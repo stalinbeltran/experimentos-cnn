@@ -6,7 +6,8 @@ va en un `comun/` que todavía no existe y que se crea cuando haya un segundo
 caso, nunca con el primero.
 """
 
-from .entorno import exigir_datos, exigir_fv, hay_fv, ruta_datos, ruta_fv
+from .entorno import (exigir_datos, exigir_fv, exigir_generador, hay_fv,
+                      ruta_datos, ruta_fv, ruta_generador)
 from .registro import ESTADOS, GASTOS, Experimento, experimentos, por_id, raiz
 
 __all__ = [
@@ -15,10 +16,12 @@ __all__ = [
     "Experimento",
     "exigir_datos",
     "exigir_fv",
+    "exigir_generador",
     "experimentos",
     "hay_fv",
     "por_id",
     "ruta_datos",
+    "ruta_generador",
     "raiz",
     "ruta_fv",
 ]

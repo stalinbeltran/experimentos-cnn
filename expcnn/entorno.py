@@ -2,7 +2,8 @@
 
 Son dos y hacen falta las dos: `foveal-vision` (el código) y `foveal-vision-data`
 (el dato de entrada, que este repo NO puede copiar porque es público y aquél es
-privado — ver `.gitignore`).
+privado — ver `.gitignore`) y `image-text-sample-generator` (el generador de
+párrafos, que es de donde sale el dato de este repo).
 
 Por qué existe (R4 + R2 de las reglas de diseño): en
 `foveal-vision/experimentos/` hay **72 `sys.path.insert`** repartidos por 41
@@ -97,4 +98,36 @@ def exigir_datos() -> Path:
     p = ruta_datos()
     if p is None:
         raise RuntimeError(AYUDA_DATOS)
+    return p
+
+
+AYUDA_GENERADOR = (
+    "Este experimento genera su dataset con `image-text-sample-generator` y no lo "
+    "encuentro.\n"
+    "  → clónalo al lado:  git clone "
+    "https://github.com/stalinbeltran/image-text-sample-generator ~/src/image-text-sample-generator\n"
+    "  → o dime dónde está: EXPCNN_GENERADOR=/ruta/al/generador\n"
+    "⚠ Y necesita su venv con Playwright y un Chromium: "
+    "`uv venv && uv pip install -r requirements.txt && python -m playwright install chromium`"
+)
+
+
+def ruta_generador() -> Path | None:
+    """Dónde está el generador de párrafos, o None.
+
+        EXPCNN_GENERADOR  >  hermano ../image-text-sample-generator  >  None
+    """
+    declarado = os.environ.get("EXPCNN_GENERADOR")
+    if declarado:
+        p = Path(declarado).expanduser().resolve()
+        return p if (p / "app" / "core" / "renderer.py").is_file() else None
+    hermano = raiz().parent / "image-text-sample-generator"
+    return hermano if (hermano / "app" / "core" / "renderer.py").is_file() else None
+
+
+def exigir_generador() -> Path:
+    """La raíz del generador, o se niega AHORA diciendo qué falta."""
+    p = ruta_generador()
+    if p is None:
+        raise RuntimeError(AYUDA_GENERADOR)
     return p

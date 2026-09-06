@@ -1,0 +1,20 @@
+{
+  "id": "esq-k",
+  "titulo": "Que kernel unico aprende a senalar la esquina superior-izquierda de un parrafo",
+  "pregunta": "Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo",
+  "creado": "2026-09-06",
+  "estado": "abierto",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "brazos": ["k03", "k05", "k07", "k09", "k11"],
+  "comparabilidad": {
+    "dataset": "esquina-limpia-800x600-r4",
+    "ventana_px": 32,
+    "reduccion": 4,
+    "semilla": 1,
+    "k_max": 11,
+    "margen_ciego_px": 5
+  }
+}

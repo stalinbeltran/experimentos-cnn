@@ -22,7 +22,9 @@ renombrar y re-ordenar sin romper nada.
 
 <!-- INDICE: generado por `python3 comprobar.py --indice`. No editar a mano. -->
 
-_Todavía no hay ningún experimento._
+| experimento | estado | qué pregunta |
+|---|---|---|
+| [`2026-09-06-esquina-kernel-unico/`](2026-09-06-esquina-kernel-unico/) `esq-k` | abierto | Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo |
 
 <!-- FIN INDICE -->
 
