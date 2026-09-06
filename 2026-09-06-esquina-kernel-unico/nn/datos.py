@@ -213,13 +213,59 @@ def _elegir_muestras(V, E, C, rng):
     return elegidas[:10]
 
 
+def comprobar() -> int:
+    """Re-deriva el dataset y contrasta su huella contra `manifiesto.json`.
+
+    ⚠ Esto NO es "comprobar que los ficheros de disco no se han corrompido": es
+    comprobar que la receta y la semilla vuelven a producir EL MISMO dato. La
+    diferencia importa, porque en este sistema ya se dio por reproducible un
+    dataset que no lo era, y costo 20 corridas ya pagadas. Regenera de verdad
+    (unos 2,5 min) en un directorio aparte y compara SHA-256."""
+    import shutil, tempfile
+    man = AQUI / "manifiesto.json"
+    if not man.exists():
+        print("✗ no hay manifiesto.json: genera primero con --imagenes N")
+        return 1
+    esperado = json.loads(man.read_text())
+    global DATOS
+    original, tmp = DATOS, Path(tempfile.mkdtemp(prefix="comprobar-"))
+    try:
+        DATOS = tmp
+        rc = _generar_y_guardar(esperado["imagenes_pedidas"], escribir_manifiesto=False)
+        if rc:
+            return rc
+        print("\ncontraste con el manifiesto:")
+        ok = True
+        for nombre, esp in esperado["particiones"].items():
+            f = tmp / f"{nombre}.npz"
+            h = hashlib.sha256(f.read_bytes()).hexdigest()[:16] if f.exists() else "(no existe)"
+            igual = h == esp["sha256_16"]
+            ok &= igual
+            print(f"  {nombre:>8}: {h} contra {esp['sha256_16']} … {'igual' if igual else 'DISTINTO'}")
+        if ok:
+            print("\n✓ el dataset SE REPRODUCE: la receta y la semilla dan el mismo dato.")
+        else:
+            print("\n✗ NO se reproduce. El `.npz` deja de ser regenerable y hay que")
+            print("  guardarlo, no enlazarlo (y anotar el defecto como abierto).")
+        return 0 if ok else 1
+    finally:
+        DATOS = original
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--imagenes", type=int, default=300)
     p.add_argument("--comprobar", action="store_true")
     a = p.parse_args()
+    if a.comprobar:
+        return comprobar()
+    return _generar_y_guardar(a.imagenes)
 
-    DATOS.mkdir(exist_ok=True)
+
+def _generar_y_guardar(n_imagenes: int, escribir_manifiesto: bool = True) -> int:
+    a = argparse.Namespace(imagenes=n_imagenes)
+    DATOS.mkdir(parents=True, exist_ok=True)
     rng = random.Random(SEMILLA)
     r = asyncio.run(generar(a.imagenes))
     imgs, descartes = r["imgs"], r["descartes"]
@@ -257,7 +303,7 @@ def main() -> int:
             "ventanas": int(len(E)), "positivas": int(E.sum()),
             "imagenes": sorted({int(i) for i in IMG}), "sha256_16": h}
         print(f"  {nombre:>8}: {len(E):>5} ventanas ({int(E.sum())} positivas) · {h}")
-        if nombre == "muestra":
+        if nombre == "muestra" and escribir_manifiesto:
             sel = _elegir_muestras(V, E, C, random.Random(SEMILLA))
             np.savez_compressed(MUESTRAS_NPZ, ventanas=V[sel], existe=E[sel], x=X[sel],
                                 y=Y[sel], clase=C[sel], imagen=IMG[sel])
@@ -272,7 +318,8 @@ def main() -> int:
         print(f"✗ FUGA: {len(fuga)} imagen(es) de muestra estan tambien en train/val")
         return 1
     print("  ✓ sin fuga: ninguna imagen de muestra aparece en train ni en val")
-    (AQUI / "manifiesto.json").write_text(json.dumps(manifiesto, indent=2), encoding="utf-8")
+    if escribir_manifiesto:
+        (AQUI / "manifiesto.json").write_text(json.dumps(manifiesto, indent=2), encoding="utf-8")
     return 0
 
 
