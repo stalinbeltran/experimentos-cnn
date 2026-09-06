@@ -48,6 +48,13 @@ siendo barato si se respeta **una** convención:
 > **Nada de fuera de una carpeta de experimento la nombra por su ruta: se la pide al registro
 > por su `id`. Y ningún experimento importa de otro experimento.**
 
+Y una regla de forma que la sostiene: **la carpeta empieza siempre por su fecha**
+(`<AAAA-MM-DD>-<nombre>`). No es estética. La comprobación de arriba busca el nombre de la
+carpeta dentro de los ficheros, así que una carpeta llamada `k3s1` casaría con cualquier
+docstring o tabla que hable del brazo `k3s1` — el aviso que sale siempre y se deja de leer.
+Con la fecha delante el nombre es inequívoco, y renombrar sigue siendo gratis: lo que se fija
+es la **forma** del nombre, no el nombre.
+
 Con eso, re-ordenar es `git mv` y nada más: renombrar, agrupar por tema (`planas/`,
 `cabezas/`), meterlas por trimestre o cambiar la forma interna de una son **gratis**.
 
@@ -144,12 +151,22 @@ tienen reporte). Si se confirma, la enmienda se escribe **allí**, no aquí en s
 Un experimento **autónomo no necesita nada**: `comprobar.py` y `expcnn` son stdlib pura, así
 que un clon limpio corre sin instalar nada.
 
-Un experimento que reusa `fv` llama a `expcnn.exigir_fv()` **en su primera línea**, y ésa es
-la única puerta:
+Hay **dos** puertas, y son las dos únicas: `expcnn.exigir_fv()` para el código y
+`expcnn.exigir_datos()` para el dato de entrada. Se llaman **en la primera línea** del
+experimento que las necesite:
 
 ```
-EXPCNN_FV (variable de entorno)  >  el hermano ../foveal-vision  >  se NIEGA diciendo qué falta
+código:  EXPCNN_FV                    >  el hermano ../foveal-vision       >  se NIEGA
+dato:    EXPCNN_DATOS > FV_DATA_ROOT  >  el hermano ../foveal-vision-data  >  se NIEGA
 ```
+
+⚠ **La puerta al dato respeta `FV_DATA_ROOT`** —la variable con la que `foveal-vision`
+resuelve ESE MISMO repo (`src/fv/settings.py:27`)— a propósito: dos mandos para un solo hecho
+pueden discrepar sin que nada falle (R15).
+
+⚠ **Y NO cae al repo de código como hace `fv.settings.data_root()`.** Allí ese respaldo es
+correcto: quien no ha clonado el repo de datos sigue funcionando. Aquí sería un directorio sin
+`windows.npz`, o sea fallar a mitad en vez de negarse al empezar (R2).
 
 Se niega **antes de empezar**, no a la época 30 (R2). Y hay una sola indirección a propósito:
 en `foveal-vision/experimentos/` hay **72 `sys.path.insert`** repartidos por 41 ficheros

@@ -1,4 +1,8 @@
-"""La ÚNICA puerta a `foveal-vision`, y sólo para el experimento que la pida.
+"""Las ÚNICAS puertas a los repos hermanos, y sólo para el experimento que las pida.
+
+Son dos y hacen falta las dos: `foveal-vision` (el código) y `foveal-vision-data`
+(el dato de entrada, que este repo NO puede copiar porque es público y aquél es
+privado — ver `.gitignore`).
 
 Por qué existe (R4 + R2 de las reglas de diseño): en
 `foveal-vision/experimentos/` hay **72 `sys.path.insert`** repartidos por 41
@@ -28,6 +32,14 @@ AYUDA = (
     "  → o escribe el experimento autónomo, que es la opción por defecto aquí."
 )
 
+AYUDA_DATOS = (
+    "Este experimento lee el dato de entrada de `foveal-vision-data` y no lo encuentro.\n"
+    "  → clónalo al lado:  git clone https://github.com/stalinbeltran/foveal-vision-data "
+    "~/src/foveal-vision-data\n"
+    "  → o dime dónde está: EXPCNN_DATOS=/ruta/a/foveal-vision-data\n"
+    "⚠ El dato NO se copia a este repo: es público y aquél es privado."
+)
+
 
 def ruta_fv() -> Path | None:
     """Dónde está `foveal-vision`, o None. No importa nada ni toca `sys.path`."""
@@ -54,4 +66,35 @@ def exigir_fv() -> Path:
     src = str(p / "src")
     if src not in sys.path:
         sys.path.insert(0, src)
+    return p
+
+
+def ruta_datos() -> Path | None:
+    """Dónde está `foveal-vision-data`, o None.
+
+    ⚠ Respeta `FV_DATA_ROOT` a propósito, que es la variable con la que
+    `foveal-vision/src/fv/settings.py:27` resuelve ESE MISMO repo. Inventarse
+    aquí una variable propia y sola dejaría dos mandos para un solo hecho, que
+    pueden discrepar sin que nada falle (R15: una colisión se anuncia).
+
+        EXPCNN_DATOS  >  FV_DATA_ROOT  >  hermano ../foveal-vision-data  >  None
+
+    ⚠ Y NO cae al repo de código como hace `fv.settings.data_root()`. Allí ese
+    respaldo es correcto —el que no ha clonado nada sigue funcionando—; aquí
+    sería un directorio sin `windows.npz`, o sea fallar a mitad (R2).
+    """
+    for var in ("EXPCNN_DATOS", "FV_DATA_ROOT"):
+        v = os.environ.get(var)
+        if v:
+            p = Path(v).expanduser().resolve()
+            return p if p.is_dir() else None
+    hermano = raiz().parent / "foveal-vision-data"
+    return hermano if hermano.is_dir() else None
+
+
+def exigir_datos() -> Path:
+    """La raíz del repo de datos, o se niega AHORA diciendo qué falta."""
+    p = ruta_datos()
+    if p is None:
+        raise RuntimeError(AYUDA_DATOS)
     return p

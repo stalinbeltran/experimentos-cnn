@@ -21,6 +21,7 @@ que `cerrable.mjs --exit0` en el coordinador.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
@@ -29,7 +30,8 @@ from pathlib import Path
 # sitio es deducir del disco dónde está OTRO repo — para eso está expcnn.entorno.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from expcnn import ESTADOS, GASTOS, experimentos, hay_fv, raiz, ruta_fv  # noqa: E402
+from expcnn import (ESTADOS, GASTOS, experimentos, hay_fv, raiz,  # noqa: E402
+                    ruta_datos, ruta_fv)
 from expcnn.registro import MANIFIESTO  # noqa: E402
 
 TEXTO = {".py", ".md", ".json", ".toml", ".sh", ".mjs", ".txt", ".yaml", ".yml", ".cfg"}
@@ -39,6 +41,13 @@ TEXTO = {".py", ".md", ".json", ".toml", ".sh", ".mjs", ".txt", ".yaml", ".yml",
 EXENTOS = {"README.md"}
 MARCA_INI = "<!-- INDICE: generado por `python3 comprobar.py --indice`. No editar a mano. -->"
 MARCA_FIN = "<!-- FIN INDICE -->"
+# El nombre de una carpeta de experimento empieza por su fecha. No es estética:
+# `_rutas_cableadas` busca el nombre dentro de los ficheros, y un nombre corto
+# —el id de un brazo, por ejemplo— aparecería en cualquier docstring o tabla de
+# resultados que hable de ese brazo: el aviso que sale siempre. Con la fecha
+# delante, el nombre es inequívoco. Renombrar sigue siendo gratis: lo que se
+# fija es la FORMA del nombre, no el nombre.
+FECHADA = re.compile(r"^\d{4}-\d{2}-\d{2}-.+")
 
 
 def _problemas_de_manifiestos(exps) -> list[str]:
@@ -56,6 +65,13 @@ def _problemas_de_manifiestos(exps) -> list[str]:
         for campo in ("titulo", "pregunta", "creado"):
             if not d.get(campo):
                 malos.append(f"{donde}: falta '{campo}' en {MANIFIESTO}")
+        if not FECHADA.match(e.carpeta.name):
+            malos.append(
+                f"{donde}: la carpeta tiene que empezar por su fecha "
+                f"(`<AAAA-MM-DD>-<nombre>`); '{e.carpeta.name}' no. Un nombre corto "
+                f"aparece por casualidad dentro de otros textos y llena de falsos "
+                f"avisos la comprobación que mantiene barato re-ordenar"
+            )
         if e.entrada:
             if not (e.carpeta / e.entrada).exists():
                 malos.append(f"{donde}: `entrada` apunta a {e.entrada}, que no existe")
@@ -92,7 +108,13 @@ def _rutas_cableadas(exps) -> list[str]:
         except Exception:  # noqa: BLE001
             continue
         for nombre, donde in nombres.items():
-            if nombre in txt and nombre not in f.parts:
+            if nombre in f.parts:
+                continue
+            # Por TOKEN, no por subcadena: una carpeta no puede casar dentro del
+            # nombre de otra que la tenga por prefijo, que es otra carpeta y otra
+            # cosa. (Y por eso los ejemplos de estos comentarios no son nombres
+            # verosímiles: este fichero también pasa por la comprobación.)
+            if re.search(rf"(?<![\w-]){re.escape(nombre)}(?![\w-])", txt):
                 malos.append(f"{f.relative_to(raiz())} nombra la carpeta '{nombre}' ({donde})")
     return malos
 
@@ -147,7 +169,9 @@ def main() -> int:
 
     print(f"\nrepo: {raiz()}")
     fv = ruta_fv()
-    print(f"foveal-vision: {fv if fv else '— no está (los experimentos autónomos corren igual)'}\n")
+    print(f"foveal-vision: {fv if fv else '— no está (los experimentos autónomos corren igual)'}")
+    datos = ruta_datos()
+    print(f"foveal-vision-data: {datos if datos else '— no está (el dato de entrada se lee de ahí)'}\n")
 
     if not exps:
         print("No hay ningún experimento todavía.")
