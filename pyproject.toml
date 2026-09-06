@@ -1,0 +1,20 @@
+[project]
+name = "experimentos-cnn"
+version = "0.1.0"
+description = "Experimentos sueltos de estructuras de redes: cada uno con su codigo, sus reglas y su criterio"
+requires-python = ">=3.11"
+# SIN dependencias a proposito: `expcnn` es stdlib pura, asi que un clon limpio
+# corre `comprobar.py` sin instalar nada (R3). Lo que necesite torch lo declara
+# el experimento, no el repo.
+dependencies = []
+
+[project.optional-dependencies]
+# Para los experimentos que entrenan aqui mismo. `uv pip install -e '.[torch]'`
+torch = ["torch>=2.0", "numpy"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["expcnn"]

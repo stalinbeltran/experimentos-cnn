@@ -1,0 +1,12 @@
+{
+  "name": "exp",
+  "descripcion": "Que experimentos hay en experimentos-cnn, en que estado, cuales pueden correr aqui y que esta mal puesto. No gasta nada: solo lee el repo.",
+  "ejemplos": [
+    "(sin argumentos: el informe entero)",
+    "--breve"
+  ],
+  "command": "python3 comprobar.py --exit0 {{input}}",
+  "encargados": ["echo"],
+  "requiere": ["python3"],
+  "timeoutMs": 60000
+}

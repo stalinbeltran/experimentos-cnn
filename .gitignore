@@ -1,0 +1,17 @@
+# Entornos y caché de Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# ⚠ El dato de entrada NUNCA se copia aquí: este repo es PÚBLICO y el de datos
+# (foveal-vision-data) es PRIVADO. Comprobado el 2026-09-06 contra la API de
+# GitHub: anónimo, este repo da 200 y el de datos da 404. Git no olvida, así que
+# un dataset que se cuele no se arregla borrándolo.
+*.npz
+*.npy.gz
+
+# Salidas grandes: las figuras y métricas SÍ se commitean (son el resultado),
+# los volcados intermedios no.
+/tmp/
+*.log

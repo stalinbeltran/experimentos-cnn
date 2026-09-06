@@ -1,0 +1,37 @@
+# `experimentos-cnn`
+
+Pruebas de estructuras de red. **Un experimento por carpeta, y cada uno con sus propias
+reglas**: su código, su criterio, su métrica y sus objetivos. Pueden no parecerse en nada
+entre sí — es a propósito.
+
+Separado de [`foveal-vision`](https://github.com/stalinbeltran/foveal-vision) el 2026-09-06,
+porque allí las restricciones del proyecto entorpecían especificar pruebas libres.
+
+```bash
+python3 comprobar.py           # qué hay, qué puede correr aquí, y qué está mal puesto
+python3 comprobar.py --indice  # regenera la tabla de abajo desde los experimento.json
+```
+
+Desde Telegram: `/use exp`.
+
+## Los experimentos
+
+La tabla la **genera** `comprobar.py --indice` leyendo cada `experimento.json`. La identidad
+de un experimento es su `id`, no el nombre de su carpeta: por eso las carpetas se pueden
+renombrar y re-ordenar sin romper nada.
+
+<!-- INDICE: generado por `python3 comprobar.py --indice`. No editar a mano. -->
+
+_Todavía no hay ningún experimento._
+
+<!-- FIN INDICE -->
+
+## Cómo se añade uno
+
+1. `mkdir 2026-09-06-<nombre>` y copia dentro `experimento.ejemplo.json` como
+   `experimento.json`, rellenado.
+2. Escribe el **criterio antes de mirar** en `instrucciones/02-criterio.md`.
+3. Lo demás lo decide el experimento. `python3 comprobar.py` te dice si algo está mal puesto.
+
+Las reglas, la frontera de lo que un experimento puede decidir y dónde va cada artefacto
+están en [`CLAUDE.md`](CLAUDE.md).
