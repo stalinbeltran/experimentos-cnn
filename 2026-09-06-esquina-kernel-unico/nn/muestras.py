@@ -107,8 +107,13 @@ def figura(brazo: str, datos: dict, etiqueta: str) -> Path:
     f, fb = _fuente(14), _fuente(17)
 
     k = BRAZOS[brazo]
+    aciertos = sum(1 for i in range(len(V)) if datos["existe"][i] == 1 and
+                   ((float(px[i]) - datos["x"][i]) ** 2 +
+                    (float(py[i]) - datos["y"][i]) ** 2) ** 0.5 <= 2)
+    n_pos = int(datos["existe"].sum())
     d.text((sep, 10), f"{brazo} · kernel {k}x{k} · {k*k + 3} parametros · "
-                      f"epoca {epoca}{'  (SIN ENTRENAR)' if epoca == 0 else ''}",
+                      f"epoca {epoca}{'  (SIN ENTRENAR)' if epoca == 0 else ''} · "
+                      f"acierta a <=2 px en {aciertos}/{n_pos} de las muestras con esquina",
            fill=(20, 20, 20), font=fb)
     d.text((sep, 33), f"arriba: ventana 32x32 (x8) · abajo: mapa del kernel en las MISMAS "
                       f"coordenadas (azul<0 rojo>0; gris = margen ciego {(k-1)//2} px) "
@@ -137,13 +142,16 @@ def figura(brazo: str, datos: dict, etiqueta: str) -> Path:
 
         clase = str(datos["clase"][i])
         real = "SI" if datos["existe"][i] == 1 else "no"
-        err = ""
+        err, color = "", (70, 70, 70)
         if datos["existe"][i] == 1:
             e = ((float(px[i]) - datos["x"][i]) ** 2 + (float(py[i]) - datos["y"][i]) ** 2) ** 0.5
-            err = f" · error {e:.1f} px"
+            # El umbral de 2 px es el de la metrica principal del criterio, para
+            # que la figura y el criterio digan lo mismo y no haya que traducir.
+            err = f" · {e:.1f} px {'ACIERTA' if e <= 2 else 'falla'}"
+            color = (0, 130, 0) if e <= 2 else (150, 60, 60)
         d.text((x0, ym + LADO + 5), f"{i+1}. {clase}", fill=(20, 20, 20), font=f)
         d.text((x0, ym + LADO + 23), f"existe {real} · pred {float(prob[i]):.2f}{err}",
-               fill=(70, 70, 70), font=f)
+               fill=color, font=f)
 
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"{brazo}-{etiqueta}.png"

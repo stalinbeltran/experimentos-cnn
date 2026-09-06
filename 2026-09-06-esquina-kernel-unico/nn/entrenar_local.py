@@ -44,7 +44,13 @@ PESOS = AQUI / "pesos"
 
 LOTE = 128
 LR = 0.05
-LAMBDA_COORD = 0.01   # equilibra MSE en px (~64 al empezar) contra BCE (~0,7)
+# ⚠ MEDIDO, no elegido a ojo (2026-09-06, sin entrenar nada): al inicializar, la
+# BCE vale 1,23-1,31 y el MSE de coordenadas 40,9-42,6 px^2 en los cinco brazos.
+# La regla es "los dos terminos parten IGUALES" -- porque las coordenadas son el
+# objeto de este experimento, no un extra --, y eso da 0,0294-0,0317 segun el
+# brazo. Se congela en 0,03 para los cinco: un lambda por brazo haria que cada
+# uno optimizase una funcion distinta.
+LAMBDA_COORD = 0.03
 SEMILLA = 1
 
 
@@ -65,6 +71,31 @@ def _perdida(salida, objetivo):
     else:
         coord = torch.zeros((), device=logit.device)
     return bce + LAMBDA_COORD * coord, bce.item(), coord.item()
+
+
+def _metricas(salida, objetivo) -> dict:
+    """Lo que se mira de verdad, sobre las ventanas donde la esquina EXISTE.
+
+    ⚠ La metrica principal es la TASA DE ACIERTO dentro de r px, no la distancia
+    media. Medido el 2026-09-06 sin entrenar nada: la distancia media del suelo
+    es 5,88 px y esta explicada entera por la geometria (la distancia media al
+    centro de un cuadrado uniforme de lado 15 es 0,3826*15 = 5,74). Esa metrica
+    esta acotada por arriba en 10,6 px, asi que el suelo ya "parece" medio
+    camino. La tasa de acierto tiene el azar en 5,6 % (r=2) y llega al 100 %:
+    ahi si hay recorrido, y es lo que se ve en la figura de las muestras."""
+    logit, px, py, _ = salida
+    existe, x, y = objetivo
+    hay = existe > 0.5
+    m = {"n_positivas": int(hay.sum())}
+    if hay.any():
+        d = ((px[hay] - x[hay]) ** 2 + (py[hay] - y[hay]) ** 2).sqrt()
+        m["err_px"] = d.mean().item()
+        m["acierto_1px"] = (d <= 1).float().mean().item()
+        m["acierto_2px"] = (d <= 2).float().mean().item()
+    pred = torch.sigmoid(logit) > 0.5
+    tp = (pred & hay).sum().item()
+    m["f1_existe"] = (2 * tp / (pred.sum().item() + hay.sum().item())) if (pred.sum() + hay.sum()) > 0 else 0.0
+    return m
 
 
 def _estado_rng() -> dict:
@@ -126,19 +157,23 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
             suma += p.item() * len(idx); n += len(idx)
         red.eval()
         with torch.no_grad():
-            pv, bce, coord = _perdida(red(Vva), Yva)
+            salida = red(Vva)
+            pv, bce, coord = _perdida(salida, Yva)
+            met = _metricas(salida, Yva)
         fila = {"epoca": ep, "train": suma / n, "val": pv.item(), "bce": bce,
                 "coord_mse": coord, "beta": float(red.log_beta.exp()),
-                "segundos": round(time.time() - t0, 2)}
+                **met, "segundos": round(time.time() - t0, 2)}
         with reg.open("a", encoding="utf-8") as f:      # SOLO ANADIR
             f.write(json.dumps(fila) + "\n")
         if pv.item() < mejor:
             mejor = pv.item()
             _guardar(mejor_f, red, opt, ep, mejor)
         _guardar(ultimo, red, opt, ep, mejor)           # cada epoca: reanudable siempre
-        print(f"  ep {ep:>3} train {fila['train']:.4f} val {fila['val']:.4f} "
-              f"(bce {bce:.3f} coord {coord:.1f} px2) beta {fila['beta']:.2f} "
-              f"{fila['segundos']}s")
+        print(f"  ep {ep:>3} val {fila['val']:.4f} · acierto<=2px "
+              f"{100*fila.get('acierto_2px', 0):>5.1f}% (azar 5,6) · err "
+              f"{fila.get('err_px', 0):.2f} px (suelo 5,88) · f1 existe "
+              f"{fila['f1_existe']:.3f} (suelo 0,572) · beta {fila['beta']:.2f} "
+              f"· {fila['segundos']}s")
     return 0
 
 
