@@ -1,8 +1,73 @@
-# `esq-2d` — con UN solo kernel, ¿qué estructura detecta las DOS esquinas en diagonal?
+# `esq-2d` — con UN solo kernel, ¿qué tamaño detecta las DOS esquinas en diagonal?
 
-**PREPARADO el 2026-09-07, SIN ENTRENAR NI UNA ÉPOCA.** Aquí están las estructuras, el dataset,
-los suelos medidos y el criterio congelado. Lo que todavía no hay es resultado — y ésa es la
-diferencia entre este documento y el de `esq-k`.
+**Corrido el 2026-09-07, 14:11:32 → 14:31 UTC · 5 brazos × 300 épocas · ~20 min de reloj ·
+0 máquinas · 0 $** (CPU de este droplet de 2 vCPU). El criterio está congelado en
+[`instrucciones/02-criterio.md`](instrucciones/02-criterio.md), escrito **antes** de la primera
+época, y **no declara ganador**: se reportan todos los que pasan.
+
+## Qué salió
+
+En la época que guarda su `best.pt` (elegida por `val_loss`, la misma regla en los cinco):
+
+| brazo | params | época | acierto ≤2 px `tl` | `br` | ≤1 px `tl` | `br` | error `tl` | `br` | f1 `tl` | `br` | antisim. | ¿pasa? |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|:--:|
+| `k05` | 30 | 295 | 10,3 % | 6,4 % | 2,6 % | 0,0 % | 4,88 px | 6,13 px | 0,218 | 0,000 | 56 % | ❌ |
+| `k07` | 54 | 268 | 56,4 % | 5,1 % | 34,6 % | 0,0 % | 2,45 px | 6,07 px | 0,340 | 0,069 | 52 % | ❌ |
+| `k09` | 86 | 266 | 65,4 % | 7,7 % | 23,1 % | 2,6 % | 2,29 px | 5,17 px | 0,385 | 0,463 | 62 % | ❌ |
+| **`k11`** | 126 | 235 | 62,8 % | **12,8 %** | 25,6 % | 2,6 % | 2,15 px | 4,72 px | 0,408 | 0,621 | 62 % | ✅ |
+| **`k13`** | 174 | 109 | **89,7 %** | **23,1 %** | 24,4 % | 2,6 % | **1,73 px** | **4,00 px** | 0,470 | 0,609 | 47 % | ✅ |
+| **suelo** (sin entrenar) | — | 0 | 5,1 % | 6,4 % | 1,3 % | 3,8 % | 5,96 px | 6,13 px | 0,334 | 0,334 | 38 % | — |
+
+**Pasan el umbral (12 % a ≤2 px en LAS DOS esquinas) dos de los cinco: `k11` y `k13`.** Un solo
+kernel **sí** puede con las dos esquinas en diagonal — pero necesita mucho más kernel que con una
+sola, y ni de lejos lo hace igual de bien.
+
+### Las cinco cosas que hay que leer antes que la tabla
+
+1. ⚠⚠ **Compartir el kernel sale carísimo, y el número que lo dice es `k07`.** Ahí `esq-k`
+   sacaba **100 %** a ≤2 px con **una** esquina; aquí, con la misma convolución y dos esquinas,
+   saca **56,4 % en `tl` y 5,1 % en `br`**. No es un ajuste: es otra tarea.
+2. **La asimetría predicha se cumplió, y es enorme.** `tl` va del 10 % al 90 %; `br`, del 6 % al
+   23 %. **El kernel se queda con la esquina barata** — que es el desenlace 3 del criterio,
+   registrado como el más probable, y por el motivo que estaba medido: `br` pide renunciar a la
+   parte del filtro que apaga el interior del párrafo.
+3. ⚠ **NADA saturó, al revés que en `esq-k`, y el mejor es el BORDE del rango.** `k13` gana en las
+   dos esquinas y en las dos métricas, y la `val_loss` baja monótona con `k` (1,82 → 1,43 → 1,17
+   → 1,02 → **0,89**). Es el **desenlace 5**: el eje **no está acotado por arriba** y la respuesta
+   no es «13», es «mirar más allá».
+4. **`existe` apenas despega.** Con suelo 0,334, el mejor `f1` es 0,470 (`tl`) y 0,621 (`br`), y
+   `k05` da **0,000** en `br`: no detecta la esquina inferior-derecha en absoluto. La red aprende
+   antes *dónde* que *si*.
+5. ⚠ **Una semilla.** Entre brazos vecinos no se puede declarar nada: `k09` (65,4 %) y `k11`
+   (62,8 %) en `tl` se dan la vuelta respecto de la tendencia, y con una sola semilla eso no se
+   distingue de una fluctuación. Lo que sí es sólido es el extremo: `k05` no aprende y `k13` es el
+   mejor de largo.
+
+### Lo que se ve en las muestras
+
+[`muestras/`](muestras/) tiene las 10 muestras congeladas por brazo, **antes**
+(`-ep000-sin-entrenar`) y **después** (`-ep300`). En `k13-ep300.png`: **3/3 en `tl` y 1/3 en
+`br`**, y el mapa enseña por qué — responde **positivo sobre la tinta** (al revés que el kernel de
+`esq-k`, que la suprimía), con la esquina `tl` como máximo local; el mínimo, que es de donde se lee
+`br`, cae en zonas mucho menos definidas. Y las probabilidades de `existe` son bajísimas incluso
+cuando acierta la posición (0,57 · 0,14 · 0,15 en las tres `tl`), que es la misma historia del
+punto 4 vista de cerca.
+
+## Lo que quedó pendiente
+
+- **El eje no está acotado por arriba, y esta vez con más razón que en `esq-k`**: `k13` es el
+  borde y gana en todo. El dataset admite hasta **k = 17** sin regenerarlo (lo calcula el
+  manifiesto), así que `k15` y `k17` cuestan ~5 min y están a un `BRAZOS` de distancia.
+- **`br` sigue siendo malo en términos absolutos** (23 % a ≤2 px). Si lo que hace falta es
+  detectar las dos esquinas de verdad, esta lectura no basta y la continuación declarada es
+  **`ant`** — el mismo montaje con el kernel forzado antisimétrico—, que está implementada y
+  comprobada, sin armar. Ver
+  [`instrucciones/03-alternativas-anotadas.md`](instrucciones/03-alternativas-anotadas.md).
+- **`existe` no se ha estudiado.** Su `f1` se queda cerca del suelo en los cinco brazos y nadie ha
+  mirado si es la cabeza (2 parámetros por esquina) o el kernel.
+- **Una semilla**, como en `esq-k`. Nadie ha medido la variación entre semillas.
+
+## Cómo está montado (lo de abajo se escribió antes de correr)
 
 Hereda de `esq-k` **todo lo que decide la comparabilidad**: misma receta, semilla 1, ventana
 32×32, reducción por 4, sin padding, sin bias, cabeza C1 (esperanza bajo `softmax(β·M)`, β

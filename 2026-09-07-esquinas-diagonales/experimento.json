@@ -3,7 +3,7 @@
   "titulo": "La red de esq-k con DOS esquinas en vez de una: que tamano de kernel unico senala la superior-izquierda y la inferior-derecha a la vez",
   "pregunta": "Una sola convolucion sin bias produce UN mapa, y las dos esquinas en diagonal se leen de sus dos extremos: la superior-izquierda del maximo y la inferior-derecha del minimo. Que tamano de kernel lo hace mejor, y cuanto se pierde respecto del mismo barrido sobre UNA sola esquina de esq-k",
   "creado": "2026-09-07",
-  "estado": "abierto",
+  "estado": "cerrado",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
