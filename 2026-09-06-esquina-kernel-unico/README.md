@@ -96,6 +96,44 @@ razonable.
 positivo —que es lo único que la cabeza lee— queda aplastado y la figura parece un detector de
 tinta en vez de un detector de esquina. Pasó en la primera versión de esta figura.
 
+## ...y la misma función sobre 10 PÁGINAS ENTERAS: aciertan las 10
+
+*Medido el 2026-09-07 con `.venv/bin/python nn/transformacion.py --paginas 10` — 16 s de reloj,
+0 máquinas, 0 $.*
+
+[`muestras/transformacion-k07-10-paginas.png`](muestras/transformacion-k07-10-paginas.png) — las
+**10 primeras páginas de la partición `muestra`**, enteras (200×200 px reducidos) y fuera de train
+y de val, cada una con su mapa de respuesta en las mismas coordenadas.
+
+**Es la misma `aplicar()` sin tocar nada, y ahí está el punto de que sea una transformación y no
+una capa.** Lo que cambia es el problema, y cambia de verdad: entrenando, cada ventana traía
+**una** esquina y siempre con contexto a los dos lados; una página entera trae las cuatro
+esquinas, los cuatro bordes, el interior, todo el fondo y **el comienzo de cada línea** — y hay
+**un solo máximo** para las 37.636 posiciones del mapa (194×194) en vez de para las 676 de una
+ventana.
+
+| página (`s`) | 0 | 1 | 2 | 3 | 4 | 6 | 7 | 8 | 9 | 10 |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| **distancia del máximo a la esquina (px)** | 0,70 | 0,54 | 0,58 | 0,49 | 0,42 | 0,49 | 0,62 | **0,87** | 0,28 | 0,64 |
+| pico del mapa | 1,75 | 1,62 | 2,77 | 2,14 | 1,91 | 1,50 | 1,60 | 2,03 | 2,15 | 2,02 |
+
+**En las 10 el máximo cae a ≤1 px de la esquina superior-izquierda verdadera**; el peor, a 0,87 px.
+
+**Lo que esto añade** sobre la figura de las 20 ventanas es justo lo que no estaba medido: la
+cabeza que leía el mapa nunca vio más de 32×32, así que *«el máximo de la página entera cae en la
+esquina buena»* era una extrapolación razonable — con las otras tres esquinas y todos los
+comienzos de línea compitiendo — y ahora es una medida.
+
+⚠ **El suelo de la medida es ~0,5 px, así que estos diez números NO se ordenan entre sí.** La
+esquina verdadera sale del DOM y es un decimal; el máximo del mapa es un píxel entero. Un detector
+perfecto mediría igualmente entre 0 y ~0,7 px. Lo que dice la tabla es que **las diez están por
+debajo de 1 px**, no que la página 9 sea mejor que la 8.
+
+⚠ **Y lo que NO dice:** son 10 páginas de **una** receta (un párrafo por página, limpio, sin girar
+y sin ruido) y **una** semilla. Cada página tiene **exactamente una** esquina superior-izquierda,
+así que «el máximo» es un lector válido aquí y sólo aquí: con dos párrafos habría que leer picos
+sobre un umbral, y ni el umbral ni la separación entre picos están medidos.
+
 ## Lo que quedó pendiente
 
 - **El eje no está acotado por arriba.** `k11` sigue mejorando y es el borde del rango. Si
@@ -104,6 +142,9 @@ tinta en vez de un detector de esquina. Pasó en la primera versión de esta fig
   semillas, así que las diferencias pequeñas (k09 contra k11) no se pueden declarar.
 - **El techo de la métrica.** Si se repite, el umbral de acierto debería bajar a ≤1 px o ≤0,5 px,
   que es donde los brazos todavía se distinguen.
+- **Una página con VARIOS párrafos.** Con uno solo, «el máximo del mapa» es un lector
+  válido; con dos o más hay que leer picos sobre un umbral, y ni ese umbral ni la
+  separación entre picos están medidos.
 - **Nada de esto dice nada del `stride`**, que es el eje siguiente y no se ha tocado.
 
 ## Cómo se repite
@@ -111,6 +152,10 @@ tinta en vez de un detector de esquina. Pasó en la primera versión de esta fig
 ```bash
 cd ~/src/experimentos-cnn
 uv venv && uv pip install -e . && uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+# El dato se RINDE con el navegador del generador, así que el venv necesita además esto:
+uv pip install playwright pydantic
+.venv/bin/python -m playwright install chromium               # ~115 MB
+sudo .venv/bin/python -m playwright install-deps chromium     # libatk-1.0 y compañía
 E=2026-09-06-esquina-kernel-unico
 .venv/bin/python $E/nn/datos.py --imagenes 300     # ~2,5 min (necesita el generador y Chromium)
 .venv/bin/python $E/nn/datos.py --comprobar        # ¿se re-deriva el mismo dato? SÍ, comprobado
@@ -118,7 +163,20 @@ for b in k03 k05 k07 k09 k11; do
   .venv/bin/python $E/nn/entrenar_local.py --brazo $b --epocas 300   # reanudable: se corta y sigue
 done
 .venv/bin/python $E/nn/muestras.py --etiqueta ep300
+.venv/bin/python $E/nn/transformacion.py --kernel --entradas 20 --paginas 10
 ```
+
+⚠ **Las cuatro líneas de `playwright` faltaban aquí, y se descubrieron a mitad** (2026-09-07,
+en una máquina recién hecha). `uv pip install -e .` no las trae porque `pyproject.toml` **no declara
+dependencias a propósito**, y sin ellas `datos.py` y `--paginas` no fallan al empezar: fallan al
+importar `app.core.renderer`, o al lanzar el navegador con `libatk-1.0.so.0: cannot open shared
+object file`. Es la regla del preflight de este proyecto: comprueba estado **utilizable**, no
+presencia.
+
+⚠ **Y `cdn.playwright.dev` SÍ sirvió** desde este droplet el 2026-09-07 (115 MB, sin un solo error),
+al contrario de lo medido el 2026-08-27 desde `nyc1`, donde daba **403** y hubo que instalar el `.deb`
+de Google Chrome. O sea que ese 403 **no es permanente**: se prueba primero el camino normal y sólo
+se cae al `.deb` si falla.
 
 ⚠ **El dataset SE REPRODUCE**, y está comprobado el 2026-09-06 ejecutando `--comprobar`: las tres
 particiones dan la misma huella SHA-256 tras regenerarlas de cero. Por eso el `.npz` no se
