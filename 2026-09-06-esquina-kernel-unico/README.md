@@ -45,6 +45,57 @@ En la época que guarda su `best.pt` (elegida por `val_loss`, la misma regla en 
 mismo párrafo, que son el negativo difícil—. Y el mapa de respuesta enseña qué aprendió el
 kernel: responde **negativo sobre la tinta**, y el máximo cae justo en la esquina.
 
+## Qué aprendió el kernel: es un detector de CUADRANTE, como se predijo
+
+El producto del experimento no es la red: es **el filtro**. Éstos son los 49 pesos de `k07`
+(sin bias, la convolución no lo tiene) — [`muestras/kernel-k07.png`](muestras/kernel-k07.png):
+
+```
+  -1.360  -1.572  -1.232  -2.700  -3.661  -3.205  -3.199     <- espera FONDO arriba
+  -0.914  -1.064  -0.786  -1.005  -1.109  -1.136  -2.006
+  -0.786  -0.741  -0.717  -1.054  -0.632  -0.732  -1.196
+  -4.995  -1.169  -0.657  -1.598  -0.516  -1.225  -2.460
+  -9.433  -1.655  -2.754  +0.267  +2.319  +0.104  -1.111
+  -6.457  -1.506  -4.376  +1.960  -0.245  -0.083  +2.054     <- espera TINTA abajo-derecha
+  -5.467  -1.929  -1.792  -0.456  +0.442  -0.482  +0.346
+     ^ espera FONDO a la izquierda
+```
+
+**Fila superior y columna izquierda muy negativas; cuadrante inferior-derecho positivo.** Es
+literalmente la forma que el encargo predijo *antes* de entrenar nada, y por el argumento de que
+un filtro lineal orientado no puede picar en las cuatro esquinas a la vez:
+
+> «Un filtro lineal que pique en una esquina superior-izquierda tiene forma de **cuadrante**
+> —positivo donde espera tinta, negativo donde espera fondo—.»
+> — [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md)
+
+⚠ **Y la asimetría no es decorativa**: el peso más fuerte de todos es el **−9,43 de la columna
+izquierda**, casi 4× el positivo más grande. El filtro gasta más en comprobar que *no hay tinta a
+la izquierda* que en comprobar que *sí la hay abajo*. Tiene sentido para separar una esquina
+superior-izquierda de un borde superior, que es el negativo que sólo se distingue por ese lado.
+
+## La transformación aplicada a 20 entradas nunca vistas
+
+[`nn/transformacion.py`](nn/transformacion.py) expone la función suelta —`cargar_kernel()` y
+`aplicar()`—, que acepta **cualquier tamaño de entrada**, no sólo la ventana 32×32 con la que se
+entrenó: una transformación que sólo sirve para la forma exacta del entrenamiento no es una
+transformación, es una capa. La conversión a tinta y el `/255` van **dentro** de `aplicar()`,
+porque pasarle la imagen sin invertir da un mapa con el signo cambiado y una figura que parece
+razonable.
+
+[`muestras/transformacion-k07-20-entradas.png`](muestras/transformacion-k07-20-entradas.png) —
+20 ventanas de la partición `muestra`, fuera de train y de val:
+
+- **Las 8 entradas `esquina-tl` tienen su máximo (rojo) justo sobre la esquina verdadera.**
+- **Las 12 negativas no tienen máximo positivo en ninguna parte** — ni el interior, ni el fondo,
+  ni el borde superior, ni las **otras tres esquinas** del párrafo, que son el negativo por
+  orientación.
+
+⚠ **Los dos signos se dibujan a escalas independientes, y hay que decirlo.** El kernel suma
+**−73,68**, o sea que responde muy negativo a toda la tinta; con una escala única el pico
+positivo —que es lo único que la cabeza lee— queda aplastado y la figura parece un detector de
+tinta en vez de un detector de esquina. Pasó en la primera versión de esta figura.
+
 ## Lo que quedó pendiente
 
 - **El eje no está acotado por arriba.** `k11` sigue mejorando y es el borde del rango. Si
