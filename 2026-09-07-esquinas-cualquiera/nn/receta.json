@@ -1,0 +1,16 @@
+{
+  "canvas": { "width": 800, "height": 800 },
+  "background": { "kind": "solid" },
+  "blocks": [{
+    "kind": "paragraph",
+    "count": 1,
+    "width": { "range": [280, 416] },
+    "content": { "source": "words", "words": { "range": [120, 200], "step": 1 } },
+    "typography": { "font_size": 14, "color": "#000000" },
+    "placement": {
+      "area": [0.16, 0.16, 0.84, 0.84],
+      "angle": 0,
+      "avoid_overlap": false
+    }
+  }]
+}

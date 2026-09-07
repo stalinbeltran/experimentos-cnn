@@ -1,0 +1,48 @@
+{
+  "id": "esq-cq",
+  "titulo": "POR DEFINIR — copia de esq-2d dejada en estado de partida el 2026-09-07",
+  "pregunta": "POR DEFINIR — el dueno escribe aqui la pregunta antes de correr nada (R13: el criterio se escribe antes de mirar)",
+  "creado": "2026-09-07",
+  "estado": "abierto",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "brazos": [
+    "k05",
+    "k07",
+    "k09",
+    "k11",
+    "k13"
+  ],
+  "comparabilidad": {
+    "hereda_de": "esq-2d",
+    "dataset": "esquinas300-32px-r4-r20260907",
+    "dataset_repo": "foveal-vision-data/experimentos-cnn/",
+    "ventana_px": 32,
+    "reduccion": 4,
+    "semilla": 1,
+    "k_barrido": [
+      5,
+      7,
+      9,
+      11,
+      13
+    ],
+    "k_max_representable": 17,
+    "epocas": 300,
+    "lr": 0.05,
+    "lote": 128,
+    "lambda_coord": 0.038,
+    "estructura": "sig (un mapa: tl = maximo, br = minimo)",
+    "alternativas_anotadas_sin_correr": [
+      "ant",
+      "ind-tl",
+      "ind-br"
+    ],
+    "cabeza_parametros": 5,
+    "descartada_por_el_dueno": [
+      "rot (girar la entrada 180 grados)"
+    ]
+  }
+}
