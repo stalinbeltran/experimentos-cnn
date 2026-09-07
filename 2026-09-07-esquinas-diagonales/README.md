@@ -53,6 +53,44 @@ sola, y ni de lejos lo hace igual de bien.
 cuando acierta la posición (0,57 · 0,14 · 0,15 en las tres `tl`), que es la misma historia del
 punto 4 vista de cerca.
 
+## Los cinco kernels sobre PÁGINAS ENTERAS
+
+*Medido el 2026-09-07 con `python nn/transformacion.py --paginas 10` — 16 s, 0 $.*
+
+El producto del experimento no es la red: es **el filtro**. `nn/transformacion.py` lo aplica
+suelto a las **10 páginas enteras** de la partición `muestra` (200×200 px reducidos, nunca vistas),
+una figura por kernel: arriba la página, abajo su mapa de respuesta en las mismas coordenadas, con
+las esquinas verdaderas en verde, **el máximo en rojo** (de donde se lee `tl`) y **el mínimo en
+naranja** (de donde se lee `br`).
+
+| kernel | máximo a ≤2 px de `tl` | mínimo a ≤2 px de `br` | mediana `tl` | mediana `br` |
+|---|--:|--:|--:|--:|
+| `k05` | 5/10 | **0/10** | 5,3 px | 67,7 px |
+| `k07` | 6/10 | **0/10** | 0,8 px | 55,8 px |
+| `k09` | 4/10 | **0/10** | 27,4 px | 57,8 px |
+| `k11` | 1/10 | **0/10** | 52,6 px | 31,7 px |
+| **`k13`** | **8/10** | **0/10** | 1,2 px | 41,7 px |
+| *(`esq-k`, una esquina)* | *10/10* | *—* | *0,5 px* | *—* |
+
+**Cuatro cosas, y ninguna es buena para esta lectura:**
+
+1. ⚠⚠ **`br` es 0/10 en los cinco kernels.** El mínimo del mapa **nunca** marca la esquina
+   inferior-derecha sobre una página entera; la mediana va de 32 a 68 px. Es la confirmación más
+   dura de lo que la ventana ya insinuaba (23 % como techo) y coincide exactamente con la sonda
+   que se hizo **antes de diseñar el experimento** sobre el kernel de `esq-k`: 0/10, mediana 91 px.
+2. ⚠ **`tl` tampoco generaliza bien**: el mejor es `k13` con 8/10, contra el **10/10 con mediana
+   0,5 px** que daba `esq-k` con una sola esquina. Pedirle las dos degrada también la que sí
+   aprendió.
+3. ⚠⚠ **La ventana y la página NO se ordenan igual, y eso es un aviso de método.** `k11` es el
+   segundo mejor en ventana y da **1/10** en página (mediana 52,6 px); `k07`, que no pasaba el
+   umbral, da 6/10. Un brazo puede ser bueno en 32×32 y malo en 200×200 — **el barrido no mide la
+   tarea de la página**, y si lo que se quiere es una transformación para páginas, hay que medirla
+   ahí.
+4. **El signo del kernel se dio la vuelta respecto de `esq-k`.** Allí la suma era **−73,68** (un
+   supresor de tinta); aquí es **positiva en los cinco** (+19 a +36), y los mapas salen rojos sobre
+   el párrafo. El azul —donde vive el mínimo— se concentra en los **bordes inferior y derecho**,
+   así que el kernel sí codifica algo de esa zona, pero su mínimo no pica en el punto.
+
 ## Lo que quedó pendiente
 
 - **El eje no está acotado por arriba, y esta vez con más razón que en `esq-k`**: `k13` es el
@@ -63,6 +101,10 @@ punto 4 vista de cerca.
   **`ant`** — el mismo montaje con el kernel forzado antisimétrico—, que está implementada y
   comprobada, sin armar. Ver
   [`instrucciones/03-alternativas-anotadas.md`](instrucciones/03-alternativas-anotadas.md).
+- ⚠ **La transformación sobre página entera no funciona para `br`, y eso es lo más importante
+  que deja este experimento.** Si el objetivo es un filtro que señale las dos esquinas de un
+  párrafo en una página, esta lectura (máximo/mínimo de un mapa) **no vale**, y subir `k` no lo
+  arregla: 0/10 en los cinco.
 - **`existe` no se ha estudiado.** Su `f1` se queda cerca del suelo en los cinco brazos y nadie ha
   mirado si es la cabeza (2 parámetros por esquina) o el kernel.
 - **Una semilla**, como en `esq-k`. Nadie ha medido la variación entre semillas.
