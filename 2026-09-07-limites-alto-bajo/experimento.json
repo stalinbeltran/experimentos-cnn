@@ -1,0 +1,83 @@
+{
+  "id": "lim-ab",
+  "titulo": "Con UN solo kernel, que tamano detecta CUALQUIERA de los dos limites horizontales de un parrafo: una sola salida (hay limite / a que ALTURA), sin decir si es el alto o el bajo",
+  "pregunta": "Las esquinas resultaron ambiguas (br es un vertice de caja sobre fondo, no una esquina de tinta). Cambiando el objetivo de ESQUINAS a LIMITES horizontales -- la y del borde alto y la del bajo -- que tamano de kernel unico los detecta, y cuanto se gana respecto de esq-cq en cada una de las cuatro celdas",
+  "creado": "2026-09-07",
+  "estado": "abierto",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "brazos": [
+    "k05",
+    "k07",
+    "k09",
+    "k11",
+    "k13",
+    "k15",
+    "k17"
+  ],
+  "comparabilidad": {
+    "hereda_de": "esq-cq",
+    "dataset": "limites300-32px-r4-r20260907",
+    "dataset_repo": "foveal-vision-data/experimentos-cnn/",
+    "ventana_px": 32,
+    "reduccion": 4,
+    "semilla": 1,
+    "k_barrido": [
+      5,
+      7,
+      9,
+      11,
+      13,
+      15,
+      17
+    ],
+    "k_max_representable": 17,
+    "epocas": 300,
+    "lr": 0.05,
+    "lote": 128,
+    "lambda_coord": 0.0522,
+    "estructura": "max (un mapa, UNA altura leida del maximo)",
+    "alternativas_anotadas_sin_correr": [
+      "sim (kernel simetrico vertical)",
+      "agrupar el mapa sobre x antes del softmax (perfil 1-D)",
+      "dos salidas (alto del maximo, bajo del minimo)"
+    ],
+    "cabeza_parametros": 3,
+    "descartada_por_el_dueno": [
+      "rot (girar la entrada 180 grados)"
+    ],
+    "salidas": "UNA: existe + y (SOLO la altura; un limite horizontal es una linea, su x no esta definida)",
+    "positivas_pct": 40.0,
+    "suelos_medidos_2026_09_07": {
+      "acierto_2px": 0.058,
+      "acierto_2px_tl": 0.051,
+      "acierto_2px_br": 0.064,
+      "f1_siempre_si": 0.572,
+      "err_px": 6.08
+    },
+    "hallazgo_previo_2026_09_07": "el cambio de punto a linea ARREGLA la celda tr (tinta a 6,00 px como punto -> 1,00 px como linea) y NO arregla br (8,25 -> 7,00 px): la ultima linea del parrafo es corta, asi que el borde bajo pasa sobre fondo en su tramo derecho. Y el SUELO de la metrica cambia entero: 28,6 % en 1-D contra 5,8 % en 2-D, o sea que el umbral de esq-cq (9,6 %) NO se puede heredar",
+    "radio_campo_receptivo_px": {
+      "k05": 2,
+      "k07": 3,
+      "k09": 4,
+      "k11": 5,
+      "k13": 6,
+      "k15": 7,
+      "k17": 8
+    },
+    "por_que_hasta_17": "la tinta mas cercana a br esta a 8,1 px de mediana y el radio es (k-1)/2: ningun brazo de k=5..13 (2..6 px) puede verla. k=17 es el primero con radio 8 y ademas el techo del dataset (mapa 8..23, exactamente el rango donde se sortean las esquinas)",
+    "simetria_que_importa": "VOLTEO VERTICAL (el par alto/bajo es reflejo vertical), no rot180 como en esq-cq",
+    "reparto_ventanas": "20 por imagen: 8 positivas (2 tl, 2 br, 1 tr, 1 bl, 1 borde-sup PURO, 1 borde-inf PURO) y 12 negativas (4 interior, 2 borde-izq, 2 borde-der, 4 fondo)",
+    "por_que_dataset_nuevo": "en esq-cq las ventanas de borde PURO (un limite sin ninguna esquina) existian como negativos y su offset se sorteaba y SE TIRABA. Son el caso mas limpio de esta pregunta, asi que hay que regenerar para guardarlo. De paso se re-equilibra a 40 % de positivas -- el mismo de esq-cq, para que el suelo de f1 vuelva a ser 0,572 por construccion -- y entran los bordes VERTICALES como negativo duro nuevo",
+    "suelos_medidos": {
+      "acierto_2px": 0.212,
+      "acierto_2px_alto": 0.192,
+      "acierto_2px_bajo": 0.231,
+      "f1_siempre_si": 0.571,
+      "err_dy_px": 4.28,
+      "umbral_acierto": 0.258
+    }
+  }
+}
