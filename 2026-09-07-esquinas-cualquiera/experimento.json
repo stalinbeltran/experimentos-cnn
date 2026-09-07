@@ -4,6 +4,7 @@
   "pregunta": "Colapsando las dos salidas de esq-2d en UNA -- 'hay esquina' y su posicion, sin importar si es la superior-izquierda o la inferior-derecha -- que tamano de kernel unico lo hace mejor, y cuanto se gana o se pierde respecto de tener que declarar cual esquina es",
   "creado": "2026-09-07",
   "estado": "abierto",
+  "dataset": "esquinas300-32px-r4-r20260907",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
@@ -19,7 +20,6 @@
   ],
   "comparabilidad": {
     "hereda_de": "esq-2d",
-    "dataset": "esquinas300-32px-r4-r20260907",
     "dataset_repo": "foveal-vision-data/experimentos-cnn/",
     "ventana_px": 32,
     "reduccion": 4,

@@ -4,6 +4,7 @@
   "pregunta": "Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo",
   "creado": "2026-09-06",
   "estado": "cerrado",
+  "dataset": "esquina-tl300-32px-r4-r20260906",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
@@ -16,7 +17,6 @@
     "k11"
   ],
   "comparabilidad": {
-    "dataset": "esquina-limpia-800x600-r4",
     "ventana_px": 32,
     "reduccion": 4,
     "semilla": 1,

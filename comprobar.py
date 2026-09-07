@@ -31,7 +31,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from expcnn import (ESTADOS, GASTOS, experimentos, hay_fv, raiz,  # noqa: E402
-                    ruta_datos, ruta_fv)
+                    ruta_dataset, ruta_datos, ruta_fv)
 from expcnn.registro import MANIFIESTO  # noqa: E402
 
 TEXTO = {".py", ".md", ".json", ".toml", ".sh", ".mjs", ".txt", ".yaml", ".yml", ".cfg"}
@@ -48,6 +48,26 @@ MARCA_FIN = "<!-- FIN INDICE -->"
 # delante, el nombre es inequívoco. Renombrar sigue siendo gratis: lo que se
 # fija es la FORMA del nombre, no el nombre.
 FECHADA = re.compile(r"^\d{4}-\d{2}-\d{2}-.+")
+
+# Las reglas PROPIAS de cada experimento (CLAUDE.md § «REGLAS.md»). Obligatorias
+# por orden del dueño (2026-09-07): «Cada experimento debe tener un set de reglas
+# propio, donde se especifican las entradas, las salidas, los procesos, los
+# scripts, etc, de modo que cada experimento use su propio código».
+#
+# Se comprueban aquí y no se dejan a la buena voluntad porque el fallo que evitan
+# NO da error: un experimento sin sus condiciones escritas se las hereda del
+# vecino, y el resultado parece correcto. Es la Regla 0 del repo.
+REGLAS = "REGLAS.md"
+PLANTILLA_REGLAS = "REGLAS.ejemplo.md"
+# Las cinco secciones, por su encabezado exacto. La quinta es la que ataca la
+# Regla 0 de frente y por eso no es opcional ni cuando el experimento no viene de
+# ninguno: entonces se escribe «no se copió de ninguno», que es un dato.
+SECCIONES_REGLAS = ("## Entradas", "## Salidas", "## Procesos", "## Scripts",
+                    "## Qué NO hereda")
+# El marcador de la plantilla. Un hueco se lee como «aquí no aplica» y en realidad
+# es «todavía no lo he pensado»: entre un fallo ruidoso y uno silencioso, el
+# ruidoso (regla 3 de escritura).
+SIN_RELLENAR = "RELLENAR"
 
 
 def _problemas_de_manifiestos(exps) -> list[str]:
@@ -87,6 +107,73 @@ def _problemas_de_manifiestos(exps) -> list[str]:
         elif e.gasta != "no":
             malos.append(f"{donde}: gasta='{e.gasta}' pero no declara `entrada`")
     return malos
+
+
+def _problemas_de_reglas(exps) -> list[str]:
+    """Cada experimento trae su `REGLAS.md`, con sus cinco secciones rellenadas.
+
+    Se comprueba estado utilizable y no presencia (regla 5 de escritura): un
+    fichero copiado del vecino con los huecos de la plantilla sin tocar es
+    exactamente la especificación de OTRO experimento con el nombre de éste, y
+    eso es peor que no tenerla — se lee como vigente."""
+    malos = []
+    for e in exps:
+        f = e.carpeta / REGLAS
+        if not f.is_file():
+            malos.append(
+                f"{e.rel()}: falta {REGLAS}. Cópialo de {PLANTILLA_REGLAS} y rellénalo: "
+                f"sin sus reglas escritas, las condiciones de este experimento sólo "
+                f"existen en la cabeza de quien lo montó, y el siguiente las rellena "
+                f"con las del vecino"
+            )
+            continue
+        try:
+            txt = f.read_text(encoding="utf-8")
+        except Exception as err:  # noqa: BLE001
+            malos.append(f"{e.rel()}/{REGLAS}: no se puede leer ({err})")
+            continue
+        faltan = [s for s in SECCIONES_REGLAS if s not in txt]
+        if faltan:
+            malos.append(f"{e.rel()}/{REGLAS}: le faltan las secciones " + ", ".join(faltan))
+        if SIN_RELLENAR in txt:
+            cuantas = txt.count(SIN_RELLENAR)
+            malos.append(
+                f"{e.rel()}/{REGLAS}: {cuantas} hueco(s) sin rellenar ({SIN_RELLENAR})"
+            )
+    return malos
+
+
+def _problemas_de_datasets(exps) -> tuple[list[str], list[str]]:
+    """El dataset declarado, ¿está publicado en el repo de datos?
+
+    Devuelve (problemas, no_comprobables). La segunda lista NO se calla nunca:
+    sin el repo de datos clonado, «no lo miré» y «miré y está bien» se leerían
+    igual — el mismo criterio que el `NO SÉ` de `cerrable.mjs`."""
+    malos, mudos = [], []
+    hay_repo = ruta_datos() is not None
+    for e in exps:
+        # R15: un solo mando para un solo hecho. El sitio del nombre es el primer
+        # nivel del manifiesto; si aparece dentro de `comparabilidad`, es un
+        # segundo mando que puede discrepar del primero sin que nada falle.
+        dentro = (e.datos.get("comparabilidad") or {}).get("dataset")
+        if dentro is not None:
+            malos.append(
+                f"{e.rel()}: el dataset se declara en el primer nivel de {MANIFIESTO} "
+                f'("dataset": "{dentro}"), no dentro de `comparabilidad`: dos sitios '
+                f"para un solo hecho pueden discrepar sin que nada falle"
+            )
+        if not e.dataset:
+            continue
+        if not hay_repo:
+            mudos.append(f"{e.rel()}: declara el dataset '{e.dataset}' y no puedo comprobarlo")
+            continue
+        if ruta_dataset(e.dataset) is None:
+            malos.append(
+                f"{e.rel()}: el dataset '{e.dataset}' no está publicado en el repo de "
+                f"datos. Se publica con `--publicar`; NO se re-deriva al vuelo, porque "
+                f"entonces «el mismo dataset» deja de estar garantizado por nada"
+            )
+    return malos, mudos
 
 
 def _rutas_cableadas(exps) -> list[str]:
@@ -150,7 +237,9 @@ def main() -> int:
     exps = experimentos()
     if "--indice" in sys.argv:
         return _indice(exps)
-    malos = _problemas_de_manifiestos(exps) + _rutas_cableadas(exps)
+    problemas_datasets, sin_comprobar = _problemas_de_datasets(exps)
+    malos = (_problemas_de_manifiestos(exps) + _problemas_de_reglas(exps)
+             + problemas_datasets + _rutas_cableadas(exps))
     corribles = [e for e in exps if not e.usa_fv or hay_fv()]
     bloqueados = [e for e in exps if e.usa_fv and not hay_fv()]
     vivos = [e for e in exps if e.estado == "corriendo"]
@@ -162,6 +251,8 @@ def main() -> int:
             trozos.append(f"{len(vivos)} corriendo: " + ", ".join(x.id for x in vivos))
         if bloqueados:
             trozos.append(f"{len(bloqueados)} necesitan foveal-vision (no está)")
+        if sin_comprobar:
+            trozos.append(f"{len(sin_comprobar)} dataset(s) sin comprobar (falta el repo de datos)")
         if malos:
             trozos.append(f"{len(malos)} problema(s)")
         print(f"{estado} experimentos-cnn — " + " · ".join(trozos))
@@ -183,6 +274,15 @@ def main() -> int:
             print(f"{marca} {e.id:<28} [{e.estado}] gasta={e.gasta:<14} {e.rel()}")
             print(f"     {e.titulo}")
         print(f"\n{len(corribles)} de {len(exps)} se pueden correr aquí ahora mismo.")
+
+    if sin_comprobar:
+        # No se calla: sin el repo de datos, «no lo miré» y «miré y está bien» se
+        # leerían igual. No es un problema (no sube el código de salida), es una
+        # duda declarada.
+        print(f"\n{len(sin_comprobar)} dataset(s) que no puedo comprobar:")
+        for m in sin_comprobar:
+            print(f"  ? {m}")
+        print("  → clónalo al lado, o dime dónde está: EXPCNN_DATOS=/ruta/a/foveal-vision-data")
 
     if malos:
         print(f"\n{len(malos)} problema(s):")

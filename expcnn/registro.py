@@ -55,6 +55,15 @@ class Experimento:
     def entrada(self) -> str | None:
         return self.datos.get("entrada")
 
+    @property
+    def dataset(self) -> str | None:
+        """El nombre del dataset PUBLICADO que consume, o None.
+
+        Se declara aquí y no sólo dentro de un script para que «¿sobre qué se
+        midió esto?» no se conteste leyendo código. Lo comprueba `comprobar.py`
+        contra el repo de datos."""
+        return self.datos.get("dataset")
+
     def rel(self) -> str:
         return str(self.carpeta.relative_to(raiz()))
 

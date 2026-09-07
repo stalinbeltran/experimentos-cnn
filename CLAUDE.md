@@ -22,23 +22,127 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
+## ⚠⚠ Regla 0 — cada experimento es INDEPENDIENTE de los demás
+
+**Orden del dueño (2026-09-07), y es la regla que manda sobre todas las de este fichero:**
+
+> «aunque es un mismo repo, cada experimento es totalmente independiente de los otros. No
+> debemos tratar de que uno se comporte como alguno de los otros.»
+
+**Y no es una preferencia de estilo: es el fallo observado.** Lo que el dueño describe
+haber visto es que *«Claude empieza a meter restricciones de otros experimentos como si se
+tratara de un único proyecto»*. Ese fallo no da error por ningún lado — da un experimento
+que contesta una pregunta que nadie hizo, con condiciones que nadie pidió, y **parece
+correcto**: es el fallo silencioso otra vez, sólo que sobre el diseño en vez de sobre el
+dinero.
+
+### Qué NO se hereda entre experimentos: nada
+
+Nada de esta lista viaja de un experimento a otro. Cada uno la decide entera, desde cero:
+
+| | |
+|---|---|
+| **el dataset** y sus condiciones | qué se sortea, cuántas ventanas, qué se descarta, qué margen, qué reducción |
+| **la etiqueta** | cuántos números, qué significan, qué es positivo |
+| **la red** | arquitectura, número de parámetros, qué se aprende y qué se congela |
+| **los hiperparámetros** | épocas, `lr`, lote, semillas, los pesos de la pérdida |
+| **la métrica y el umbral** | qué se mide, qué se llama «aprendió», qué se llama «ganar» |
+| **el criterio** | cuántos brazos, si declara ganador o reporta todos los que pasan |
+| **los scripts y su interfaz** | qué ficheros hay, cómo se llaman sus banderas, qué imprimen |
+| **la forma de la carpeta** | qué subdirectorios tiene y cómo se llaman |
+
+**Lo único que un experimento no decide** son las cinco cosas de la § siguiente
+(«La libertad, y su frontera exacta»), y las cinco protegen dinero o trabajo del
+**sistema**, no la coherencia entre experimentos — que no es un objetivo aquí.
+
+### La consecuencia que hay que interiorizar: una diferencia NO es un bug
+
+Dos experimentos que hacen lo mismo de dos formas distintas **están bien los dos**. No se
+unifican, no se «arreglan», y **no se toca el de al lado** para que cuadre con el que se
+está escribiendo.
+
+⚠ **Las frases que hay que reconocer como el fallo**, porque suenan a rigor y son justo lo
+contrario:
+
+- *«pero en `esq-2d` esto se hacía así»* → allí, sí. Aquí no se ha pedido.
+- *«para ser consistente con el otro experimento…»* → la consistencia entre experimentos
+  **no es un valor de este repo**. Lo es dentro de uno.
+- *«esto rompería la comparabilidad»* → sólo si **este** experimento declaró querer
+  comparar. Si no lo declaró en su `REGLAS.md`, no hay nada que romper.
+- *«ya que estamos, lo alineo con el patrón del repo»* → aquí no hay patrón del repo. Hay
+  una frontera (cinco cosas) y todo lo demás es libre.
+
+**Si de verdad parece que una condición de otro experimento debería aplicarse aquí**: se
+**dice** y se **escribe en las reglas de este experimento** como decisión propia, con su
+motivo. Lo que no vale es importarla en silencio porque el vecino la tenía.
+
+### Copiar un experimento es ahorrar tecleo, NUNCA heredar obligaciones
+
+Copiar la carpeta de otro experimento para empezar es **lo normal y está bien** — es lo que
+se hizo con `esq-cq`, copiado de `esq-2d` (`instrucciones/01-encargo.md`, orden literal del
+dueño). Lo que se copia son las **especificaciones ya escritas**, para no volver a
+escribirlas.
+
+> «En ocasiones vamos a copiar un experimento para ahorrar tiempo y no repetir cosas ya
+> especificadas, pero eso no le resta independencia al proyecto. […] No hay obligación de
+> hacer las cosas tal como las hizo el proyecto copiado (sólo queremos ahorrar tiempo en las
+> especificaciones).» — el dueño, 2026-09-07
+
+Así que al copiar:
+
+1. **Se cambia el `id`** y se reescribe el `experimento.json` entero. Un `id` duplicado lo
+   caza `comprobar.py`, pero un título heredado no.
+2. **Se relee `REGLAS.md` línea por línea y se cambia lo que no aplique.** Es el paso que se
+   salta: un fichero copiado que nadie releyó es una especificación **de otro experimento**
+   con el nombre de éste.
+3. **Cambiar cualquier cosa del original es gratis y no hay que justificarlo.** Al revés:
+   **conservar** algo del original porque estaba ahí, sin decidirlo, es lo que sí es un
+   fallo.
+4. **El experimento copiado no se toca.** Ni para arreglarle nada, ni para «alinearlos». Si
+   está cerrado, sus números ya se reportaron con el código que tenía.
+
+⚠ **Qué significa `hereda_de` en `experimento.json`, y qué NO significa.** Es **linaje**:
+*«de aquí salió la pregunta, y contra esto se comparan los números»*. No es herencia de
+obligaciones ni de restricciones. Un experimento con `hereda_de` puede cambiar todo lo que
+quiera de su padre — y si cambia algo que afecte a la comparación, **lo dice en su
+`REGLAS.md`** y ya está: dejar de ser comparable es una decisión legítima, no un error.
+
+### Cómo se sostiene, y no es sólo esta página
+
+- **Ningún experimento importa código de otro.** Ya lo comprueba `comprobar.py` (la
+  comprobación de R16 recorre **todo** el repo, así que un fichero de un experimento que
+  nombre la carpeta de otro falla igual que uno de fuera). El código común se copia, y el
+  precio —dos ficheros que pueden divergir— es **menor** que el de un `comun/` inventado con
+  el segundo caso.
+- **`comun/` no existe a propósito**, y crearlo antes de tiempo es la forma estructural de
+  romper esta regla: en cuanto dos experimentos comparten una pieza, cambiarla por uno
+  cambia al otro. Ver § «Los huecos conocidos».
+- **Cada experimento declara sus reglas por escrito** en su `REGLAS.md` (§ «`REGLAS.md`: el
+  set de reglas PROPIO de cada experimento»), que es donde se contesta *«¿qué aplica aquí?»*
+  sin tener que mirar al vecino.
+
 ## La libertad, y su frontera exacta
 
 Esto es lo que el dueño pidió que quedara anotado: **la estructura de este repo se puede
 sugerir y re-ordenar según convenga**, y cada experimento puede tener sus propias reglas y
-objetivos. Pero hay cuatro cosas que un experimento **no** puede decidir por su cuenta, y
-las cuatro protegen dinero o trabajo, no gusto.
+objetivos. Pero hay cinco cosas que un experimento **no** puede decidir por su cuenta, y
+las cinco protegen dinero o trabajo, no gusto.
 
 | Un experimento SÍ decide | Un experimento NO puede cambiar | Por qué |
 |---|---|---|
 | su arquitectura, su bucle, su métrica, su dataset, su umbral, qué llama «ganar», cuántas semillas, qué dependencias usa, si reusa `fv` o no, y **la forma interna de su carpeta** | que **el freno lo vea** si tarda o alquila | el veredicto «¿se puede apagar este server?» se lee desde el móvil y decide una factura |
 | en qué lenguaje lo escribe, si publica figuras, si guarda snapshot de código | que exista un **criterio escrito antes de mirar** (R13) | escrito después no se distingue de una racionalización, y «no hubo señal» deja de ser un resultado |
 | dónde deja sus artefactos **dentro** de su carpeta | que el veredicto que mueva `ESTADO.md` acabe en el **repo central** (R7) | si no, `estudios-redes-neuronales` deja de contestar qué se pagó ya |
-| — | que los secretos no se commiteen · que todo vaya a `main` · que el dato de entrada **no se copie aquí** | reglas del sistema, no del experimento |
+| cuántos ficheros tiene, cómo se llaman y qué imprimen | que **sus reglas estén escritas** en su `REGLAS.md` (§ más abajo) | sin ellas, el siguiente que llegue rellena las condiciones con las del experimento de al lado — que es el fallo que la Regla 0 evita |
+| — | que los secretos no se commiteen · que todo vaya a `main` · que el dato de entrada **no se copie aquí** (se **publica** en el repo de datos) | reglas del sistema, no del experimento |
 
 **Lo que NO está en esa lista es libre.** No hace falta pedir permiso para inventarse una
 estructura de carpeta distinta, ni para no usar `expcnn`, ni para escribir el experimento
 entero en un solo fichero.
+
+⚠ **Y ninguna de las cinco es «parecerse a los demás experimentos».** La frontera la ponen el
+freno, el criterio, el repo central, los secretos y las reglas escritas — el sistema. La
+coherencia entre experimentos **no está en la lista y no es un objetivo** (Regla 0).
 
 ## Se puede RE-ORDENAR — y por eso el nombre de la carpeta NO es la identidad
 
@@ -72,11 +176,14 @@ git mv 2026-09-06-algo 2026-09-06-otro-nombre && python3 comprobar.py   # tiene 
 
 ## La forma de un experimento
 
-Es una **sugerencia con motivo**, no un molde: lo único obligatorio es `experimento.json`.
+Es una **sugerencia con motivo**, no un molde: lo único obligatorio son
+`experimento.json` y `REGLAS.md`.
 
 ```
 <fecha>-<nombre>/
-  experimento.json     LO ÚNICO OBLIGATORIO. La identidad y las obligaciones que hereda
+  experimento.json     OBLIGATORIO. La identidad y las obligaciones que hereda
+  REGLAS.md            OBLIGATORIO. Las reglas de ESTE experimento: entradas, salidas,
+                       procesos, scripts, y qué NO hereda de nadie (§ siguiente)
   README.md            qué se preguntó, qué salió, y cómo repetirlo
   instrucciones/       01-encargo.md · 02-criterio.md  ← el criterio, ANTES de mirar (R13)
   nn/
@@ -104,6 +211,54 @@ escritas con su porqué, y siguen valiendo aquí:
    ordene y va aprobada una a una en `inferencia.json`.
 4. **Lo que no se puede regenerar se guarda; lo que sí, se enlaza.**
 
+## `REGLAS.md`: el set de reglas PROPIO de cada experimento
+
+**Orden del dueño (2026-09-07):**
+
+> «Cada experimento debe tener un set de reglas propio, donde se especifican las entradas,
+> las salidas, los procesos, los scripts, etc, de modo que cada experimento use su propio
+> código.»
+
+Es **obligatorio** y lo comprueba `comprobar.py`. Un experimento sin sus reglas escritas es
+un experimento cuyas condiciones sólo existen en la cabeza de quien lo montó — y en cuanto
+esa sesión termina, el siguiente que llegue las rellena con las del vecino, que es
+exactamente el fallo de la Regla 0.
+
+### Las cinco secciones, y por qué esas
+
+`REGLAS.ejemplo.md` (en la raíz, commiteada) es la plantilla: se copia y se rellena.
+
+| sección | qué contesta | por qué es obligatoria |
+|---|---|---|
+| **Entradas** | qué dataset publicado consume, con qué condiciones y qué etiqueta | es lo primero que se hereda por error del experimento copiado |
+| **Salidas** | qué produce y dónde queda: pesos, métricas, figuras, tablas | «¿dónde está el resultado?» no puede ser una pregunta que haya que investigar |
+| **Procesos** | qué pasos hay, en qué orden, y qué se decide en cada uno | sin esto, repetir el experimento es leer los scripts |
+| **Scripts** | qué fichero hace qué, y **su interfaz exacta** | los nombres y banderas son de este experimento, no del repo |
+| **Qué NO hereda** | de qué experimento se copió y **qué se cambió a propósito** | es la única sección que ataca la Regla 0 de frente |
+
+⚠ **La quinta es la que no se puede omitir aunque el experimento no venga de ninguno**: si
+no se copió de nadie, se escribe *«no se copió de ningún experimento»*. Un hueco se lee como
+«todavía no lo he pensado» y una ausencia no se distingue de un olvido.
+
+### Por qué un fichero aparte, y no dentro de lo que ya había
+
+Los tres documentos de un experimento contestan tres preguntas distintas y en tres momentos
+distintos (R8: estado e historial son documentos distintos):
+
+- **`experimento.json`** — la identidad **legible por máquina**: `id`, `estado`, `gasta`,
+  `dataset`, `entrada`. Lo lee `comprobar.py` y el índice del README. No es prosa.
+- **`REGLAS.md`** — el **contrato de trabajo**, y es lo que hay que leer **antes de tocar
+  nada**. Vale para todo el experimento, de la primera línea a la última.
+- **`instrucciones/`** — el **encargo** y el **criterio escrito antes de mirar** (R13) de
+  una corrida concreta. Un experimento puede tener varias; las reglas siguen siendo unas.
+- **`README.md`** — **qué salió**. Se escribe después, y por eso no puede ser el sitio donde
+  vivan las condiciones: lo que se escribe después de mirar no se distingue de una
+  racionalización.
+
+⚠ **Y las reglas se ACTUALIZAN cuando el experimento cambia**, en el mismo commit. Unas
+reglas que describen lo que el experimento era hace tres días son peores que no tenerlas: se
+leen como vigentes.
+
 ## ⚠ El contrato de nombre con el freno: `entrenar_local.py`
 
 `telegram-coordinator/scripts/cerrable.mjs:137` **ya casa `entrenar_local.py`** en su lista
@@ -128,7 +283,7 @@ entrena se llama así, y por eso `comprobar.py` se niega si un experimento decla
 | Qué | Dónde | Por qué |
 |---|---|---|
 | pesos, métricas, figuras, kernels | **aquí**, en la carpeta del experimento | vive donde su productor (R7) |
-| el dataset de entrada | **se LEE de `foveal-vision-data`; NUNCA se copia aquí** | este repo es **público** y el de datos es **privado** (medido el 2026-09-06: anónimo, 200 contra 404). Git no olvida |
+| el dataset de entrada | **se PUBLICA y se lee de `foveal-vision-data/experimentos-cnn/`; NUNCA se copia aquí** | este repo es **público** y el de datos es **privado** (medido el 2026-09-06: anónimo, 200 contra 404). Git no olvida. Detalle en la § siguiente |
 | el reporte de un estudio | **`estudios-redes-neuronales`**, con su fila en `reportes/README.md` | el central es quien contesta «qué se pagó ya» |
 | qué se cree hoy de un parámetro | `ESTADO.md` del central (se reescribe) | estado e historial son documentos distintos (R8) |
 
@@ -146,19 +301,96 @@ dice hoy *«un reporte por cada barrido, estudio o medición que se termine, ven
 venga»*, y la práctica ya lo contradice (de los 11 experimentos de `foveal-vision`, sólo 2
 tienen reporte). Si se confirma, la enmienda se escribe **allí**, no aquí en silencio.
 
+## Los datasets viven en el repo de DATOS, y se reusan por NOMBRE
+
+**Orden del dueño, dos veces y con dos motivos distintos:**
+
+> «Guarda los datasets en el repo de data, de modo que sean siempre los mismos, por
+> consistencia.» — 2026-09-07
+
+> «los datasets se guardan siempre en el repo de data, para que todos los experimentos que
+> usen un dataset dado puedan tomarlo de ahí en vez de regenerarlos. Los datasets pueden ser
+> distintos en cada experimento.» — 2026-09-07
+
+Las dos mitades importan y dicen cosas distintas: **el mismo dataset se comparte** (no se
+regenera por experimento), y **cada experimento puede tener el suyo** (compartir el sitio no
+es compartir el dato).
+
+```
+foveal-vision-data/experimentos-cnn/<nombre-del-dataset>/
+    train.npz · val.npz · muestra.npz · muestras-congeladas.npz
+    manifiesto.json     la huella SHA-256 de cada partición, y con qué se generó
+    README.md           qué etiqueta, cuántas ventanas, quién lo usa
+```
+
+### Las cinco reglas, con su porqué
+
+1. **Un dataset se PUBLICA una vez y se LEE muchas.** Un experimento nuevo que necesite un
+   dataset que ya existe **no lo regenera**: lo pide por su nombre. Regenerar da un dato que
+   es el mismo *mientras nada cambie*, y «nada cambia» no se puede comprobar hacia el
+   futuro; **publicado, es el mismo porque es el mismo fichero**.
+2. **La puerta es `expcnn.exigir_dataset("<nombre>")`**, y se llama en la primera línea. Se
+   **niega antes de empezar** si no está publicado, en vez de re-derivarlo al vuelo (R2): un
+   dataset re-derivado a mitad daría números incomparables **sin fallar por ningún lado**.
+3. **Sólo se añaden: dato nuevo = nombre nuevo**, con su `r<fecha>` de render. Un dataset
+   publicado **no se reescribe nunca** y `--publicar` se niega a pisar uno existente — si
+   pudiera, un `--publicar` distraído cambiaría el dato bajo los pies de todo lo ya medido.
+4. **El nombre del dataset se DECLARA** en `experimento.json` (`"dataset"`), y
+   `comprobar.py` comprueba que esté publicado de verdad. No vale que sólo lo sepa un
+   `DATASET = ...` dentro de un script: entonces *«¿sobre qué se midió esto?»* se contesta
+   leyendo código.
+5. **Nunca se copia a este repo.** Éste es **público** y el de datos es **privado** (medido
+   el 2026-09-06 contra la API de GitHub: anónimo, 200 contra 404), y git no olvida. Por eso
+   el `.gitignore` de aquí lleva `*.npz`.
+
+⚠ **Compartir dataset NO es compartir condiciones** — y ésta es la Regla 0 aplicada al dato,
+que es por donde más fácil se cuela. Dos experimentos sobre el mismo `.npz` pueden leer
+columnas distintas de la etiqueta, quedarse con subconjuntos distintos, normalizar distinto y
+medir distinto. Lo único que garantiza el dataset compartido es que **las ventanas son las
+mismas**; todo lo demás lo decide cada experimento y lo escribe en su `REGLAS.md`.
+
+⚠ **Y un dataset parecido no es el mismo dataset.** Medido el 2026-09-07: dos datasets de
+este repo salen de las **mismas imágenes** —misma receta, misma semilla, misma reducción— y
+aun así **las ventanas son otras**, porque uno sortea 4 esquinas `tl` por imagen y el otro
+2 `tl` + 2 `br`. Los números de un experimento sólo son comparables contra el dataset que
+usó, y por eso el nombre lleva qué etiqueta trae y no sólo la fecha.
+
+⚠ **El dataset sobrevive al experimento, y es la prueba de que este sitio es el correcto.**
+`lim-ab` se borró el 2026-09-07 porque el diseño cambió; su dataset `limites300-…` sigue
+publicado y utilizable por el que venga. Si el dato hubiera vivido en la carpeta del
+experimento, se habría ido con él.
+
+### La verificación se conserva como PRUEBA, no como sustituto
+
+`python nn/datos.py --rederivar` sigue existiendo y sigue teniendo que pasar: contesta *«¿la
+receta y la semilla lo vuelven a dar?»*. Pero es una **prueba de que la receta es honesta**,
+no una alternativa a publicar. Lo mismo `--comprobar`, que casa las huellas del publicado
+contra el manifiesto.
+
+⚠ **Qué costaba no publicarlo, medido el 2026-09-07:** las 10 muestras congeladas de `esq-k`
+se declaraban commiteadas y **no lo estaban** — el `*.npz` del `.gitignore` de este repo se
+las llevaba —, así que en un clon limpio su figura de verificación no se podía regenerar sin
+volver a rendir 300 imágenes.
+
 ## Cómo se conecta con `foveal-vision` (y qué pasa si no está)
 
 Un experimento **autónomo no necesita nada**: `comprobar.py` y `expcnn` son stdlib pura, así
 que un clon limpio corre sin instalar nada.
 
-Hay **dos** puertas, y son las dos únicas: `expcnn.exigir_fv()` para el código y
-`expcnn.exigir_datos()` para el dato de entrada. Se llaman **en la primera línea** del
-experimento que las necesite:
+Hay **tres** puertas a los repos hermanos, y son las tres únicas (`expcnn/entorno.py`).
+Se llaman **en la primera línea** del experimento que las necesite:
 
-```
-código:  EXPCNN_FV                    >  el hermano ../foveal-vision       >  se NIEGA
-dato:    EXPCNN_DATOS > FV_DATA_ROOT  >  el hermano ../foveal-vision-data  >  se NIEGA
-```
+| puerta | para qué | cómo resuelve |
+|---|---|---|
+| `exigir_fv()` | reusar código de `foveal-vision` | `EXPCNN_FV` > el hermano `../foveal-vision` > se **niega** |
+| `exigir_dataset("<nombre>")` | **un dataset publicado** (lo normal) | sobre la raíz de abajo; sin `manifiesto.json`, se **niega** |
+| `exigir_datos()` | la raíz del repo de datos, para algo que no sea un dataset | `EXPCNN_DATOS` > `FV_DATA_ROOT` > el hermano `../foveal-vision-data` > se **niega** |
+| `exigir_generador()` | rendir párrafos con `image-text-sample-generator` | `EXPCNN_GENERADOR` > el hermano > se **niega** |
+
+⚠ **Para leer el dato de entrada, la puerta es `exigir_dataset(nombre)`**, no
+`exigir_datos()` + componer la ruta a mano: si cada experimento arma su propia ruta, *«el
+mismo dataset»* deja de estar garantizado por nada (R4). El subdirectorio lo decide
+`expcnn.SUBDIR_DATASETS` en un solo sitio.
 
 ⚠ **La puerta al dato respeta `FV_DATA_ROOT`** —la variable con la que `foveal-vision`
 resuelve ESE MISMO repo (`src/fv/settings.py:27`)— a propósito: dos mandos para un solo hecho

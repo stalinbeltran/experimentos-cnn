@@ -30,12 +30,32 @@ renombrar y re-ordenar sin romper nada.
 
 <!-- FIN INDICE -->
 
+## Cada experimento es independiente de los demás
+
+**No se hereda nada entre experimentos**: ni las condiciones del dataset, ni los
+hiperparámetros, ni la métrica, ni el umbral, ni los nombres de los scripts, ni la forma de la
+carpeta. Dos experimentos que hacen lo mismo de dos formas distintas están bien los dos, y una
+diferencia entre ellos **no es un bug que haya que arreglar**.
+
+Copiar la carpeta de otro para empezar es normal y está bien — es para ahorrar tecleo, no para
+heredar obligaciones: se relee todo y se cambia lo que no aplique, sin justificar nada.
+
+Por eso **cada experimento trae su `REGLAS.md`**: sus entradas, sus salidas, sus procesos, sus
+scripts y **qué NO hereda** de aquel del que se copió. Es obligatorio y lo comprueba
+`comprobar.py`. El porqué entero está en [`CLAUDE.md`](CLAUDE.md) § «Regla 0».
+
+Y **los datasets viven en el repo de datos** (`foveal-vision-data/experimentos-cnn/`), no aquí:
+un dataset se publica una vez y todos los experimentos que lo necesiten lo leen de ahí por su
+nombre, en vez de regenerarlo. Cada experimento puede tener el suyo.
+
 ## Cómo se añade uno
 
 1. `mkdir 2026-09-06-<nombre>` y copia dentro `experimento.ejemplo.json` como
    `experimento.json`, rellenado.
-2. Escribe el **criterio antes de mirar** en `instrucciones/02-criterio.md`.
-3. Lo demás lo decide el experimento. `python3 comprobar.py` te dice si algo está mal puesto.
+2. Copia `REGLAS.ejemplo.md` como `REGLAS.md` y rellénalo. Si vienes de copiar otro
+   experimento, **reléelo línea por línea**: es el paso que se salta.
+3. Escribe el **criterio antes de mirar** en `instrucciones/02-criterio.md`.
+4. Lo demás lo decide el experimento. `python3 comprobar.py` te dice si algo está mal puesto.
 
 Las reglas, la frontera de lo que un experimento puede decidir y dónde va cada artefacto
 están en [`CLAUDE.md`](CLAUDE.md).

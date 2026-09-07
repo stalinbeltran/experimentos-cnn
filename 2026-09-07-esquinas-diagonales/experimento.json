@@ -4,6 +4,7 @@
   "pregunta": "Una sola convolucion sin bias produce UN mapa, y las dos esquinas en diagonal se leen de sus dos extremos: la superior-izquierda del maximo y la inferior-derecha del minimo. Que tamano de kernel lo hace mejor, y cuanto se pierde respecto del mismo barrido sobre UNA sola esquina de esq-k",
   "creado": "2026-09-07",
   "estado": "cerrado",
+  "dataset": "esquinas300-32px-r4-r20260907",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
@@ -17,7 +18,6 @@
   ],
   "comparabilidad": {
     "hereda_de": "esq-k",
-    "dataset": "esquinas300-32px-r4-r20260907",
     "dataset_repo": "foveal-vision-data/experimentos-cnn/",
     "ventana_px": 32,
     "reduccion": 4,
