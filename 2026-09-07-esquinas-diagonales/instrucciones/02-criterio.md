@@ -38,7 +38,9 @@ que hay un óptimo local cómodo exactamente donde la red arranca.
 > 10,1 % y 12,0 %. Se toma el mayor de los dos para las dos, que es la dirección estricta.
 
 **Métrica secundaria**, siempre junto a su suelo y nunca sola: el **error medio**, que además
-debe bajar de **5,46 px** (= 5,98 − 2·SE, con SE = 0,26 px). Y `existe`, cuyo suelo es
+debe bajar de **5,45 px** (= 5,96 − 2·SE, con SE = 0,26 px; se usa el suelo más bajo de los cinco
+brazos, que es la dirección estricta, y el mismo número para las dos esquinas aunque el de `br`
+daría 5,61). Y `existe`, cuyo suelo es
 **f1 = 0,334** por esquina — lo que da el «siempre sí» con 78 positivas de 389, y que es
 exactamente lo que dan las redes sin entrenar.
 
@@ -50,10 +52,20 @@ correr, y `rot` (girar la entrada) queda **descartada**; las dos cosas por orden
 2026-09-07. Lo que eso permite y lo que impide está en
 [`03-alternativas-anotadas.md`](03-alternativas-anotadas.md).
 
+0. **NO SE DECLARA UN GANADOR.** Orden del dueño (2026-09-07): *«No importa quién gana, quiero
+   ver todos los ganadores. Es un experimento, no un concurso»*. Así que se reportan **todos** los
+   `k` que pasan el umbral, cada uno con sus cinco números (acierto ≤2 px y ≤1 px por esquina,
+   error medio, `f1` de `existe`, y la fracción simétrica del kernel), y **no hay regla de
+   desempate**.
+   ⚠ **Y eso disuelve el problema de la saturación en vez de esconderlo.** En `esq-k` la métrica
+   principal saturó —tres brazos al 100 %— y hubo que elegir uno por «más barato», tirando por el
+   camino que uno de ellos colocaba la esquina 5× más fino (0,08 px contra 0,40). Reportando
+   todos, el que quiera el más barato y el que quiera el más preciso leen la misma tabla.
+   ⚠ **El umbral SIGUE HACIENDO FALTA**, y no es lo mismo que un ganador: separa «aprendió» de «se
+   quedó en el suelo», que es la única pregunta que un suelo medido puede contestar.
 1. **Algún `k` pasa el 12 % en las dos esquinas.** Un solo kernel sirve para las dos, y el
-   experimento tiene señal. **Gana el de mayor peor-esquina**; si dos caen dentro de 2·SE el uno
-   del otro, **empate**, y gana el **`k` más pequeño**, por ser más barato — misma regla que en
-   `esq-k` y por el mismo motivo.
+   experimento tiene señal. Se listan **todos** los que pasan, ordenados por `k`, no por
+   resultado.
 2. **Ningún `k` pasa el 12 %.** *Con esta lectura, un kernel compartido no resuelve las dos
    esquinas.* Es un resultado, no un fracaso.
    ⚠ **Y es exactamente donde este diseño toca su límite, que hay que decir antes**: con un solo
@@ -68,8 +80,8 @@ correr, y `rot` (girar la entrada) queda **descartada**; las dos cosas por orden
 4. **El eje no es monótono.** En `esq-k` subía monótono. Si aquí no lo hace, **se dice**: con una
    sola semilla no se puede distinguir de una fluctuación, y ésa es una limitación declarada, no
    un fallo del análisis.
-5. **El `13` gana y es el borde del rango.** Entonces el eje **sigue sin estar acotado por
-   arriba**, que es exactamente lo que dejó abierto `esq-k`, y la respuesta no es «13» sino
+5. **El `13` está entre los que pasan y es el borde del rango.** Entonces el eje **sigue sin
+   estar acotado por arriba**, que es exactamente lo que dejó abierto `esq-k`, y la respuesta no es «13» sino
    «mirar más allá». El dataset admite hasta **k = 17** sin regenerarlo (lo calcula el
    manifiesto), así que la continuación es barata y está declarada de antemano.
 6. **Todos los `k` salen igual de mal, incluido el 13.** No se podrá distinguir «ningún kernel
