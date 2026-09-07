@@ -11,8 +11,12 @@
   "particiones": {
     "train": {
       "ventanas": 2157,
-      "positivas_tl": 432,
-      "positivas_br": 432,
+      "positivas": {
+        "tl": 432,
+        "tr": 216,
+        "bl": 216,
+        "br": 432
+      },
       "imagenes": [
         13,
         14,
@@ -231,12 +235,16 @@
         256,
         257
       ],
-      "sha256_16": "d48f16a4bead6059"
+      "sha256_16": "826f9f6b880f60d5"
     },
     "val": {
       "ventanas": 389,
-      "positivas_tl": 78,
-      "positivas_br": 78,
+      "positivas": {
+        "tl": 78,
+        "tr": 39,
+        "bl": 39,
+        "br": 78
+      },
       "imagenes": [
         258,
         259,
@@ -278,12 +286,16 @@
         298,
         299
       ],
-      "sha256_16": "520bb5cd25b4adeb"
+      "sha256_16": "51a8ae6f88019e8e"
     },
     "muestra": {
       "ventanas": 120,
-      "positivas_tl": 24,
-      "positivas_br": 24,
+      "positivas": {
+        "tl": 24,
+        "tr": 12,
+        "bl": 12,
+        "br": 24
+      },
       "imagenes": [
         0,
         1,
@@ -298,12 +310,14 @@
         11,
         12
       ],
-      "sha256_16": "3cdf12f621549ccd"
+      "sha256_16": "84690373a7e503fa"
     }
   },
   "muestras": {
     "n": 10,
     "tl": 3,
+    "tr": 1,
+    "bl": 1,
     "br": 3,
     "clases": [
       "esquina-tl",
@@ -316,7 +330,16 @@
       "otra-esquina-bl",
       "interior",
       "fondo"
-    ]
+    ],
+    "sha256_16": "4c97ae55741eed9d"
   },
-  "ventanas_con_las_dos_esquinas": 0
+  "nombre": "esquinas300-32px-r4-r20260907",
+  "esquinas_etiquetadas": [
+    "tl",
+    "tr",
+    "bl",
+    "br"
+  ],
+  "k_max_representable": 17,
+  "ventanas_con_mas_de_una_esquina": 0
 }

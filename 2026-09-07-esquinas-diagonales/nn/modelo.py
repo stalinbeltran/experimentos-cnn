@@ -54,9 +54,14 @@ LO QUE NO CAMBIA RESPECTO DE `esq-k`, Y POR QUE
     conv 1 kernel k x k, stride 1, SIN padding, SIN bias · entrada TINTA /255 ·
     ventana 32x32 · lectura por esperanza bajo softmax(beta*M) con beta aprendida
     (BETA0 = 3,5) · sin ReLU entre la conv y la cabeza. Los porques estan medidos
-    en `esq-k` y no se vuelven a pagar aqui. Lo UNICO que varia entre brazos es
-    la estructura de lectura; `sig11` ademas sube k, y esta declarado como punto
-    de seguro, no como parte del eje.
+    en `esq-k` y no se vuelven a pagar aqui.
+
+EL DISENO ES DE DOS EJES, y eso hay que decirlo porque cambia como se lee
+    ESTRUCTURA (rot · sig · ant, mas el control ind) x KERNEL (5 · 7 · 9 · 11 ·
+    13). Son 25 brazos. El eje que contesta la PREGUNTA es el de la estructura;
+    el del kernel esta para que "esta lectura no puede" no se confunda nunca con
+    "con este kernel no cabe" -- que es la duda que en `esq-k` dejo abierta el
+    borde del rango.
 """
 
 from __future__ import annotations
@@ -69,19 +74,40 @@ import torch.nn.functional as F
 
 VENTANA = 32
 BETA0 = 3.5
-K = 7                    # el ganador de `esq-k` por su criterio congelado
+
+# EL EJE DEL KERNEL, por orden del dueno (2026-09-07): los mismos de `esq-k`
+# MENOS el 3x3, y uno mas grande en su lugar.
+#
+# ⚠ El 3 se cae con un dato, no por gusto: alli se quedo en el 8,3 % de acierto,
+# que es EXACTAMENTE su suelo sin entrenar. No aprendio poco: no aprendio. Con 12
+# parametros y 3 px de campo receptivo no hay esquina que ver, y aqui la tarea es
+# mas dificil (dos esquinas), asi que repetirlo seria pagar por re-confirmar al
+# perdedor. El 13 entra en su sitio porque el eje NO estaba acotado por arriba:
+# el 11 seguia mejorando y era el borde del rango.
+#
+# ⚠ Y 13 es el ultimo k que este dataset admite SIN regenerarlo: las esquinas se
+# sortean con el punto entre los pixeles 8 y 23 de la ventana, y el mapa de un
+# kernel k solo representa de (k-1)/2 a 31-(k-1)/2. Con k = 17 los dos rangos
+# coinciden exactamente; con k = 19 ya habria esquinas que el mapa no puede
+# senalar. Cabe 13, cabe 15, y a partir de 19 hay que rehacer el dato.
+K_BARRIDO = (5, 7, 9, 11, 13)
+ESTRUCTURAS = ("rot", "sig", "ant")
+ESQUINAS = ("tl", "br")
+
+
+def _nombre(estructura: str, k: int, esquina: str | None = None) -> str:
+    return f"{estructura}{'-' + esquina if esquina else ''}-k{k:02d}"
+
 
 # nombre -> (estructura, k, esquina). `esquina` solo lo usa el control `ind`,
 # que entrena UNA red por esquina y por tanto no comparte nada.
-BRAZOS = {
-    "rot":    ("rot", K, None),
-    "sig":    ("sig", K, None),
-    "ant":    ("ant", K, None),
-    "sig11":  ("sig", 11, None),
-    "ind-tl": ("ind", K, "tl"),
-    "ind-br": ("ind", K, "br"),
-}
-ESQUINAS = ("tl", "br")
+BRAZOS = {}
+for _e in ESTRUCTURAS:
+    for _k in K_BARRIDO:
+        BRAZOS[_nombre(_e, _k)] = (_e, _k, None)
+for _c in ESQUINAS:
+    for _k in K_BARRIDO:
+        BRAZOS[_nombre("ind", _k, _c)] = ("ind", _k, _c)
 
 
 class DosEsquinasUnKernel(nn.Module):
@@ -208,7 +234,7 @@ def simetria(w: torch.Tensor) -> tuple[float, float]:
 
 
 if __name__ == "__main__":
-    print(f"{'brazo':>7} {'estruct':>8} {'k':>3} {'mapa':>7} {'esquinas':>10} "
+    print(f"{'brazo':>11} {'estruct':>8} {'k':>3} {'mapa':>7} {'esquinas':>10} "
           f"{'kernel':>7} {'cabeza':>7} {'total':>6}")
     for brazo in BRAZOS:
         red = construir(brazo)
@@ -224,7 +250,7 @@ if __name__ == "__main__":
             assert lo <= float(px.min()) and float(px.max()) <= hi, \
                 f"{brazo}/{esq}: la lectura se sale del mapa"
         assert set(salida) == set(red.esquinas)
-        print(f"{brazo:>7} {red.estructura:>8} {red.k:>3} "
+        print(f"{brazo:>11} {red.estructura:>8} {red.k:>3} "
               f"{str(red.m)+'x'+str(red.m):>7} {'+'.join(red.esquinas):>10} "
               f"{red.n_kernel():>7} {red.n_cabeza():>7} {red.n_parametros():>6}")
 
@@ -234,7 +260,7 @@ if __name__ == "__main__":
     # `ant` tiene que ser antisimetrico EXACTO, y por tanto responder a un
     # parche y a su giro con el mismo numero cambiado de signo. Si esto falla,
     # el brazo no prueba la hipotesis que dice probar.
-    red = construir("ant")
+    red = construir(_nombre("ant", 7))
     w = red.kernel()
     assert torch.allclose(w, -torch.flip(w, dims=(-2, -1)), atol=1e-7)
     sim, anti = simetria(w)
@@ -244,7 +270,7 @@ if __name__ == "__main__":
     assert torch.allclose(m1, -torch.flip(m2, dims=(1, 2)), atol=1e-5)
     print("\nant: el kernel es antisimetrico exacto y responde al giro con el signo cambiado")
 
-    red = construir("rot")
+    red = construir(_nombre("rot", 7))
     x = torch.randn(3, 1, VENTANA, VENTANA)
     s1, _ = red(x)
     s2, _ = red(torch.flip(x, dims=(2, 3)))

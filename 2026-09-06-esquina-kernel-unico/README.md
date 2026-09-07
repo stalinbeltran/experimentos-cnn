@@ -178,6 +178,13 @@ al contrario de lo medido el 2026-08-27 desde `nyc1`, donde daba **403** y hubo 
 de Google Chrome. O sea que ese 403 **no es permanente**: se prueba primero el camino normal y sólo
 se cae al `.deb` si falla.
 
+✅ **Y desde el 2026-09-07 el dataset está PUBLICADO** en el repo de datos, en
+`experimentos-cnn/esquina-tl300-32px-r4-r20260906/` — con sus tres particiones y **las 10
+muestras congeladas**, que hasta entonces no estaban en ningún git: el `*.npz` del `.gitignore`
+de este repo se las llevaba, así que en un clon limpio la figura de verificación de arriba no se
+podía regenerar sin volver a rendir. Se re-derivó **idéntico** (mismas huellas SHA-256) antes de
+publicarlo. Cómo usarlo, en el README de esa carpeta.
+
 ⚠ **El dataset SE REPRODUCE**, y está comprobado el 2026-09-06 ejecutando `--comprobar`: las tres
 particiones dan la misma huella SHA-256 tras regenerarlas de cero. Por eso el `.npz` no se
 commitea y sí su huella. **No se dio por supuesto**: en este sistema ya se dio por reproducible

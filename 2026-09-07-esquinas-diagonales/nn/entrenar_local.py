@@ -37,11 +37,12 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from datos import DATASET
+from expcnn import exigir_dataset
 from modelo import BRAZOS, ESQUINAS, construir, simetria
 
 AQUI = Path(__file__).resolve().parent
 EXP = AQUI.parent
-DATOS = EXP / "datos"
 PESOS = AQUI / "pesos"
 
 LOTE = 128
@@ -56,7 +57,12 @@ EPOCAS_DEF = 300
 
 
 def _cargar(parte: str):
-    z = np.load(DATOS / f"{parte}.npz", allow_pickle=True)
+    """Del dataset PUBLICADO en el repo de datos, nunca de una copia local.
+
+    Se niega antes de empezar si no esta (R2). Entrenar sobre un dato
+    re-derivado al vuelo daria numeros incomparables con los de cualquier otro
+    brazo, y no fallaria por ningun lado."""
+    z = np.load(exigir_dataset(DATASET) / f"{parte}.npz", allow_pickle=True)
     v = torch.from_numpy(z["ventanas"].astype(np.float32) / 255.0).unsqueeze(1)
     obj = {c: (torch.from_numpy(z[f"existe_{c}"]).float(),
                torch.from_numpy(z[f"x_{c}"]), torch.from_numpy(z[f"y_{c}"]))
@@ -103,6 +109,17 @@ def _metricas(salida, objetivo, esquinas) -> dict:
         m[f"f1_existe_{c}"] = (2 * tp / den) if den > 0 else 0.0
     m["acierto_2px_peor"] = min(aciertos) if aciertos else 0.0
     return m
+
+
+def _redondear(fila: dict) -> dict:
+    """Seis cifras significativas en el registro, no diecisiete.
+
+    ⚠ Es una decision de TAMANO, y con 25 brazos deja de ser cosmetica: el
+    `repr` de un float de Python ocupa ~17 caracteres, y 300 epocas x 20 campos
+    x 25 brazos son ~3 MB de historial en un repo cuyo tope declarado es ~5 MB
+    (CLAUDE.md). Redondeado baja a la mitad, y ninguna metrica de aqui se lee mas
+    alla de la cuarta cifra: el umbral del criterio es 12 % y el SE, 2,8 %."""
+    return {k: (round(v, 6) if isinstance(v, float) else v) for k, v in fila.items()}
 
 
 def _estado_rng() -> dict:
@@ -172,7 +189,7 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
                 "simetrico": sim, "antisimetrico": anti,
                 **met, "segundos": round(time.time() - t0, 2)}
         with reg.open("a", encoding="utf-8") as f:      # SOLO ANADIR
-            f.write(json.dumps(fila) + "\n")
+            f.write(json.dumps(_redondear(fila)) + "\n")
         if pv.item() < mejor:
             mejor = pv.item()
             _guardar(mejor_f, red, opt, ep, mejor)
@@ -192,9 +209,6 @@ def suelos() -> int:
 
     Es lo que el criterio necesita ANTES de mirar, y por eso vive aqui y no en
     una libreta: un suelo escrito de memoria no se distingue de uno medido."""
-    if not (DATOS / "val.npz").exists():
-        print("✗ no hay dataset. Generalo: python nn/datos.py --imagenes 300")
-        return 1
     Vva, Yva = _cargar("val")
     n = {c: int(Yva[c][0].sum()) for c in ESQUINAS}
     print(f"val: {len(Vva)} ventanas · {n['tl']} con esquina tl · {n['br']} con br\n")

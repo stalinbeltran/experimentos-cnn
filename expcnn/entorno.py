@@ -101,6 +101,53 @@ def exigir_datos() -> Path:
     return p
 
 
+# --- los datasets PUBLICADOS -------------------------------------------------
+#
+# Por orden del dueño (2026-09-07): «Guarda los datasets en el repo de data, de
+# modo que sean siempre los mismos, por consistencia». Un dataset que cada
+# experimento re-deriva es el mismo *si nada cambia*, y "nada cambia" no es una
+# propiedad que se pueda comprobar hacia el futuro: basta que el generador
+# cambie una fuente. Publicado, es el mismo porque es EL MISMO FICHERO.
+#
+# Vive aquí y no en cada experimento porque es exactamente la clase de cosa que
+# `expcnn` existe para tener en UN sitio: si dos experimentos deducen la ruta
+# por su cuenta, «el mismo dataset» deja de estar garantizado por nada.
+#
+# ⚠ Va en `experimentos-cnn/` del repo de datos y NO en `window-datasets/`, que
+# es de `foveal-vision` y lo resuelve su `fv.settings.window_datasets_root()`:
+# meter ahí un dataset de otra forma sería una colisión silenciosa (R15).
+SUBDIR_DATASETS = "experimentos-cnn"
+
+AYUDA_DATASET = (
+    "El dataset '{n}' no está publicado en el repo de datos.\n"
+    "  → genéralo y publícalo:  python nn/datos.py --imagenes 300 --publicar\n"
+    "  → o dime dónde está el repo de datos: EXPCNN_DATOS=/ruta/a/foveal-vision-data\n"
+    "⚠ No se re-deriva al vuelo a propósito: el dato de entrada tiene que ser EL "
+    "MISMO fichero entre experimentos, no uno equivalente."
+)
+
+
+def ruta_dataset(nombre: str) -> Path | None:
+    """Dónde está un dataset publicado, o None si no está."""
+    raiz_datos = ruta_datos()
+    if raiz_datos is None:
+        return None
+    p = raiz_datos / SUBDIR_DATASETS / nombre
+    return p if (p / "manifiesto.json").is_file() else None
+
+
+def exigir_dataset(nombre: str) -> Path:
+    """El dataset publicado, o se NIEGA ahora diciendo cómo se publica.
+
+    Se niega antes de empezar y no a mitad (R2): entrenar sobre un dataset
+    re-derivado al vuelo daría números que no se pueden comparar con los de
+    nadie, y no fallaría por ningún lado."""
+    p = ruta_dataset(nombre)
+    if p is None:
+        raise RuntimeError(AYUDA_DATASET.format(n=nombre))
+    return p
+
+
 AYUDA_GENERADOR = (
     "Este experimento genera su dataset con `image-text-sample-generator` y no lo "
     "encuentro.\n"

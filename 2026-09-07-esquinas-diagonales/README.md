@@ -6,8 +6,12 @@ diferencia entre este documento y el de `esq-k`.
 
 Hereda de `esq-k` **todo lo que decide la comparabilidad**: misma receta, semilla 1, ventana
 32×32, reducción por 4, sin padding, sin bias, cabeza C1 (esperanza bajo `softmax(β·M)`, β
-aprendida desde 3,5), Adam `lr` 0,05, lote 128, 300 épocas. **`k` = 7**, que es el que ganó allí.
-Lo único que varía es **cómo se lee el mapa**.
+aprendida desde 3,5), Adam `lr` 0,05, lote 128, 300 épocas.
+
+**El diseño tiene DOS ejes: la estructura de lectura × el tamaño del kernel.** El que contesta la
+pregunta es el primero; el segundo está para que *«esta lectura no puede»* no se confunda nunca
+con *«con este kernel no cabe»* — que es justo la duda que `esq-k` dejó abierta al quedarse en el
+borde de su rango.
 
 ## El problema, que no es el de ayer con otra etiqueta
 
@@ -59,22 +63,54 @@ función **lineal de un solo escalar**, o sea monótona, y esa hipótesis pide f
 máximo y el mínimo) es ya `sig`. El argumento entero está en la cabecera de
 [`nn/modelo.py`](nn/modelo.py).
 
-## El dataset
+## El dataset vive en el repo de DATOS, y es siempre el mismo fichero
 
-El mismo de `esq-k` en imágenes —misma receta y misma semilla—, con **etiqueta de seis números**
-por ventana: `(existe_tl, x_tl, y_tl, existe_br, x_br, y_br)`. Diez ventanas por imagen: **2 tl +
-2 br** positivas y **6 negativas** (las esquinas de la otra diagonal `tr` y `bl`, que son el
-negativo duro; borde superior, borde inferior, interior y fondo).
+**Por orden del dueño (2026-09-07): «Guarda los datasets en el repo de data, de modo que sean
+siempre los mismos, por consistencia».**
 
-267 imágenes válidas de 300 · **2.157 ventanas de train** (432 tl · 432 br), **389 de val**
-(78 · 78) y 120 de muestra. ⚠ Y está **comprobado, no supuesto, que ninguna ventana contiene las
-dos esquinas**: lo cuenta el propio generador y lo escribe en el manifiesto.
+```
+foveal-vision-data/experimentos-cnn/esquinas300-32px-r4-r20260907/
+    train.npz · val.npz · muestra.npz · muestras-congeladas.npz · manifiesto.json · README.md
+```
 
-El `.npz` **no se commitea**: se re-deriva de la receta y la semilla, y su huella SHA-256 vive en
-[`nn/manifiesto.json`](nn/manifiesto.json). ✅ **Comprobado el 2026-09-07** regenerándolo entero
-en un directorio aparte: las tres particiones dan la misma huella
-(`python nn/datos.py --comprobar`, ~6 min). En este sistema ya se dio por reproducible un dataset
-que no lo era, así que esto se ejecuta, no se supone.
+Se resuelve con `expcnn.exigir_dataset(...)`, que es **la única** puerta: si no está publicado,
+el entrenamiento **se niega antes de empezar** en vez de generarse uno equivalente. Ahí está el
+punto — un dato re-derivado es el mismo *mientras nada cambie*, y «nada cambia» no es comprobable
+hacia el futuro; publicado, es el mismo **porque es el mismo fichero**.
+
+⚠ **No va en este repo y no es una preferencia:** éste es **público** y el de datos es
+**privado**. Y no va en `window-datasets/`, que es de `foveal-vision` y lo resuelve su propio
+`settings`: meter ahí un dataset de otra forma sería una colisión silenciosa.
+
+⚠ **Y de paso tapa un agujero real.** Las 10 muestras congeladas de `esq-k` se declaraban
+commiteadas y **no lo estaban**: el `*.npz` del `.gitignore` de este repo —que existe para que no
+se cuele el dato de entrada— se llevaba también la verificación. Medido el 2026-09-07 en el clon
+limpio de esta máquina: aquel `nn/muestras.npz` no existe, así que su figura de verificación no
+se podía regenerar sin volver a rendir 300 imágenes. Publicadas con el dataset, dejan de perderse.
+
+### Qué trae
+
+Mismas imágenes que `esq-k` (misma receta, misma semilla): 267 válidas de 300. Diez ventanas por
+imagen: **2 `tl` + 2 `br`** positivas y **6 negativas** (las esquinas de la otra diagonal `tr` y
+`bl`, que son el negativo duro; borde superior, borde inferior, interior y fondo).
+
+⚠ **Se etiquetan LAS CUATRO esquinas**, no sólo la diagonal que mide `esq-2d`. No cuesta nada —
+las cuatro coordenadas ya se conocen al recortar— y es lo que hace que *«si pueden usar el mismo
+dataset no hay problema»* sea cierto también para el experimento siguiente: el que mire la otra
+diagonal, o las cuatro, no tiene que re-rendir nada. `esq-2d` lee `tl` y `br` e ignora el resto.
+
+⚠ **Ninguna ventana contiene más de una esquina** (párrafo ≥ 64 px, ventana 32). Se **cuenta** al
+generar y se escribe en el manifiesto, no se supone.
+
+```bash
+python nn/datos.py --imagenes 300 --publicar   # genera y publica (no pisa lo publicado)
+python nn/datos.py --comprobar                 # ¿el publicado es el del manifiesto? (instantáneo)
+python nn/datos.py --rederivar                 # ¿la receta y la semilla lo vuelven a dar? (~6 min)
+```
+
+**`--publicar` se niega a pisar un dataset ya publicado**: dato nuevo = nombre nuevo, que es la
+regla que el repo de datos ya tiene escrita. Si publicar pudiera sobrescribir, un `--publicar`
+distraído cambiaría el dato bajo los pies de todo lo ya medido, sin un solo error.
 
 ## El criterio, congelado antes de mirar
 
@@ -99,11 +135,19 @@ Las dependencias del venv están en el README de `esq-k` § «Cómo se repite» 
 
 ## Cuánto cuesta (estimado, no medido)
 
-**0 máquinas y 0 $**: entrena en este droplet, como `esq-k`. Lo que sí cuesta es reloj —
-*medido el 2026-09-07 con una época de prueba por brazo y la máquina ocupada rindiendo el
-dataset*: **1,2–2,7 s/época**, o sea **~40–80 min los seis brazos** a 300 épocas. Es bastante más
-que los 9 min de `esq-k` (0,36 s/época) porque el mapa es mayor y hay dos lecturas por paso; con
-la máquina libre bajará, pero **no se ha medido libre**.
+**0 máquinas y 0 $**: entrena en este droplet, como `esq-k`. Lo que cuesta es reloj —
+*medido el 2026-09-07 a máquina libre, una época en nueve brazos*: **0,31–1,02 s/época** (sube
+con `k` y con el número de convoluciones: `rot` hace dos). Los **25 brazos × 300 épocas ≈ 60–70
+min** *(estimado a partir de esas nueve medidas, no medido entero)*.
+
+⚠ Y una lección de medición, porque el primer número que di estaba mal: la misma prueba **con la
+máquina rindiendo el dataset a la vez** daba 1,2–2,7 s/época, o sea **~3× más**. En un droplet de
+2 vCPU, un tiempo por época medido con algo más corriendo no es el tiempo por época.
+
+Y en disco: 25 brazos × (2 checkpoints de ~17 KB + un `metrics.jsonl` de ~50 KB) ≈ **2,1 MB**,
+dentro del tope de ~5 MB por experimento que declara el `CLAUDE.md` del repo. Por eso el registro
+se guarda **redondeado a 6 cifras** y las figuras de muestras **no salen para los 25** por
+defecto: sin las dos cosas, sólo el historial serían ~3 MB.
 
 ⚠ El freno lo ve: `entrenar_local.py` está en la lista `TRABAJOS` de
 `telegram-coordinator/scripts/cerrable.mjs`, así que un entrenamiento vivo aparece en el veredicto
