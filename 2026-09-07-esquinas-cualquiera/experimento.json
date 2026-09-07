@@ -1,7 +1,7 @@
 {
   "id": "esq-cq",
-  "titulo": "POR DEFINIR — copia de esq-2d dejada en estado de partida el 2026-09-07",
-  "pregunta": "POR DEFINIR — el dueno escribe aqui la pregunta antes de correr nada (R13: el criterio se escribe antes de mirar)",
+  "titulo": "Con UN solo kernel, que tamano detecta CUALQUIERA de las dos esquinas en diagonal: una sola salida (hay esquina / donde), sin decir si es tl o br",
+  "pregunta": "Colapsando las dos salidas de esq-2d en UNA -- 'hay esquina' y su posicion, sin importar si es la superior-izquierda o la inferior-derecha -- que tamano de kernel unico lo hace mejor, y cuanto se gana o se pierde respecto de tener que declarar cual esquina es",
   "creado": "2026-09-07",
   "estado": "abierto",
   "usa_fv": false,
@@ -33,16 +33,27 @@
     "epocas": 300,
     "lr": 0.05,
     "lote": 128,
-    "lambda_coord": 0.038,
-    "estructura": "sig (un mapa: tl = maximo, br = minimo)",
+    "lambda_coord": 0.0293,
+    "estructura": "max (un mapa, UNA salida leida del maximo)",
     "alternativas_anotadas_sin_correr": [
-      "ant",
-      "ind-tl",
-      "ind-br"
+      "sim"
     ],
-    "cabeza_parametros": 5,
+    "cabeza_parametros": 3,
     "descartada_por_el_dueno": [
       "rot (girar la entrada 180 grados)"
-    ]
+    ],
+    "descartada_por_incapaz": [
+      "ant (kernel antisimetrico): con lectura por maximo responde a una esquina con el signo cambiado de la otra, asi que solo una puede ser el maximo"
+    ],
+    "salidas": "UNA: existe + (x, y). En esq-2d eran dos, una por esquina",
+    "positivas_pct": 40.1,
+    "suelos_medidos_2026_09_07": {
+      "acierto_2px": 0.058,
+      "acierto_2px_tl": 0.051,
+      "acierto_2px_br": 0.064,
+      "f1_siempre_si": 0.572,
+      "err_px": 6.08
+    },
+    "hallazgo_previo_2026_09_07": "br NO es una esquina de tinta: la mediana al pixel de tinta mas cercano es 8,1 px (tl: 1,0 px) y su cuadrante propio esta vacio en el 82 % de las 78 ventanas. Ningun brazo de k=5..13 tiene ese radio (2..6 px); el primero es k=17"
   }
 }

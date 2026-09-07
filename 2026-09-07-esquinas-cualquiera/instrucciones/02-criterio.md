@@ -1,185 +1,117 @@
-# El criterio, congelado ANTES de la primera época
+# El criterio de `esq-cq`, congelado ANTES de la primera época
 
-Escrito el **2026-09-07 con cero épocas entrenadas en cualquier brazo**. Los suelos de abajo
-están medidos sobre la partición de validación con las redes **sin entrenar**, que es lo único
-que se puede medir antes de mirar.
+**Escrito el 2026-09-07 con CERO épocas entrenadas.** Los suelos de aquí abajo salen de
+`nn/entrenar_local.py --suelos` sobre el `val.npz` publicado, no de memoria. Nada de este
+documento se toca después de mirar los resultados: si algo no estaba previsto, se anota en el
+reporte como no previsto, que es distinto de reescribir el criterio.
 
-```bash
-python nn/entrenar_local.py --suelos      # reproduce la tabla de abajo
-```
+## La pregunta
 
-## La métrica principal, y su suelo
+Orden del dueño (2026-09-07), literal:
 
-**Tasa de acierto: qué fracción de las esquinas se predice a ≤ 2 px de su sitio**, medida
-**por esquina** y sólo sobre las ventanas donde esa esquina existe de verdad (la etiqueta, no la
-predicción). Val trae **389 ventanas: 78 con `tl` y 78 con `br`**.
+> «ahora no se quieren detectar las 2 esquinas por separado, sino cualquiera de ellas. Las
+> esquinas siguen siendo las mismas, pero las salidas ahora son una sola. Decimos "hay esquina"
+> si la hay, y la posición de ella, sin importar si es tl o br.»
 
-**El titular es la PEOR de las dos esquinas, nunca el promedio.** Un promedio escondería
-exactamente el desenlace más probable —que una estructura resuelva `tl` y no `br`—, que es la
-pregunta del experimento.
+Una convolución `k×k` sin bias produce un mapa; la posición sale de su **máximo** y `existe` de
+la altura de ese máximo. **Cabeza de 3 parámetros** (`β`, `a`, `b`) — exactamente la de `esq-k`.
 
-| | acierto ≤2 px `tl` | acierto ≤2 px `br` | ≤1 px | error medio |
-|---|--:|--:|--:|--:|
-| predictor **constante** en el centro del mapa | 5,1 % | 6,4 % | 1,3 % · 3,8 % | 5,98 · 6,19 px |
-| **los cinco brazos sin entrenar** | 3,8 – **5,1 %** | **6,4 %** | 0 – 1,3 % · 2,6 – 3,8 % | 5,96 – 6,06 · 6,13 – 6,22 px |
+## Los suelos, medidos
 
-⚠ **El suelo no depende del brazo, y eso es lo que permite un único umbral.** Se midió sobre las
-25 redes de las cuatro estructuras antes de reducir el experimento a una, y las 25 caen en el
-mismo sitio: `ant` con 17 parámetros y `sig-k13` con 174 dan el mismo 5,1 % / 6,4 %. No es que se
-parezcan — es que todas arrancan en el mismo modo degenerado.
+*`nn/entrenar_local.py --suelos`, 2026-09-07, sobre las 389 ventanas de `val`.*
 
-⚠ Las redes sin entrenar dan **exactamente** el predictor constante, igual que en `esq-k`: si el
-mapa sale plano, el softmax es uniforme y la esperanza cae en el centro del mapa, que es justo
-donde se concentran las etiquetas. **La solución vaga y la solución mediocre son la misma**, así
-que hay un óptimo local cómodo exactamente donde la red arranca.
+| | valor |
+|---|--:|
+| positivas (`tl` ∪ `br`) | **156 / 389 = 40,1 %** — 78 `tl` + 78 `br` |
+| negativo duro (`tr`/`bl`) | 78 |
+| acierto ≤2 px **sin entrenar** | **5,8 %** (5,1 % en `tl` · 6,4 % en `br`) |
+| error medio sin entrenar | **6,08 px** (el predictor constante en el centro) |
+| `f1` del «siempre sí» | **0,572** |
+| `λ` que iguala los dos términos | **0,0293** (congelada; el 0,038 era de otra pérdida) |
 
-> **Un brazo ha aprendido algo** si su acierto ≤2 px de validación pasa del **12 % EN LAS DOS
-> esquinas**. Sale de suelo + 2·SE con SE = 2,5 % (`tl`) y 2,8 % (`br`) sobre 78 positivas:
-> 10,1 % y 12,0 %. Se toma el mayor de los dos para las dos, que es la dirección estricta.
+## El umbral: qué cuenta como «ha aprendido algo»
 
-**Métrica secundaria**, siempre junto a su suelo y nunca sola: el **error medio**, que además
-debe bajar de **5,45 px** (= 5,96 − 2·SE, con SE = 0,26 px; se usa el suelo más bajo de los cinco
-brazos, que es la dirección estricta, y el mismo número para las dos esquinas aunque el de `br`
-daría 5,61). Y `existe`, cuyo suelo es
-**f1 = 0,334** por esquina — lo que da el «siempre sí» con 78 positivas de 389, y que es
-exactamente lo que dan las redes sin entrenar.
+**Acierto a ≤2 px > 9,6 %**, que es el suelo (5,8 %) más 2 SE, con SE = √(p(1−p)/156) = 1,9 %.
 
-## Los desenlaces, escritos antes
+- Secundario: error medio **< 5,70 px** y `f1` de `existe` **> 0,572**.
+- **No se declara ganador.** Se reportan **todos** los que pasan, como en `esq-2d`.
 
-**El eje es UNO: `k` ∈ {5, 7, 9, 11, 13}, con la misma estructura en los cinco brazos** — una
-convolución, un mapa, `tl` = máximo y `br` = mínimo. Las otras lecturas quedan anotadas y sin
-correr, y `rot` (girar la entrada) queda **descartada**; las dos cosas por orden del dueño del
-2026-09-07. Lo que eso permite y lo que impide está en
-[`03-alternativas-anotadas.md`](03-alternativas-anotadas.md).
+## ⚠⚠ Lo que este experimento puede aparentar y no ser
 
-0. **NO SE DECLARA UN GANADOR.** Orden del dueño (2026-09-07): *«No importa quién gana, quiero
-   ver todos los ganadores. Es un experimento, no un concurso»*. Así que se reportan **todos** los
-   `k` que pasan el umbral, cada uno con sus cinco números (acierto ≤2 px y ≤1 px por esquina,
-   error medio, `f1` de `existe`, y la fracción simétrica del kernel), y **no hay regla de
-   desempate**.
-   ⚠ **Y eso disuelve el problema de la saturación en vez de esconderlo.** En `esq-k` la métrica
-   principal saturó —tres brazos al 100 %— y hubo que elegir uno por «más barato», tirando por el
-   camino que uno de ellos colocaba la esquina 5× más fino (0,08 px contra 0,40). Reportando
-   todos, el que quiera el más barato y el que quiera el más preciso leen la misma tabla.
-   ⚠ **El umbral SIGUE HACIENDO FALTA**, y no es lo mismo que un ganador: separa «aprendió» de «se
-   quedó en el suelo», que es la única pregunta que un suelo medido puede contestar.
-1. **Algún `k` pasa el 12 % en las dos esquinas.** Un solo kernel sirve para las dos, y el
-   experimento tiene señal. Se listan **todos** los que pasan, ordenados por `k`, no por
-   resultado.
-2. **Ningún `k` pasa el 12 %.** *Con esta lectura, un kernel compartido no resuelve las dos
-   esquinas.* Es un resultado, no un fracaso.
-   ⚠ **Y es exactamente donde este diseño toca su límite, que hay que decir antes**: con un solo
-   brazo por `k`, *«un kernel no da para las dos esquinas»* y *«esta lectura no es la buena»* se
-   ven **igual**. Distinguirlas es lo que contestarían las alternativas anotadas, y entonces la
-   pregunta siguiente no es otro `k`: es otra estructura.
-3. **Pasa en `tl` y no en `br`.** El kernel se queda con la mitad que ya sabía hacer.
-   ⚠ **Éste es el desenlace que hay que esperar de verdad, no una rareza**, y es la razón de que
-   el titular sea la peor de las dos: `tl` es la tarea de `esq-k`, que ya salió al 100 %, y `br`
-   es la que pide que el kernel renuncie a su parte simétrica. Un 100 % en `tl` y un 20 % en `br`
-   **no** es «medio resuelto»: es el kernel eligiendo la esquina barata.
-4. **El eje no es monótono.** En `esq-k` subía monótono. Si aquí no lo hace, **se dice**: con una
-   sola semilla no se puede distinguir de una fluctuación, y ésa es una limitación declarada, no
-   un fallo del análisis.
-5. **El `13` está entre los que pasan y es el borde del rango.** Entonces el eje **sigue sin
-   estar acotado por arriba**, que es exactamente lo que dejó abierto `esq-k`, y la respuesta no es «13» sino
-   «mirar más allá». El dataset admite hasta **k = 17** sin regenerarlo (lo calcula el
-   manifiesto), así que la continuación es barata y está declarada de antemano.
-6. **Todos los `k` salen igual de mal, incluido el 13.** No se podrá distinguir «ningún kernel
-   sirve» de «la cabeza es demasiado estrecha». Por eso hay que mirar **el mapa de respuesta** de
-   las 10 muestras: si el mapa tiene estructura y la lectura falla, el problema es la cabeza; si
-   el mapa es plano, es el kernel.
+**Las positivas son mitad `tl` y mitad `br`. Un resultado en torno al 50 % es exactamente lo que
+sale de "`tl` entero, `br` nada".** No es una sospecha: es lo que predice la medida de abajo.
 
-## La comparación con `esq-k`, que es lo que sustituye al control
+Por eso **el desglose por esquina verdadera se reporta siempre, desde la primera época**, y por
+eso la métrica titular va acompañada de sus dos columnas. Un número global sin desglose, en este
+experimento, es un autoengaño con forma de éxito.
 
-Sin los brazos `ind-*`, el techo no se mide aquí: se **lee de `esq-k`**, que midió la tarea de
-**una** esquina con esta misma convolución y la misma cabeza C1.
+## La medida que se hizo ANTES de diseñar nada
 
-| `k` | 5 | 7 | 9 | 11 |
-|---|--:|--:|--:|--:|
-| `esq-k`, acierto ≤2 px con **una** esquina | 92,3 % | 100 % | 100 % | 100 % |
+*2026-09-07, sobre las 389 ventanas del `val.npz` publicado. Distancia del punto etiquetado al
+píxel de tinta más cercano (robusta al umbral de binarización: 0, 32 y 64 dan lo mismo).*
 
-⚠ **Es una referencia, no un control, y hay DOS motivos —no uno— por los que no es una
-comparación limpia:**
+| esquina | mediana | p90 | máx |
+|---|--:|--:|--:|
+| `tl` | **1,00 px** | 1,00 | 1,41 |
+| `bl` | 2,00 px | 3,00 | 3,16 |
+| `tr` | 6,00 px | 9,22 | 10,63 |
+| **`br`** | **8,06 px** | **12,23** | 17,00 |
 
-1. **Las ventanas son otras.** Allí se sortean 4 `tl` por imagen; aquí 2 `tl` + 2 `br`. Una
-   diferencia de pocos puntos no se puede atribuir a nada.
-2. **La red no es idéntica**, aunque casi. La convolución sí, y la lectura C1 también; pero la
-   cabeza pasa de **3 a 5 parámetros** (un `existe` por esquina) y `br` se lee del **mínimo** del
-   mapa, que allí no se leía. O sea que lo que se compara es *la misma convolución con el doble de
-   trabajo*, no la misma red.
+Y la masa de tinta en el cuadrante propio (radio 6 px): `tl` **0,431** · `br` **0,014**, con el
+cuadrante **completamente vacío en 64 de las 78** ventanas (**82 %**).
 
-Lo que sí se puede leer es lo grueso: si aquí sale 100 % donde allí salía 100 %, compartir no
-costó nada visible; si aquí sale 40 %, costó, y mucho.
+**`br` no es una esquina de tinta: es el vértice inferior-derecho de la caja del layout.** La
+última línea de un párrafo es corta, así que ese vértice cae sobre fondo.
 
-## La predicción registrada, para que pueda fallar
+⚠ **Consecuencia para el eje, sabida por adelantado:** el radio del campo receptivo es **2 · 3 · 4
+· 5 · 6 px** para `k` ∈ {5,7,9,11,13}. **Ninguno alcanza los 8,1 px** donde empieza la tinta más
+cercana a `br`. El primer `k` con radio ≥ 8 es **17**, que es justo el `k_max_representable` del
+dataset.
 
-*Escrita antes de entrenar, el 2026-09-07.*
+## Los desenlaces, por orden de probabilidad estimada
 
-⚠⚠ **Esta estructura tiene una medida EN CONTRA, y hay que dejarlo escrito antes y no después.**
-El kernel ganador de `esq-k` —el único kernel de esta familia que se ha entrenado— tiene el
-**74,0 % de su energía en la parte simétrica** y suma **−73,68**: es sobre todo un **supresor de
-tinta**. Y su **mínimo cae en la mancha de tinta, no en la esquina `br`**: 0/10 páginas, mediana
-**91 px** (medido el 2026-09-07, comando en el encargo).
+1. **`tl` sí, `br` no** *(el más probable, y por un mecanismo medido, no por intuición)*. El
+   global se queda cerca del 50 %, el desglose enseña ~100 % / ~0 %. **Cuenta como resultado, no
+   como fracaso**: cierra que el problema no es la lectura ni el reparto de salidas, sino que en
+   `br` no hay nada que ver a esa escala.
+2. **Los dos suben con `k`, y `k13` es el mejor sin saturar.** Entonces el eje **no está acotado
+   por arriba** y la continuación es `k15`/`k17`, no repetir lo de dentro. Es lo que ya pasó en
+   `esq-2d`.
+3. **El global supera el umbral pero el kernel se vuelve simétrico y dispara los falsos positivos
+   en `tr`/`bl`.** Un kernel simétrico bajo giro de 180° responde igual a las cuatro esquinas si
+   no aprende otra cosa; por eso `fp_otra_diagonal` se mide en cada época.
+4. **No pasa nada del umbral en ningún brazo.** Entonces la lectura por máximo no sirve para esta
+   tarea y la continuación declarada es `sim` (ver `03-alternativas-anotadas.md`).
 
-Lo que eso significa exactamente, y lo que no:
+## La predicción registrada, que se contrasta gratis
 
-- **No significa que `sig` no pueda funcionar.** Aquel kernel se entrenó **sólo para `tl`**, sin
-  ninguna presión para poner nada en el mínimo. Uno entrenado para las dos podría colocar `br`
-  ahí.
-- **Sí significa que el gradiente, cuando se le deja elegir, gasta el kernel en apagar el
-  interior del párrafo.** Y para que `br` sea el mínimo hay que renunciar a buena parte de eso.
-  Ésa es la tensión, y es lo que este barrido mide.
+**La fracción SIMÉTRICA del kernel debe SUBIR al entrenar.** Con lectura por máximo hay que pedir
+las dos esquinas altas, y eso exige `⟨S,P⟩ ≫ |⟨A,P⟩|`, o sea `A → 0`. Es la inversa exacta de
+`esq-2d`, donde toda la diferencia entre esquinas vivía en `A`.
 
-**Así que la predicción honesta es: NO LO SÉ, y el desenlace 3 (`tl` sí, `br` no) es el más
-probable de los cinco.** Lo que sí está predicho:
+Contra qué se contrasta, sin gastar nada: `esq-k` acabó en **74,0 %** simétrico y `esq-2d` en
+**38–53 %**. Se registra en cada época (`simetrico` / `antisimetrico` en `metrics.jsonl`).
 
-- **`tl` debería acercarse a lo de `esq-k`** (100 % a partir de k=7). Si `tl` tampoco pasa, lo
-  primero que hay que sospechar es el montaje, no la hipótesis.
-- **Si `br` falla, la continuación NO es otro `k`: es `ant`** —el mismo `sig` con el kernel
-  forzado antisimétrico—, que es lo único que separa «esta lectura no sirve» de «el gradiente no
-  llega hasta ella». Está anotada y lista.
-- **Y si `br` sale bien, el kernel resultante debe haber bajado mucho su fracción simétrica.** Se
-  registra en cada época (`simetrico` / `antisimetrico` en `metrics.jsonl`), así que esta
-  predicción se puede contrastar directamente contra el 74,0 % de partida.
+⚠ **Y el álgebra descansa en un supuesto que hoy sabemos FALSO**: `esq-2d` la construía sobre
+«el parche de una `br` es el giro del de una `tl`». Con 1,0 px de tinta en una y 8,1 px en la
+otra, **no lo es**. Simetrizar ayuda pero no puede cerrar la tarea.
 
-## Lo que se congela, y es igual en todos los brazos
+## Contra qué se compara, y contra qué NO
 
-dataset **publicado** `esquinas300-32px-r4-r20260907` (en `foveal-vision-data`, con su huella en
-`nn/manifiesto.json`) · semilla 1 · ventana 32×32 · sin padding · sin bias · cabeza C1 con β
-inicial 3,5 · Adam lr 0,05 · lote 128 · **300 épocas** · las mismas 10 muestras ·
-**`λ_coord` = 0,038**.
+| | comparable | no comparable |
+|---|---|---|
+| **`esq-k`** | la **arquitectura**: misma conv, misma cabeza de 3, misma lectura por máximo, **mismos totales** (28/52/84/124) y mismo suelo de `f1` (0,572) | el **dato** (otro dataset) y la **tarea** (allí sólo `tl`) |
+| **`esq-2d`** | el **dato**, de forma exacta: mismo fichero publicado, mismo split, misma semilla, mismo eje, mismas 300 épocas | la **métrica titular**: allí es *la peor de dos tasas sobre 78*, aquí *una tasa sobre 156*. **Un 50 % aquí no es un 50 % allí** |
 
-⚠ **El dato de entrada ya no se re-deriva al empezar: se LEE del repo de datos**, y si no está,
-el entrenamiento **se niega** en vez de generarse uno equivalente. Es lo que hace que «el mismo
-dataset» sea comprobable y no una intención: los cinco brazos leen el mismo fichero, y el que venga
-detrás también.
+⚠ **Lo único comparable columna a columna con `esq-2d` es el desglose por esquina verdadera**,
+sobre las mismas 78 + 78 ventanas. Por eso el desglose es el ancla de comparabilidad y no un
+diagnóstico opcional.
 
-⚠ **`λ` cambia respecto del 0,03 de `esq-k`, y NO es un descuido.** Lo que se hereda es la
-**regla** —«los dos términos de la pérdida parten iguales»—, no el número: la pérdida ya no es la
-misma (dos BCE y dos MSE) y la proporción de positivas por esquina pasó del 40 % al 20 %, así que
-la BCE inicial sube de ~1,27 a ~1,64. Medido el 2026-09-07 sobre los cinco brazos sin entrenar,
-la regla da **0,0366–0,0391**; se congela en **0,038 para todos**. Un `λ` por brazo haría que cada
-uno optimizase una función distinta.
+## Qué NO contesta este experimento
 
-**Varía UNA sola cosa: el TAMAÑO DEL KERNEL** (5 · 7 · 9 · 11 · 13 — los mismos de `esq-k` menos
-el 3×3, y uno más grande en su lugar). La estructura es la misma en los cinco brazos y todo lo
-demás es idéntico. Las otras lecturas quedan **anotadas y sin correr**, y `rot` **descartada**;
-las dos cosas por orden del dueño del 2026-09-07.
-
-## Una nota de higiene, para que esto se pueda creer dentro de un año
-
-Este criterio se escribió con **cero épocas corridas**. Después de escribirlo se corrió **una
-sola época** en nueve brazos (las cuatro estructuras en varios `k`, cuando todavía estaban las
-cuatro) como prueba del mecanismo —que el bucle no se rompe con ninguna— y **sus pesos y sus
-métricas se borraron**: `nn/pesos/` no
-existe en el commit que trae este fichero. Ninguno de los números de arriba viene de ahí, y los
-de esa prueba no se leen: una época no es una medida.
-
-## Lo que este experimento NO contesta
-
-- **Nada sobre señalar las dos esquinas a la vez en la misma vista.** Ninguna ventana contiene
-  las dos (párrafo ≥ 64 px, ventana 32) y está comprobado en el manifiesto, no supuesto.
-- Nada sobre las otras dos esquinas (`tr`, `bl`), que aquí son negativos duros.
-- Nada sobre otras escalas de reducción, otros tamaños de ventana ni el `stride`.
-- **Nada que se pueda declarar entre brazos parecidos: una sola semilla.** Es la misma limitación
-  que `esq-k` dejó anotada, y se hereda a propósito para no cambiar dos cosas a la vez.
+- **Nada sobre la página entera.** La ventana es 32×32; el filtro sobre páginas se mide aparte
+  con `nn/transformacion.py`, y en `esq-2d` el orden de los brazos **no se conservó** entre las
+  dos escalas (`k11` era 2.º en ventana y 1/10 en página).
+- **Nada sobre `tr`/`bl`**: aquí son el negativo duro.
+- **Una semilla**, como en los dos anteriores. Las diferencias pequeñas entre brazos vecinos no se
+  van a poder declarar.

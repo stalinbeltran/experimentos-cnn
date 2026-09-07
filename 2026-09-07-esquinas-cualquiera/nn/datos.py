@@ -114,6 +114,50 @@ DATOS = EXP / "datos"
 # recorte de `tr` traiga su etiqueta no lo convierte en positivo suyo.
 ETIQUETADAS = ("tl", "tr", "bl", "br")
 
+# De cuales se DERIVA el positivo de `esq-cq`. Las otras dos (`tr`, `bl`) siguen
+# etiquetadas y son el negativo duro: mismo dataset, otra lectura.
+DIAGONAL = ("tl", "br")
+
+
+def objetivo(d):
+    """La etiqueta de `esq-cq`: (existe, x, y). UNA salida, sin decir cual esquina.
+
+    `existe = existe_tl | existe_br`, y la coordenada es la de la que exista.
+
+    ⚠ VIVE AQUI Y SE IMPORTA, no se copia. La usan TRES consumidores
+    (`entrenar_local`, `muestras`, `informe`) y tres copias de una derivacion
+    divergen sin que nadie se entere -- es la misma razon por la que el
+    coordinador tiene `workspaces-locales.mjs` en vez de la comparacion repetida
+    en dos scripts.
+
+    ⚠ Y el `assert` no es decorativo: toda la pregunta de `esq-cq` descansa en que
+    una ventana no pueda tener `tl` Y `br` a la vez, porque hay UNA sola salida de
+    posicion y dos esquinas no caben en ella. Si algun dia el dataset cambia
+    (parrafo mas corto, ventana mas grande), esto tiene que fallar A GRITOS y no
+    quedarse con una de las dos en silencio.
+
+    Medido el 2026-09-07 sobre el `val.npz` publicado: 0 de 389 ventanas tienen
+    dos, y 156 (40,1 %) son positivas de la diagonal. La garantia de fondo es
+    geometrica: LADO_MIN = 64 px y el offset va de OFF_MIN a OFF_MAX, asi que
+    desde el ancla la ventana alcanza como mucho VENTANA - 1 - OFF_MIN px, que es
+    menor que 64."""
+    n = len(d["ventanas"])
+    existe = np.zeros(n, np.int64)
+    x = np.full(n, -1.0, np.float32)
+    y = np.full(n, -1.0, np.float32)
+    juntas = sum(np.asarray(d[f"existe_{c}"]) for c in DIAGONAL)
+    if (juntas > 1).any():
+        raise AssertionError(
+            f"{int((juntas > 1).sum())} ventana(s) tienen {' Y '.join(DIAGONAL)} a la vez: "
+            f"con UNA sola salida de posicion, `esq-cq` no puede representarlas. "
+            f"El dataset o los parametros de recorte han cambiado.")
+    for c in DIAGONAL:
+        m = np.asarray(d[f"existe_{c}"]) == 1
+        existe[m] = 1
+        x[m] = np.asarray(d[f"x_{c}"])[m]
+        y[m] = np.asarray(d[f"y_{c}"])[m]
+    return existe, x, y
+
 
 def _reducir(img: Image.Image) -> np.ndarray:
     """Reduce por PROMEDIO DE AREA y devuelve TINTA: fondo 0, tinta 255."""
@@ -135,12 +179,29 @@ def _caja_valida(caja, W, H) -> str | None:
 
 
 def _recorte(vista, cx, cy, ox, oy):
-    """Ventana cuyo pixel (ox, oy) es el punto (cx, cy) de la imagen."""
+    """(ventana, x0, y0) cuyo pixel (ox, oy) es el punto (cx, cy) de la imagen.
+
+    Devuelve tambien el ORIGEN porque sin el no se puede contar cuantas esquinas
+    de la caja caen dentro del recorte, y ese conteo es el unico aval de que la
+    salida unica de `esq-cq` es representable. Ver `_esquinas_dentro`."""
     x0, y0 = int(round(cx - ox)), int(round(cy - oy))
     H, W = vista.shape
     if x0 < 0 or y0 < 0 or x0 + VENTANA > W or y0 + VENTANA > H:
         return None
-    return vista[y0:y0 + VENTANA, x0:x0 + VENTANA]
+    return vista[y0:y0 + VENTANA, x0:x0 + VENTANA], x0, y0
+
+
+def _esquinas_dentro(esquinas: dict, x0: int, y0: int) -> int:
+    """Cuantas de las CUATRO esquinas de la caja caen dentro del recorte.
+
+    ⚠ Se cuenta contra la GEOMETRIA, no contra la etiqueta que se acaba de
+    escribir. El contador anterior hacia `sum(et[c][0]) > 1` sobre un `et` en el
+    que `_ventanas` habia marcado UNA sola esquina: no podia dar otra cosa que 0,
+    o sea un assert incapaz de fallar (R14). Y de ese 0 dependia la afirmacion
+    "ninguna ventana contiene mas de una esquina", que es lo que hace que una
+    salida unica de posicion sea siquiera representable."""
+    return sum(1 for cx, cy in esquinas.values()
+               if x0 <= cx < x0 + VENTANA and y0 <= cy < y0 + VENTANA)
 
 
 # etiqueta vacia: sin ninguna esquina
@@ -164,42 +225,47 @@ def _ventanas(vista, caja, rng):
     for cual in ("tl", "br"):                             # POSITIVAS: 2 de cada
         for _ in range(2):
             ox, oy = sortear_off()
-            v = _recorte(vista, *esquinas[cual], ox, oy)
-            if v is not None:
+            r = _recorte(vista, *esquinas[cual], ox, oy)
+            if r is not None:
+                v, x0, y0 = r
                 et = dict(VACIA)
                 et[cual] = (1, float(ox), float(oy))
-                fuera.append((v, et, f"esquina-{cual}"))
+                fuera.append((v, et, f"esquina-{cual}", _esquinas_dentro(esquinas, x0, y0)))
 
     for nombre in ("tr", "bl"):                           # negativo duro: la OTRA diagonal
         ox, oy = sortear_off()
-        v = _recorte(vista, *esquinas[nombre], ox, oy)
-        if v is not None:
+        r = _recorte(vista, *esquinas[nombre], ox, oy)
+        if r is not None:
+            v, x0, y0 = r
             # Negativo para ESTE experimento, pero se etiqueta igual: para el que
             # mire la otra diagonal es un positivo, y el recorte ya esta hecho.
             et = dict(VACIA)
             et[nombre] = (1, float(ox), float(oy))
-            fuera.append((v, et, f"otra-esquina-{nombre}"))
+            fuera.append((v, et, f"otra-esquina-{nombre}", _esquinas_dentro(esquinas, x0, y0)))
 
     if w > 2 * VENTANA:                                   # negativo: bordes sin esquina
         for lado, cy in (("superior", y), ("inferior", y + h)):
             bx = rng.uniform(x + VENTANA, x + w - VENTANA)
-            v = _recorte(vista, bx, cy, *sortear_off())
-            if v is not None:
-                fuera.append((v, dict(VACIA), f"borde-{lado}"))
+            r = _recorte(vista, bx, cy, *sortear_off())
+            if r is not None:
+                v, x0, y0 = r
+                fuera.append((v, dict(VACIA), f"borde-{lado}", _esquinas_dentro(esquinas, x0, y0)))
 
     if w > 2 * VENTANA and h > 2 * VENTANA:               # negativo: interior
-        v = _recorte(vista, rng.uniform(x + VENTANA, x + w - VENTANA),
+        r = _recorte(vista, rng.uniform(x + VENTANA, x + w - VENTANA),
                      rng.uniform(y + VENTANA, y + h - VENTANA), VENTANA // 2, VENTANA // 2)
-        if v is not None:
-            fuera.append((v, dict(VACIA), "interior"))
+        if r is not None:
+            v, x0, y0 = r
+            fuera.append((v, dict(VACIA), "interior", _esquinas_dentro(esquinas, x0, y0)))
 
     H, W = vista.shape                                    # negativo: fondo vacio
     for _ in range(6):
         fx, fy = rng.uniform(0, W - VENTANA), rng.uniform(0, H - VENTANA)
         if fx + VENTANA < x or fx > x + w or fy + VENTANA < y or fy > y + h:
-            v = _recorte(vista, fx, fy, 0, 0)
-            if v is not None:
-                fuera.append((v, dict(VACIA), "fondo"))
+            r = _recorte(vista, fx, fy, 0, 0)
+            if r is not None:
+                v, x0, y0 = r
+                fuera.append((v, dict(VACIA), "fondo", _esquinas_dentro(esquinas, x0, y0)))
             break
     return fuera
 
@@ -243,9 +309,10 @@ def _empaquetar(imgs, rng):
     Y = {c: [] for c in ETIQUETADAS}
     dobles = 0
     for vista, caja, s in imgs:
-        for v, et, clase in _ventanas(vista, caja, rng):
+        for v, et, clase, n_geom in _ventanas(vista, caja, rng):
             V.append(v); C.append(clase); IMG.append(s)
-            dobles += int(sum(et[c][0] for c in ETIQUETADAS) > 1)
+            # GEOMETRICO, no tautologico: ver `_esquinas_dentro`.
+            dobles += int(n_geom > 1)
             for c in ETIQUETADAS:
                 e, ox, oy = et[c]
                 E[c].append(e); X[c].append(ox); Y[c].append(oy)

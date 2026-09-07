@@ -161,17 +161,23 @@ def figura_paginas(brazo: str, pags: list, esc: int = 2) -> tuple[Path, dict]:
     for vista, caja, s in pags:
         mapa = aplicar(255 - vista, brazo)                 # `aplicar` espera GRIS
         r, c = np.unravel_index(int(np.argmax(mapa)), mapa.shape)
-        rn, cn = np.unravel_index(int(np.argmin(mapa)), mapa.shape)
         x, y, w, h = caja
-        mx, my = c + off, r + off                          # el MAXIMO -> tl
-        nx, ny = cn + off, rn + off                        # el MINIMO -> br
+        mx, my = c + off, r + off                          # el MAXIMO, y ya
+        # ⚠ UNA sola lectura: `esq-cq` no dice CUAL esquina es, asi que el maximo
+        # acierta si cae cerca de CUALQUIERA de las dos. El minimo ya no se lee
+        # (en `esq-2d` era de donde salia `br`).
+        d_tl = float(np.hypot(mx - x, my - y))
+        d_br = float(np.hypot(mx - (x + w), my - (y + h)))
         filas.append({"s": s, "vista": vista, "caja": caja, "mapa": mapa,
-                      "max": (mx, my), "min": (nx, ny),
-                      "d_tl": float(np.hypot(mx - x, my - y)),
-                      "d_br": float(np.hypot(nx - (x + w), ny - (y + h)))})
+                      "max": (mx, my), "d_tl": d_tl, "d_br": d_br,
+                      "d": min(d_tl, d_br),
+                      "cual": "tl" if d_tl <= d_br else "br"})
 
-    ok_tl = sum(1 for f in filas if f["d_tl"] <= 2)
-    ok_br = sum(1 for f in filas if f["d_br"] <= 2)
+    ok = sum(1 for f in filas if f["d"] <= 2)
+    # A cual se pega el maximo cuando acierta: es la pregunta que sustituye al
+    # desglose por salida, porque aqui la red no declara cual esquina cree ver.
+    ok_tl = sum(1 for f in filas if f["d"] <= 2 and f["cual"] == "tl")
+    ok_br = sum(1 for f in filas if f["d"] <= 2 and f["cual"] == "br")
 
     H, W = pags[0][0].shape
     lw, lh = W * esc, H * esc
@@ -189,9 +195,9 @@ def figura_paginas(brazo: str, pags: list, esc: int = 2) -> tuple[Path, dict]:
     d.text((sep, 34), "arriba la pagina · abajo su mapa de respuesta en las mismas coordenadas "
                       "· VERDE: las esquinas verdaderas (cruz = tl, aspa = br)",
            fill=(90, 90, 90), font=f12)
-    d.text((sep, 52), f"ROJO: el MAXIMO del mapa, que es de donde se lee `tl` -> cae a <=2 px en "
-                      f"{ok_tl}/{n}  ·  NARANJA: el MINIMO, de donde se lee `br` -> {ok_br}/{n}"
-                      f"   [los dos signos van a escalas independientes]",
+    d.text((sep, 52), f"ROJO: el MAXIMO del mapa, la UNICA lectura -> cae a <=2 px de ALGUNA "
+                      f"esquina en {ok}/{n}  (se pega a tl en {ok_tl}, a br en {ok_br})"
+                      f"   ·  el minimo ya no se lee",
            fill=(90, 90, 90), font=f12)
 
     for j, fila in enumerate(filas):
@@ -217,16 +223,16 @@ def figura_paginas(brazo: str, pags: list, esc: int = 2) -> tuple[Path, dict]:
             _marca(dd, x + w + x0 / esc, y + h + oy / esc, (0, 170, 0), esc, r=9, w=2, aspa=True)
             _marca(dd, fila["max"][0] + x0 / esc, fila["max"][1] + oy / esc,
                    (220, 0, 0), esc, r=7, w=2)
-            _marca(dd, fila["min"][0] + x0 / esc, fila["min"][1] + oy / esc,
-                   (245, 140, 0), esc, r=7, w=2, aspa=True)
         d.text((x0, ym + lh + 3),
-               f"{j+1}. s={fila['s']} · max a {_coma(fila['d_tl'],1)} px de tl · "
-               f"min a {_coma(fila['d_br'],1)} px de br", fill=(70, 70, 70), font=f12)
+               f"{j+1}. s={fila['s']} · max a {_coma(fila['d'],1)} px de {fila['cual']} "
+               f"(tl {_coma(fila['d_tl'],1)} · br {_coma(fila['d_br'],1)})",
+               fill=(70, 70, 70), font=f12)
 
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"transformacion-{brazo}-{n}-paginas.png"
     lienzo.save(destino)
-    return destino, {"tl": ok_tl, "br": ok_br, "n": n,
+    return destino, {"ok": ok, "tl": ok_tl, "br": ok_br, "n": n,
+                     "med": float(np.median([f["d"] for f in filas])),
                      "med_tl": float(np.median([f["d_tl"] for f in filas])),
                      "med_br": float(np.median([f["d_br"] for f in filas]))}
 
@@ -249,13 +255,13 @@ def main() -> int:
         # proposito, para que la unica diferencia entre figuras sea el kernel.
         pags = paginas(a.paginas)
         print(f"{len(pags)} paginas de la particion `muestra` (fuera de train y val)\n")
-        print(f"{'brazo':>6} {'max a <=2px de tl':>18} {'min a <=2px de br':>18} "
-              f"{'mediana tl':>11} {'br':>8}")
+        print(f"{'brazo':>6} {'max a <=2px de ALGUNA':>22} {'(a tl':>7} {'a br)':>7} "
+              f"{'mediana':>9} {'med tl':>8} {'med br':>8}")
         for b in brazos:
             destino, r = figura_paginas(b, pags)
-            print(f"{b:>6} {str(r['tl'])+'/'+str(r['n']):>18} "
-                  f"{str(r['br'])+'/'+str(r['n']):>18} {r['med_tl']:>10.1f}px "
-                  f"{r['med_br']:>7.1f}px   {destino.relative_to(EXP)}")
+            print(f"{b:>6} {str(r['ok'])+'/'+str(r['n']):>22} {r['tl']:>7} {r['br']:>7} "
+                  f"{r['med']:>8.1f}px {r['med_tl']:>7.1f}px {r['med_br']:>7.1f}px   "
+                  f"{destino.relative_to(EXP)}")
     return 0
 
 

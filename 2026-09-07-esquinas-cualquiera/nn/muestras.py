@@ -43,6 +43,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from datos import CONGELADAS, DATASET
 from expcnn import exigir_dataset
+import datos
 from modelo import BRAZOS, ESQUINAS, VENTANA, construir, simetria
 
 AQUI = Path(__file__).resolve().parent
@@ -51,7 +52,10 @@ SALIDA = EXP / "muestras"
 ESCALA = 8
 LADO = VENTANA * ESCALA
 FUENTE = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-COLOR = {"tl": (230, 0, 0), "br": (245, 140, 0)}      # predichas
+# UNA sola prediccion: la red no dice cual esquina es. El color de la VERDADERA
+# distingue tl de br, que es lo unico que sigue teniendo dos casos.
+COLOR_PRED = (230, 0, 0)                              # la posicion predicha
+COLOR_REAL = {"tl": (0, 150, 0), "br": (0, 90, 200)}  # la verdadera, por tipo
 VERDE = (0, 190, 0)
 
 
@@ -108,9 +112,10 @@ def figura(brazo: str, d10: dict, etiqueta: str) -> Path:
 
     V = d10["ventanas"].astype(np.float32) / 255.0
     with torch.no_grad():
-        salida, mapa = red(torch.from_numpy(V).unsqueeze(1))
-    pred = {c: (torch.sigmoid(salida[c][0]).numpy(), salida[c][1].numpy(), salida[c][2].numpy())
-            for c in red.esquinas}
+        (logit, px, py), mapa = red(torch.from_numpy(V).unsqueeze(1))
+    p_existe, pred_x, pred_y = torch.sigmoid(logit).numpy(), px.numpy(), py.numpy()
+    # La etiqueta unica, por la MISMA puerta que usa el entrenamiento.
+    e_real, x_real, y_real = datos.objetivo(d10)
 
     cols, filas = 5, 2
     pie, sep = 62, 14
@@ -122,16 +127,21 @@ def figura(brazo: str, d10: dict, etiqueta: str) -> Path:
     f, fb = _fuente(14), _fuente(17)
 
     k = red.k
-    aciertos = {c: [0, 0] for c in ESQUINAS}       # [aciertos, total] por esquina
+    # Global, y el desglose por esquina VERDADERA -- que es lo que distingue
+    # "acierta la mitad" de "acierta todas las tl y ninguna br".
+    ok = tot = 0
+    por_tipo = {c: [0, 0] for c in ESQUINAS}
     for i in range(len(V)):
-        for c in red.esquinas:
-            if d10[f"existe_{c}"][i] != 1:
-                continue
-            e = float(np.hypot(pred[c][1][i] - d10[f"x_{c}"][i],
-                               pred[c][2][i] - d10[f"y_{c}"][i]))
-            aciertos[c][0] += int(e <= 2); aciertos[c][1] += 1
-    resumen = " · ".join(f"{c} {aciertos[c][0]}/{aciertos[c][1]}"
-                         for c in red.esquinas if aciertos[c][1])
+        if e_real[i] != 1:
+            continue
+        e = float(np.hypot(pred_x[i] - x_real[i], pred_y[i] - y_real[i]))
+        ok += int(e <= 2); tot += 1
+        for c in ESQUINAS:
+            if d10[f"existe_{c}"][i] == 1:
+                por_tipo[c][0] += int(e <= 2); por_tipo[c][1] += 1
+    resumen = f"{ok}/{tot}" + (
+        "  (" + " · ".join(f"{c} {por_tipo[c][0]}/{por_tipo[c][1]}"
+                           for c in ESQUINAS if por_tipo[c][1]) + ")")
     sim, anti = simetria(red.kernel())
     dr.text((sep, 10), f"{brazo} · estructura `{red.estructura}` · kernel {k}x{k} · "
                        f"{red.n_parametros()} parametros ({red.n_cabeza()} de cabeza) · "
@@ -140,12 +150,11 @@ def figura(brazo: str, d10: dict, etiqueta: str) -> Path:
             fill=(20, 20, 20), font=fb)
     dr.text((sep, 32), f"arriba: ventana 32x32 (x8) · abajo: mapa del kernel en las MISMAS "
                        f"coordenadas (azul<0 rojo>0; gris = margen ciego {(k-1)//2} px) "
-                       f"· kernel {100*anti:.0f}% antisimetrico bajo giro de 180",
+                       f"· kernel {100*sim:.0f}% SIMETRICO bajo giro de 180",
             fill=(90, 90, 90), font=f)
-    dr.text((sep, 50), "VERDE: la esquina verdadera (hay una por ventana, o ninguna) · "
-                       "cruz ROJA: la tl predicha · ASPA NARANJA: la br predicha "
-                       "— las dos se pintan siempre, y con forma distinta porque al empezar "
-                       "caen en el mismo sitio",
+    dr.text((sep, 50), "VERDE: la esquina verdadera si es `tl` · AZUL: si es `br` · "
+                       "cruz ROJA: la UNICA posicion predicha — la red no dice cual "
+                       "esquina es, y por eso hay una sola marca roja",
             fill=(90, 90, 90), font=f)
 
     for i in range(len(V)):
@@ -161,28 +170,27 @@ def figura(brazo: str, d10: dict, etiqueta: str) -> Path:
             for c in ESQUINAS:                          # la verdadera, si existe
                 if d10[f"existe_{c}"][i] == 1:
                     _cruz(cap, d10[f"x_{c}"][i] + x0 / ESCALA,
-                          d10[f"y_{c}"][i] + oy / ESCALA, VERDE, r=r + 2, w=w)
-            for c in red.esquinas:                      # las predichas, siempre
-                _cruz(cap, float(pred[c][1][i]) + x0 / ESCALA,
-                      float(pred[c][2][i]) + oy / ESCALA, COLOR[c], r=r, w=w,
-                      aspa=(c == "br"))
+                          d10[f"y_{c}"][i] + oy / ESCALA, COLOR_REAL[c], r=r + 2, w=w)
+            # UNA sola prediccion, siempre pintada
+            _cruz(cap, float(pred_x[i]) + x0 / ESCALA,
+                  float(pred_y[i]) + oy / ESCALA, COLOR_PRED, r=r, w=w)
             dr.rectangle([x0, oy, x0 + LADO - 1, oy + LADO - 1], outline=(120, 120, 120))
 
         dr.text((x0, ym + LADO + 5), f"{i+1}. {d10['clase'][i]}", fill=(20, 20, 20), font=f)
         lin = ym + LADO + 23
-        for c in red.esquinas:
-            real = d10[f"existe_{c}"][i] == 1
-            txt = f"{c}: existe {'SI' if real else 'no'} · pred {float(pred[c][0][i]):.2f}"
-            color = (70, 70, 70)
-            if real:
-                e = float(np.hypot(pred[c][1][i] - d10[f"x_{c}"][i],
-                                   pred[c][2][i] - d10[f"y_{c}"][i]))
-                # El umbral de 2 px es el de la metrica principal del criterio,
-                # para que la figura y el criterio digan lo mismo.
-                txt += f" · {e:.1f} px {'ACIERTA' if e <= 2 else 'falla'}"
-                color = (0, 130, 0) if e <= 2 else (150, 60, 60)
-            dr.text((x0, lin), txt, fill=color, font=f)
-            lin += 18
+        cual = next((c for c in ESQUINAS if d10[f"existe_{c}"][i] == 1), None)
+        real = e_real[i] == 1
+        txt = (f"existe {'SI' if real else 'no'}"
+               + (f" ({cual})" if cual else "")
+               + f" · pred {float(p_existe[i]):.2f}")
+        color = (70, 70, 70)
+        if real:
+            e = float(np.hypot(pred_x[i] - x_real[i], pred_y[i] - y_real[i]))
+            # El umbral de 2 px es el de la metrica principal del criterio,
+            # para que la figura y el criterio digan lo mismo.
+            txt += f" · {e:.1f} px {'ACIERTA' if e <= 2 else 'falla'}"
+            color = (0, 130, 0) if e <= 2 else (150, 60, 60)
+        dr.text((x0, lin), txt, fill=color, font=f)
 
     SALIDA.mkdir(exist_ok=True)
     destino = SALIDA / f"{brazo}-{etiqueta}.png"

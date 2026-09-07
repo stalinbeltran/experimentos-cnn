@@ -37,6 +37,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+import datos
 from datos import DATASET
 from expcnn import exigir_dataset
 from modelo import BRAZOS, ESQUINAS, construir, simetria
@@ -47,11 +48,15 @@ PESOS = AQUI / "pesos"
 
 LOTE = 128
 LR = 0.05
-# ⚠ MEDIDO, no elegido a ojo. La regla es la misma de `esq-k` -- "los dos
-# terminos parten IGUALES" -- y el numero se re-mide aqui porque la perdida
-# cambio (dos BCE y dos MSE). Lo imprime `--suelos`, que es lo que hay que correr
-# si se toca el dataset o la cabeza.
-LAMBDA_COORD = 0.038
+# ⚠ MEDIDO, no elegido a ojo. La regla que se hereda es "los dos terminos parten
+# IGUALES", NO el numero. Y el numero HAY QUE RE-MEDIRLO: el 0,038 sale de una
+# perdida con DOS bce y DOS mse y un 20 % de positivas por esquina; aqui hay UNA
+# de cada y las positivas son el 40,1 %. Lo imprime `--suelos`, y se congela ahi
+# antes de la primera epoca.
+# ✅ RE-MEDIDO Y CONGELADO el 2026-09-07 con `--suelos` sobre el val publicado,
+# ANTES de la primera epoca: bce/mse = 0,0293 de media en los cinco brazos
+# (0,0285 a 0,0303). El 0,038 de `esq-2d` era de otra perdida.
+LAMBDA_COORD = 0.0293
 SEMILLA = 1
 EPOCAS_DEF = 300
 
@@ -64,50 +69,79 @@ def _cargar(parte: str):
     brazo, y no fallaria por ningun lado."""
     z = np.load(exigir_dataset(DATASET) / f"{parte}.npz", allow_pickle=True)
     v = torch.from_numpy(z["ventanas"].astype(np.float32) / 255.0).unsqueeze(1)
-    obj = {c: (torch.from_numpy(z[f"existe_{c}"]).float(),
-               torch.from_numpy(z[f"x_{c}"]), torch.from_numpy(z[f"y_{c}"]))
-           for c in ESQUINAS}
-    return v, obj
+    # LA PUERTA UNICA: la union tl|br se deriva en `datos.objetivo` y se importa.
+    # No se repite aqui -- la usan tambien `muestras.py` e `informe.py`, y tres
+    # copias de una derivacion divergen sin que nadie se entere.
+    e, x, y = datos.objetivo(z)
+    obj = (torch.from_numpy(e).float(), torch.from_numpy(x), torch.from_numpy(y))
+    # Mascaras SOLO para el desglose al medir: la red no las ve nunca. Son el
+    # ancla de comparabilidad con `esq-2d`, que midio sobre estas mismas 78+78.
+    desglose = {c: torch.from_numpy(z[f"existe_{c}"] == 1) for c in ("tl", "br")}
+    desglose["otra_diagonal"] = torch.from_numpy(
+        (z["existe_tr"] == 1) | (z["existe_bl"] == 1))
+    return v, obj, desglose
 
 
-def _perdida(salida, objetivo, esquinas):
-    """(perdida, bce_media, coord_mse_media). Las dos esquinas pesan igual."""
-    bces, coords = [], []
-    for c in esquinas:
-        logit, px, py = salida[c]
-        existe, x, y = objetivo[c]
-        bces.append(F.binary_cross_entropy_with_logits(logit, existe))
-        hay = existe > 0.5
-        if hay.any():     # las coordenadas solo tienen sentido donde la esquina EXISTE
-            coords.append(((px[hay] - x[hay]) ** 2 + (py[hay] - y[hay]) ** 2).mean())
-    bce = torch.stack(bces).mean()
-    coord = torch.stack(coords).mean() if coords else torch.zeros((), device=bce.device)
+def _perdida(salida, objetivo):
+    """(perdida, bce, coord_mse). UNA bce y UN mse: hay una sola salida.
+
+    En `esq-2d` habia que promediar dos de cada y declarar que las dos esquinas
+    pesaban igual. Aqui esa decision desaparece: no hay dos cosas que pesar."""
+    logit, px, py = salida
+    existe, x, y = objetivo
+    bce = F.binary_cross_entropy_with_logits(logit, existe)
+    hay = existe > 0.5
+    if hay.any():         # las coordenadas solo tienen sentido donde HAY esquina
+        coord = ((px[hay] - x[hay]) ** 2 + (py[hay] - y[hay]) ** 2).mean()
+    else:
+        coord = torch.zeros((), device=bce.device)
     return bce + LAMBDA_COORD * coord, bce, coord
 
 
-def _metricas(salida, objetivo, esquinas) -> dict:
-    """Por esquina, sobre las ventanas donde ESA esquina existe de verdad.
+def _metricas(salida, objetivo, desglose) -> dict:
+    """La metrica UNICA, mas el desglose por esquina verdadera.
 
-    ⚠ La metrica principal es la TASA DE ACIERTO a <=2 px, y el titular es la
-    PEOR de las dos esquinas: una estructura que resuelve tl y no br no ha
-    resuelto la tarea. El promedio la escondería."""
-    m, aciertos = {}, []
-    for c in esquinas:
-        logit, px, py = salida[c]
-        existe, x, y = objetivo[c]
-        hay = existe > 0.5
-        m[f"n_pos_{c}"] = int(hay.sum())
-        if hay.any():
-            d = ((px[hay] - x[hay]) ** 2 + (py[hay] - y[hay]) ** 2).sqrt()
-            m[f"err_px_{c}"] = d.mean().item()
-            m[f"acierto_1px_{c}"] = (d <= 1).float().mean().item()
-            m[f"acierto_2px_{c}"] = (d <= 2).float().mean().item()
-            aciertos.append(m[f"acierto_2px_{c}"])
-        pred = torch.sigmoid(logit) > 0.5
-        tp = (pred & hay).sum().item()
-        den = pred.sum().item() + hay.sum().item()
-        m[f"f1_existe_{c}"] = (2 * tp / den) if den > 0 else 0.0
-    m["acierto_2px_peor"] = min(aciertos) if aciertos else 0.0
+    ⚠⚠ EL DESGLOSE NO ES DIAGNOSTICO OPCIONAL: ES EL ANCLA DE COMPARABILIDAD.
+    La metrica titular de `esq-cq` (una tasa sobre 156 ventanas) y la de `esq-2d`
+    (la PEOR de dos tasas sobre 78) NO son el mismo numero: un 50 % aqui no es un
+    50 % alli. Lo unico que se puede poner columna a columna son las tasas por
+    esquina verdadera, sobre las MISMAS 78 + 78 ventanas.
+
+    ⚠ Y hace falta por un motivo mas fuerte: con `br` sin senal local a menos de
+    8 px (medido 2026-09-07) el techo esperable ronda el 50 %, porque las
+    positivas son mitad y mitad. **Un 50 % se lee como "resuelve la mitad" y
+    significa "tl entero, br nada".** Sin desglose, este experimento se
+    autoengana.
+
+    `fp_otra_diagonal` es el modo de fallo propio de un kernel casi simetrico:
+    responder alto en `tr`/`bl`, que son el negativo duro."""
+    logit, px, py = salida
+    existe, x, y = objetivo
+    hay = existe > 0.5
+    m = {"n_pos": int(hay.sum())}
+
+    d_todas = ((px - x) ** 2 + (py - y) ** 2).sqrt()
+    if hay.any():
+        d = d_todas[hay]
+        m["err_px"] = d.mean().item()
+        m["acierto_1px"] = (d <= 1).float().mean().item()
+        m["acierto_2px"] = (d <= 2).float().mean().item()
+
+    # desglose por esquina VERDADERA (la red no sabe cual es; nosotros si)
+    for c in ("tl", "br"):
+        sel = desglose[c]
+        m[f"n_pos_{c}"] = int(sel.sum())
+        if sel.any():
+            dc = d_todas[sel]
+            m[f"acierto_2px_{c}"] = (dc <= 2).float().mean().item()
+            m[f"err_px_{c}"] = dc.mean().item()
+
+    pred = torch.sigmoid(logit) > 0.5
+    tp = (pred & hay).sum().item()
+    den = pred.sum().item() + hay.sum().item()
+    m["f1_existe"] = (2 * tp / den) if den > 0 else 0.0
+    otra = desglose["otra_diagonal"]
+    m["fp_otra_diagonal"] = pred[otra].float().mean().item() if otra.any() else 0.0
     return m
 
 
@@ -162,8 +196,8 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
         print(f"ya esta en la epoca {ep0} >= {epocas}: nada que hacer")
         return 0
 
-    Vtr, Ytr = _cargar("train")
-    Vva, Yva = _cargar("val")
+    Vtr, Ytr, _ = _cargar("train")          # el desglose solo hace falta al medir
+    Vva, Yva, Dva = _cargar("val")
     reg = dir_b / "metrics.jsonl"
 
     for ep in range(ep0 + 1, epocas + 1):
@@ -174,18 +208,18 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
         for i in range(0, len(orden), LOTE):
             idx = orden[i:i + LOTE]
             opt.zero_grad()
-            obj = {c: tuple(t[idx] for t in Ytr[c]) for c in red.esquinas}
-            p, *_ = _perdida(red(Vtr[idx])[0], obj, red.esquinas)
+            obj = tuple(t[idx] for t in Ytr)
+            p, *_ = _perdida(red(Vtr[idx])[0], obj)
             p.backward(); opt.step()
             suma += p.item() * len(idx); n += len(idx)
         red.eval()
         with torch.no_grad():
             salida, _ = red(Vva)
-            pv, bce, coord = _perdida(salida, Yva, red.esquinas)
-            met = _metricas(salida, Yva, red.esquinas)
+            pv, bce, coord = _perdida(salida, Yva)
+            met = _metricas(salida, Yva, Dva)
         sim, anti = simetria(red.kernel())
         fila = {"epoca": ep, "train": suma / n, "val": pv.item(), "bce": bce.item(),
-                "coord_mse": coord.item(), "beta": float(red.log_beta.exp()),
+                "coord_mse": coord.item(), "beta": float(red.log_beta.exp().detach()),
                 "simetrico": sim, "antisimetrico": anti,
                 **met, "segundos": round(time.time() - t0, 2)}
         with reg.open("a", encoding="utf-8") as f:      # SOLO ANADIR
@@ -194,45 +228,67 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
             mejor = pv.item()
             _guardar(mejor_f, red, opt, ep, mejor)
         _guardar(ultimo, red, opt, ep, mejor)           # cada epoca: reanudable siempre
-        det = " · ".join(f"{c} {100*fila.get(f'acierto_2px_{c}', 0):.0f}%/"
-                         f"{fila.get(f'err_px_{c}', 0):.2f}px/f1 {fila[f'f1_existe_{c}']:.2f}"
-                         for c in red.esquinas)
-        print(f"  ep {ep:>3} val {fila['val']:.4f} · peor<=2px "
-              f"{100*fila['acierto_2px_peor']:>5.1f}% · {det} · A {100*anti:.0f}% "
+        # ⚠ El desglose va en la linea de cada epoca, no solo en el informe: es
+        # donde se ve si el 40 % que sale es "medio tl y medio br" o "tl entero".
+        det = " · ".join(f"{c} {100*fila.get(f'acierto_2px_{c}', 0):.0f}%"
+                         for c in ("tl", "br"))
+        print(f"  ep {ep:>3} val {fila['val']:.4f} · <=2px "
+              f"{100*fila['acierto_2px']:>5.1f}% ({det}) · f1 {fila['f1_existe']:.2f} "
+              f"· fp-otra {100*fila['fp_otra_diagonal']:.0f}% · S {100*sim:.0f}% "
               f"· beta {fila['beta']:.2f} · {fila['segundos']}s")
     return 0
 
 
 def suelos() -> int:
-    """Los SUELOS: que da cada estructura SIN entrenar, y con que lambda parten
-    iguales los dos terminos de la perdida.
+    """Los SUELOS: que da la red SIN entrenar, y con que lambda parten iguales
+    los dos terminos de la perdida.
 
     Es lo que el criterio necesita ANTES de mirar, y por eso vive aqui y no en
-    una libreta: un suelo escrito de memoria no se distingue de uno medido."""
-    Vva, Yva = _cargar("val")
-    n = {c: int(Yva[c][0].sum()) for c in ESQUINAS}
-    print(f"val: {len(Vva)} ventanas · {n['tl']} con esquina tl · {n['br']} con br\n")
+    una libreta: un suelo escrito de memoria no se distingue de uno medido.
+
+    ⚠ Y aqui es donde se CONGELA `LAMBDA_COORD` para `esq-cq`. El 0,038 que se
+    hereda de `esq-2d` sale de una perdida distinta (dos bce y dos mse, 20 % de
+    positivas por esquina); esta tiene una de cada y 40,1 % de positivas. La
+    regla que se hereda es "los dos terminos parten iguales", no el numero."""
+    Vva, Yva, Dva = _cargar("val")
+    existe = Yva[0]
+    print(f"val: {len(Vva)} ventanas · {int(existe.sum())} positivas "
+          f"({existe.mean():.1%}) · {int(Dva['tl'].sum())} son tl · "
+          f"{int(Dva['br'].sum())} son br · {int(Dva['otra_diagonal'].sum())} "
+          f"de la otra diagonal (negativo duro)\n")
 
     # El predictor CONSTANTE en el centro del mapa, que es el modo degenerado de
     # esta cabeza: si el mapa sale plano, la esperanza cae justo ahi.
-    print(f"{'brazo':>7} {'esquina':>8} {'acierto<=2px':>13} {'<=1px':>7} {'err px':>8} "
-          f"{'f1 existe':>10} {'bce':>7} {'mse':>8} {'lambda':>8}")
+    print(f"{'brazo':>7} {'<=2px':>7} {'(tl':>7} {'br)':>7} {'<=1px':>7} {'err px':>8} "
+          f"{'f1':>7} {'fp-otra':>8} {'bce':>7} {'mse':>8} {'lambda':>8}")
+    lams = []
     for brazo in BRAZOS:
         red = construir(brazo, SEMILLA)
         red.eval()
         with torch.no_grad():
             salida, _ = red(Vva)
-            _, bce, coord = _perdida(salida, Yva, red.esquinas)
-            met = _metricas(salida, Yva, red.esquinas)
+            _, bce, coord = _perdida(salida, Yva)
+            met = _metricas(salida, Yva, Dva)
         lam = bce.item() / coord.item() if coord.item() else float("nan")
-        for i, c in enumerate(red.esquinas):
-            print(f"{brazo if i == 0 else '':>7} {c:>8} "
-                  f"{100*met[f'acierto_2px_{c}']:>12.1f}% {100*met[f'acierto_1px_{c}']:>6.1f}% "
-                  f"{met[f'err_px_{c}']:>8.2f} {met[f'f1_existe_{c}']:>10.3f} "
-                  f"{bce.item() if i == 0 else 0:>7.3f} {coord.item() if i == 0 else 0:>8.2f} "
-                  f"{lam if i == 0 else 0:>8.4f}")
-    print(f"\n  lambda congelada en {LAMBDA_COORD} (regla: los dos terminos parten iguales)")
+        lams.append(lam)
+        print(f"{brazo:>7} {100*met['acierto_2px']:>6.1f}% "
+              f"{100*met.get('acierto_2px_tl', 0):>6.1f}% "
+              f"{100*met.get('acierto_2px_br', 0):>6.1f}% "
+              f"{100*met['acierto_1px']:>6.1f}% {met['err_px']:>8.2f} "
+              f"{met['f1_existe']:>7.3f} {100*met['fp_otra_diagonal']:>7.1f}% "
+              f"{bce.item():>7.3f} {coord.item():>8.2f} {lam:>8.4f}")
+
+    medio = sum(lams) / len(lams)
+    print(f"\n  lambda que iguala los dos terminos: {medio:.4f} (media de los {len(lams)} brazos)")
+    print(f"  LAMBDA_COORD hoy en el codigo: {LAMBDA_COORD}")
+    if abs(medio - LAMBDA_COORD) > 0.2 * max(medio, LAMBDA_COORD):
+        print(f"  ⚠⚠ NO CUADRAN. Congela LAMBDA_COORD = {medio:.4f} ANTES de la primera")
+        print("     epoca: es el numero heredado de `esq-2d`, con otra perdida detras.")
     print("  ⚠ un lambda por brazo haria que cada uno optimizase una funcion distinta")
+
+    # El suelo del "siempre si", que es contra lo que se lee el f1.
+    p_si = float(existe.mean())
+    print(f"\n  suelo f1 del 'siempre si': {2 * p_si / (1 + p_si):.3f}")
     return 0
 
 

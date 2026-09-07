@@ -1,126 +1,161 @@
-# `esq-cq` — ⚠ PARTIDA SIN DEFINIR: copia de `esq-2d` lista para entrenar
+# `esq-cq` — con UN kernel, ¿qué tamaño detecta CUALQUIERA de las dos esquinas?
 
-**No se ha corrido ni una época, y la pregunta todavía no está escrita.** Esta carpeta es una
-copia literal del montaje de [`esq-2d`](../2026-09-07-esquinas-diagonales/) —código, dataset,
-estructura y alternativas anotadas— con **todo lo producido por su barrido borrado**. Sirve como
-punto de partida para el experimento siguiente, no como un experimento en sí.
+**Preparado el 2026-09-07. Cero épocas entrenadas — no se ha lanzado.** El criterio está
+congelado **antes** de mirar en
+[`instrucciones/02-criterio.md`](instrucciones/02-criterio.md), y no declara ganador: se
+reportan todos los que pasan.
 
-## ⚠ Lo que falta antes de lanzar nada
+## Qué pregunta
 
-Tres cosas, y las tres son del dueño porque son el criterio, no la mecánica:
+Una sola salida: **`existe`** («hay esquina») y **una posición**, sin decir si la esquina es la
+superior-izquierda o la inferior-derecha. Orden del dueño (2026-09-07):
 
-1. **`experimento.json` → `titulo` y `pregunta`.** Hoy dicen `POR DEFINIR`. El preflight las
-   exige no vacías, así que el marcador pasa la comprobación — pero un `POR DEFINIR` en el índice
-   del README raíz es justo lo que tiene que verse hasta que se decida.
-2. **`instrucciones/02-criterio.md` está congelado para la pregunta de `esq-2d`**, no para ésta.
-   **R13: el criterio se escribe antes de mirar** — reescribirlo *después* de la primera época
-   deja de ser un criterio y pasa a ser una explicación.
-3. **`instrucciones/01-encargo.md` y `03-alternativas-anotadas.md`** son igualmente los de
-   `esq-2d`. Valen como herencia; hay que decir qué sigue aplicando.
+> «no se quieren detectar las 2 esquinas por separado, sino cualquiera de ellas [...] Decimos
+> "hay esquina" si la hay, y la posición de ella, sin importar si es tl o br.»
 
-Mientras `pregunta` diga `POR DEFINIR`, lo que salga de aquí no es comparable con nada, porque
-nadie ha declarado contra qué se compara.
+Es `esq-2d` **quitándole la mitad que consistía en distinguir**. No es «`esq-2d` más fácil»:
+quita la dificultad barata y conserva entera la cara (ver abajo).
 
-## Qué se conservó, y por qué
+## La estructura
 
-| Qué | Por qué se queda |
-|---|---|
-| `nn/*.py`, `nn/lanzar_barrido.sh` | es el montaje que se hereda — el punto de copiar |
-| `nn/manifiesto.json`, `nn/receta.json` | identidad del dataset de entrada, no resultado del barrido |
-| `instrucciones/` | la herencia de `esq-2d`, pendiente de revisar (ver arriba) |
-| `datos/` *(ignorado por git)* | caché local del dataset publicado; no es producto de entrenar |
+```
+entrada x (1, 32, 32) en TINTA (/255)
+    │
+    └── conv(x, W)  ──►  M  (m×m, m = 32 − k + 1)   ── UN mapa, sin bias, sin padding
+                          │
+                          └── softmax(β·M) ──► (x, y) del MÁXIMO   ── LA posición
+                              existe = a · logsumexp(β·M)/β + b
 
-## Qué se borró, y por qué
-
-Todo lo que sólo existe **porque `esq-2d` ya corrió**. Nada de esto se pierde: vive en
-[`esq-2d`](../2026-09-07-esquinas-diagonales/), que está commiteado y empujado.
-
-| Qué | Cuánto |
-|---|---|
-| `nn/pesos/k{05,07,09,11,13}/` (`best.pt`, `last.pt`, `metrics.jsonl`) | 892 KB, 5 brazos |
-| `muestras/*.png` (`ep000-sin-entrenar`, `ep300`, `transformacion-*`) | 15 figuras |
-| `nn/__pycache__/` | — |
-
-⚠ **Las `ep000-sin-entrenar` también se borraron**, aunque suenen a «antes de entrenar»: son la
-salida de `muestras.py` sobre la inicialización aleatoria concreta de `esq-2d`. Si esta copia
-cambia el modelo, mienten. Se regeneran en segundos:
-
-```bash
-.venv/bin/python 2026-09-07-esquinas-cualquiera/nn/muestras.py    # sin pesos, etiqueta ep000 sola
+β se aprende (arranca en 3,5). Cabeza de 3 parámetros: β, a, b.
 ```
 
-## El montaje heredado
-
-Lo que sigue describe **cómo está montado hoy**, tal como vino de `esq-2d`. Si la pregunta nueva
-cambia algo de esto, hay que cambiarlo aquí también.
-
-- **Una sola convolución `k×k`**, sin bias, sin padding, sin ReLU, y la lectura C1 por esperanza
-  bajo `softmax`. Un solo mapa: `tl` del máximo, `br` del mínimo. `β` aprendida, compartida.
-- **Cinco brazos**, `k` ∈ {5, 7, 9, 11, 13}, 300 épocas, `lr` 0,05, lote 128, semilla 1.
-- **Cabeza de 5 parámetros** (`β` + `a,b` por esquina).
-- **Alternativas implementadas y sin armar**: `ant` (kernel antisimétrico) y el control
-  `ind-tl`/`ind-br`. Armarlas es añadir su línea a `BRAZOS`.
-- **Descartada por el dueño**: `rot` (girar la entrada 180°), con su código borrado a propósito.
+**La cabeza vuelve a ser la de `esq-k`**, y con ella los totales: **28 · 52 · 84 · 124 · 172**
+para `k` = 5·7·9·11·13. Eso vale más que la cifra — de los dos defectos que `esq-2d` declaraba al
+compararse con `esq-k`, el de *«la red no es idéntica»* desaparece.
 
 ```bash
-.venv/bin/python 2026-09-07-esquinas-cualquiera/nn/modelo.py   # imprime la tabla y comprueba
+.venv/bin/python 2026-09-07-esquinas-cualquiera/nn/modelo.py   # la tabla y los dos invariantes
 ```
 
-⚠ **`k` = 13 no es un tope caprichoso**: la esquina se sortea entre los píxeles 8 y 23, y el mapa
-de un kernel `k` representa de `(k−1)/2` a `31−(k−1)/2`. Este dataset admite hasta **k = 17** sin
-regenerarlo; a partir de 19 hay esquinas que el mapa **no puede** señalar. Lo calcula el
-manifiesto, no se supone.
+### El mínimo ya no se lee, y eso le da la vuelta a lo que se le pide al kernel
 
-## El dataset: el mismo fichero, no uno equivalente
+En `esq-2d`, `respuesta_tl = ⟨S,P⟩ + ⟨A,P⟩` y `respuesta_br = ⟨S,P⟩ − ⟨A,P⟩`: toda la diferencia
+entre esquinas vivía en la parte **antisimétrica**. Con **una** salida leída del máximo hay que
+pedir las **dos** altas, y eso exige `⟨S,P⟩ ≫ |⟨A,P⟩|`, o sea **`A → 0`**.
+
+Es la inversa exacta. Por eso **`ant` se borra** (con esta lectura es incapaz por construcción) y
+entra **`sim`**, el kernel forzado simétrico, que da equivarianza exacta bajo giro de 180° y tiene
+su test. Detalle en
+[`instrucciones/03-alternativas-anotadas.md`](instrucciones/03-alternativas-anotadas.md).
+
+## ⚠⚠ Lo que se midió ANTES de diseñar nada: `br` no es una esquina de tinta
+
+*2026-09-07, sobre las 389 ventanas del `val.npz` publicado, 0 $. Distancia del punto etiquetado
+al píxel de tinta más cercano — robusta al umbral (0, 32 y 64 dan lo mismo).*
+
+| esquina | mediana | p90 | máx |
+|---|--:|--:|--:|
+| `tl` | **1,00 px** | 1,00 | 1,41 |
+| `bl` | 2,00 px | 3,00 | 3,16 |
+| `tr` | 6,00 px | 9,22 | 10,63 |
+| **`br`** | **8,06 px** | **12,23** | 17,00 |
+
+Masa de tinta en el cuadrante propio (radio 6 px): `tl` **0,431** · `br` **0,014**, con el
+cuadrante **vacío en 64 de 78** ventanas (**82 %**).
+
+**La caja del párrafo es el rectángulo del layout y la última línea es corta**, así que su
+vértice inferior-derecho cae sobre fondo. `br` es un vértice de *bounding box*, no una esquina de
+tinta — y se ve a simple vista en `muestras/k13-ep000-sin-entrenar.png`, paneles 4·5·6.
+
+⚠ **Consecuencia sabida por adelantado:** los radios de campo receptivo son **2·3·4·5·6 px** para
+`k` = 5..13. **Ninguno alcanza los 8,1 px.** El primer `k` con radio ≥ 8 es **17**, que es justo
+el techo del dataset. Esto explica `esq-2d` entero (23 % de techo en `br`, 0/10 en página) sin
+conjeturas, y **acota lo que este experimento puede dar**.
+
+## ⚠ El desglose NO es diagnóstico opcional
+
+**Las positivas son mitad `tl` y mitad `br`, así que ~50 % es exactamente lo que sale de "`tl`
+entero, `br` nada".** Un número global sin desglose, aquí, es un autoengaño con forma de éxito.
+
+Y es además **el ancla de comparabilidad**: la métrica titular de `esq-cq` (una tasa sobre 156) y
+la de `esq-2d` (la peor de dos tasas sobre 78) **no son el mismo número**. Lo único que se puede
+poner columna a columna son las tasas por esquina verdadera, sobre las mismas 78 + 78 ventanas.
+
+Por eso el desglose sale en cada época, en `--suelos`, en el informe y en las figuras.
+
+## Los suelos, medidos antes de entrenar
+
+| | |
+|---|--:|
+| positivas | **156 / 389 = 40,1 %** (78 `tl` + 78 `br`; 78 de la otra diagonal son negativo duro) |
+| acierto ≤2 px sin entrenar | **5,8 %** (5,1 `tl` · 6,4 `br`) |
+| error medio | **6,08 px** |
+| `f1` del «siempre sí» | **0,572** |
+| **umbral del criterio** | **> 9,6 %** (suelo + 2 SE) |
+| `λ` de la pérdida | **0,0293**, re-medida y congelada (el 0,038 era de otra pérdida) |
+
+```bash
+.venv/bin/python 2026-09-07-esquinas-cualquiera/nn/entrenar_local.py --suelos
+```
+
+## La predicción registrada, que se contrasta gratis
+
+**La fracción SIMÉTRICA del kernel debe SUBIR al entrenar.** `esq-k` acabó en **74,0 %** y
+`esq-2d` en **38–53 %**; se registra en cada época. Es la consecuencia directa del álgebra de
+arriba, y contrastarla no cuesta una corrida nueva.
+
+⚠ Con la salvedad de que **el supuesto de esa álgebra es falso**: `esq-2d` la construía sobre
+«el parche de una `br` es el giro del de una `tl`», y con 1,0 px de tinta en una y 8,1 en la otra
+**no lo es**. Simetrizar ayuda, no cierra.
+
+## El dataset: el mismo fichero, sin regenerar nada
 
 ```
 foveal-vision-data/experimentos-cnn/esquinas300-32px-r4-r20260907/
-    train.npz · val.npz · muestra.npz · muestras-congeladas.npz · manifiesto.json · README.md
 ```
 
-Se resuelve con `expcnn.exigir_dataset(...)`, que es **la única** puerta: si no está publicado, el
-entrenamiento **se niega antes de empezar** en vez de generarse uno equivalente. Un dato
-re-derivado es el mismo *mientras nada cambie*, y «nada cambia» no es comprobable hacia el futuro.
+Se reusa **tal cual** —mismos sha, mismo split, misma semilla— porque etiqueta **las cuatro**
+esquinas desde el principio, justo para que un experimento que mire otra combinación no tenga que
+re-rendir nada. `esq-cq` deriva su etiqueta con `datos.objetivo()`, **la puerta única** que
+importan los tres consumidores (entrenamiento, muestras e informe).
 
-Trae las **cuatro** esquinas etiquetadas, no sólo la diagonal `tl`/`br` que leía `esq-2d` — a
-propósito, para que un experimento que mire otra combinación no tenga que re-rendir nada.
-
-```bash
-.venv/bin/python 2026-09-07-esquinas-cualquiera/nn/datos.py --comprobar   # instantáneo
-```
+⚠ **Y ahí se arregló un aval que era vacuo.** El manifiesto decía «0 ventanas con más de una
+esquina» y ese contador se calculaba sobre la etiqueta que `_ventanas` acababa de escribir —una
+sola por ventana—, así que **no podía dar otra cosa que 0**: un assert incapaz de fallar. Ahora se
+cuenta contra la **geometría** (`_esquinas_dentro`). El dato publicado **no se reescribe**; la
+comprobación independiente sobre él da igualmente **0 de 389**, así que la conclusión se sostiene
+— lo que no se sostenía era la prueba.
 
 ## Cómo se corre — ⚠ NO lanzado todavía
 
 ```bash
 cd ~/src/experimentos-cnn
 E=2026-09-07-esquinas-cualquiera
-.venv/bin/python $E/nn/entrenar_local.py --suelos                    # sin entrenar nada
-$E/nn/lanzar_barrido.sh                                              # los 5 brazos (unidad systemd)
-$E/nn/lanzar_barrido.sh --estado                                     # ¿viva? ¿por dónde? ¿NRestarts?
+.venv/bin/python $E/nn/entrenar_local.py --suelos     # sin entrenar nada
+$E/nn/lanzar_barrido.sh                               # 5 brazos (unidad `esqcq-barrido`)
+$E/nn/lanzar_barrido.sh --estado                      # ¿viva? ¿por dónde? ¿NRestarts?
 ```
 
-⚠ **`lanzar_barrido.sh` corre como unidad de systemd** (padre PID 1): sobrevive al fin del turno
-que la lanzó y al reinicio del coordinador, y **se niega a lanzarse dos veces**. El estado se lee
-del **disco**, no del log — `python` bufferiza cuando no es un tty, así que un log vacío no
-significa que no haya arrancado.
+Corre como **unidad de systemd** (padre PID 1): sobrevive al fin del turno y al reinicio del
+coordinador, y se niega a lanzarse dos veces. El estado se lee del **disco**, no del log —
+`python` bufferiza cuando no es un tty.
 
-✅ **La unidad se renombró a `esqcq-barrido`** al hacer la copia (venía como `esq2d-barrido`).
-No es cosmética: el cerrojo de «no se lanza dos veces» compara contra ese nombre, así que con el
-heredado esta copia y `esq-2d` se habrían bloqueado mutuamente — y el aviso de fin habría llegado
-a Telegram firmado por el experimento equivocado.
+## Cuánto cuesta
 
-## Cuánto costaría (estimado, heredado de `esq-2d`, no medido aquí)
+**0 máquinas y 0 $.** `esq-2d` midió ~20 min para 5 brazos × 300 épocas y 0,4 MB en disco; este
+montaje es el mismo con dos parámetros menos por brazo. El freno lo ve (`entrenar_local.py` está
+en la lista `TRABAJOS` de `cerrable.mjs`).
 
-**0 máquinas y 0 $** — entrena en este droplet. `esq-2d` midió **~20 min de reloj** para sus 5
-brazos × 300 épocas, y **0,4 MB** en disco. ⚠ Es el coste de *aquel* montaje: si la pregunta nueva
-cambia brazos o épocas, cambia.
+## 🔓 La decisión abierta: ¿se extiende el eje a `k` ∈ {15, 17}?
 
-El freno lo ve (`entrenar_local.py` está en la lista `TRABAJOS` de `cerrable.mjs`), así que un
-entrenamiento vivo aparece en el veredicto que se lee desde el móvil.
+**No decidida.** El rango es hoy {5,7,9,11,13}. El argumento para extenderlo es la medida de
+arriba —ningún brazo actual alcanza la tinta de `br`—; el argumento para no hacerlo es que con
+{5..13} las filas se leen contra las de `esq-2d` sin traducir. Cuesta **+6 min y 0 $**, y es una
+línea (`K_BARRIDO` en `nn/modelo.py`).
 
-## Los resultados de la base están en `esq-2d`, no aquí
+## Lo que este experimento NO contesta
 
-Lo que aquel barrido midió —que `k11` y `k13` pasan el umbral, que `br` es **0/10 sobre páginas
-enteras en los cinco kernels**, y que el eje **no está acotado por arriba**— se lee en
-[`../2026-09-07-esquinas-diagonales/README.md`](../2026-09-07-esquinas-diagonales/README.md).
-No se copia aquí: dos copias de un veredicto es como nacen las dos mitades desfasadas.
+- **Nada sobre la página entera.** Se mide aparte con `nn/transformacion.py`, y en `esq-2d` el
+  orden de los brazos **no se conservó** entre ventana y página.
+- **Nada sobre `tr`/`bl`**: aquí son el negativo duro (`fp_otra_diagonal` los vigila).
+- **Una semilla.** Las diferencias entre brazos vecinos no se van a poder declarar.
