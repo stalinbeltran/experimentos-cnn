@@ -214,8 +214,16 @@ def main() -> int:
           f"{int(d10['existe_br'].sum())} con br")
 
     for b in ([a.brazo] if a.brazo else list(BRAZOS)):
+        # ⚠ La etiqueta sale de la EPOCA, no de si el fichero de pesos existe.
+        # Deducirla de la presencia del fichero daba `-actual` a una red de epoca
+        # 0 en cuanto se guardaban sus pesos iniciales (`--init`): el nombre decia
+        # "entrenada" de algo que no habia entrenado nada. Es un dato, se lee.
         pesos = AQUI / "pesos" / b / "last.pt"
-        et = a.etiqueta or ("ep000-sin-entrenar" if not pesos.exists() else "actual")
+        ep = 0
+        if pesos.exists():
+            ep = int(torch.load(pesos, map_location="cpu",
+                                weights_only=False)["epoca"])
+        et = a.etiqueta or ("ep000-sin-entrenar" if ep == 0 else f"ep{ep:03d}")
         print(f"  {b}: {figura(b, d10, et).relative_to(EXP)}")
     return 0
 

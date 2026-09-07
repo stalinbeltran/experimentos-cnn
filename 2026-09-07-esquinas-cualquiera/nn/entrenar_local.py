@@ -239,6 +239,59 @@ def entrenar(brazo: str, epocas: int, desde_cero: bool) -> int:
     return 0
 
 
+def init(brazo: str | None = None) -> int:
+    """Guarda los pesos de la EPOCA 0 -- la red construida y sin entrenar.
+
+    Por que existe, y no es un capricho: `nn/transformacion.py` lee el kernel de
+    `pesos/<brazo>/best.pt`, asi que sin esto NO SE PUEDE dibujar la figura de
+    pagina entera del punto de partida. El suelo de la ventana si se puede medir
+    sin pesos (`--suelos` construye la red al vuelo), pero el de la pagina no.
+
+    Y de paso deja la fila 0 en `metrics.jsonl`, que es el suelo DE ESE BRAZO
+    medido, no el de la tabla general: cuando el entrenamiento escriba la epoca 1
+    el registro ya tiene contra que compararla.
+
+    ⚠ NO PISA lo que ya exista. Un `--init` distraido sobre un brazo entrenado
+    borraria sus pesos y su registro, que es justo el fallo que no se puede
+    permitir un comando que se corre "para preparar"."""
+    Vva, Yva, Dva = _cargar("val")
+    brazos = [brazo] if brazo else list(BRAZOS)
+    hechos = saltados = 0
+    for b in brazos:
+        dir_b = PESOS / b
+        ultimo, mejor_f, reg = dir_b / "last.pt", dir_b / "best.pt", dir_b / "metrics.jsonl"
+        if ultimo.exists() or mejor_f.exists() or reg.exists():
+            print(f"  {b}: YA existe (epoca "
+                  f"{torch.load(ultimo, map_location='cpu', weights_only=False)['epoca'] if ultimo.exists() else '?'})"
+                  f" — no lo toco")
+            saltados += 1
+            continue
+        dir_b.mkdir(parents=True, exist_ok=True)
+        torch.manual_seed(SEMILLA); np.random.seed(SEMILLA); random.seed(SEMILLA)
+        red = construir(b, SEMILLA)
+        opt = torch.optim.Adam(red.parameters(), lr=LR)
+        red.eval()
+        with torch.no_grad():
+            salida, _ = red(Vva)
+            pv, bce, coord = _perdida(salida, Yva)
+            met = _metricas(salida, Yva, Dva)
+        sim, anti = simetria(red.kernel())
+        fila = {"epoca": 0, "train": None, "val": pv.item(), "bce": bce.item(),
+                "coord_mse": coord.item(), "beta": float(red.log_beta.exp().detach()),
+                "simetrico": sim, "antisimetrico": anti, **met, "segundos": 0.0}
+        with reg.open("w", encoding="utf-8") as f:
+            f.write(json.dumps(_redondear(fila)) + "\n")
+        _guardar(mejor_f, red, opt, 0, pv.item())
+        _guardar(ultimo, red, opt, 0, pv.item())
+        print(f"  {b}: {red.n_parametros():>3} par · val {pv.item():.4f} · "
+              f"<=2px {100*met['acierto_2px']:.1f}% (tl {100*met.get('acierto_2px_tl',0):.1f} "
+              f"br {100*met.get('acierto_2px_br',0):.1f}) · S {100*sim:.0f}%")
+        hechos += 1
+    print(f"\n{hechos} brazo(s) inicializados en la epoca 0, {saltados} ya existian.")
+    print("⚠ Son pesos SIN ENTRENAR: sirven de suelo y para las figuras de partida.")
+    return 0
+
+
 def suelos() -> int:
     """Los SUELOS: que da la red SIN entrenar, y con que lambda parten iguales
     los dos terminos de la perdida.
@@ -322,11 +375,15 @@ def main() -> int:
     p.add_argument("--desde-cero", action="store_true")
     p.add_argument("--comprobar", action="store_true")
     p.add_argument("--suelos", action="store_true")
+    p.add_argument("--init", action="store_true",
+                   help="guarda los pesos de la epoca 0 (sin entrenar) y su fila de registro")
     a = p.parse_args()
     if a.comprobar:
         return comprobar()
     if a.suelos:
         return suelos()
+    if a.init:
+        return init(a.brazo)
     if not a.brazo:
         p.error("hace falta --brazo (o --comprobar / --suelos)")
     return entrenar(a.brazo, a.epocas, a.desde_cero)

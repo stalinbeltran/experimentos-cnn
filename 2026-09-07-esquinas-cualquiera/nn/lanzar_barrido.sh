@@ -43,7 +43,7 @@ AQUI=$(cd "$(dirname "$0")" && pwd)
 EXP=$(dirname "$AQUI")
 REPO=$(dirname "$EXP")
 UNIDAD=esqcq-barrido
-BRAZOS="k05 k07 k09 k11 k13"
+BRAZOS="k05 k07 k09 k11 k13 k15 k17"
 EPOCAS=300
 : "${COORD_HOME:=$HOME/src/telegram-coordinator}"
 

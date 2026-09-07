@@ -60,6 +60,15 @@ SALIDA = EXP / "muestras"
 FUENTE = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 
+def epoca_de(brazo: str) -> int:
+    """La epoca del `best.pt` que se va a usar. La figura la lleva en el NOMBRE:
+    sin eso, regenerarla despues de entrenar pisa en silencio la del punto de
+    partida, y las dos son el mismo fichero con contenidos incomparables."""
+    est = torch.load(AQUI / "pesos" / brazo / "best.pt", map_location="cpu",
+                     weights_only=False)
+    return int(est["epoca"])
+
+
 def cargar_kernel(brazo: str) -> np.ndarray:
     """Los k x k pesos aprendidos. Sin bias: la conv no lo tiene.
 
@@ -189,8 +198,10 @@ def figura_paginas(brazo: str, pags: list, esc: int = 2) -> tuple[Path, dict]:
     lienzo = Image.new("RGB", (ancho, alto), (250, 250, 250))
     d = ImageDraw.Draw(lienzo)
     f12 = _fuente(12)
+    ep = epoca_de(brazo)
     d.text((sep, 10), f"El kernel {brazo} ({k.shape[0]}x{k.shape[0]}) aplicado a {n} PAGINAS "
-                      f"ENTERAS ({W}x{H} px reducidos), no a ventanas de 32x32",
+                      f"ENTERAS ({W}x{H} px reducidos), no a ventanas de 32x32"
+                      f"  ·  epoca {ep}{'  (SIN ENTRENAR)' if ep == 0 else ''}",
            fill=(20, 20, 20), font=_fuente(17))
     d.text((sep, 34), "arriba la pagina · abajo su mapa de respuesta en las mismas coordenadas "
                       "· VERDE: las esquinas verdaderas (cruz = tl, aspa = br)",
@@ -229,7 +240,9 @@ def figura_paginas(brazo: str, pags: list, esc: int = 2) -> tuple[Path, dict]:
                fill=(70, 70, 70), font=f12)
 
     SALIDA.mkdir(exist_ok=True)
-    destino = SALIDA / f"transformacion-{brazo}-{n}-paginas.png"
+    ep = epoca_de(brazo)
+    et = "ep000-sin-entrenar" if ep == 0 else f"ep{ep:03d}"
+    destino = SALIDA / f"transformacion-{brazo}-{n}-paginas-{et}.png"
     lienzo.save(destino)
     return destino, {"ok": ok, "tl": ok_tl, "br": ok_br, "n": n,
                      "med": float(np.median([f["d"] for f in filas])),

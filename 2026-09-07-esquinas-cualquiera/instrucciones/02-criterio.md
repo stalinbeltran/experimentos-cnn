@@ -63,10 +63,14 @@ cuadrante **completamente vacío en 64 de las 78** ventanas (**82 %**).
 **`br` no es una esquina de tinta: es el vértice inferior-derecho de la caja del layout.** La
 última línea de un párrafo es corta, así que ese vértice cae sobre fondo.
 
-⚠ **Consecuencia para el eje, sabida por adelantado:** el radio del campo receptivo es **2 · 3 · 4
-· 5 · 6 px** para `k` ∈ {5,7,9,11,13}. **Ninguno alcanza los 8,1 px** donde empieza la tinta más
-cercana a `br`. El primer `k` con radio ≥ 8 es **17**, que es justo el `k_max_representable` del
-dataset.
+✅ **Y por eso el eje se extendió a `k` ∈ {5,7,9,11,13,15,17}** (decisión del dueño, 2026-09-07,
+tomada con esta medida delante). El radio del campo receptivo es `(k−1)/2` = **2·3·4·5·6·7·8 px**.
+Ningún brazo de `k` ≤ 13 alcanza los 8,1 px donde empieza la tinta de `br`; **`k17` es el primero
+que llega**, y es además el techo del dataset (su mapa cubre [8,23], justo el rango donde se
+sortean las esquinas).
+
+⚠ **Lo que cuesta**: las filas de `k05`..`k13` se siguen leyendo columna a columna contra
+`esq-2d`; `k15` y `k17` **no tienen contraparte allí** y sólo se comparan entre sí.
 
 ## Los desenlaces, por orden de probabilidad estimada
 
@@ -74,9 +78,10 @@ dataset.
    global se queda cerca del 50 %, el desglose enseña ~100 % / ~0 %. **Cuenta como resultado, no
    como fracaso**: cierra que el problema no es la lectura ni el reparto de salidas, sino que en
    `br` no hay nada que ver a esa escala.
-2. **Los dos suben con `k`, y `k13` es el mejor sin saturar.** Entonces el eje **no está acotado
-   por arriba** y la continuación es `k15`/`k17`, no repetir lo de dentro. Es lo que ya pasó en
-   `esq-2d`.
+2. **Los dos suben con `k` hasta el borde.** Con el eje ya extendido a 17 —que es el techo del
+   dataset— si `k17` sigue siendo el mejor, la continuación **ya no es subir `k`**: haría falta
+   regenerar el dato con otra ventana. Es una diferencia real con `esq-2d`, donde subir era
+   gratis.
 3. **El global supera el umbral pero el kernel se vuelve simétrico y dispara los falsos positivos
    en `tr`/`bl`.** Un kernel simétrico bajo giro de 180° responde igual a las cuatro esquinas si
    no aprende otra cosa; por eso `fp_otra_diagonal` se mide en cada época.

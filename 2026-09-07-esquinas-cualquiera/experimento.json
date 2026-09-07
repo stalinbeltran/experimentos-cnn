@@ -13,7 +13,9 @@
     "k07",
     "k09",
     "k11",
-    "k13"
+    "k13",
+    "k15",
+    "k17"
   ],
   "comparabilidad": {
     "hereda_de": "esq-2d",
@@ -27,7 +29,9 @@
       7,
       9,
       11,
-      13
+      13,
+      15,
+      17
     ],
     "k_max_representable": 17,
     "epocas": 300,
@@ -54,6 +58,16 @@
       "f1_siempre_si": 0.572,
       "err_px": 6.08
     },
-    "hallazgo_previo_2026_09_07": "br NO es una esquina de tinta: la mediana al pixel de tinta mas cercano es 8,1 px (tl: 1,0 px) y su cuadrante propio esta vacio en el 82 % de las 78 ventanas. Ningun brazo de k=5..13 tiene ese radio (2..6 px); el primero es k=17"
+    "hallazgo_previo_2026_09_07": "br NO es una esquina de tinta: la mediana al pixel de tinta mas cercano es 8,1 px (tl: 1,0 px) y su cuadrante propio esta vacio en el 82 % de las 78 ventanas. Ningun brazo de k=5..13 tiene ese radio (2..6 px); el primero es k=17",
+    "radio_campo_receptivo_px": {
+      "k05": 2,
+      "k07": 3,
+      "k09": 4,
+      "k11": 5,
+      "k13": 6,
+      "k15": 7,
+      "k17": 8
+    },
+    "por_que_hasta_17": "la tinta mas cercana a br esta a 8,1 px de mediana y el radio es (k-1)/2: ningun brazo de k=5..13 (2..6 px) puede verla. k=17 es el primero con radio 8 y ademas el techo del dataset (mapa 8..23, exactamente el rango donde se sortean las esquinas)"
   }
 }

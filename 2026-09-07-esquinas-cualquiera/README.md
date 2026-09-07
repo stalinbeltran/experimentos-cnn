@@ -1,6 +1,6 @@
 # `esq-cq` — con UN kernel, ¿qué tamaño detecta CUALQUIERA de las dos esquinas?
 
-**Preparado el 2026-09-07. Cero épocas entrenadas — no se ha lanzado.** El criterio está
+**Lanzado el 2026-09-07 · 7 brazos × 300 épocas · 0 máquinas · 0 $** (CPU de este droplet). El criterio está
 congelado **antes** de mirar en
 [`instrucciones/02-criterio.md`](instrucciones/02-criterio.md), y no declara ganador: se
 reportan todos los que pasan.
@@ -29,8 +29,8 @@ entrada x (1, 32, 32) en TINTA (/255)
 β se aprende (arranca en 3,5). Cabeza de 3 parámetros: β, a, b.
 ```
 
-**La cabeza vuelve a ser la de `esq-k`**, y con ella los totales: **28 · 52 · 84 · 124 · 172**
-para `k` = 5·7·9·11·13. Eso vale más que la cifra — de los dos defectos que `esq-2d` declaraba al
+**La cabeza vuelve a ser la de `esq-k`**, y con ella los totales: **28 · 52 · 84 · 124 · 172 ·
+228 · 292** para `k` = 5·7·9·11·13·15·17. Eso vale más que la cifra — de los dos defectos que `esq-2d` declaraba al
 compararse con `esq-k`, el de *«la red no es idéntica»* desaparece.
 
 ```bash
@@ -67,10 +67,18 @@ cuadrante **vacío en 64 de 78** ventanas (**82 %**).
 vértice inferior-derecho cae sobre fondo. `br` es un vértice de *bounding box*, no una esquina de
 tinta — y se ve a simple vista en `muestras/k13-ep000-sin-entrenar.png`, paneles 4·5·6.
 
-⚠ **Consecuencia sabida por adelantado:** los radios de campo receptivo son **2·3·4·5·6 px** para
-`k` = 5..13. **Ninguno alcanza los 8,1 px.** El primer `k` con radio ≥ 8 es **17**, que es justo
-el techo del dataset. Esto explica `esq-2d` entero (23 % de techo en `br`, 0/10 en página) sin
-conjeturas, y **acota lo que este experimento puede dar**.
+✅ **Y por eso el eje llega hasta 17, que es lo que `esq-2d` no hizo.** Los radios de campo
+receptivo son `(k−1)/2`:
+
+| `k` | 5 | 7 | 9 | 11 | 13 | **15** | **17** |
+|---|--:|--:|--:|--:|--:|--:|--:|
+| radio | 2 px | 3 px | 4 px | 5 px | 6 px | **7 px** | **8 px** |
+
+**Ningún brazo de `k` ≤ 13 puede VER la tinta de `br`** (8,1 px). `k17` es el primero que llega, y
+además es el **techo del dataset**: su mapa 16×16 cubre exactamente [8, 23], que es donde se
+sortean las esquinas; con `k`=19 habría esquinas no representables. Con el rango viejo, el
+resultado en `br` estaba escrito de antemano — esto explica `esq-2d` entero (23 % de techo, 0/10
+en página) sin conjeturas.
 
 ## ⚠ El desglose NO es diagnóstico opcional
 
@@ -126,13 +134,14 @@ cuenta contra la **geometría** (`_esquinas_dentro`). El dato publicado **no se 
 comprobación independiente sobre él da igualmente **0 de 389**, así que la conclusión se sostiene
 — lo que no se sostenía era la prueba.
 
-## Cómo se corre — ⚠ NO lanzado todavía
+## Cómo se corre
 
 ```bash
 cd ~/src/experimentos-cnn
 E=2026-09-07-esquinas-cualquiera
 .venv/bin/python $E/nn/entrenar_local.py --suelos     # sin entrenar nada
-$E/nn/lanzar_barrido.sh                               # 5 brazos (unidad `esqcq-barrido`)
+$E/nn/entrenar_local.py --init                        # los pesos de la epoca 0 (no pisa)
+$E/nn/lanzar_barrido.sh                               # 7 brazos (unidad `esqcq-barrido`)
 $E/nn/lanzar_barrido.sh --estado                      # ¿viva? ¿por dónde? ¿NRestarts?
 ```
 
@@ -146,12 +155,21 @@ coordinador, y se niega a lanzarse dos veces. El estado se lee del **disco**, no
 montaje es el mismo con dos parámetros menos por brazo. El freno lo ve (`entrenar_local.py` está
 en la lista `TRABAJOS` de `cerrable.mjs`).
 
-## 🔓 La decisión abierta: ¿se extiende el eje a `k` ∈ {15, 17}?
+## ✅ El punto de partida está medido y guardado (época 0)
 
-**No decidida.** El rango es hoy {5,7,9,11,13}. El argumento para extenderlo es la medida de
-arriba —ningún brazo actual alcanza la tinta de `br`—; el argumento para no hacerlo es que con
-{5..13} las filas se leen contra las de `esq-2d` sin traducir. Cuesta **+6 min y 0 $**, y es una
-línea (`K_BARRIDO` en `nn/modelo.py`).
+Antes de entrenar se guardaron los pesos iniciales de los 7 brazos
+(`nn/entrenar_local.py --init`) y se dibujó el suelo en las dos escalas. **No es adorno: la figura
+de página entera necesita un `best.pt` en disco**, así que sin esto el punto de partida a esa
+escala no se puede dibujar nunca más.
+
+| | resultado en la época 0 |
+|---|---|
+| `muestras/k*-ep000-sin-entrenar.png` | **0/6** aciertos en las 10 ventanas congeladas, en los 7 brazos |
+| `muestras/transformacion-k*-10-paginas-ep000-sin-entrenar.png` | **0/10** en los 7, mediana 42–52 px |
+
+⚠ Las figuras llevan la **época en el nombre**. Antes se deducía de si el fichero de pesos
+existía, así que en cuanto `--init` los creó, una red de época 0 pasó a llamarse `-actual`: el
+nombre decía «entrenada» de algo que no había entrenado nada. La época es un dato, se lee.
 
 ## Lo que este experimento NO contesta
 

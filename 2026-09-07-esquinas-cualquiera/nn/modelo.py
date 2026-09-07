@@ -104,12 +104,18 @@ BETA0 = 3.5
 # perdedor. El 13 entra en su sitio porque el eje NO estaba acotado por arriba:
 # el 11 seguia mejorando y era el borde del rango.
 #
-# ⚠ Y 13 es el ultimo k que este dataset admite SIN regenerarlo: las esquinas se
-# sortean con el punto entre los pixeles 8 y 23 de la ventana, y el mapa de un
-# kernel k solo representa de (k-1)/2 a 31-(k-1)/2. Con k = 17 los dos rangos
-# coinciden exactamente; con k = 19 ya habria esquinas que el mapa no puede
-# senalar. Cabe 13, cabe 15, y a partir de 19 hay que rehacer el dato.
-K_BARRIDO = (5, 7, 9, 11, 13)
+# ⚠ EL EJE LLEGA HASTA 17, Y ESO ES UNA DECISION CON UNA MEDIDA DETRAS.
+# Las esquinas se sortean con el punto entre los pixeles 8 y 23 de la ventana, y
+# el mapa de un kernel k solo representa de (k-1)/2 a 31-(k-1)/2. Con k = 17 los
+# dos rangos coinciden EXACTAMENTE (8..23); con k = 19 ya habria esquinas que el
+# mapa no puede senalar. O sea que 17 es el techo del dataset, no una redondez.
+#
+# ⚠⚠ Y por que se extiende de 13 a 17, que en `esq-2d` no se hizo: medido el
+# 2026-09-07, la tinta mas cercana a `br` esta a 8,1 px de mediana, y el RADIO
+# del campo receptivo es (k-1)/2 -- o sea 2/3/4/5/6 px para k = 5..13. NINGUN
+# brazo del rango viejo puede VER la tinta de `br`. El primero que llega es
+# k = 17 (radio 8). Con {5..13} el resultado en `br` estaba escrito de antemano.
+K_BARRIDO = (5, 7, 9, 11, 13, 15, 17)
 
 # ⚠ ESQUINAS YA NO SON "LAS SALIDAS": son de cuales se DERIVA el unico positivo.
 # En `esq-2d` habia una salida por esquina; aqui hay UNA, y `tl`/`br` solo dicen
