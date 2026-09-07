@@ -1,7 +1,7 @@
 {
   "id": "esq-2d",
-  "titulo": "Con UN kernel unico y la MISMA cabeza sobre la vista girada, que tamano de kernel detecta las DOS esquinas en diagonal",
-  "pregunta": "Un kernel unico aplicado a la entrada y a la entrada girada 180 grados detecta la esquina superior-izquierda y la inferior-derecha con la misma cabeza de 3 parametros. Que tamano de kernel lo hace mejor, y como se compara con el mismo barrido sobre UNA sola esquina de esq-k",
+  "titulo": "La red de esq-k con DOS esquinas en vez de una: que tamano de kernel unico senala la superior-izquierda y la inferior-derecha a la vez",
+  "pregunta": "Una sola convolucion sin bias produce UN mapa, y las dos esquinas en diagonal se leen de sus dos extremos: la superior-izquierda del maximo y la inferior-derecha del minimo. Que tamano de kernel lo hace mejor, y cuanto se pierde respecto del mismo barrido sobre UNA sola esquina de esq-k",
   "creado": "2026-09-07",
   "estado": "abierto",
   "usa_fv": false,
@@ -9,11 +9,11 @@
   "entrada": "nn/entrenar_local.py",
   "reporte": null,
   "brazos": [
-    "rot-k05",
-    "rot-k07",
-    "rot-k09",
-    "rot-k11",
-    "rot-k13"
+    "k05",
+    "k07",
+    "k09",
+    "k11",
+    "k13"
   ],
   "comparabilidad": {
     "hereda_de": "esq-k",
@@ -34,12 +34,15 @@
     "lr": 0.05,
     "lote": 128,
     "lambda_coord": 0.038,
-    "estructura": "rot",
+    "estructura": "sig (un mapa: tl = maximo, br = minimo)",
     "alternativas_anotadas_sin_correr": [
-      "sig",
       "ant",
       "ind-tl",
       "ind-br"
+    ],
+    "cabeza_parametros": 5,
+    "descartada_por_el_dueno": [
+      "rot (girar la entrada 180 grados)"
     ]
   }
 }

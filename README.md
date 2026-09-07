@@ -25,7 +25,7 @@ renombrar y re-ordenar sin romper nada.
 | experimento | estado | qué pregunta |
 |---|---|---|
 | [`2026-09-06-esquina-kernel-unico/`](2026-09-06-esquina-kernel-unico/) `esq-k` | cerrado | Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo |
-| [`2026-09-07-esquinas-diagonales/`](2026-09-07-esquinas-diagonales/) `esq-2d` | abierto | Un kernel unico aplicado a la entrada y a la entrada girada 180 grados detecta la esquina superior-izquierda y la inferior-derecha con la misma cabeza de 3 parametros. Que tamano de kernel lo hace mejor, y como se compara con el mismo barrido sobre UNA sola esquina de esq-k |
+| [`2026-09-07-esquinas-diagonales/`](2026-09-07-esquinas-diagonales/) `esq-2d` | abierto | Una sola convolucion sin bias produce UN mapa, y las dos esquinas en diagonal se leen de sus dos extremos: la superior-izquierda del maximo y la inferior-derecha del minimo. Que tamano de kernel lo hace mejor, y cuanto se pierde respecto del mismo barrido sobre UNA sola esquina de esq-k |
 
 <!-- FIN INDICE -->
 

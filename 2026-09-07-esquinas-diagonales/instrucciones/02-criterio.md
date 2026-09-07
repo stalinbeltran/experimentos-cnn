@@ -21,7 +21,7 @@ pregunta del experimento.
 | | acierto ≤2 px `tl` | acierto ≤2 px `br` | ≤1 px | error medio |
 |---|--:|--:|--:|--:|
 | predictor **constante** en el centro del mapa | 5,1 % | 6,4 % | 1,3 % · 3,8 % | 5,98 · 6,19 px |
-| **los cinco brazos sin entrenar** | 3,8 – **5,1 %** | **6,4 %** | 0 – 1,3 % · 2,6 – 3,8 % | 5,96 – 6,06 · 6,20 – 6,28 px |
+| **los cinco brazos sin entrenar** | 3,8 – **5,1 %** | **6,4 %** | 0 – 1,3 % · 2,6 – 3,8 % | 5,96 – 6,06 · 6,13 – 6,22 px |
 
 ⚠ **El suelo no depende del brazo, y eso es lo que permite un único umbral.** Se midió sobre las
 25 redes de las cuatro estructuras antes de reducir el experimento a una, y las 25 caen en el
@@ -44,9 +44,11 @@ exactamente lo que dan las redes sin entrenar.
 
 ## Los desenlaces, escritos antes
 
-**El eje es UNO: `k` ∈ {5, 7, 9, 11, 13}, con la estructura `rot` en los cinco brazos.** Las otras
-lecturas quedan anotadas y sin correr (orden del dueño del 2026-09-07); lo que eso permite y lo
-que impide está en [`03-alternativas-anotadas.md`](03-alternativas-anotadas.md).
+**El eje es UNO: `k` ∈ {5, 7, 9, 11, 13}, con la misma estructura en los cinco brazos** — una
+convolución, un mapa, `tl` = máximo y `br` = mínimo. Las otras lecturas quedan anotadas y sin
+correr, y `rot` (girar la entrada) queda **descartada**; las dos cosas por orden del dueño del
+2026-09-07. Lo que eso permite y lo que impide está en
+[`03-alternativas-anotadas.md`](03-alternativas-anotadas.md).
 
 1. **Algún `k` pasa el 12 % en las dos esquinas.** Un solo kernel sirve para las dos, y el
    experimento tiene señal. **Gana el de mayor peor-esquina**; si dos caen dentro de 2·SE el uno
@@ -58,11 +60,11 @@ que impide está en [`03-alternativas-anotadas.md`](03-alternativas-anotadas.md)
    brazo por `k`, *«un kernel no da para las dos esquinas»* y *«esta lectura no es la buena»* se
    ven **igual**. Distinguirlas es lo que contestarían las alternativas anotadas, y entonces la
    pregunta siguiente no es otro `k`: es otra estructura.
-3. **Pasa en `tl` y no en `br`** (o al revés). El kernel compartido se queda con una de las dos
-   mitades. ⚠ En `rot` esto sería **sorprendente y hay que mirarlo dos veces antes de creerlo**:
-   la red es literalmente la misma sobre la entrada y sobre la entrada girada, así que las dos
-   esquinas son la MISMA tarea. Una asimetría grande aquí apunta antes al dato —¿son igual de
-   difíciles las dos esquinas en este dataset?— que a la red.
+3. **Pasa en `tl` y no en `br`.** El kernel se queda con la mitad que ya sabía hacer.
+   ⚠ **Éste es el desenlace que hay que esperar de verdad, no una rareza**, y es la razón de que
+   el titular sea la peor de las dos: `tl` es la tarea de `esq-k`, que ya salió al 100 %, y `br`
+   es la que pide que el kernel renuncie a su parte simétrica. Un 100 % en `tl` y un 20 % en `br`
+   **no** es «medio resuelto»: es el kernel eligiendo la esquina barata.
 4. **El eje no es monótono.** En `esq-k` subía monótono. Si aquí no lo hace, **se dice**: con una
    sola semilla no se puede distinguir de una fluctuación, y ésa es una limitación declarada, no
    un fallo del análisis.
@@ -78,26 +80,55 @@ que impide está en [`03-alternativas-anotadas.md`](03-alternativas-anotadas.md)
 ## La comparación con `esq-k`, que es lo que sustituye al control
 
 Sin los brazos `ind-*`, el techo no se mide aquí: se **lee de `esq-k`**, que midió la tarea de
-**una** esquina con esta misma red (`k²+3` parámetros, cabeza C1 de 3) sobre el mismo tipo de dato.
+**una** esquina con esta misma convolución y la misma cabeza C1.
 
 | `k` | 5 | 7 | 9 | 11 |
 |---|--:|--:|--:|--:|
 | `esq-k`, acierto ≤2 px con **una** esquina | 92,3 % | 100 % | 100 % | 100 % |
 
-⚠ **Es una referencia, no un control, y la diferencia importa:** las ventanas de aquel dataset son
-otras (allí 4 `tl` por imagen; aquí 2 `tl` + 2 `br`), así que una diferencia de pocos puntos entre
-los dos barridos **no se puede atribuir** a compartir el kernel. Lo que sí se puede leer es lo
-grueso: si aquí sale 100 % donde allí salía 100 %, compartir no costó nada visible; si aquí sale
-40 %, costó, y mucho.
+⚠ **Es una referencia, no un control, y hay DOS motivos —no uno— por los que no es una
+comparación limpia:**
+
+1. **Las ventanas son otras.** Allí se sortean 4 `tl` por imagen; aquí 2 `tl` + 2 `br`. Una
+   diferencia de pocos puntos no se puede atribuir a nada.
+2. **La red no es idéntica**, aunque casi. La convolución sí, y la lectura C1 también; pero la
+   cabeza pasa de **3 a 5 parámetros** (un `existe` por esquina) y `br` se lee del **mínimo** del
+   mapa, que allí no se leía. O sea que lo que se compara es *la misma convolución con el doble de
+   trabajo*, no la misma red.
+
+Lo que sí se puede leer es lo grueso: si aquí sale 100 % donde allí salía 100 %, compartir no
+costó nada visible; si aquí sale 40 %, costó, y mucho.
 
 ## La predicción registrada, para que pueda fallar
 
-*Escrita antes de entrenar.* **`rot` pasa, y con holgura**, porque por simetría es la MISMA tarea
-de `esq-k` resuelta dos veces con los mismos pesos: si no pasara, lo primero que hay que sospechar
-es el montaje, no la hipótesis. Y **el `k` ganador debería parecerse al de allí** (7 por el
-criterio de empate; 9-13 si se mira el error de posición). ⚠ Lo que **no** está predicho es el
-suelo del rango: el 5 allí acertó el 92,3 % con una esquina, y aquí tiene que repartir 25 pesos
-entre dos.
+*Escrita antes de entrenar, el 2026-09-07.*
+
+⚠⚠ **Esta estructura tiene una medida EN CONTRA, y hay que dejarlo escrito antes y no después.**
+El kernel ganador de `esq-k` —el único kernel de esta familia que se ha entrenado— tiene el
+**74,0 % de su energía en la parte simétrica** y suma **−73,68**: es sobre todo un **supresor de
+tinta**. Y su **mínimo cae en la mancha de tinta, no en la esquina `br`**: 0/10 páginas, mediana
+**91 px** (medido el 2026-09-07, comando en el encargo).
+
+Lo que eso significa exactamente, y lo que no:
+
+- **No significa que `sig` no pueda funcionar.** Aquel kernel se entrenó **sólo para `tl`**, sin
+  ninguna presión para poner nada en el mínimo. Uno entrenado para las dos podría colocar `br`
+  ahí.
+- **Sí significa que el gradiente, cuando se le deja elegir, gasta el kernel en apagar el
+  interior del párrafo.** Y para que `br` sea el mínimo hay que renunciar a buena parte de eso.
+  Ésa es la tensión, y es lo que este barrido mide.
+
+**Así que la predicción honesta es: NO LO SÉ, y el desenlace 3 (`tl` sí, `br` no) es el más
+probable de los cinco.** Lo que sí está predicho:
+
+- **`tl` debería acercarse a lo de `esq-k`** (100 % a partir de k=7). Si `tl` tampoco pasa, lo
+  primero que hay que sospechar es el montaje, no la hipótesis.
+- **Si `br` falla, la continuación NO es otro `k`: es `ant`** —el mismo `sig` con el kernel
+  forzado antisimétrico—, que es lo único que separa «esta lectura no sirve» de «el gradiente no
+  llega hasta ella». Está anotada y lista.
+- **Y si `br` sale bien, el kernel resultante debe haber bajado mucho su fracción simétrica.** Se
+  registra en cada época (`simetrico` / `antisimetrico` en `metrics.jsonl`), así que esta
+  predicción se puede contrastar directamente contra el 74,0 % de partida.
 
 ## Lo que se congela, y es igual en todos los brazos
 
@@ -108,20 +139,20 @@ inicial 3,5 · Adam lr 0,05 · lote 128 · **300 épocas** · las mismas 10 mues
 
 ⚠ **El dato de entrada ya no se re-deriva al empezar: se LEE del repo de datos**, y si no está,
 el entrenamiento **se niega** en vez de generarse uno equivalente. Es lo que hace que «el mismo
-dataset» sea comprobable y no una intención: los 25 brazos leen el mismo fichero, y el que venga
+dataset» sea comprobable y no una intención: los cinco brazos leen el mismo fichero, y el que venga
 detrás también.
 
 ⚠ **`λ` cambia respecto del 0,03 de `esq-k`, y NO es un descuido.** Lo que se hereda es la
 **regla** —«los dos términos de la pérdida parten iguales»—, no el número: la pérdida ya no es la
 misma (dos BCE y dos MSE) y la proporción de positivas por esquina pasó del 40 % al 20 %, así que
-la BCE inicial sube de ~1,27 a ~1,64. Medido el 2026-09-07 sobre las seis redes sin entrenar, la
-regla da **0,0375–0,0400**; se congela en **0,038 para todos**. Un `λ` por brazo haría que cada
+la BCE inicial sube de ~1,27 a ~1,64. Medido el 2026-09-07 sobre los cinco brazos sin entrenar,
+la regla da **0,0366–0,0391**; se congela en **0,038 para todos**. Un `λ` por brazo haría que cada
 uno optimizase una función distinta.
 
 **Varía UNA sola cosa: el TAMAÑO DEL KERNEL** (5 · 7 · 9 · 11 · 13 — los mismos de `esq-k` menos
-el 3×3, y uno más grande en su lugar). La estructura es `rot` en los cinco brazos, y todo lo demás
-es idéntico. Las otras lecturas quedan **anotadas y sin correr**, las dos cosas por orden del
-dueño del 2026-09-07.
+el 3×3, y uno más grande en su lugar). La estructura es la misma en los cinco brazos y todo lo
+demás es idéntico. Las otras lecturas quedan **anotadas y sin correr**, y `rot` **descartada**;
+las dos cosas por orden del dueño del 2026-09-07.
 
 ## Una nota de higiene, para que esto se pueda creer dentro de un año
 

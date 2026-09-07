@@ -29,9 +29,13 @@ LA DESCOMPOSICION QUE LAS ORDENA, Y QUE DECIDE CUAL PUEDE FUNCIONAR
       se FUERZA A = W  ->  lo mismo, pero con S = 0 por construccion: la
                            igualdad respuesta_br = -respuesta_tl deja de ser
                            una esperanza y pasa a ser exacta               `ant`
-      ninguna de las   ->  no se comparte el MAPA sino la VISTA: el mismo
-      dos              ->  kernel sobre la entrada GIRADA 180 grados es,
-                           literalmente, un detector de br                 `rot`
+
+    ⚠ HUBO UNA TERCERA --aplicar el mismo kernel a la entrada GIRADA 180 grados--
+    y el dueno la DESCARTO el 2026-09-07: «No queremos girar el kernel». No se
+    implementa, a proposito: una alternativa descartada que sigue en el codigo se
+    acaba armando por error. Queda anotada en
+    `instrucciones/03-alternativas-anotadas.md`, que es donde se mira antes de
+    volver a proponerla.
 
     ⚠ Y UNA CUARTA QUE SE DESCARTA EN PAPEL, no midiendo: "las dos esquinas son
     maximos y se distinguen por el VALOR" (si manda S). No es expresable con
@@ -57,12 +61,23 @@ LO QUE NO CAMBIA RESPECTO DE `esq-k`, Y POR QUE
     en `esq-k` y no se vuelven a pagar aqui.
 
 EL DISENO ES DE UN SOLO EJE: EL KERNEL
-    5 brazos, k en {5, 7, 9, 11, 13}, todos con la estructura `rot`. Las otras
-    lecturas quedan ANOTADAS y sin correr, por orden del dueno del 2026-09-07.
+    5 brazos, k en {5, 7, 9, 11, 13}, todos con la MISMA estructura. Por orden
+    del dueno (2026-09-07): «Debe ser identica al exper anterior, solo que en vez
+    de 1 esquina van a ser 2».
 
-    Lo que eso compra: el barrido de aqui es comparable UNO A UNO con el de
-    `esq-k`, porque la red es la misma (k^2 + 3 parametros, cabeza C1 de 3) y lo
-    unico que cambia es que resuelve las dos esquinas en vez de una.
+    Y lo es, salvo en un punto que no puede serlo y hay que decir cual: la cabeza
+    pasa de 3 parametros a 5. La conv es la misma, la lectura C1 es la misma, y
+    lo unico que se duplica es el `existe` (a, b), porque ahora hay DOS cosas que
+    detectar. La beta sigue siendo UNA, compartida.
+
+    ⚠ Y la posicion de la segunda esquina sale del MINIMO del mapa porque no hay
+    otro sitio de donde sacarla. Con una sola conv y una cabeza minima, las
+    unicas dos lecturas distintas de un mapa son su maximo y su minimo:
+    cualquier otra pediria pesos POR POSICION (m^2 de ellos), y eso rompe la
+    restriccion que el dueno puso en `esq-k` -- «si la cabeza es grande, el
+    kernel no aprende nada». No es una eleccion entre varias: es la unica que
+    cabe.
+
     Lo que cuesta, y hay que decirlo: si el barrido sale mal, este diseno NO
     puede distinguir "un kernel no da para las dos esquinas" de "esta lectura no
     es la buena". Esa pregunta es la que contestarian las alternativas anotadas.
@@ -106,23 +121,19 @@ ESQUINAS = ("tl", "br")
 # Estan descritas, con lo que cada una contestaria y lo que cuesta, en
 # `instrucciones/03-alternativas-anotadas.md`.
 #
-# ⚠ Y el brazo que queda NO se eligio por gusto: `rot` es el unico cuya red es
-# EXACTAMENTE la de `esq-k` --misma conv, misma cabeza C1 de 3 parametros, mismo
-# k^2+3-- resolviendo el doble de tarea. Eso hace que el barrido de `k` de aqui
-# se pueda leer contra el de alli sin traducir nada, que es justo lo que se pierde
-# al elegir cualquiera de las otras (las de un solo mapa necesitan 2 parametros
-# mas de cabeza y una lectura distinta).
-ESTRUCTURA = "rot"
-ESTRUCTURAS = ("rot", "sig", "ant")      # implementadas; solo se corre ESTRUCTURA
+ESTRUCTURA = "sig"
+ESTRUCTURAS = ("sig", "ant")             # implementadas; solo se corre ESTRUCTURA
 
-
-def _nombre(estructura: str, k: int, esquina: str | None = None) -> str:
-    return f"{estructura}{'-' + esquina if esquina else ''}-k{k:02d}"
+# ⚠ LOS BRAZOS SE LLAMAN COMO LOS DE `esq-k` -- k05, k07... -- y no `sig-k05`.
+# Con una sola estructura, el nombre solo tiene que decir lo unico que varia; y
+# asi las dos tablas de resultados se leen una al lado de la otra sin traducir.
+def _nombre(k: int, esquina: str | None = None) -> str:
+    return f"k{k:02d}{'-' + esquina if esquina else ''}"
 
 
 # nombre -> (estructura, k, esquina). `esquina` solo lo usa el control `ind`,
 # que entrena UNA red por esquina y por tanto no comparte nada.
-BRAZOS = {_nombre(ESTRUCTURA, _k): (ESTRUCTURA, _k, None) for _k in K_BARRIDO}
+BRAZOS = {_nombre(_k): (ESTRUCTURA, _k, None) for _k in K_BARRIDO}
 
 
 class DosEsquinasUnKernel(nn.Module):
@@ -130,10 +141,9 @@ class DosEsquinasUnKernel(nn.Module):
 
     `estructura` decide como se leen DOS esquinas de un solo mapa:
 
-        rot   el mismo kernel sobre x y sobre girar180(x). La cabeza tambien es
-              la misma para las dos, porque por simetria son la MISMA tarea:
-              3 parametros de cabeza, los mismos que en `esq-k` con una esquina.
-        sig   un mapa; tl = maximo, br = minimo. Dos `existe` (5 parametros).
+        sig   LA QUE SE CORRE. Un mapa; tl = maximo, br = minimo. Una beta
+              compartida y un `existe` por esquina: 5 parametros de cabeza,
+              contra los 3 de `esq-k`, que tenia una sola esquina que detectar.
         ant   igual que `sig`, pero el kernel se PROYECTA antisimetrico en cada
               paso: W = (V - rot180(V))/2. Asi S = 0 por construccion y
               respuesta_br = -respuesta_tl es exacta, no una esperanza. El
@@ -151,16 +161,16 @@ class DosEsquinasUnKernel(nn.Module):
         super().__init__()
         if (k - 1) % 2:
             raise ValueError(f"k tiene que ser impar para que el campo receptivo tenga centro; es {k}")
-        if estructura not in ("rot", "sig", "ant", "ind"):
+        if estructura not in ("sig", "ant", "ind"):
             raise ValueError(f"estructura '{estructura}' no existe")
         self.estructura, self.k, self.ventana = estructura, k, ventana
         self.m = ventana - k + 1
         self.esquinas = (esquina,) if estructura == "ind" else ESQUINAS
         self.conv = nn.Conv2d(1, 1, k, stride=1, padding=0, bias=False)
         self.log_beta = nn.Parameter(torch.tensor(math.log(beta0)))
-        # `rot` comparte la cabeza entera entre las dos esquinas (son la misma
-        # tarea girada); las demas necesitan un `existe` por esquina.
-        n_cabezas = 1 if estructura in ("rot", "ind") else 2
+        # El control `ind` solo detecta UNA esquina; las demas necesitan un
+        # `existe` por esquina. La beta es siempre una, compartida.
+        n_cabezas = 1 if estructura == "ind" else 2
         self.a = nn.Parameter(torch.ones(n_cabezas))
         self.b = nn.Parameter(torch.zeros(n_cabezas))
         # La posicion i del mapa mira el CENTRO de su campo receptivo, que en
@@ -200,17 +210,9 @@ class DosEsquinasUnKernel(nn.Module):
         mapa = self._conv(x)
         if self.estructura == "ind":
             return {self.esquinas[0]: self._leer(mapa, +1.0, 0)}, mapa
-        if self.estructura in ("sig", "ant"):
-            return {"tl": self._leer(mapa, +1.0, 0),
-                    "br": self._leer(mapa, -1.0, 1)}, mapa
-        # rot: el MISMO kernel sobre la entrada girada 180 grados. Una esquina br
-        # de la entrada es una esquina tl de la vista girada, asi que la cabeza
-        # es la misma. Las coordenadas se devuelven al marco original.
-        mapa_g = self._conv(torch.flip(x, dims=(2, 3)))
-        logit_tl, px, py = self._leer(mapa, +1.0, 0)
-        logit_br, gx, gy = self._leer(mapa_g, +1.0, 0)
-        borde = self.ventana - 1
-        return {"tl": (logit_tl, px, py), "br": (logit_br, borde - gx, borde - gy)}, mapa
+        # sig / ant: UN solo mapa, y las dos esquinas en sus dos extremos.
+        return {"tl": self._leer(mapa, +1.0, 0),
+                "br": self._leer(mapa, -1.0, 1)}, mapa
 
     def n_parametros(self) -> int:
         """Los GRADOS DE LIBERTAD reales, que en `ant` no son los tensores
@@ -273,8 +275,7 @@ if __name__ == "__main__":
         for esq, (logit, px, py) in salida.items():
             assert logit.shape == (2,) and px.shape == (2,)
             px, py = px.detach(), py.detach()
-            # la lectura SIEMPRE cae dentro del rango representable, tambien
-            # despues de deshacer el giro de `rot`
+            # la lectura SIEMPRE cae dentro del rango representable
             assert lo <= float(px.min()) and float(px.max()) <= hi, \
                 f"{brazo}/{esq}: la lectura se sale del mapa"
         assert set(salida) == set(red.esquinas)
@@ -282,13 +283,10 @@ if __name__ == "__main__":
               f"{str(red.m)+'x'+str(red.m):>7} {'+'.join(red.esquinas):>10} "
               f"{red.n_kernel():>7} {red.n_cabeza():>7} {red.n_parametros():>6}")
 
-    # `rot` tiene que ser EXACTAMENTE equivariante: girar la entrada 180 grados
-    # intercambia las dos esquinas predichas. Si esto falla, el brazo no es lo
-    # que dice ser, y se veria como "aprende peor" en vez de como un fallo.
     print("\nLAS ALTERNATIVAS ANOTADAS Y NO ARMADAS (ver instrucciones/03-...):\n")
     print(f"{'estruct':>11} {'k':>3} {'mapa':>7} {'esquinas':>10} "
           f"{'kernel':>7} {'cabeza':>7} {'total':>6}")
-    for _e, _esq in (("sig", None), ("ant", None), ("ind", "tl"), ("ind", "br")):
+    for _e, _esq in (("ant", None), ("ind", "tl"), ("ind", "br")):
         red = construir_suelta(_e, 7, _esq)
         salida, mapa = red(torch.randn(2, 1, VENTANA, VENTANA))
         assert set(salida) == set(red.esquinas)
@@ -309,15 +307,20 @@ if __name__ == "__main__":
     assert torch.allclose(m1, -torch.flip(m2, dims=(1, 2)), atol=1e-5)
     print("\nant: el kernel es antisimetrico exacto y responde al giro con el signo cambiado")
 
-    red = construir_suelta("rot", 7)
-    x = torch.randn(3, 1, VENTANA, VENTANA)
-    s1, _ = red(x)
-    s2, _ = red(torch.flip(x, dims=(2, 3)))
-    borde = VENTANA - 1
-    assert torch.allclose(s1["tl"][0], s2["br"][0], atol=1e-5)
-    assert torch.allclose(s1["tl"][1], borde - s2["br"][1], atol=1e-4)
-    assert torch.allclose(s1["br"][2], borde - s2["tl"][2], atol=1e-4)
-    print("rot: girar la entrada 180 grados intercambia las dos esquinas (equivariante)")
+    # La lectura de `br` tiene que ser LA DEL MINIMO, no otra cosa: sobre un mapa
+    # con un pico negativo claro, la esquina leida cae donde esta ese pico. Sin
+    # esto, "br = minimo" seria una intencion escrita en un comentario.
+    red = construir(_nombre(7))
+    mapa = torch.full((1, red.m, red.m), 0.0)
+    mapa[0, 4, 9] = -20.0                       # un unico pico NEGATIVO
+    mapa[0, 15, 3] = +20.0                      # y uno positivo en otro sitio
+    with torch.no_grad():
+        _, bx, by = red._leer(mapa, -1.0, 1)
+        _, tx, ty = red._leer(mapa, +1.0, 0)
+    off = (red.k - 1) / 2
+    assert abs(float(bx) - (9 + off)) < 0.01 and abs(float(by) - (4 + off)) < 0.01
+    assert abs(float(tx) - (3 + off)) < 0.01 and abs(float(ty) - (15 + off)) < 0.01
+    print("\nsig: `tl` lee el MAXIMO del mapa y `br` el MINIMO, cada uno en su sitio")
     sim, anti = simetria(red.kernel())
     print(f"kernel sin entrenar: {100*sim:.1f}% simetrico · {100*anti:.1f}% antisimetrico")
     print("todas construyen, la lectura cae dentro del mapa y ninguna conv lleva bias.")

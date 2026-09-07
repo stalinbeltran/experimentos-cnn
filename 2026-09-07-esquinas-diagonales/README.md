@@ -34,51 +34,87 @@ ganador de `esq-k` —que sólo vio esquinas tl— tiene el **74,0 % de su energ
 experimento, **su mínimo cae en la mancha de tinta, no en la esquina br: 0/10, mediana 91 px**.
 El comando está en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md).
 
-## La estructura: `rot`, un kernel y la misma cabeza sobre la vista girada
+## La estructura: la de `esq-k`, con dos esquinas en vez de una
 
-**Una sola convolución de `k×k` sin bias, aplicada dos veces con los MISMOS pesos**: a la entrada
-y a la entrada girada 180°. Una esquina inferior-derecha es, literalmente, una superior-izquierda
-en la vista girada — así que la cabeza también es la misma, y son **3 parámetros de cabeza**,
-exactamente los de `esq-k` con una sola esquina.
+**Orden del dueño (2026-09-07): «Debe ser idéntica al exper anterior, sólo que en vez de 1 esquina
+van a ser 2».** Y lo es: una sola convolución `k×k`, sin bias, sin padding, sin ReLU, y la misma
+lectura C1 por esperanza bajo `softmax`. **No se gira nada.**
 
 ```
 entrada x (1, 32, 32) en TINTA (/255)
     │
-    ├── conv(x, W)              ──► M⁺  (m×m, m = 32 − k + 1)  ──► cabeza C1 ──► (existe_tl, x_tl, y_tl)
-    │
-    └── conv(girar180(x), W)    ──► M⁻  (m×m)                  ──► cabeza C1 ──► (existe_br, x_br, y_br)
-             ▲ el MISMO W                    ▲ la MISMA cabeza        ▲ y las coordenadas se
-                                               (β, a, b)                devuelven al marco original:
-                                                                        x = 31 − x_girada
+    └── conv(x, W)  ──►  M  (m×m, m = 32 − k + 1)   ── UN solo mapa
+                          │
+                          ├── softmax(+β·M) ──► (x, y) del MÁXIMO  ──► esquina superior-izquierda
+                          │   existe_tl = a₁ · logsumexp(+β·M)/β + b₁
+                          │
+                          └── softmax(−β·M) ──► (x, y) del MÍNIMO  ──► esquina inferior-derecha
+                              existe_br = a₂ · logsumexp(−β·M)/β + b₂
 
-cabeza C1:  p = softmax(β·M) · (x, y) = esperanza de la posición bajo p
-            existe = a · logsumexp(β·M)/β + b            β se aprende, arranca en 3,5
+β se aprende (arranca en 3,5) y es UNA sola, compartida por las dos lecturas.
 ```
 
-| brazo | k | mapa | kernel | cabeza | **total** |
-|---|--:|---|--:|--:|--:|
-| `rot-k05` | 5 | 28×28 | 25 | 3 | **28** |
-| `rot-k07` | 7 | 26×26 | 49 | 3 | **52** |
-| `rot-k09` | 9 | 24×24 | 81 | 3 | **84** |
-| `rot-k11` | 11 | 22×22 | 121 | 3 | **124** |
-| `rot-k13` | 13 | 20×20 | 169 | 3 | **172** |
+| brazo | `k` | mapa | kernel | cabeza | **total** | (`esq-k` a ese `k`) |
+|---|--:|---|--:|--:|--:|--:|
+| `k05` | 5 | 28×28 | 25 | 5 | **30** | 28 |
+| `k07` | 7 | 26×26 | 49 | 5 | **54** | 52 |
+| `k09` | 9 | 24×24 | 81 | 5 | **86** | 84 |
+| `k11` | 11 | 22×22 | 121 | 5 | **126** | 124 |
+| `k13` | 13 | 20×20 | 169 | 5 | **174** | — |
+
+Los brazos se llaman como allí (`k05`, `k07`…) porque lo único que varía es `k`, y así las dos
+tablas de resultados se leen una al lado de la otra sin traducir.
 
 ```bash
 python nn/modelo.py     # imprime esta tabla, las alternativas anotadas, y comprueba las dos
 ```
 
-⚠ **Es exactamente la red de `esq-k`, con el doble de tarea.** Mismo `k²+3`, misma cabeza, misma
-convolución. Por eso este barrido se puede leer **uno a uno** contra el de allí sin traducir nada
-— que es lo que se perdería con cualquier otra de las lecturas propuestas, que necesitan 2
-parámetros más de cabeza y una lectura distinta del mapa.
+### Los dos únicos sitios donde «idéntica» no puede ser literal
 
-⚠ **La equivarianza es exacta y hay un test que la fija**: girar la entrada 180° intercambia las
-dos esquinas predichas (`assert` en `nn/modelo.py`). Si eso se rompiera, el brazo dejaría de ser
-lo que dice ser y se leería como «aprende peor» en vez de como un fallo.
+Son consecuencia de tener dos esquinas, no decisiones de estilo, y conviene tenerlos delante:
 
-⚠ **Y por eso las dos esquinas son la MISMA tarea**, no dos parecidas. Es la propiedad que hace
-que un solo kernel pueda con las dos sin que ninguna de las dos partes del filtro tenga que ceder
-— que es el problema que tienen las lecturas de un solo mapa, y está medido en el encargo.
+1. **La cabeza pasa de 3 a 5 parámetros.** La `β` sigue siendo **una**, y lo único que se duplica
+   es el `existe` (`a`, `b`), porque ahora hay **dos** cosas que detectar. Todo lo demás —la
+   convolución y la lectura de la posición— es idéntico.
+2. **La segunda esquina se lee del MÍNIMO del mapa, y no hay otro sitio de donde sacarla.** Con
+   una sola convolución y una cabeza mínima, las únicas dos lecturas distintas de un mapa son su
+   **máximo** y su **mínimo**: cualquier otra pediría pesos **por posición** (m² de ellos), y eso
+   rompe la restricción que tú mismo pusiste en `esq-k` — *«si la cabeza es grande, el kernel no
+   aprende nada»*. No es una elección entre varias: es la única que cabe.
+
+Hay un test que lo fija: sobre un mapa con un pico negativo y otro positivo en sitios distintos,
+`tl` cae en el positivo y `br` en el negativo, cada uno en su coordenada (`assert` en
+`nn/modelo.py`). Sin eso, «`br` = mínimo» sería una intención escrita en un comentario.
+
+### ⚠⚠ Y una medida que juega EN CONTRA de esta estructura, dicha antes de correrla
+
+El kernel ganador de `esq-k` —el único de esta familia que se ha entrenado— tiene el **74,0 % de
+su energía en la parte simétrica** bajo giro de 180° y suma **−73,68**: es sobre todo un
+**supresor de tinta**. Y medido sobre las 10 páginas enteras de aquel experimento, **su mínimo cae
+en la mancha de tinta, no en la esquina inferior-derecha: 0/10, mediana 91 px.**
+
+- **No significa que esto no pueda funcionar**: aquel kernel se entrenó **sólo para `tl`**, sin
+  ninguna presión para poner nada en el mínimo.
+- **Sí significa que el gradiente, cuando se le deja elegir, gasta el kernel en apagar el interior
+  del párrafo** — y para que `br` sea el mínimo hay que renunciar a buena parte de eso.
+
+**Ésa es exactamente la tensión que este barrido mide**, y por eso el criterio dice que el
+desenlace más probable es *acierta en `tl` y falla en `br`*, y que el titular sea **la peor de las
+dos esquinas, nunca el promedio**. La fracción simétrica del kernel se registra **en cada época**,
+así que la explicación se podrá contrastar contra ese 74,0 % de partida en vez de conjeturarla.
+
+### Lo que se propuso y NO se corre
+
+- ❌ **`rot`** (aplicar el mismo kernel a la entrada girada 180°): **descartada por el dueño** —
+  *«No queremos girar el kernel»*. Su código está **borrado**, a propósito: una alternativa
+  descartada que se queda en el repo se acaba armando por error.
+- **`ant`** (el mismo `sig` con el kernel forzado antisimétrico, 29 parámetros a k=7) y el control
+  **`ind-tl`/`ind-br`** (dos redes sin compartir nada): siguen **implementadas y comprobadas** en
+  `nn/modelo.py`, sin armar. Armarlas es añadir su línea a `BRAZOS`.
+
+El registro completo —qué contestaría cada una, qué cuesta, y por qué `ant` es la continuación
+natural si el barrido falla— en
+[`instrucciones/03-alternativas-anotadas.md`](instrucciones/03-alternativas-anotadas.md).
 
 ### El eje: `k` ∈ {5, 7, 9, 11, 13}
 
@@ -163,9 +199,10 @@ predictor constante en el centro. Umbral de «ha aprendido algo»: **12 % en las
 titular es la **peor** de las dos, nunca el promedio.
 
 Y sin los brazos de control, el techo se lee de `esq-k`, que midió la tarea de **una** esquina con
-esta misma red: 92,3 % (k=5) · 100 % (7 · 9 · 11). ⚠ Es una **referencia, no un control**: sus
-ventanas son otras, así que una diferencia de pocos puntos no se puede atribuir a compartir el
-kernel.
+esta misma convolución: 92,3 % (k=5) · 100 % (7 · 9 · 11). ⚠ Es una **referencia, no un control**,
+por dos motivos y no uno: sus **ventanas** son otras (allí 4 `tl` por imagen), y la **red no es
+idéntica** —2 parámetros más de cabeza y una lectura del mínimo que allí no existía—. Lo que se
+compara es *la misma convolución con el doble de trabajo*, no la misma red.
 
 ## Cómo se corre (cuando se ordene)
 
@@ -174,7 +211,7 @@ cd ~/src/experimentos-cnn
 E=2026-09-07-esquinas-diagonales
 .venv/bin/python $E/nn/datos.py --imagenes 300        # ~6 min (generador + Chromium)
 .venv/bin/python $E/nn/entrenar_local.py --suelos     # los suelos, sin entrenar nada
-for b in rot sig mag sig11 ind-tl ind-br; do
+for b in k05 k07 k09 k11 k13; do
   .venv/bin/python $E/nn/entrenar_local.py --brazo $b --epocas 300   # reanudable
 done
 .venv/bin/python $E/nn/muestras.py --etiqueta ep300
@@ -186,9 +223,9 @@ Las dependencias del venv están en el README de `esq-k` § «Cómo se repite» 
 ## Cuánto cuesta (estimado, no medido)
 
 **0 máquinas y 0 $**: entrena en este droplet, como `esq-k`. Lo que cuesta es reloj —
-*medido el 2026-09-07 a máquina libre*: `rot` va de **0,55 s/época** (k=5) a **1,02** (k=13), así
-que los **cinco brazos × 300 épocas ≈ 20 min** *(estimado a partir de tres medidas, no medido
-entero)*.
+*medido el 2026-09-07 a máquina libre*: de **0,31 s/época** (k=5) a **0,53** (k=11 y 13), así que
+los **cinco brazos × 300 épocas ≈ 11 min** *(estimado a partir de cuatro medidas, no medido
+entero)*. Es del orden de los 9 min que costó `esq-k` entero.
 
 ⚠ Y una lección de medición, porque el primer número que di estaba mal: la misma prueba **con la
 máquina rindiendo el dataset a la vez** daba 1,2–2,7 s/época, o sea **~3× más**. En un droplet de
