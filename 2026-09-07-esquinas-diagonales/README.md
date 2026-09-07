@@ -204,14 +204,50 @@ por dos motivos y no uno: sus **ventanas** son otras (allí 4 `tl` por imagen), 
 idéntica** —2 parámetros más de cabeza y una lectura del mínimo que allí no existía—. Lo que se
 compara es *la misma convolución con el doble de trabajo*, no la misma red.
 
-## Cómo se corre (cuando se ordene)
+## Cómo se lanzó, y cómo se le pregunta cómo va
+
+**El lanzador está commiteado**, por orden del dueño (2026-09-07): *«Guarda el script q empleaste
+para el vigilante… Así podemos saber cuál se usó, y si funcionó como se espera»*.
+
+```bash
+nn/lanzar_barrido.sh            # los 5 brazos x 300 épocas + las figuras ep300 + el aviso
+nn/lanzar_barrido.sh --estado   # ¿está viva? ¿por dónde va? ¿falló? ¿se relanzó?
+```
+
+Corre como **unidad de systemd** (`esq2d-barrido`, vía `desacoplar-persistente.sh`), o sea con
+padre PID 1: sobrevive al fin del turno que la lanzó y al reinicio del coordinador. Y **se niega a
+lanzarse dos veces**: dos procesos escribiendo los mismos pesos y el mismo `metrics.jsonl` los
+corrompen.
+
+### ✅ Lo que se midió con este mismo lanzamiento (2026-09-07)
+
+La unidad arrancó a las **14:11:32 UTC**. A mitad del barrido, el proceso de Claude Code que la
+lanzó terminó:
+
+| | qué pasó |
+|---|---|
+| la **unidad** | siguió `active`, `Result=success`, **`NRestarts=0`**, y `k09` terminó sus 300 épocas **después** de que muriera la sesión ✅ |
+| los **vigilantes** del harness (`run_in_background`) | quedaron marcados **`stopped` sin registro de finalización** ❌ |
+
+Son las dos mitades de la regla del proyecto medidas **en el mismo suceso**: el trabajo sobrevive
+porque su padre es PID 1; el vigilante no, porque el suyo es la sesión. Por eso el estado se lee
+del **disco** (`--estado` mira `metrics.jsonl`, que se escribe y se cierra en cada época) y no del
+log, que además puede verse vacío estando todo bien: `python` bufferiza cuando no es un tty.
+
+⚠ **`NRestarts` se mira siempre.** Una unidad que falló y se relanzó sola *parece* «corriendo» y
+está repitiendo trabajo desde cero — pasó el 2026-09-02 y el 2026-09-04, con 62 relanzamientos.
+
+El detalle del mecanismo y la regla general viven donde se dispara, en
+[`telegram-coordinator/CLAUDE.md`](https://github.com/stalinbeltran/telegram-coordinator/blob/main/CLAUDE.md).
+
+## Cómo se corre a mano (los pasos sueltos)
 
 ```bash
 cd ~/src/experimentos-cnn
 E=2026-09-07-esquinas-diagonales
 .venv/bin/python $E/nn/datos.py --imagenes 300        # ~6 min (generador + Chromium)
 .venv/bin/python $E/nn/entrenar_local.py --suelos     # los suelos, sin entrenar nada
-for b in k05 k07 k09 k11 k13; do
+for b in k05 k07 k09 k11 k13; do   # o, mejor: nn/lanzar_barrido.sh
   .venv/bin/python $E/nn/entrenar_local.py --brazo $b --epocas 300   # reanudable
 done
 .venv/bin/python $E/nn/muestras.py --etiqueta ep300
