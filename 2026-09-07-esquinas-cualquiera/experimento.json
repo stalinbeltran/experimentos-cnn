@@ -1,0 +1,30 @@
+{
+  "id": "esq-cq",
+  "titulo": "La red de esq-k con la etiqueta colapsada: una esquina CUALQUIERA de las dos en diagonal",
+  "pregunta": "Si no hay que decir CUAL esquina es, sino solo que hay una (tl o br), que tamano de kernel unico la detecta, y cuanto cuesta admitir la segunda esquina frente al barrido de una sola de esq-k",
+  "creado": "2026-09-07",
+  "estado": "abierto",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "brazos": ["k05", "k07", "k09", "k11", "k13"],
+  "comparabilidad": {
+    "hereda_de": "esq-k",
+    "dataset": "esquinas300-32px-r4-r20260907",
+    "dataset_repo": "foveal-vision-data/experimentos-cnn/",
+    "dataset_se_reusa_sin_regenerar": true,
+    "estructura": "libre (la red de esq-k sin tocar)",
+    "cabeza_parametros": 3,
+    "ventana_px": 32,
+    "reduccion": 4,
+    "semilla": 1,
+    "k_barrido": [5, 7, 9, 11, 13],
+    "k_max_representable": 17,
+    "epocas": 300,
+    "lr": 0.05,
+    "lote": 128,
+    "lambda_coord": 0.03,
+    "alternativas_anotadas_sin_correr": ["sim", "abs"]
+  }
+}
