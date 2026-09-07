@@ -25,6 +25,7 @@ renombrar y re-ordenar sin romper nada.
 | experimento | estado | qué pregunta |
 |---|---|---|
 | [`2026-09-06-esquina-kernel-unico/`](2026-09-06-esquina-kernel-unico/) `esq-k` | cerrado | Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo |
+| [`2026-09-07-esquinas-diagonales/`](2026-09-07-esquinas-diagonales/) `esq-2d` | abierto | Un kernel unico produce un mapa; la esquina superior-izquierda y la inferior-derecha son la misma forma girada 180 grados. Que estructura de lectura (por signo, por signo con el kernel forzado antisimetrico, o compartiendo la vista girada en vez del mapa) recupera las dos, y cuanto cuesta compartir el kernel frente a no compartirlo |
 
 <!-- FIN INDICE -->
 

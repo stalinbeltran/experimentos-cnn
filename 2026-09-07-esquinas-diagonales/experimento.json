@@ -1,0 +1,32 @@
+{
+  "id": "esq-2d",
+  "titulo": "Con UN solo kernel, que estructura de cabeza detecta las DOS esquinas en diagonal",
+  "pregunta": "Un kernel unico produce un mapa; la esquina superior-izquierda y la inferior-derecha son la misma forma girada 180 grados. Que estructura de lectura (por signo, por signo con el kernel forzado antisimetrico, o compartiendo la vista girada en vez del mapa) recupera las dos, y cuanto cuesta compartir el kernel frente a no compartirlo",
+  "creado": "2026-09-07",
+  "estado": "abierto",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "brazos": [
+    "rot",
+    "sig",
+    "ant",
+    "sig11",
+    "ind-tl",
+    "ind-br"
+  ],
+  "comparabilidad": {
+    "hereda_de": "esq-k",
+    "dataset": "esquina-limpia-800x800-r4",
+    "ventana_px": 32,
+    "reduccion": 4,
+    "semilla": 1,
+    "k": 7,
+    "k_max": 11,
+    "margen_ciego_px": 5,
+    "epocas": 300,
+    "lr": 0.05,
+    "lote": 128
+  }
+}
