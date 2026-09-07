@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """La figura de verificacion: las 10 muestras, todas juntas, en UNA imagen por red.
 
-    python nn/muestras.py                     las REPRESENTATIVAS (una por estructura)
-    python nn/muestras.py --brazo rot-k07     solo una
-    python nn/muestras.py --todas             las 25
+    python nn/muestras.py                     los cinco brazos
+    python nn/muestras.py --brazo rot-k07     solo uno
     python nn/muestras.py --etiqueta ep000    sufijo del fichero
 
-⚠ POR DEFECTO NO SALEN LAS 25, y es una decision de tamano con su numero: cada
-    figura pesa ~80 KB, asi que las 25 son ~2 MB en un repo cuyo tope declarado
-    es ~5 MB por experimento (CLAUDE.md) -- y el eje del kernel se lee en la
-    tabla de metricas, no mirando 25 veces las mismas 10 ventanas. Las de por
-    defecto son una por estructura al k de referencia; para el resto, `--todas`.
+⚠ SALEN LOS CINCO, y eso vale MIENTRAS SEAN CINCO: cada figura pesa ~80 KB, o
+    sea ~0,4 MB el barrido entero, dentro del tope de ~5 MB por experimento que
+    declara el CLAUDE.md del repo. Si algun dia se arma alguna de las
+    alternativas anotadas y los brazos se multiplican, esto vuelve a necesitar un
+    filtro: 25 figuras son ~2 MB y el eje se lee en la tabla de metricas, no
+    mirando 25 veces las mismas 10 ventanas.
 
 Sale en `muestras/<brazo>-<etiqueta>.png`.
 
@@ -43,9 +43,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 from datos import CONGELADAS, DATASET
 from expcnn import exigir_dataset
-from modelo import BRAZOS, ESQUINAS, ESTRUCTURAS, VENTANA, construir, simetria
-
-K_REFERENCIA = 7          # el ganador de `esq-k`, y el punto donde se comparan las estructuras
+from modelo import BRAZOS, ESQUINAS, VENTANA, construir, simetria
 
 AQUI = Path(__file__).resolve().parent
 EXP = AQUI.parent
@@ -195,7 +193,6 @@ def figura(brazo: str, d10: dict, etiqueta: str) -> Path:
 def main() -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--brazo", default=None, choices=sorted(BRAZOS))
-    p.add_argument("--todas", action="store_true")
     p.add_argument("--etiqueta", default=None)
     a = p.parse_args()
 
@@ -208,13 +205,7 @@ def main() -> int:
     print(f"{len(d10['clase'])} muestras · {int(d10['existe_tl'].sum())} con tl · "
           f"{int(d10['existe_br'].sum())} con br")
 
-    if a.brazo:
-        brazos = [a.brazo]
-    elif a.todas:
-        brazos = list(BRAZOS)
-    else:
-        brazos = [b for b in BRAZOS if b.endswith(f"-k{K_REFERENCIA:02d}")]
-    for b in brazos:
+    for b in ([a.brazo] if a.brazo else list(BRAZOS)):
         pesos = AQUI / "pesos" / b / "last.pt"
         et = a.etiqueta or ("ep000-sin-entrenar" if not pesos.exists() else "actual")
         print(f"  {b}: {figura(b, d10, et).relative_to(EXP)}")

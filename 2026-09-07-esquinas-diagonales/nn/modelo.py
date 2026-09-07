@@ -56,12 +56,16 @@ LO QUE NO CAMBIA RESPECTO DE `esq-k`, Y POR QUE
     (BETA0 = 3,5) · sin ReLU entre la conv y la cabeza. Los porques estan medidos
     en `esq-k` y no se vuelven a pagar aqui.
 
-EL DISENO ES DE DOS EJES, y eso hay que decirlo porque cambia como se lee
-    ESTRUCTURA (rot · sig · ant, mas el control ind) x KERNEL (5 · 7 · 9 · 11 ·
-    13). Son 25 brazos. El eje que contesta la PREGUNTA es el de la estructura;
-    el del kernel esta para que "esta lectura no puede" no se confunda nunca con
-    "con este kernel no cabe" -- que es la duda que en `esq-k` dejo abierta el
-    borde del rango.
+EL DISENO ES DE UN SOLO EJE: EL KERNEL
+    5 brazos, k en {5, 7, 9, 11, 13}, todos con la estructura `rot`. Las otras
+    lecturas quedan ANOTADAS y sin correr, por orden del dueno del 2026-09-07.
+
+    Lo que eso compra: el barrido de aqui es comparable UNO A UNO con el de
+    `esq-k`, porque la red es la misma (k^2 + 3 parametros, cabeza C1 de 3) y lo
+    unico que cambia es que resuelve las dos esquinas en vez de una.
+    Lo que cuesta, y hay que decirlo: si el barrido sale mal, este diseno NO
+    puede distinguir "un kernel no da para las dos esquinas" de "esta lectura no
+    es la buena". Esa pregunta es la que contestarian las alternativas anotadas.
 """
 
 from __future__ import annotations
@@ -91,8 +95,25 @@ BETA0 = 3.5
 # coinciden exactamente; con k = 19 ya habria esquinas que el mapa no puede
 # senalar. Cabe 13, cabe 15, y a partir de 19 hay que rehacer el dato.
 K_BARRIDO = (5, 7, 9, 11, 13)
-ESTRUCTURAS = ("rot", "sig", "ant")
 ESQUINAS = ("tl", "br")
+
+# LA ESTRUCTURA QUE SE CORRE ES UNA, Y LO UNICO QUE VARIA ES `k`.
+#
+# Por orden del dueno (2026-09-07): «Anotalas pero no vamos a ejecutarlas. Solo
+# variamos los kernels». Las otras tres --`sig`, `ant` y el control `ind`-- SIGUEN
+# IMPLEMENTADAS aqui abajo a proposito: una estructura implementada es la forma
+# menos ambigua de anotarla, y ponerla en marcha es anadir su linea a `BRAZOS`.
+# Estan descritas, con lo que cada una contestaria y lo que cuesta, en
+# `instrucciones/03-alternativas-anotadas.md`.
+#
+# ⚠ Y el brazo que queda NO se eligio por gusto: `rot` es el unico cuya red es
+# EXACTAMENTE la de `esq-k` --misma conv, misma cabeza C1 de 3 parametros, mismo
+# k^2+3-- resolviendo el doble de tarea. Eso hace que el barrido de `k` de aqui
+# se pueda leer contra el de alli sin traducir nada, que es justo lo que se pierde
+# al elegir cualquiera de las otras (las de un solo mapa necesitan 2 parametros
+# mas de cabeza y una lectura distinta).
+ESTRUCTURA = "rot"
+ESTRUCTURAS = ("rot", "sig", "ant")      # implementadas; solo se corre ESTRUCTURA
 
 
 def _nombre(estructura: str, k: int, esquina: str | None = None) -> str:
@@ -101,13 +122,7 @@ def _nombre(estructura: str, k: int, esquina: str | None = None) -> str:
 
 # nombre -> (estructura, k, esquina). `esquina` solo lo usa el control `ind`,
 # que entrena UNA red por esquina y por tanto no comparte nada.
-BRAZOS = {}
-for _e in ESTRUCTURAS:
-    for _k in K_BARRIDO:
-        BRAZOS[_nombre(_e, _k)] = (_e, _k, None)
-for _c in ESQUINAS:
-    for _k in K_BARRIDO:
-        BRAZOS[_nombre("ind", _k, _c)] = ("ind", _k, _c)
+BRAZOS = {_nombre(ESTRUCTURA, _k): (ESTRUCTURA, _k, None) for _k in K_BARRIDO}
 
 
 class DosEsquinasUnKernel(nn.Module):
@@ -210,6 +225,17 @@ class DosEsquinasUnKernel(nn.Module):
         return 1 + 2 * self.a.numel()
 
 
+def construir_suelta(estructura: str, k: int, esquina: str | None = None,
+                     semilla: int = 1) -> DosEsquinasUnKernel:
+    """Una estructura CUALQUIERA, este armada o no en `BRAZOS`.
+
+    Existe para que las alternativas anotadas se sigan comprobando: una
+    estructura que se guarda "por si acaso" y deja de ejecutarse nunca se pudre
+    en silencio, y el dia que se arme habria que depurarla desde cero."""
+    torch.manual_seed(semilla)
+    return DosEsquinasUnKernel(estructura, k, esquina)
+
+
 def construir(brazo: str, semilla: int = 1) -> DosEsquinasUnKernel:
     """La red de un brazo, con inicializacion REPRODUCIBLE.
 
@@ -234,6 +260,8 @@ def simetria(w: torch.Tensor) -> tuple[float, float]:
 
 
 if __name__ == "__main__":
+    print(f"LOS {len(BRAZOS)} BRAZOS QUE SE CORREN (estructura `{ESTRUCTURA}`, "
+          f"y lo unico que varia es k):\n")
     print(f"{'brazo':>11} {'estruct':>8} {'k':>3} {'mapa':>7} {'esquinas':>10} "
           f"{'kernel':>7} {'cabeza':>7} {'total':>6}")
     for brazo in BRAZOS:
@@ -257,10 +285,21 @@ if __name__ == "__main__":
     # `rot` tiene que ser EXACTAMENTE equivariante: girar la entrada 180 grados
     # intercambia las dos esquinas predichas. Si esto falla, el brazo no es lo
     # que dice ser, y se veria como "aprende peor" en vez de como un fallo.
+    print("\nLAS ALTERNATIVAS ANOTADAS Y NO ARMADAS (ver instrucciones/03-...):\n")
+    print(f"{'estruct':>11} {'k':>3} {'mapa':>7} {'esquinas':>10} "
+          f"{'kernel':>7} {'cabeza':>7} {'total':>6}")
+    for _e, _esq in (("sig", None), ("ant", None), ("ind", "tl"), ("ind", "br")):
+        red = construir_suelta(_e, 7, _esq)
+        salida, mapa = red(torch.randn(2, 1, VENTANA, VENTANA))
+        assert set(salida) == set(red.esquinas)
+        print(f"{_e + ('-' + _esq if _esq else ''):>11} {red.k:>3} "
+              f"{str(red.m)+'x'+str(red.m):>7} {'+'.join(red.esquinas):>10} "
+              f"{red.n_kernel():>7} {red.n_cabeza():>7} {red.n_parametros():>6}")
+
     # `ant` tiene que ser antisimetrico EXACTO, y por tanto responder a un
     # parche y a su giro con el mismo numero cambiado de signo. Si esto falla,
     # el brazo no prueba la hipotesis que dice probar.
-    red = construir(_nombre("ant", 7))
+    red = construir_suelta("ant", 7)
     w = red.kernel()
     assert torch.allclose(w, -torch.flip(w, dims=(-2, -1)), atol=1e-7)
     sim, anti = simetria(w)
@@ -270,7 +309,7 @@ if __name__ == "__main__":
     assert torch.allclose(m1, -torch.flip(m2, dims=(1, 2)), atol=1e-5)
     print("\nant: el kernel es antisimetrico exacto y responde al giro con el signo cambiado")
 
-    red = construir(_nombre("rot", 7))
+    red = construir_suelta("rot", 7)
     x = torch.randn(3, 1, VENTANA, VENTANA)
     s1, _ = red(x)
     s2, _ = red(torch.flip(x, dims=(2, 3)))

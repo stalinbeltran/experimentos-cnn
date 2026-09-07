@@ -8,10 +8,11 @@ Hereda de `esq-k` **todo lo que decide la comparabilidad**: misma receta, semill
 32×32, reducción por 4, sin padding, sin bias, cabeza C1 (esperanza bajo `softmax(β·M)`, β
 aprendida desde 3,5), Adam `lr` 0,05, lote 128, 300 épocas.
 
-**El diseño tiene DOS ejes: la estructura de lectura × el tamaño del kernel.** El que contesta la
-pregunta es el primero; el segundo está para que *«esta lectura no puede»* no se confunda nunca
-con *«con este kernel no cabe»* — que es justo la duda que `esq-k` dejó abierta al quedarse en el
-borde de su rango.
+**El diseño tiene UN eje: el tamaño del kernel.** Cinco brazos, una sola estructura, y lo único
+que cambia entre ellos es `k`. Las otras lecturas que se propusieron quedan **anotadas y sin
+correr**, por orden del dueño del 2026-09-07 — en
+[`instrucciones/03-alternativas-anotadas.md`](instrucciones/03-alternativas-anotadas.md), con lo
+que cada una contestaría y lo que cuesta.
 
 ## El problema, que no es el de ayer con otra etiqueta
 
@@ -33,35 +34,77 @@ ganador de `esq-k` —que sólo vio esquinas tl— tiene el **74,0 % de su energ
 experimento, **su mínimo cae en la mancha de tinta, no en la esquina br: 0/10, mediana 91 px**.
 El comando está en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md).
 
-## Las estructuras
+## La estructura: `rot`, un kernel y la misma cabeza sobre la vista girada
 
-| brazo | idea | kernel | cabeza | total |
-|---|---|--:|--:|--:|
-| **`rot`** | el **mismo** kernel sobre la entrada **y sobre la entrada girada 180°**. Una br es una tl en la vista girada, así que la cabeza también es la misma | 49 | 3 | **52** |
-| **`sig`** | un mapa: **tl = máximo, br = mínimo**. Pide que mande `A` | 49 | 5 | **54** |
-| **`ant`** | igual que `sig`, pero el kernel se **proyecta antisimétrico** (`W = (V − rot180(V))/2`): `S = 0` por construcción, así que `respuesta_br = −respuesta_tl` deja de ser una esperanza y pasa a ser **exacta**. La mitad de grados de libertad | **24** | 5 | **29** |
-| `sig11` | `sig` con k = 11. **Punto de seguro, no parte del eje**: separa «esta lectura no puede» de «con 49 pesos no cabe» | 121 | 5 | 126 |
-| `ind-tl` · `ind-br` | **control, no compite**: dos redes de un kernel cada una, sin compartir nada. Es el **techo** contra el que se mide lo que cuesta compartir | 49 | 3 | 52 ×2 |
+**Una sola convolución de `k×k` sin bias, aplicada dos veces con los MISMOS pesos**: a la entrada
+y a la entrada girada 180°. Una esquina inferior-derecha es, literalmente, una superior-izquierda
+en la vista girada — así que la cabeza también es la misma, y son **3 parámetros de cabeza**,
+exactamente los de `esq-k` con una sola esquina.
 
-```bash
-python nn/modelo.py       # imprime esta tabla y comprueba que rot es equivariante
+```
+entrada x (1, 32, 32) en TINTA (/255)
+    │
+    ├── conv(x, W)              ──► M⁺  (m×m, m = 32 − k + 1)  ──► cabeza C1 ──► (existe_tl, x_tl, y_tl)
+    │
+    └── conv(girar180(x), W)    ──► M⁻  (m×m)                  ──► cabeza C1 ──► (existe_br, x_br, y_br)
+             ▲ el MISMO W                    ▲ la MISMA cabeza        ▲ y las coordenadas se
+                                               (β, a, b)                devuelven al marco original:
+                                                                        x = 31 − x_girada
+
+cabeza C1:  p = softmax(β·M) · (x, y) = esperanza de la posición bajo p
+            existe = a · logsumexp(β·M)/β + b            β se aprende, arranca en 3,5
 ```
 
-⚠ **`rot` es exactamente equivariante y hay un test que lo fija**: girar la entrada 180°
-intercambia las dos esquinas predichas. Si eso se rompiera, el brazo dejaría de ser lo que dice
-ser y se leería como «aprende peor» en vez de como un fallo.
+| brazo | k | mapa | kernel | cabeza | **total** |
+|---|--:|---|--:|--:|--:|
+| `rot-k05` | 5 | 28×28 | 25 | 3 | **28** |
+| `rot-k07` | 7 | 26×26 | 49 | 3 | **52** |
+| `rot-k09` | 9 | 24×24 | 81 | 3 | **84** |
+| `rot-k11` | 11 | 22×22 | 121 | 3 | **124** |
+| `rot-k13` | 13 | 20×20 | 169 | 3 | **172** |
 
-⚠ **`ant` es antisimétrico exacto y hay un test que lo fija**: el kernel cumple
-`W = −rot180(W)` con tolerancia 1e-7, y responde a un parche y a su giro con el mismo número
-cambiado de signo. El precio de forzarlo está declarado: pierde la parte del kernel que **apaga
-el interior del párrafo**, que es justo donde el kernel de `esq-k` gastaba el 74 % de su energía.
+```bash
+python nn/modelo.py     # imprime esta tabla, las alternativas anotadas, y comprueba las dos
+```
 
-⚠ **Una cuarta estructura se descartó EN PAPEL, sin pagarla:** *«las dos esquinas son máximos y
-se distinguen por el VALOR de la respuesta»*. No es expresable con esta cabeza — `existe` es una
-función **lineal de un solo escalar**, o sea monótona, y esa hipótesis pide fondo 0 · `br` medio ·
-`tl` alto, donde «`br`» sería una **banda** que ninguna recta separa. Darle dos escalares (el
-máximo y el mínimo) es ya `sig`. El argumento entero está en la cabecera de
-[`nn/modelo.py`](nn/modelo.py).
+⚠ **Es exactamente la red de `esq-k`, con el doble de tarea.** Mismo `k²+3`, misma cabeza, misma
+convolución. Por eso este barrido se puede leer **uno a uno** contra el de allí sin traducir nada
+— que es lo que se perdería con cualquier otra de las lecturas propuestas, que necesitan 2
+parámetros más de cabeza y una lectura distinta del mapa.
+
+⚠ **La equivarianza es exacta y hay un test que la fija**: girar la entrada 180° intercambia las
+dos esquinas predichas (`assert` en `nn/modelo.py`). Si eso se rompiera, el brazo dejaría de ser
+lo que dice ser y se leería como «aprende peor» en vez de como un fallo.
+
+⚠ **Y por eso las dos esquinas son la MISMA tarea**, no dos parecidas. Es la propiedad que hace
+que un solo kernel pueda con las dos sin que ninguna de las dos partes del filtro tenga que ceder
+— que es el problema que tienen las lecturas de un solo mapa, y está medido en el encargo.
+
+### El eje: `k` ∈ {5, 7, 9, 11, 13}
+
+⚠ **El 3×3 se cae con un dato, no por gusto** (y es el propio dueño quien lo saca): en `esq-k` se
+quedó en el 8,3 % de acierto, que es **exactamente su suelo sin entrenar**. No aprendió poco: no
+aprendió. Aquí la tarea es más difícil, así que repetirlo sería pagar por re-confirmar al
+perdedor. **El 13 entra en su lugar** porque aquel eje no estaba acotado por arriba: el 11 seguía
+mejorando y era el borde del rango.
+
+⚠ **Y 13 no es un tope caprichoso: es lo que este dataset admite.** La esquina se sortea entre los
+píxeles 8 y 23 de la ventana, y el mapa de un kernel `k` sólo representa de `(k−1)/2` a
+`31−(k−1)/2`. Con **k = 17** los dos rangos coinciden exactamente; con k = 19 habría esquinas que
+el mapa **no puede** señalar. Cabe 15; a partir de 19 hay que regenerar el dato. Lo calcula y lo
+escribe el manifiesto, no se supone.
+
+### Lo que se propuso y NO se corre
+
+`sig` (un mapa: `tl` = máximo, `br` = mínimo), `ant` (lo mismo con el kernel forzado
+antisimétrico) y el control `ind-tl`/`ind-br` (dos redes sin compartir nada). **Siguen
+implementadas y comprobadas** en `nn/modelo.py` —una estructura implementada es la forma menos
+ambigua de anotarla, y así no se pudre en silencio—, pero no están armadas: ponerlas en marcha es
+añadir su línea a `BRAZOS`.
+
+⚠ **Lo que se pierde, dicho por delante:** si el barrido sale bien, nada. Si sale mal, este diseño
+**no puede distinguir** *«un kernel no da para las dos esquinas»* de *«esta lectura no es la
+buena»*. Está escrito en el criterio como desenlace 2.
 
 ## El dataset vive en el repo de DATOS, y es siempre el mismo fichero
 
@@ -115,7 +158,14 @@ distraído cambiaría el dato bajo los pies de todo lo ya medido, sin un solo er
 ## El criterio, congelado antes de mirar
 
 En [`instrucciones/02-criterio.md`](instrucciones/02-criterio.md), con los suelos medidos sobre
-las redes **sin entrenar**. El titular es la **peor** de las dos esquinas, nunca el promedio.
+las redes **sin entrenar**: **3,8–5,1 % (`tl`) y 6,4 % (`br`)** a ≤2 px, que son exactamente el
+predictor constante en el centro. Umbral de «ha aprendido algo»: **12 % en las dos esquinas**. El
+titular es la **peor** de las dos, nunca el promedio.
+
+Y sin los brazos de control, el techo se lee de `esq-k`, que midió la tarea de **una** esquina con
+esta misma red: 92,3 % (k=5) · 100 % (7 · 9 · 11). ⚠ Es una **referencia, no un control**: sus
+ventanas son otras, así que una diferencia de pocos puntos no se puede atribuir a compartir el
+kernel.
 
 ## Cómo se corre (cuando se ordene)
 
@@ -136,18 +186,18 @@ Las dependencias del venv están en el README de `esq-k` § «Cómo se repite» 
 ## Cuánto cuesta (estimado, no medido)
 
 **0 máquinas y 0 $**: entrena en este droplet, como `esq-k`. Lo que cuesta es reloj —
-*medido el 2026-09-07 a máquina libre, una época en nueve brazos*: **0,31–1,02 s/época** (sube
-con `k` y con el número de convoluciones: `rot` hace dos). Los **25 brazos × 300 épocas ≈ 60–70
-min** *(estimado a partir de esas nueve medidas, no medido entero)*.
+*medido el 2026-09-07 a máquina libre*: `rot` va de **0,55 s/época** (k=5) a **1,02** (k=13), así
+que los **cinco brazos × 300 épocas ≈ 20 min** *(estimado a partir de tres medidas, no medido
+entero)*.
 
 ⚠ Y una lección de medición, porque el primer número que di estaba mal: la misma prueba **con la
 máquina rindiendo el dataset a la vez** daba 1,2–2,7 s/época, o sea **~3× más**. En un droplet de
 2 vCPU, un tiempo por época medido con algo más corriendo no es el tiempo por época.
 
-Y en disco: 25 brazos × (2 checkpoints de ~17 KB + un `metrics.jsonl` de ~50 KB) ≈ **2,1 MB**,
-dentro del tope de ~5 MB por experimento que declara el `CLAUDE.md` del repo. Por eso el registro
-se guarda **redondeado a 6 cifras** y las figuras de muestras **no salen para los 25** por
-defecto: sin las dos cosas, sólo el historial serían ~3 MB.
+Y en disco: 5 brazos × (2 checkpoints de ~17 KB + un `metrics.jsonl` de ~50 KB) ≈ **0,4 MB**,
+holgado dentro del tope de ~5 MB por experimento que declara el `CLAUDE.md` del repo. El registro
+se guarda **redondeado a 6 cifras** de todas formas: era necesario con 25 brazos y no estorba con
+5.
 
 ⚠ El freno lo ve: `entrenar_local.py` está en la lista `TRABAJOS` de
 `telegram-coordinator/scripts/cerrable.mjs`, así que un entrenamiento vivo aparece en el veredicto

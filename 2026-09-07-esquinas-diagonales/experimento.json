@@ -1,7 +1,7 @@
 {
   "id": "esq-2d",
-  "titulo": "Con UN solo kernel, que estructura de cabeza detecta las DOS esquinas en diagonal",
-  "pregunta": "Un kernel unico produce un mapa; la esquina superior-izquierda y la inferior-derecha son la misma forma girada 180 grados. Que estructura de lectura (por signo, por signo con el kernel forzado antisimetrico, o compartiendo la vista girada en vez del mapa) recupera las dos, a que tamano de kernel, y cuanto cuesta compartir el kernel frente a no compartirlo",
+  "titulo": "Con UN kernel unico y la MISMA cabeza sobre la vista girada, que tamano de kernel detecta las DOS esquinas en diagonal",
+  "pregunta": "Un kernel unico aplicado a la entrada y a la entrada girada 180 grados detecta la esquina superior-izquierda y la inferior-derecha con la misma cabeza de 3 parametros. Que tamano de kernel lo hace mejor, y como se compara con el mismo barrido sobre UNA sola esquina de esq-k",
   "creado": "2026-09-07",
   "estado": "abierto",
   "usa_fv": false,
@@ -13,27 +13,7 @@
     "rot-k07",
     "rot-k09",
     "rot-k11",
-    "rot-k13",
-    "sig-k05",
-    "sig-k07",
-    "sig-k09",
-    "sig-k11",
-    "sig-k13",
-    "ant-k05",
-    "ant-k07",
-    "ant-k09",
-    "ant-k11",
-    "ant-k13",
-    "ind-tl-k05",
-    "ind-tl-k07",
-    "ind-tl-k09",
-    "ind-tl-k11",
-    "ind-tl-k13",
-    "ind-br-k05",
-    "ind-br-k07",
-    "ind-br-k09",
-    "ind-br-k11",
-    "ind-br-k13"
+    "rot-k13"
   ],
   "comparabilidad": {
     "hereda_de": "esq-k",
@@ -53,6 +33,13 @@
     "epocas": 300,
     "lr": 0.05,
     "lote": 128,
-    "lambda_coord": 0.038
+    "lambda_coord": 0.038,
+    "estructura": "rot",
+    "alternativas_anotadas_sin_correr": [
+      "sig",
+      "ant",
+      "ind-tl",
+      "ind-br"
+    ]
   }
 }
