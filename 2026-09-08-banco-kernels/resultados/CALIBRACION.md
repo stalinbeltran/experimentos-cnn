@@ -54,6 +54,27 @@ De **identidad** (0.7981) a **sobel** (0.8164) hay **0.0183**, que son **2.4 ×*
 
 ⚠ Esto es una **observación sobre el instrumento**, medida en la calibración, no un hallazgo sobre kernels (§11).
 
+## De qué está hecha la desviación del aleatorio
+
+No es un detalle de contabilidad: **esa desviación es el denominador de los dos criterios de éxito** (§2), así que de qué esté hecha decide cuán exigente es el listón.
+
+En este banco las condiciones no se sortean igual, y es deliberado (§10.2):
+
+| condición | 10 semillas varían… | σ mide |
+|---|---|---|
+| identidad · gauss · sobel | sólo los pesos iniciales y el orden de los lotes | ruido de **entrenamiento** |
+| **aleatorio** | eso **y además el kernel** (`aleatorio-r0` … `r9`) | entrenamiento **+ kernel a kernel** |
+
+| | σ |
+|---|---|
+| entrenamiento (media de los tres de kernel fijo) | **0.0069** |
+| aleatorio | **0.0077** |
+| kernel a kernel (raíz de la diferencia de varianzas) | **≈0.0035** |
+
+**Lo que sale de ahí:** el listón del §2.1 lo pone sobre todo el **ruido de entrenamiento**, no la suerte al elegir el kernel aleatorio. Dicho de otra forma: **da bastante igual con qué ruido concreto filtres** — todos los kernels aleatorios rinden parecido —, y lo que cuesta atravesar es la variabilidad de entrenar con 100 muestras.
+
+⚠ *Descomposición aproximada:* con n=10 por condición, una σ tiene ~24 % de error relativo, así que el ≈0,0035 es un orden de magnitud, no una medida fina. Lo robusto es la comparación: **σ del aleatorio ≈ σ de los de kernel fijo**.
+
 ## Resolución (§7.5)
 
 MAE medio de la identidad: **2.40 px** contra una celda de rejilla de **8.0 px**. El soft-argmax **interpola entre celdas**, que es lo que §7.5 espera.

@@ -398,6 +398,34 @@ def informe() -> int:
               "eso el margen del §2.1 no es una formalidad.", "",
               "⚠ Esto es una **observación sobre el instrumento**, medida en la "
               "calibración, no un hallazgo sobre kernels (§11).", ""]
+    # De donde viene la desviacion del aleatorio, que es el denominador de los criterios
+    if p4 and p2 and e.get("extra_gauss") and e.get("extra_sobel"):
+        s_fijo = float(np.mean([p2["iou_eval"]["desv"], e["extra_gauss"]["iou_eval"]["desv"],
+                                e["extra_sobel"]["iou_eval"]["desv"]]))
+        s_al = p4["iou_eval"]["desv"]
+        dif = s_al ** 2 - s_fijo ** 2
+        L += ["## De qué está hecha la desviación del aleatorio", "",
+              "No es un detalle de contabilidad: **esa desviación es el denominador de los "
+              "dos criterios de éxito** (§2), así que de qué esté hecha decide cuán "
+              "exigente es el listón.", "",
+              "En este banco las condiciones no se sortean igual, y es deliberado (§10.2):", "",
+              "| condición | 10 semillas varían… | σ mide |", "|---|---|---|",
+              "| identidad · gauss · sobel | sólo los pesos iniciales y el orden de los lotes | ruido de **entrenamiento** |",
+              "| **aleatorio** | eso **y además el kernel** (`aleatorio-r0` … `r9`) | entrenamiento **+ kernel a kernel** |", "",
+              f"| | σ |", "|---|---|",
+              f"| entrenamiento (media de los tres de kernel fijo) | **{s_fijo:.4f}** |",
+              f"| aleatorio | **{s_al:.4f}** |",
+              (f"| kernel a kernel (raíz de la diferencia de varianzas) | **≈{np.sqrt(dif):.4f}** |"
+               if dif > 0 else "| kernel a kernel | **no se distingue de cero** |"), "",
+              "**Lo que sale de ahí:** el listón del §2.1 lo pone sobre todo el **ruido de "
+              "entrenamiento**, no la suerte al elegir el kernel aleatorio. Dicho de otra "
+              "forma: **da bastante igual con qué ruido concreto filtres** — todos los "
+              "kernels aleatorios rinden parecido —, y lo que cuesta atravesar es la "
+              "variabilidad de entrenar con 100 muestras.", "",
+              "⚠ *Descomposición aproximada:* con n=10 por condición, una σ tiene ~24 % de "
+              "error relativo, así que el ≈0,0035 es un orden de magnitud, no una medida "
+              "fina. Lo robusto es la comparación: **σ del aleatorio ≈ σ de los de kernel "
+              "fijo**.", ""]
     if p5:
         L += ["## Resolución (§7.5)", "",
               f"MAE medio de la identidad: **{p5['mae_medio_identidad']:.2f} px** contra "
