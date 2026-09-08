@@ -3,6 +3,7 @@
 #
 #   nn/lanzar.sh datos       genera las 1000 imagenes del dataset (~30 min)
 #   nn/lanzar.sh calibrar    corre la calibracion del §11 (~1 h)
+#   nn/lanzar.sh kernel R    evalua el kernel R contra los criterios del §2 (~9 min)
 #   nn/lanzar.sh --estado    ¿esta vivo? ¿por donde va? ¿fallo? ¿se relanzo?
 #
 # POR QUE ESTO ES UN SCRIPT COMMITEADO Y NO UNA LINEA QUE SE TECLEA
@@ -75,7 +76,14 @@ fi
 case "$1" in
     datos)     UNIDAD=bancok-datos ;;
     calibrar)  UNIDAD=bancok-calibrar ;;
-    *) echo "uso: $0 datos|calibrar|--estado"; exit 2 ;;
+    kernel)
+        [ -n "$2" ] || { echo "uso: $0 kernel <ruta.npy>"; exit 2; }
+        # El contrato del §5 se comprueba AQUI, en primer plano, antes de desacoplar
+        # nada: un kernel invalido tiene que fallar donde lo estas mirando, no dentro
+        # de una unidad cuyo log hay que ir a buscar.
+        "$PY" nn/evaluar_kernel.py --contrato "$2" || exit 2
+        UNIDAD="bancok-$(basename "$2" .npy)" ;;
+    *) echo "uso: $0 datos|calibrar|kernel <ruta.npy>|--estado"; exit 2 ;;
 esac
 
 # No se lanza dos veces: dos procesos escribiendo los mismos ficheros los corrompen,
@@ -88,7 +96,10 @@ if [ "$(systemctl is-active "$UNIDAD" 2>&1)" = "active" ]; then
 fi
 
 cd "$EXP"
-if [ "$1" = "datos" ]; then
+if [ "$1" = "kernel" ]; then
+    ORDEN="$PY -u nn/evaluar_kernel.py --kernel '$2'
+node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: kernel $(basename "$2") evaluado. Veredicto en resultados/$(basename "$2" .npy)/criterios.json' || true"
+elif [ "$1" = "datos" ]; then
     ORDEN="$PY -u nn/datos.py --imagenes 1000
 $PY -u nn/datos.py --muestras 16
 node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: dataset de 1000 parrafos generado. Mira nn/lanzar.sh --estado' || true"

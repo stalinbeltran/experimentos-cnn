@@ -59,9 +59,48 @@ la desviación, contra las 96 × del rango útil): la caja del párrafo **sobrev
 filtro**. El banco separa con holgura *filtrar* de *no mirar*, y con mucho menos margen *un
 filtro de otro*.
 
-⚠ **Lo que NO hay es ningún kernel evaluado**, y es correcto: el banco es agnóstico a su
-origen (§1) y los métodos para obtenerlos están **fuera de alcance** (§15). `kernels/` sólo
-tiene los controles.
+## Cómo se mete un kernel a probar
+
+Es lo único que hay que saber para usar el banco. Todo lo demás está fijado y **congelado**
+(§12).
+
+```bash
+python nn/evaluar_kernel.py --contrato kernels/mio.npy   # sólo valida el §5, no entrena
+python nn/evaluar_kernel.py --kernel   kernels/mio.npy   # lo evalúa entero (~9 min)
+nn/lanzar.sh kernel kernels/mio.npy                      # igual, pero como unidad de systemd
+```
+
+**El contrato de entrada (§5.1), y se comprueba antes de entrenar nada:**
+
+| | |
+|---|---|
+| fichero | `.npy` |
+| forma | `(k, k)`, cuadrado |
+| tipo | `float32` (se convierte si hace falta, avisando) |
+| `k` | **impar**, `3 ≤ k ≤ 19` |
+| canales | 1 → 1 |
+
+**No hace falta normalizarlo.** El banco normaliza la norma L2 al recibirlo (§5.4) y guarda
+la norma **original** y el hash de **antes** de normalizar (§13.3). Dos kernels que sólo se
+diferencian en escala son **el mismo detector** y dan exactamente el mismo resultado.
+
+**Qué sale:** `resultados/<nombre>/` con `metricas.csv` por semilla, `config.json`,
+`resumen.json` y **`criterios.json`** — la evaluación de §2.1 y §2.2 por separado, más el
+mecanismo del §2.3 (facilitación o transferencia) y un veredicto.
+
+⚠ **El control aleatorio tiene que ser del mismo `k`** (§2.1: «igual norma y **mismo `k`**»).
+La calibración corrió el suyo con `k=9`; si tu kernel tiene otro, el script **corre primero**
+un aleatorio nuevo con ese `k` y sus 10 semillas. Compararte contra un aleatorio de otro
+tamaño mezclaría la **forma** del kernel con su **campo receptivo**, que es otra pregunta.
+Cuesta 10 corridas más y se paga una sola vez por `k`.
+
+⚠ **De dónde salga el kernel no es asunto del banco** (§1, §15): sólo se pide el contrato.
+**Pero si lo obtuviste con el mismo generador de párrafos, respeta la reserva del §3.7** —
+`LiberationMono` y el interlineado `[1,45 · 1,60]` son de uso exclusivo del banco — o tendrás
+**fuga de distribución aunque las muestras sean otras**.
+
+⚠ **Hoy `kernels/` sólo tiene los controles** y es correcto: el banco es agnóstico al origen
+del kernel (§1) y los métodos para obtenerlos están **fuera de alcance** (§15).
 
 **Concluida la calibración, los parámetros quedan congelados** (§12).
 

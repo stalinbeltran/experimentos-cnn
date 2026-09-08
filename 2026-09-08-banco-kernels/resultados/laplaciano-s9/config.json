@@ -1,0 +1,26 @@
+{
+  "condicion": "laplaciano",
+  "semilla": 9,
+  "kernel": "kernels/laplaciano.npy",
+  "kernel_k": 9,
+  "kernel_norma_original": 1.6698720455169678,
+  "kernel_sha256_16": "95a2da9a48f8211b",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": -0.0006886558257974684,
+    "sigma": 413.4964904785156
+  },
+  "segundos": 41.5
+}

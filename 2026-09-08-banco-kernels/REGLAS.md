@@ -137,6 +137,9 @@ Nada de esto existe todavía. Es dónde va a caer, declarado antes de producirlo
   §2.2, por separado).
   - ⚠ **Toda cifra se reporta como media ± desviación entre semillas. Una cifra de una sola
     semilla no es un resultado en este banco** (§9.3).
+- **Veredicto por kernel:** `resultados/<nombre>/criterios.json`, con §2.1 y §2.2 **por
+  separado**, el mecanismo del §2.3 y contra qué aleatorio se comparó. Lo escribe
+  `nn/evaluar_kernel.py`, que es la única puerta de entrada de un kernel al banco.
 - **Trazabilidad:** `resultados/<condicion>/config.json` con el kernel, su `k`, **su norma
   original antes de normalizar**, su hash **antes** de normalizar, las semillas, el hash del
   dataset y la **versión de la especificación** (§13.3).
@@ -258,6 +261,7 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/kernels.py` | los controles del §10: aleatorio ×10, gauss, sobel | `python nn/kernels.py [--k 9] [--guardar]` |
 | `nn/entrenar_local.py` | entrena **una** condición con el protocolo del §8 | `--condicion identidad --semilla 0` · `--kernel k.npy` · `--comprobar` |
 | `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
+| `nn/evaluar_kernel.py` | **la puerta del banco**: mete un kernel, saca un veredicto | `--contrato k.npy` (sólo valida) · `--kernel k.npy [--nombre n]` |
 | `nn/muestras.py` | las **tres** figuras: el dataset en sus dos marcos y las 4 condiciones | `nn/datos.py --muestras 20 [--condiciones 6]` |
 | `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `--estado` |
 

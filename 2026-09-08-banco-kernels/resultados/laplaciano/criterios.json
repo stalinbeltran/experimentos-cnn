@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/laplaciano.npy",
+  "nombre": "laplaciano",
+  "contrato": {
+    "k": 9,
+    "norma_original": 1.6698720455169678,
+    "suma": -4.936009645462036e-08,
+    "suma_normalizada": 9.592622518539429e-08,
+    "sha256_16": "95a2da9a48f8211b",
+    "min": -0.5301140546798706,
+    "max": 0.07423580437898636
+  },
+  "dataset": "laplaciano",
+  "comparado_contra": {
+    "aleatorio": "aleatorio",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.7963275120736776,
+    "desv": 0.005091937713399796,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.8459455767602273,
+    "desv": 0.005088449582433946,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.04961806468654969,
+    "desv": 0.00803245087746611,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": -0.012006914677728298,
+    "margen": 0.012827724249649095,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": -0.007548159393709543,
+    "margen": 0.013980286876797237,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "sin efecto o perjudica",
+  "veredicto": "NO DECLARA"
+}
