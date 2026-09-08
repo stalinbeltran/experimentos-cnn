@@ -1,0 +1,47 @@
+{
+  "_comentario": [
+    "Receta de render de `banco-k` (especificacion §3). La lee el generador",
+    "`image-text-sample-generator` por la puerta expcnn.exigir_generador().",
+    "",
+    "canvas 584x584 (§3.1) y NO 800x800: la reduccion /4 tiene que dar 146x146,",
+    "que es el marco sobre el que se aplica el kernel antes de recortar a 128.",
+    "",
+    "placement.area = [0.1164, 0.1164, 0.8767, 0.8767] son los px [68, 512] del §3.3",
+    "expresados en fraccion del lienzo: 68/584 = 0.11644 y 512/584 = 0.87671.",
+    "",
+    "⚠⚠ MEDIDO Y LEIDO DEL CODIGO el 2026-09-08 (ver instrucciones/01-encargo.md):",
+    "`area` acota SOLO LA ESQUINA SUPERIOR-IZQUIERDA de la caja, NO la caja entera.",
+    "Lo dice el propio generador -- `PlacementRecipe.area` en app/models/recipe.py:",
+    "«Region of the canvas the block's TOP-LEFT CORNER may land in» -- y `_place()`",
+    "en app/core/resolver.py solo calcula y acota (x, y): nada recorta el borde",
+    "inferior-derecho, ni contra el area ni contra el lienzo.",
+    "",
+    "⚠⚠⚠ Y LA CONSECUENCIA ES PEOR DE LO QUE PARECE: una caja puede SALIRSE DEL",
+    "LIENZO. Medido en 6 renders (3 + 3 de una comprobacion independiente): los 6",
+    "con y0 = 67.97 (pegados al borde del area) y UNO con y1 = 641.62 sobre un",
+    "lienzo de 584, o sea un parrafo cortado por abajo. Un parrafo cortado da una",
+    "etiqueta que no describe lo que se ve, y eso es peor que una caja fuera de",
+    "[68, 512]: el §3.3 solo habla del marco final, pero hay que descartar LAS DOS",
+    "cosas.",
+    "",
+    "Asi que la restriccion OBLIGATORIA del §3.3 se cumple con ASERCION + DESCARTE",
+    "en el generador de dataset, y NO confiando en este fichero -- que es lo que el",
+    "§3.3 pide literalmente: «debe implementarse como asercion en el codigo de",
+    "generacion, no como supuesto». Y por eso hay que pedir MAS de 1000 imagenes",
+    "para conseguir 1000 validas: cuantas mas, no esta medido."
+  ],
+  "canvas": { "width": 584, "height": 584 },
+  "background": { "kind": "solid" },
+  "blocks": [{
+    "kind": "paragraph",
+    "count": 1,
+    "width": { "range": [200, 300] },
+    "content": { "source": "words", "words": { "range": [80, 160], "step": 1 } },
+    "typography": { "font_size": 14, "color": "#000000" },
+    "placement": {
+      "area": [0.1164, 0.1164, 0.8767, 0.8767],
+      "angle": 0,
+      "avoid_overlap": false
+    }
+  }]
+}

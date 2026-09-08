@@ -1,0 +1,4 @@
+# Etapa local de render: las imágenes crudas y el dataset a medio construir.
+# El dataset terminado se PUBLICA en foveal-vision-data/experimentos-cnn/, nunca
+# se commitea aquí: este repo es PÚBLICO y el de datos es PRIVADO, y git no olvida.
+datos/

@@ -1,0 +1,37 @@
+{
+  "id": "banco-k",
+  "titulo": "Banco de evaluacion de kernels: cuanto aporta un kernel de convolucion, aplicado como preproceso, a la generalizacion de una CNN de referencia de 5.812 parametros entrenada con 100 muestras",
+  "pregunta": "Dado un kernel k x k cualquiera, aplicado a las entradas antes de la red, mejora el IoU sobre eval por encima del kernel aleatorio de igual norma, y ademas REDUCE la brecha train-eval respecto de la identidad (transferencia) en vez de solo subir las dos juntas (facilitacion)",
+  "creado": "2026-09-08",
+  "estado": "abierto",
+  "dataset": null,
+  "dataset_previsto": "parrafos1000-584px-r4-rAAAAMMDD",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "especificacion": {
+    "fuente": "artifact publicado por el dueno, transcrito VERBATIM a ESPECIFICACION.md",
+    "url": "https://claude.ai/public/artifacts/fe5ff2bb-2393-484a-87d0-cfacf2bfdf60",
+    "titulo_original": "ESPECIFICACION_Banco_Evaluacion_Kernels.md",
+    "version": "v1.0",
+    "fecha": "2026-09-07",
+    "rescatada": "2026-09-08"
+  },
+  "condiciones_previstas": [
+    "caja-media",
+    "identidad",
+    "aleatorio",
+    "gauss",
+    "sobel"
+  ],
+  "bloqueado_por": [
+    "P1: el §7.1 dice `valid` pero sus dimensiones (64/32/16) sólo salen con padding `same`. Con `valid` la rejilla es 14x14 y el §7.5 (8 px/celda) deja de cuadrar. La arquitectura es INVARIANTE (§12): se confirma antes de congelar",
+    "P2: dtype y empaquetado del dataset publicado (exacto en uint16 vs uint8 redondeado): un dataset publicado NO se reescribe nunca",
+    "P3: que variables estratifican el reparto 100/100/800 (§4.1 dice «las que el generador varie»)"
+  ],
+  "no_bloqueado_pero_sin_decidir": [
+    "numero definitivo de semillas: lo fija la calibracion (§8.5, §11.4), no el diseno",
+    "si se corren los controles opcionales gauss y sobel (§10)"
+  ]
+}

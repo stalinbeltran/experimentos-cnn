@@ -27,6 +27,7 @@ renombrar y re-ordenar sin romper nada.
 | [`2026-09-06-esquina-kernel-unico/`](2026-09-06-esquina-kernel-unico/) `esq-k` | cerrado | Con UN solo kernel y una cabeza de 3 parametros, que tamano de kernel produce la transformacion mas efectiva para detectar la esquina superior-izquierda de un parrafo |
 | [`2026-09-07-esquinas-cualquiera/`](2026-09-07-esquinas-cualquiera/) `esq-cq` | abierto | Colapsando las dos salidas de esq-2d en UNA -- 'hay esquina' y su posicion, sin importar si es la superior-izquierda o la inferior-derecha -- que tamano de kernel unico lo hace mejor, y cuanto se gana o se pierde respecto de tener que declarar cual esquina es |
 | [`2026-09-07-esquinas-diagonales/`](2026-09-07-esquinas-diagonales/) `esq-2d` | cerrado | Una sola convolucion sin bias produce UN mapa, y las dos esquinas en diagonal se leen de sus dos extremos: la superior-izquierda del maximo y la inferior-derecha del minimo. Que tamano de kernel lo hace mejor, y cuanto se pierde respecto del mismo barrido sobre UNA sola esquina de esq-k |
+| [`2026-09-08-banco-kernels/`](2026-09-08-banco-kernels/) `banco-k` | abierto | Dado un kernel k x k cualquiera, aplicado a las entradas antes de la red, mejora el IoU sobre eval por encima del kernel aleatorio de igual norma, y ademas REDUCE la brecha train-eval respecto de la identidad (transferencia) en vez de solo subir las dos juntas (facilitacion) |
 
 <!-- FIN INDICE -->
 
