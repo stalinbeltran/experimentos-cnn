@@ -486,6 +486,66 @@ def informe() -> int:
               "de la facilitación — pero **firma no es declaración**: con estos márgenes "
               "ninguno cruza el listón, y decir lo contrario sería leer el ranking como si "
               "fuera evidencia, que es justo lo que los criterios existen para impedir.", ""]
+    # ¿Que haria falta para que un control llegara a DECLARAR? Se calcula, no se opina.
+    if {"identidad", "aleatorio", "gauss"} <= set(res):
+        import glob as _glob                                 # noqa: PLC0415
+
+        def _serie(c):
+            o = []
+            for f in sorted(_glob.glob(str(RESULTADOS / f"{c}-s*/metricas.csv"))):
+                lin = open(f, encoding="utf-8").read().splitlines()
+                cab = lin[0].split(",")
+                o.append((f.split("-s")[-1][0], float(lin[-1].split(",")[cab.index("iou_eval")])))
+            return np.array([v for _, v in sorted(o)])
+
+        g, a, idn = _serie("gauss"), _serie("aleatorio"), _serie("identidad")
+        d = float(g.mean() - a.mean())
+        sd = float(g.std(ddof=1) + a.std(ddof=1))
+        se = float(np.sqrt(g.var(ddof=1) / len(g) + a.var(ddof=1) / len(a)))
+        n2 = int(np.ceil((g.var(ddof=1) + a.var(ddof=1)) / (d / 2.0) ** 2))
+        n3 = int(np.ceil((g.var(ddof=1) + a.var(ddof=1)) / (d / 3.0) ** 2))
+        L += ["## ⚠⚠ Qué haría falta para que `gauss` llegara a DECLARAR", "",
+              "La pregunta tiene una respuesta incómoda y conviene verla entera, porque "
+              "revela **de qué tipo es el criterio del §2.1**.", "",
+              f"Hoy: `gauss` − `aleatorio` = **{d:+.4f}**, contra un margen de **{sd:.4f}** "
+              f"(la suma de las dos desviaciones **entre semillas**).", "",
+              "### Más semillas NO sirven. Nunca.", "",
+              "El margen del §2.1 es la **desviación estándar**, no el error estándar. Una "
+              "desviación **converge** al crecer la muestra; no encoge. Con 100 semillas, o "
+              "con 1000, ese margen seguiría valiendo **≈" + f"{sd:.3f}**.", "",
+              "**Eso significa que §2.1 no es un test de significación estadística: es un "
+              "listón de significación PRÁCTICA.** Exige que el efecto del kernel supere el "
+              "ruido de *una corrida cualquiera* — no que sea distinguible de cero con "
+              "suficientes repeticiones. Es una elección deliberada y dura, y encaja con el "
+              "§1.2 (maximizar la sensibilidad **al kernel**): un kernel cuyo efecto se "
+              "pierde dentro de la variabilidad de entrenar una vez, en la práctica no "
+              "sirve.", "",
+              f"⚠ Y por si alguien lo lee al revés: **hoy la diferencia tampoco es "
+              f"estadísticamente significativa**. t = {d/se:.2f} con n=10 (p ≈ 0,22). "
+              f"Harían falta **~{n2} semillas** por condición para t=2 y **~{n3}** para t=3 "
+              f"(≈{2*n2*55/3600:.1f} h y {2*n3*55/3600:.1f} h de reloj en esta máquina). "
+              f"Pero eso **cambiaría el criterio**, que es un invariante (§12).", "",
+              "### Y parear tampoco lo arregla, por una razón de diseño", "",
+              f"El §8.2 hace que las semillas sean idénticas entre condiciones, así que las "
+              f"corridas están **pareadas** y se podría restar el ruido común. Funciona entre "
+              f"condiciones de kernel fijo — `gauss` contra `identidad` correlacionan "
+              f"**r = {float(np.corrcoef(g, idn)[0, 1]):+.3f}** y la desviación pareada baja "
+              f"a **{float((g-idn).std(ddof=1)):.4f}** —, pero **no contra el aleatorio**: "
+              f"ahí r = **{float(np.corrcoef(g, a)[0, 1]):+.3f}**, porque el aleatorio "
+              f"**cambia de kernel en cada semilla** (§10.2) y por tanto no comparte el ruido "
+              f"que se quería cancelar.", "",
+              "### Lo único que declararía: que el efecto sea de verdad más grande", "",
+              f"Haría falta que `gauss` − `aleatorio` pasara de {d:+.4f} a más de "
+              f"**{sd:.4f}**, o sea **×{sd/d:.1f}**. Y eso no se consigue midiendo mejor: se "
+              "consigue **cambiando el banco** para que el kernel importe más — que es "
+              "exactamente lo que la sección anterior explica que hoy no ocurre, porque *la "
+              "caja del párrafo sobrevive a cualquier filtro*.", "",
+              "⚠⚠ **Y todo lo que lo conseguiría es un invariante del §12** (particiones, "
+              "arquitectura, hiperparámetros, resolución, criterios). Tocar cualquiera "
+              "**obliga a construir un banco nuevo con su propia serie**, no a re-etiquetar "
+              "éste. Así que la respuesta honesta a *«¿qué falta para declarar `gauss`?»* es: "
+              "**en este banco, nada lo consigue**; haría falta un banco distinto, más duro, "
+              "donde localizar el párrafo no fuese casi todo el trabajo.", ""]
     if p5:
         L += ["## Resolución (§7.5)", "",
               f"MAE medio de la identidad: **{p5['mae_medio_identidad']:.2f} px** contra "

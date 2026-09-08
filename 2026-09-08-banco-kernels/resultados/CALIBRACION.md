@@ -105,6 +105,30 @@ Los dos criterios del §2 aplicados a los controles. **Cuidado con leer esto com
 
 `gauss` tiene la **firma** de la transferencia y `sobel` y el aleatorio la de la facilitación — pero **firma no es declaración**: con estos márgenes ninguno cruza el listón, y decir lo contrario sería leer el ranking como si fuera evidencia, que es justo lo que los criterios existen para impedir.
 
+## ⚠⚠ Qué haría falta para que `gauss` llegara a DECLARAR
+
+La pregunta tiene una respuesta incómoda y conviene verla entera, porque revela **de qué tipo es el criterio del §2.1**.
+
+Hoy: `gauss` − `aleatorio` = **+0.0047**, contra un margen de **0.0163** (la suma de las dos desviaciones **entre semillas**).
+
+### Más semillas NO sirven. Nunca.
+
+El margen del §2.1 es la **desviación estándar**, no el error estándar. Una desviación **converge** al crecer la muestra; no encoge. Con 100 semillas, o con 1000, ese margen seguiría valiendo **≈0.016**.
+
+**Eso significa que §2.1 no es un test de significación estadística: es un listón de significación PRÁCTICA.** Exige que el efecto del kernel supere el ruido de *una corrida cualquiera* — no que sea distinguible de cero con suficientes repeticiones. Es una elección deliberada y dura, y encaja con el §1.2 (maximizar la sensibilidad **al kernel**): un kernel cuyo efecto se pierde dentro de la variabilidad de entrenar una vez, en la práctica no sirve.
+
+⚠ Y por si alguien lo lee al revés: **hoy la diferencia tampoco es estadísticamente significativa**. t = 1.28 con n=10 (p ≈ 0,22). Harían falta **~25 semillas** por condición para t=2 y **~56** para t=3 (≈0.8 h y 1.7 h de reloj en esta máquina). Pero eso **cambiaría el criterio**, que es un invariante (§12).
+
+### Y parear tampoco lo arregla, por una razón de diseño
+
+El §8.2 hace que las semillas sean idénticas entre condiciones, así que las corridas están **pareadas** y se podría restar el ruido común. Funciona entre condiciones de kernel fijo — `gauss` contra `identidad` correlacionan **r = +0.574** y la desviación pareada baja a **0.0071** —, pero **no contra el aleatorio**: ahí r = **-0.305**, porque el aleatorio **cambia de kernel en cada semilla** (§10.2) y por tanto no comparte el ruido que se quería cancelar.
+
+### Lo único que declararía: que el efecto sea de verdad más grande
+
+Haría falta que `gauss` − `aleatorio` pasara de +0.0047 a más de **0.0163**, o sea **×3.5**. Y eso no se consigue midiendo mejor: se consigue **cambiando el banco** para que el kernel importe más — que es exactamente lo que la sección anterior explica que hoy no ocurre, porque *la caja del párrafo sobrevive a cualquier filtro*.
+
+⚠⚠ **Y todo lo que lo conseguiría es un invariante del §12** (particiones, arquitectura, hiperparámetros, resolución, criterios). Tocar cualquiera **obliga a construir un banco nuevo con su propia serie**, no a re-etiquetar éste. Así que la respuesta honesta a *«¿qué falta para declarar `gauss`?»* es: **en este banco, nada lo consigue**; haría falta un banco distinto, más duro, donde localizar el párrafo no fuese casi todo el trabajo.
+
 ## Resolución (§7.5)
 
 MAE medio de la identidad: **2.40 px** contra una celda de rejilla de **8.0 px**. El soft-argmax **interpola entre celdas**, que es lo que §7.5 espera.
