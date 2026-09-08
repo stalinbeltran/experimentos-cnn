@@ -42,5 +42,214 @@
     "desv_identidad": 0.005721928944435659,
     "rango_en_desviaciones": 96.14127886031355,
     "pasa": true
+  },
+  "paso4_aleatorio": {
+    "k": 9,
+    "iou_eval": {
+      "media": 0.8083344267514059,
+      "desv": 0.007735786536249299,
+      "n": 10
+    },
+    "iou_train": {
+      "media": 0.8513957247224709,
+      "desv": 0.012143835552943152,
+      "n": 10
+    },
+    "brecha": {
+      "media": 0.04306129797106517,
+      "desv": 0.011688499935297832,
+      "n": 10
+    },
+    "mae_medio": {
+      "media": 2.256125266194343,
+      "desv": 0.09897370601739915,
+      "n": 10
+    }
+  },
+  "paso5_resolucion": {
+    "mae_medio_identidad": 2.395445068433881,
+    "celda_px": 8.0,
+    "pasa": true
+  },
+  "paso6_9_aserciones": {
+    "dataset": "publicado",
+    "ruta": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+    "n": 1000,
+    "§3.3_y_§6.4": "OK",
+    "§7.1_cadena": [
+      64,
+      32,
+      16,
+      16
+    ],
+    "§7.5_span_centros": [
+      0,
+      120
+    ],
+    "§7.5_rango_real_etiquetas": [
+      8.0,
+      119.0
+    ],
+    "§7.5_span_cubre_el_rango_REAL": true,
+    "pasa": true
+  },
+  "paso10_balance": {
+    "criterio": "|t| <= 3.0 SE en los continuos (15 comparaciones) y chi2 <= 9,49 en la familia",
+    "continuos": {
+      "cuerpo": {
+        "media": {
+          "train": 19.639,
+          "monitor": 20.317,
+          "eval": 20.631
+        },
+        "desv": {
+          "train": 5.587,
+          "monitor": 5.487,
+          "eval": 5.472
+        },
+        "pares": {
+          "train-monitor": 0.87,
+          "train-eval": 1.68,
+          "monitor-eval": 0.54
+        }
+      },
+      "interlineado": {
+        "media": {
+          "train": 1.379,
+          "monitor": 1.382,
+          "eval": 1.374
+        },
+        "desv": {
+          "train": 0.134,
+          "monitor": 0.127,
+          "eval": 0.13
+        },
+        "pares": {
+          "train-monitor": 0.16,
+          "train-eval": 0.42,
+          "monitor-eval": 0.66
+        }
+      },
+      "gris_nivel": {
+        "media": {
+          "train": 44.02,
+          "monitor": 55.43,
+          "eval": 51.32
+        },
+        "desv": {
+          "train": 27.912,
+          "monitor": 30.296,
+          "eval": 29.435
+        },
+        "pares": {
+          "train-monitor": 2.77,
+          "train-eval": 2.45,
+          "monitor-eval": 1.28
+        }
+      },
+      "ancho_real": {
+        "media": {
+          "train": 230.534,
+          "monitor": 243.693,
+          "eval": 241.238
+        },
+        "desv": {
+          "train": 87.042,
+          "monitor": 89.281,
+          "eval": 88.728
+        },
+        "pares": {
+          "train-monitor": 1.06,
+          "train-eval": 1.16,
+          "monitor-eval": 0.26
+        }
+      },
+      "alto_real": {
+        "media": {
+          "train": 185.728,
+          "monitor": 180.58,
+          "eval": 184.272
+        },
+        "desv": {
+          "train": 107.883,
+          "monitor": 106.754,
+          "eval": 111.209
+        },
+        "pares": {
+          "train-monitor": 0.34,
+          "train-eval": 0.13,
+          "monitor-eval": 0.32
+        }
+      }
+    },
+    "familia_chi2": {
+      "train": {
+        "chi2": 1.0,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 20,
+          "DejaVuSerif": 17,
+          "LiberationMono": 21,
+          "LiberationSans": 19,
+          "LiberationSerif": 23
+        }
+      },
+      "monitor": {
+        "chi2": 6.9,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 21,
+          "DejaVuSerif": 24,
+          "LiberationMono": 14,
+          "LiberationSans": 14,
+          "LiberationSerif": 27
+        }
+      },
+      "eval": {
+        "chi2": 1.1,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 159,
+          "DejaVuSerif": 159,
+          "LiberationMono": 165,
+          "LiberationSans": 167,
+          "LiberationSerif": 150
+        }
+      }
+    },
+    "familia_pasa": true,
+    "peor_t": 2.77,
+    "peor": "gris_nivel (train vs monitor)",
+    "pasa": true
+  },
+  "extra_gauss": {
+    "iou_eval": {
+      "media": 0.813004924450658,
+      "desv": 0.008587426134485175,
+      "n": 10
+    },
+    "brecha": {
+      "media": 0.02976263882771444,
+      "desv": 0.005383303698056277,
+      "n": 10
+    }
+  },
+  "extra_sobel": {
+    "iou_eval": {
+      "media": 0.8163892350726629,
+      "desv": 0.0064490641704594955,
+      "n": 10
+    },
+    "brecha": {
+      "media": 0.03667761281684018,
+      "desv": 0.004387506864763657,
+      "n": 10
+    }
   }
 }

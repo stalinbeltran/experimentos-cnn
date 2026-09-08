@@ -81,7 +81,7 @@ DATOS = EXP / "datos"
 #
 # ⚠⚠ ESTOS RANGOS SON LA SEGUNDA VERSION, Y EL MOTIVO ES UNA MEDIDA. Los primeros
 # (ancho 180-400, alto 120-400, uniformes) dieron un control de CAJA MEDIA de
-# IoU = 0,5278 sobre 1000 muestras, muy por encima del umbral <= 0,40 del §10.1: un
+# IoU = 0,5261 sobre `eval`, muy por encima del umbral <= 0,40 del §10.1: un
 # predictor constante que ni mira la imagen acertaba la mitad. Con eso el banco no
 # discrimina nada, y el §10.1 dice exactamente que hacer -- «se AMPLIA el rango de
 # ancho y alto de caja, NO el de posicion, y NO se continua».
@@ -97,7 +97,7 @@ DATOS = EXP / "datos"
 # 21 min de renders por cada intento (buscar_rangos.py; el simulador da 0,513 contra el
 # 0,528 real con los rangos viejos, o sea que es fiel):
 #
-#     rangos viejos, uniforme     -> 0,513 simulado   (0,528 real)   ✗
+#     rangos viejos, uniforme     -> 0,513 simulado   (0,5261 real)  ✗
 #     estos rangos, uniforme      -> 0,366 simulado                  margen escaso
 #     estos rangos, LOG-uniforme  -> 0,231 simulado                  ✓
 ANCHO = (80.0, 420.0)                 # 5,25x  (log-uniforme)

@@ -1,0 +1,26 @@
+{
+  "condicion": "gauss",
+  "semilla": 2,
+  "kernel": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/kernels/gauss.npy",
+  "kernel_k": 9,
+  "kernel_norma_original": 2.6586506366729736,
+  "kernel_sha256_16": "c5daea4e1e3c0099",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": 21279.98828125,
+    "sigma": 870.5139770507812
+  },
+  "segundos": 38.2
+}

@@ -4,8 +4,7 @@
   "pregunta": "Dado un kernel k x k cualquiera, aplicado a las entradas antes de la red, mejora el IoU sobre eval por encima del kernel aleatorio de igual norma, y ademas REDUCE la brecha train-eval respecto de la identidad (transferencia) en vez de solo subir las dos juntas (facilitacion)",
   "creado": "2026-09-08",
   "estado": "abierto",
-  "dataset": null,
-  "dataset_previsto": "parrafos1000-584px-r4-rAAAAMMDD",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
@@ -38,11 +37,39 @@
   },
   "bloqueado_por": [],
   "pendiente": [
-    "publicar el dataset: hay que escribir nn/datos.py con el muestreo del §3.4 (tamano primero), las aserciones del §3.3 y el empaquetado uint16 del §3.8",
-    "elegir y documentar la RESERVA del §3.7: al menos una familia tipografica y un rango de densidad de uso exclusivo del banco, declarados en el contrato de kernel",
-    "comprobar que el generador puede variar los 7 factores del §3.5 (familia, tamano de fuente, interlineado, nivel de gris): NO comprobado todavia"
+    "evaluar kernels: no hay ninguno. El banco es agnostico a su origen (§1) y los metodos para obtenerlos estan FUERA DE ALCANCE (§15), asi que esto no lo produce este experimento: llega de fuera como .npy que cumpla el contrato del §5"
   ],
   "discrepancias_con_la_spec": [
     "§7.1 y §7.5 escriben que §3.3 permite bordes en [8, 120]; la aritmetica de la propia spec (§3.3 [68,512] + §6.4 (coord/4)-9) da [8, 119]. Se usa 119. NO cambia ninguna conclusion (8 y 119 quedan fuera del span 10..114 de valid y dentro del 0..120 de same); solo cambia el margen por arriba, que es 1 px y no 0. Cosmetico, pero conviene corregirlo en la spec"
-  ]
+  ],
+  "dataset_descartado": {
+    "nombre": "parrafos1000-584px-r4-r20260908",
+    "por_que": "caja media IoU 0,5261 sobre eval, contra el umbral <= 0,40 del §10.1: con ese piso el banco no discrimina. Se conserva publicado CON su aviso"
+  },
+  "calibracion": {
+    "fecha": "2026-09-08",
+    "corridas": 41,
+    "pasa": true,
+    "piso_caja_media": 0.2479490042481713,
+    "techo_identidad": 0.7980625705140596,
+    "rango_util": 0.5501135662658883,
+    "rango_en_desviaciones": 96.1,
+    "aleatorio": {
+      "media": 0.8083344267514059,
+      "desv": 0.007735786536249299,
+      "n": 10
+    },
+    "margen_del_criterio_2_1": 0.0155,
+    "mae_identidad_px": 2.4,
+    "informe": "resultados/CALIBRACION.md",
+    "congelado": "§12: concluida la calibracion, los parametros quedan congelados"
+  },
+  "reserva_§3.7": {
+    "fuente": "LiberationMono",
+    "interlineado": [
+      1.45,
+      1.6
+    ],
+    "elegida": "2026-09-08"
+  }
 }

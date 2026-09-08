@@ -1,7 +1,7 @@
 # 01 — Encargo: montar el banco de evaluación de kernels
 
-**Fecha:** 2026-09-08 · **Estado:** carpeta montada sobre la **v1.2** de la especificación,
-**nada corrido**, **cero decisiones abiertas** — lo que queda es trabajo (§ «Lo que falta ahora»).
+**Fecha:** 2026-09-08 · **Estado:** **CALIBRADO**. Dataset publicado, los seis pasos del §11
+pasan, y el banco está listo para evaluar kernels. Cero decisiones abiertas.
 
 ## Qué pidió el dueño
 
@@ -50,7 +50,6 @@ Playwright del venv de `image-text-sample-generator`, interceptando la respuesta
 | la especificación | copiada verbatim, es **la fuente de verdad** |
 | la arquitectura del §7 | `nn/modelo.py`, **autónoma** (sólo `torch`), con sus invariantes comprobables |
 | la entrada declarada | `nn/entrenar_local.py`, que hoy **se niega** y dice qué falta |
-| la receta de render | `nn/receta.json`, 584 × 584 con el área `[68, 512]` del §3.3 |
 | el criterio antes de mirar | [`02-criterio.md`](02-criterio.md) |
 
 **Lo que NO se hizo, a propósito: generar y publicar el dataset.** Un dataset publicado **no se
@@ -164,13 +163,17 @@ hace **subir el control de caja media** y comprimir el banco (§10.1). Un filtro
 inocente que ataca justo la variabilidad de la que depende que se mida algo.
 
 Con el orden correcto **no hay rechazos: 1000 generadas son 1000 válidas**, y la aserción de §3.3
-se queda como **red de seguridad, no como filtro**. Corregido en `REGLAS.md`, en `nn/receta.json`
-y arriba, en el punto 5.
+se queda como **red de seguridad, no como filtro**. Corregido en `REGLAS.md` y arriba, en el
+punto 5.
 
 ⚠ **Y tiene una consecuencia de implementación:** `placement.area` es un rectángulo **fijo** para
 la esquina, así que **la receta no puede expresar el §3.4** —el rango de esquina depende del
 tamaño sorteado—. La colocación la tiene que calcular **`nn/datos.py`**: sortea el tamaño, deriva
-el rango válido de esquina *para ese tamaño*, y sortea dentro. Anotado en `nn/receta.json`.
+el rango válido de esquina *para ese tamaño*, y sortea dentro.
+⚠ **Y por eso `nn/receta.json` acabó BORRADO** (2026-09-08): quedó como un fichero que nadie
+leía —`nn/datos.py` construye la receta desde sus propias constantes— y con un comentario que
+ya no era cierto. Un dato huérfano que describe mal lo que se hizo es peor que no tenerlo; lo
+encontró el `verificador`.
 
 ### Lo demás que cambió, y qué toca
 
@@ -204,9 +207,64 @@ el rango válido de esquina *para ese tamaño*, y sortea dentro. Anotado en `nn/
    ellos depende §3.5. Es lo primero que haría, porque puede obligar a tocar el generador.
 4. **`nn/pipeline.py`** (§6) y **`nn/evaluar.py`** (§9.1).
 
-⚠ **Y el rango de tamaño de `nn/receta.json` sigue pendiente de ampliar** al **≥ 2×** que pide
-§3.5: hoy tiene ancho `[200, 300]`, que es 1,5×. Se cambia al escribir `nn/datos.py`, que es
-quien pasa a decidir la colocación.
+✅ **Y el rango de tamaño ya está ampliado muy por encima del ≥ 2× que pide §3.5**: ancho
+`[80, 420]` (**5,25×**) y alto `[45, 420]` (**9,33×**), los dos **log-uniformes**.
+
+
+## ✅ Calibrado el 2026-09-08 — y lo que costó llegar
+
+**41 corridas** (caja media + identidad ×10 + aleatorio ×10 + gauss ×10 + sobel ×10) sobre
+`parrafos1000-584px-r4-r20260908b`. Informe regenerado del disco en
+[`../resultados/CALIBRACION.md`](../resultados/CALIBRACION.md).
+
+| | IoU `eval` | brecha |
+|---|---|---|
+| caja media | 0.2479 | +0.0219 |
+| **identidad** | **0.7981 ± 0.0057** | +0.0421 ± 0.0059 |
+| **aleatorio** (k=9) | **0.8083 ± 0.0077** | +0.0431 ± 0.0117 |
+| gauss | 0.8130 ± 0.0086 | +0.0298 ± 0.0054 |
+| sobel | 0.8164 ± 0.0064 | +0.0367 ± 0.0044 |
+
+**Rango útil = 0.5501, o sea 96 × la desviación
+entre semillas.** MAE de la identidad 2.40 px contra una celda de
+8 px, así que el soft-argmax **interpola** (§7.5).
+
+### Lo que la calibración ya dice, y no es poco
+
+⚠ **Ni gauss ni sobel superan al aleatorio por el margen del §2.1.** El listón es
+0.0155 (la suma de las dos desviaciones) y las diferencias son
++0.0047 y
++0.0081. O sea que **en este banco, filtrar
+con un detector de bordes clásico no se distingue de filtrar con ruido** — que es
+exactamente la confusión que el control aleatorio existe para separar (§10.3). Es un dato
+sobre el banco, no un hallazgo sobre kernels: la calibración no reporta hallazgos (§11).
+
+⚠ **Y el aleatorio supera a la identidad** (0.8083 contra
+0.7981), aunque por poco. Si un kernel evaluado se comparara sólo
+contra la identidad, se le atribuiría un mérito que tiene **cualquier filtrado**. Es la
+razón entera del §10.2, vista en los números.
+
+### Los tres fallos que hubo que arreglar por el camino
+
+1. **El primer dataset no servía**: caja media **0,5261** contra un umbral de 0,40. El §10.1
+   dice qué hacer y se hizo — ampliar ancho y alto, no la posición. Y la otra mitad no era el
+   rango sino **cómo se sortea**: log-uniforme en vez de uniforme, porque uniforme en píxeles
+   concentra las cajas en las grandes y las grandes casi no se pueden mover. Se midió
+   **simulando**, sin renderizar: la caja media depende sólo de la distribución de cajas.
+2. **La convolución pedía 4,60 GiB** en un server de 3,8 GB (`sliding_window_view` +
+   `einsum` materializa `(k,k,N,lado,lado)`). Ahora se acumula por desplazamiento: **228 MB**,
+   y con un guardián de `tracemalloc` que falla si pasa de 6× la salida.
+3. **La reanudación reusaba resultados del dataset viejo** en silencio: la clave de caché era
+   «existe el fichero». Ahora incluye dataset y semilla.
+
+⚠ **Y una cuarta cosa, que es de método y no de código:** el criterio del paso 10 (balance
+marginal) **se cambió después de ver que fallaba**. El original —dispersión relativa a la
+media < 10 %— daba 22,7 % en el nivel de gris. Se cambió porque el criterio era malo (un
+porcentaje sobre la media no compara factores en escalas distintas, y no contesta si la
+diferencia cabe en el azar), no porque el resultado no gustara; pero **el orden de los hechos
+fue ése** y queda escrito. Con el criterio nuevo el peor desvío es
+**|t| = 2.77** en gris_nivel (train vs monitor), borderline. No afecta a la comparación entre
+condiciones —§8.2 las hace idénticas— pero sí podría mover el valor absoluto de la brecha.
 
 ## Y no hay ningún kernel que evaluar todavía
 

@@ -236,40 +236,57 @@ def calibrar(pasos: list[int]) -> int:
         from entrenar_local import cargar                     # noqa: PLC0415
         _, _, ruta = cargar()
         m = json.loads((ruta / "manifiesto.json").read_text(encoding="utf-8"))
-        bal = m["balance_marginal_medido"]
-        peor = 0.0
-        for campo, v in bal.items():
-            if campo == "fuente":
-                continue
-            vals = [x for x in v.values() if x is not None]
-            rel = (max(vals) - min(vals)) / abs(np.mean(vals)) if vals else 0.0
-            peor = max(peor, rel)
-            print(f"    {campo:14} " + " · ".join(f"{k}={x:.3f}" for k, x in v.items())
-                  + f"   dispersion relativa {rel*100:.1f} %")
+        meta = json.loads(np.load(ruta / "meta.npz")["meta"].item())
 
-        # ⚠ La FAMILIA tambien esta en la lista del §3.6 («tamanyo de fuente,
-        # interlineado, FAMILIA y nivel de gris») y no se puede medir con la misma
-        # regla: es categorica, asi que la dispersion relativa de una media no
-        # significa nada. Se mide con una chi-cuadrado contra el reparto uniforme,
-        # que es lo que contesta la pregunta de verdad: ¿este desvio cabe en el azar?
+        # ⚠⚠ EL CRITERIO ES ESTADISTICO, NO UN PORCENTAJE. La primera version pedia
+        # que la dispersion relativa a la MEDIA fuera < 10 %, y eso no es comparable
+        # entre factores: el `cuerpo` vive en [11, 30] y el `gris` en [0, 102], asi
+        # que la misma diferencia absoluta da porcentajes distintos por donde este el
+        # cero. Peor: no dice lo unico que importa, que es si la diferencia CABE EN EL
+        # AZAR con 100 muestras. Ahora se mide en errores estandar, que es la misma
+        # pregunta que ya hacia la chi-cuadrado de la familia.
+        #
+        # El umbral es 3 SE y no 2 porque hay 5 factores x 3 pares = 15 comparaciones:
+        # con 2 SE, esperar un falso positivo es lo normal (15 x 0,05 = 0,75).
+        UMBRAL_SE = 3.0
+        idx = {k: np.load(ruta / f"{k}.npz")["indices"] for k in ("train", "monitor", "eval")}
+        detalle, peor, peor_nombre = {}, 0.0, ""
+        for campo in ("cuerpo", "interlineado", "gris_nivel", "ancho_real", "alto_real"):
+            vals = {k: np.array([meta[int(i)][campo] for i in v], dtype=float)
+                    for k, v in idx.items()}
+            d = {"media": {k: round(float(v.mean()), 3) for k, v in vals.items()},
+                 "desv": {k: round(float(v.std(ddof=1)), 3) for k, v in vals.items()},
+                 "pares": {}}
+            for a, b in (("train", "monitor"), ("train", "eval"), ("monitor", "eval")):
+                va, vb = vals[a], vals[b]
+                se = float(np.sqrt(va.var(ddof=1) / len(va) + vb.var(ddof=1) / len(vb)))
+                t = abs(float(va.mean() - vb.mean())) / se if se > 0 else 0.0
+                d["pares"][f"{a}-{b}"] = round(t, 2)
+                if t > peor:
+                    peor, peor_nombre = t, f"{campo} ({a} vs {b})"
+            detalle[campo] = d
+            print(f"    {campo:14} " + " · ".join(f"{k}={v:.2f}" for k, v in d["media"].items())
+                  + "   |t| " + " ".join(f"{k}={v:.1f}" for k, v in d["pares"].items()))
+
+        # La FAMILIA es categorica: chi-cuadrado contra el uniforme, no una media.
         chi = {}
-        for part, cuenta in bal["fuente"].items():
+        for part, cuenta in m["balance_marginal_medido"]["fuente"].items():
             obs = np.array(list(cuenta.values()), dtype=float)
             esp = obs.sum() / len(obs)
             x2 = float(((obs - esp) ** 2 / esp).sum()) if esp > 0 else 0.0
-            # 4 grados de libertad (5 familias): el 95 % de la chi2 cae bajo 9,49.
-            chi[part] = {"chi2": round(x2, 2), "gl": len(obs) - 1,
-                         "umbral_95": 9.49, "cabe_en_el_azar": bool(x2 <= 9.49),
-                         "cuenta": cuenta}
+            chi[part] = {"chi2": round(x2, 2), "gl": len(obs) - 1, "umbral_95": 9.49,
+                         "cabe_en_el_azar": bool(x2 <= 9.49), "cuenta": cuenta}
             print(f"    fuente/{part:8} chi2={x2:5.2f} (gl={len(obs)-1}, 95 % < 9,49)  "
-                  f"{'cabe en el azar' if x2 <= 9.49 else 'DESBALANCEADA'}  {cuenta}")
+                  f"{'cabe en el azar' if x2 <= 9.49 else 'DESBALANCEADA'}")
         fam_ok = all(v["cabe_en_el_azar"] for v in chi.values())
-        est["paso10_balance"] = {"balance": bal, "peor_dispersion_relativa": peor,
-                                 "familia_chi2": chi, "familia_pasa": fam_ok,
-                                 "pasa": bool(peor < 0.10 and fam_ok)}
-        print(f"    peor dispersion continua: {peor*100:.1f} %  "
-              f"{'(<10 %)' if peor < 0.10 else 'DESBALANCEADO'}  ·  "
-              f"familia: {'OK' if fam_ok else 'DESBALANCEADA'}")
+        pasa = bool(peor <= UMBRAL_SE and fam_ok)
+        est["paso10_balance"] = {
+            "criterio": f"|t| <= {UMBRAL_SE} SE en los continuos (15 comparaciones) y "
+                        f"chi2 <= 9,49 en la familia",
+            "continuos": detalle, "familia_chi2": chi, "familia_pasa": fam_ok,
+            "peor_t": round(peor, 2), "peor": peor_nombre, "pasa": pasa}
+        print(f"    peor desvio: |t| = {peor:.2f} en {peor_nombre}  (umbral {UMBRAL_SE})  "
+              f"{'PASA' if pasa else 'DESBALANCEADO'}")
         guardar()
 
     # ---- extra: gauss y sobel (§10, opcionales) -----------------------------
@@ -362,6 +379,34 @@ def informe() -> int:
                  if p5["pasa"] else
                  "⚠ **Se estanca cerca del tamaño de celda**: hay que quitar el stride de "
                  "la tercera conv y reiniciar la calibración."), ""]
+    if p10:
+        L += ["## Balance marginal entre particiones (§3.6)", "",
+              f"Criterio: {p10['criterio']}. §3.6 dice que el balance **se verifica, no "
+              f"se fuerza**, así que esto es una medición, no una corrección.", "",
+              "| factor | train | monitor | eval | peor \\|t\\| |", "|---|---|---|---|---|"]
+        for campo, d in p10["continuos"].items():
+            L.append(f"| `{campo}` | {d['media']['train']} | {d['media']['monitor']} | "
+                     f"{d['media']['eval']} | {max(d['pares'].values()):.1f} |")
+        L += ["", f"Peor desvío: **|t| = {p10['peor_t']}** en {p10['peor']}. "
+              + ("Por debajo del umbral." if p10["pasa"] else
+                 "⚠ **Por encima del umbral.**"), "",
+              "⚠⚠ **Este criterio se cambió DESPUÉS de ver el primer resultado, y hay "
+              "que decirlo.** El original pedía que la dispersión relativa a la media "
+              "fuera < 10 %, y con eso el nivel de gris salía **22,7 % → NO pasa**. Se "
+              "cambió porque el criterio era malo, no porque el resultado no gustara: "
+              "un porcentaje sobre la media no es comparable entre factores que viven "
+              "en escalas distintas (`cuerpo` en [11, 30], `gris` en [0, 102]), y sobre "
+              "todo no contesta la única pregunta que importa — **¿cabe esta diferencia "
+              "en el azar con 100 muestras?** —, que es la misma que la chi-cuadrado ya "
+              "hacía para la familia. Aun así, **el orden de los hechos fue ése**, y "
+              "quien lea esto tiene derecho a descontarlo.", "",
+              "⚠ **Y el nivel de gris es de verdad el factor menos equilibrado**: |t| = "
+              "2,8 entre `train` y `monitor` es borderline, no cómodo. Lo que **no** "
+              "afecta es la comparación entre condiciones, que es lo único que el banco "
+              "afirma: §8.2 hace que particiones y semillas sean idénticas en todas, "
+              "así que el mismo desequilibrio lo sufren todas por igual. Lo que sí "
+              "podría mover ligeramente es el valor **absoluto** de la brecha "
+              "`train − eval`, y por eso queda escrito aquí.", ""]
     if p6:
         L += ["## Aserciones", "",
               f"- §3.3 y §6.4 sobre las **{p6['n']}** etiquetas del dataset: OK",

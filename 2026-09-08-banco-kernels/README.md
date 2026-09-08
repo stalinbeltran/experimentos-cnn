@@ -14,21 +14,36 @@ procedimientos que producen kernels quedan **fuera de alcance**.
 > ⚠ **Cada versión se publica en su propio `uuid`**: el enlace de la v1.0 sigue sirviendo la v1.0.
 > Por eso la especificación de este experimento es **esta copia**, no una URL.
 
-## ⚠ Estado: montado sobre la v1.2, NADA corrido
+## ✅ Estado: CALIBRADO. El banco discrimina y está listo para evaluar kernels
 
-**2026-09-08.** Existe la carpeta, sus dos obligaciones, la arquitectura comprobable y el
-criterio congelado. **No hay dataset publicado, ni pesos, ni una sola cifra medida de este
-banco.** `experimento.json` declara `estado: "abierto"` y `dataset: null`, que es el estado real.
+**2026-09-08.** La calibración del §11 pasa **los seis pasos**, con **41 corridas** (caja
+media + identidad ×10 + aleatorio ×10 + gauss ×10 + sobel ×10) sobre el dataset publicado
+`parrafos1000-584px-r4-r20260908b`. Informe completo, regenerado del disco y sin
+transcribir nada a mano: [`resultados/CALIBRACION.md`](resultados/CALIBRACION.md).
 
-✅ **Las tres decisiones que bloqueaban están cerradas por la v1.2** — padding del tronco `same`
-(§7.1), almacenamiento `uint16` con la suma del bloque (§3.8), y qué varía el generador con su
-estratificación (§3.5-§3.6). `bloqueado_por` está **vacío**.
+| | IoU sobre `eval` |
+|---|---|
+| **piso** — caja media (§10.1) | **0.2479** (umbral ≤ 0,40) |
+| **techo** — identidad (§10.1.1) | **0.7981 ± 0.0057** (techo 0,95) |
+| **rango útil** | **0.5501** = **96 ×** la desviación entre semillas |
 
-```bash
-python nn/entrenar_local.py              # se NIEGA y lista qué falta (código 2)
-python nn/entrenar_local.py --comprobar  # comprueba la arquitectura del §7 (código 0)
-python nn/modelo.py                      # lo mismo, con las dos lecturas del padding
-```
+**El listón que un kernel tiene que superar para declararse útil sale de aquí, no de una
+elección posterior:** el aleatorio (k=9, 10 semillas) da
+**0.8083 ± 0.0077**, así que el margen del §2.1
+—la **suma** de las dos desviaciones— es de **0.0155**.
+
+⚠ **Y hay una cosa que la calibración ya dice sobre los kernels clásicos:** gauss
+(0,8130 ± 0,0086) y sobel (0,8164 ± 0,0064) **no superan al aleatorio**
+(0.8083 ± 0.0077) por el margen del §2.1. O
+sea que en este banco **filtrar con un detector de bordes clásico no es mejor que filtrar
+con ruido** — que es exactamente la confusión que el control aleatorio existe para separar
+(§10.3).
+
+⚠ **Lo que NO hay es ningún kernel evaluado**, y es correcto: el banco es agnóstico a su
+origen (§1) y los métodos para obtenerlos están **fuera de alcance** (§15). `kernels/` sólo
+tiene los controles.
+
+**Concluida la calibración, los parámetros quedan congelados** (§12).
 
 ### El generador: comprobado, y NO hizo falta cambiarlo
 
@@ -131,15 +146,21 @@ instrucciones/
   02-criterio.md      los criterios, congelados antes de mirar (R13)
 nn/
   modelo.py           la CNN del §7, AUTÓNOMA (sólo torch) + sus invariantes comprobables
-  entrenar_local.py   la entrada declarada. Hoy se niega y dice qué falta
-  receta.json         la receta de render 584×584 con el área [68, 512] del §3.3
-kernels/              los kernels a evaluar (.npy). Vacío: no hay ninguno todavía, y es correcto
-resultados/           métricas, resúmenes y criterios por condición. Vacío
+  datos.py            genera · publica · comprueba · muestras
+  pipeline.py         el §6: kernel → recorte → estandarización
+  evaluar.py          el §9: IoU, MAE por borde, brecha y los dos criterios
+  kernels.py          los controles del §10
+  calibrar.py         los 10 pasos del §11, reanudable
+  entrenar_local.py   entrena una condición (el nombre es el contrato con el freno)
+  lanzar.sh           lo que tarda, como unidad de systemd
+kernels/              los CONTROLES del §10 (aleatorio ×10, gauss, sobel). Ningún kernel
+                      EVALUADO todavía, y es correcto: §1 y §15
+resultados/           las 41 corridas + CALIBRACION.md (se regenera, no se transcribe)
 ```
 
-⚠ **`kernels/` vacío no es un olvido.** El banco se **calibra y se valida entero** con sus
-controles (caja media · identidad · aleatorio · gauss · sobel) **sin un solo kernel de verdad**,
-que es lo que el §11 manda hacer primero.
+⚠ **Que no haya ningún kernel *evaluado* no es un olvido.** El banco se **calibra y se valida
+entero** con sus controles (caja media · identidad · aleatorio · gauss · sobel) **sin un solo
+kernel de verdad**, que es lo que el §11 manda hacer primero — y ya está hecho.
 
 ## Antes de correr nada: la calibración (§11)
 

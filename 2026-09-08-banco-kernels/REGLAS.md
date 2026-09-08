@@ -1,7 +1,11 @@
 # Reglas de `banco-k`
 
-**Escritas el 2026-09-08** al montar la carpeta y **actualizadas el mismo día a la
-[especificación v1.2](ESPECIFICACION.md)**, que cerró las tres decisiones que bloqueaban el
+**Escritas el 2026-09-08** al montar la carpeta, **actualizadas el mismo día a la
+[especificación v1.2](ESPECIFICACION.md)** y de nuevo al **calibrar** (§11: los seis pasos
+pasan; piso 0.2479, techo 0.7981, rango útil
+0.5501). El detalle vive en
+[`resultados/CALIBRACION.md`](resultados/CALIBRACION.md), que **se regenera** — no se
+transcribe, que cerró las tres decisiones que bloqueaban el
 arranque y **corrigió una cosa que estas reglas decían mal** (el sobre-generar y rechazar del
 §3.4: ver § Procesos, paso 2). Su `experimento.json` declara el estado **`abierto`** y **nada se
 ha corrido**: no hay dataset publicado, no hay pesos y no hay ninguna cifra medida.
@@ -89,7 +93,9 @@ subir las dos juntas (facilitación)?
     un rango de densidad** de uso **exclusivo del banco**, que los procedimientos que producen
     kernels **no pueden usar**. Es contra la **fuga de distribución**: un kernel obtenido por
     meta-aprendizaje sobre el mismo generador tiene fuga **aunque las muestras sean distintas**.
-    Se documenta en el contrato de kernel. **Todavía sin elegir** (`pendiente`).
+    ✅ **Elegida el 2026-09-08: `LiberationMono` y el interlineado `[1,45 · 1,60]`.** Queda
+    declarada en el `manifiesto.json` del dataset publicado y en
+    [`kernels/README.md`](kernels/README.md), que es donde la lee quien produzca un kernel.
 - **Qué se normaliza o transforma al cargar:** nada del dato crudo. Todo lo que se le hace a
   la entrada es el **pipeline** (§6), que es idéntico para las tres particiones: convolución
   `valid` con el kernel → recorte central a 128 × 128 → **estandarización con la media y la
@@ -153,7 +159,7 @@ Los pasos, en orden. **Hoy sólo está hecho el 0.**
    (`same`, §7.1), el almacenamiento (`uint16` con la suma, §3.8) y qué varía el generador con su
    estratificación (§3.5-§3.6). `bloqueado_por` está vacío; lo que queda es **trabajo**, en
    `pendiente`. El detalle en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md).
-2. ✅/⛔ **Generar y publicar el dataset** (§3, §4). Una vez en la vida, con su `manifiesto.json`
+2. ✅ **Generar y publicar el dataset** (§3, §4). Una vez en la vida, con su `manifiesto.json`
    y la huella SHA-256 de cada partición. Las **aserciones** de §3.3 (caja dentro de
    `[68, 512]` **y dentro del lienzo**) y §6.4 (la transformación de coordenadas sobre una
    muestra conocida) van en el código de generación, no en un comentario.
@@ -169,10 +175,10 @@ Los pasos, en orden. **Hoy sólo está hecho el 0.**
    La aserción de §3.3 **se queda como red de seguridad, NO como mecanismo de filtrado.**
    ⚠ **Publicar es irreversible**: un dataset publicado **no se reescribe nunca**, y dato nuevo
    es nombre nuevo. Por eso va después del paso 1 y no antes.
-3. ⛔ **Escribir el criterio operativo antes de mirar** (R13) en
+3. ✅ **Escribir el criterio operativo antes de mirar** (R13) en
    [`instrucciones/02-criterio.md`](instrucciones/02-criterio.md). Ya está escrito lo que la
    especificación §2 fija; lo que falta es el número de semillas, que **lo fija la calibración**.
-4. ⛔ **Calibrar el banco** (§11 de la v1.2: **10 pasos**, antes 7), que **no es un experimento**
+4. ✅ **Calibrar el banco** (§11 de la v1.2: **10 pasos**, antes 7), que **no es un experimento**
    y cuyos resultados **no se reportan como hallazgos**:
    1. **caja media primero, antes de cualquier kernel**, y con umbral: **IoU ≤ 0,40**
       *(propuesto, no derivado; se valida en calibración)*. Si queda por encima, el remedio es
@@ -252,7 +258,6 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
 | `nn/muestras.py` | figuras para **mirar** el dataset, en los dos marcos | `nn/datos.py --muestras N` |
 | `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `--estado` |
-| `nn/receta.json` | la receta de render 584 × 584. **Dato, no script** | la lee `nn/datos.py` |
 
 - ⚠ **`entrenar_local.py` se llama así porque es un contrato, no por estética.** `experimento.json`
   declara `gasta: "entrena-local"` y el freno del coordinador (`cerrable.mjs`) casa **ese
