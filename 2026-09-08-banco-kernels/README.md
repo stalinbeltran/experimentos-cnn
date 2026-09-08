@@ -59,6 +59,47 @@ la desviación, contra las 96 × del rango útil): la caja del párrafo **sobrev
 filtro**. El banco separa con holgura *filtrar* de *no mirar*, y con mucho menos margen *un
 filtro de otro*.
 
+## Si estás leyendo esto en un server NUEVO: cómo se retoma
+
+**Todo lo que hace falta está en git.** *Verificado el 2026-09-08, justo antes de destruir la
+máquina donde se produjo.*
+
+```bash
+# 1. los dos repos (el de datos es PRIVADO: hace falta GITHUB_TOKEN)
+git clone …/experimentos-cnn && git clone …/foveal-vision-data
+# 2. el entorno: torch + numpy
+cd experimentos-cnn && uv venv .venv && uv pip install torch numpy pillow
+# 3. comprobar que la cadena está entera, sin entrenar nada
+python3 comprobar.py                      # el dataset declarado tiene que estar publicado
+python nn/entrenar_local.py --comprobar    # modelo + pipeline + métricas
+python nn/probar_lanzador.sh               # el despacho del lanzador
+```
+
+**Y lo que prueba que las comparaciones pueden seguir**, que es distinto de que los ficheros
+estén: recalcular una corrida guardada y ver que sale **idéntica**.
+
+```bash
+python nn/entrenar_local.py --condicion esqk-k11 --kernel kernels/esqk-k11.npy --semilla 3
+# tiene que dar iou_eval=0.842944 y brecha=+0.023870, que es lo que hay en
+# resultados/esqk-k11-s3/metricas.csv
+```
+
+*Comprobado el 2026-09-08: idéntico hasta el último decimal.* Es lo que permite **comparar un
+kernel nuevo contra los ya medidos sin volver a correr ninguno** — y también rehacer cualquiera
+si hiciera falta.
+
+| qué | dónde | |
+|---|---|---|
+| el **dataset** (1000 párrafos, 2,2 MB) | `foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b/` | ✅ empujado |
+| los **kernels** evaluados y los controles | `kernels/*.npy` + su `.json` de procedencia y hash | ✅ commiteados |
+| las **métricas** de las 91 corridas | `resultados/*/metricas.csv` · `resumen.json` · `criterios.json` | ✅ commiteadas |
+| los **informes** | `resultados/CALIBRACION.md` y `resultados/KERNELS.md` | se **regeneran** del disco |
+| los **pesos entrenados** | **no existen, a propósito** — ver `REGLAS.md` § Salidas | — |
+
+⚠ **Los pesos de los que salieron los kernels sí están**, que son los que no se regeneran: viven
+en el experimento `esq-k` de este mismo repo. *Comprobado el 2026-09-08 que los tres **cargan**,
+y que el `.npy` evaluado es bit a bit el `conv.weight` de su checkpoint.*
+
 ## Cómo se mete un kernel a probar
 
 Es lo único que hay que saber para usar el banco. Todo lo demás está fijado y **congelado**

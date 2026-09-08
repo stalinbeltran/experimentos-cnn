@@ -116,15 +116,22 @@ subir las dos juntas (facilitación)?
 
 Nada de esto existe todavía. Es dónde va a caer, declarado antes de producirlo.
 
-- **Pesos:** `nn/pesos/<condicion>-s<semilla>/best.pt` y `last.pt`.
-  - ⚠ **Cabe, pero justo, y con las 10 semillas de la v1.2 hay que rehacer la cuenta**: 5.812
-    parámetros son ~23 KB por checkpoint, y **5 condiciones × 10 semillas × 2 ficheros = 100
-    checkpoints ≈ 2,3 MB** *(calculado, no medido)*, contra el tope de **≈5 MB por experimento**.
-    Entra — pero con **10 condiciones**, que es el número que usa el §8.5 para su cuenta de coste,
-    serían **~4,6 MB** y el tope queda al borde. **Si se llega ahí, se guarda sólo `best.pt`** (la
-    mitad) y se dice aquí.
-  - **La calibración NO guarda pesos**, sólo métricas: es puesta a punto del instrumento y sus
-    resultados no se reportan como hallazgos (§11). Ella sola serían otros ~0,9 MB.
+- **Pesos: NINGUNO, y es deliberado.** Este banco **no guarda `.pt`** — comprobado el
+  2026-09-08: cero ficheros `.pt` y ningún `torch.save` en `nn/`.
+  - **Por qué se puede:** cada corrida es **exactamente reproducible** a partir de (dataset
+    publicado, kernel `.npy`, semilla), porque §8.2 fija los pesos iniciales y el orden de
+    los lotes desde la semilla. *Verificado el 2026-09-08 recalculando `esqk-k11` semilla 3
+    y comparando contra su `metricas.csv` commiteado: **idéntico** hasta el último decimal.*
+    Guardar un peso sería guardar algo que se puede regenerar (regla 4 del repo: lo que no
+    se puede regenerar se guarda; lo que sí, se enlaza).
+  - **Por qué se debe:** la regla del proyecto es que **los pesos de una red sólo se guardan
+    si el dueño lo ordena**. No hay orden para éstos.
+  - ⚠ **Lo que SÍ hay que conservar es el kernel de entrada**, que no se regenera: los
+    `.npy` de `kernels/` están commiteados con su `.json` de procedencia y su hash.
+  - ⚠ **Esta sección decía lo contrario hasta el 2026-09-08** («`nn/pesos/<condicion>-s<semilla>/
+    best.pt`»), y era falso desde el primer día: se escribió al montar la carpeta, antes de
+    que existiera el entrenamiento, y nadie lo volvió a leer contra el código. Una regla que
+    describe algo que el código no hace es peor que no tenerla.
 - **Métricas:** `resultados/<condicion>/metricas.csv`, una fila por **(semilla × parada ×
   métrica)**. Las paradas son **25, 50, 100 y 200** y en cada una se registra, **para cada
   semilla**: IoU en `train`, IoU en `monitor`, IoU en `eval`, brecha `train − eval`, y MAE por
