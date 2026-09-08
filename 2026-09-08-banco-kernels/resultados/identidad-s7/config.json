@@ -1,0 +1,26 @@
+{
+  "condicion": "identidad",
+  "semilla": 7,
+  "kernel": null,
+  "kernel_k": null,
+  "kernel_norma_original": null,
+  "kernel_sha256_16": null,
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": 4019.967529296875,
+    "sigma": 266.9710388183594
+  },
+  "segundos": 38.7
+}

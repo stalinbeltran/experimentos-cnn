@@ -54,8 +54,22 @@ def _una(condicion: str, kernel: str | None, semilla: int) -> dict:
     from entrenar_local import correr                        # noqa: PLC0415
     nombre = condicion if condicion == "caja-media" else f"{condicion}-s{semilla}"
     salida = RESULTADOS / nombre
-    if (salida / "metricas.csv").is_file():
-        return _leer(salida)
+    # ⚠⚠ REANUDAR NO PUEDE SER «existe el fichero». La clave de la cache tiene que
+    # incluir DE QUE DATASET salio, o un cambio de dataset reusa en silencio numeros
+    # del anterior -- que es exactamente lo que paso el 2026-09-08: tras regenerar el
+    # dataset, la caja media siguio devolviendo 0,5261 (el valor viejo) tres veces
+    # seguidas sin volver a calcular nada, y sin un solo error. Un resultado cacheado
+    # que no dice de que dato viene es peor que no tener cache.
+    if (salida / "metricas.csv").is_file() and (salida / "config.json").is_file():
+        try:
+            cfg = json.loads((salida / "config.json").read_text(encoding="utf-8"))
+        except Exception:                                    # noqa: BLE001
+            cfg = {}
+        from entrenar_local import NOMBRE_DATASET            # noqa: PLC0415
+        if cfg.get("dataset") == NOMBRE_DATASET and cfg.get("semilla") == semilla:
+            return _leer(salida)
+        print(f"  {nombre:22} se recalcula: la cache es de "
+              f"'{cfg.get('dataset')}' y ahora toca '{NOMBRE_DATASET}'", flush=True)
     t0 = time.time()
     correr(condicion, kernel, semilla, salida)
     r = _leer(salida)

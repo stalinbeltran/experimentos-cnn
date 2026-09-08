@@ -97,13 +97,23 @@ def aplicar(imgs: np.ndarray, kernel: np.ndarray | None) -> np.ndarray:
     comprobar_contrato(kernel)
     k = normalizar_kernel(kernel)
     n = k.shape[0]
-    # Convolucion 'valid' por correlacion cruzada con el kernel volteado. Se hace con
-    # stride tricks porque scipy no esta en el venv y una convolucion 146x146 con
-    # k<=19 sobre 1000 imagenes cuesta poco; lo importante es que sea EXACTA.
-    kf = k[::-1, ::-1]
+    kf = k[::-1, ::-1]                       # correlacion cruzada con el kernel volteado
     lado = MARCO - n + 1
-    ventanas = np.lib.stride_tricks.sliding_window_view(x, (n, n), axis=(1, 2))
-    y = np.einsum("nijkl,kl->nij", ventanas, kf, optimize=True).astype(np.float32)
+    # ⚠⚠ SE ACUMULA POR DESPLAZAMIENTO, NO CON `sliding_window_view` + `einsum`.
+    # La version obvia -- ventanas deslizantes y un einsum -- materializa un array de
+    # (k, k, N, lado, lado), y eso REVENTO LA MAQUINA el 2026-09-08: con k=9 y las 800
+    # de `eval` pedia 4,60 GiB en un server de 3,8 GB, y la calibracion murio en el
+    # paso 4 despues de haber corrido bien los pasos 1 y 2.
+    #
+    # Esta forma suma k*k terminos, cada uno una VISTA desplazada de la entrada: el
+    # unico array grande es el acumulador, (N, lado, lado). Con las mismas 800 imagenes
+    # y k=9 son ~61 MB en vez de 4,6 GiB, y el resultado es el mismo hasta redondeo.
+    y = np.zeros((x.shape[0], lado, lado), dtype=np.float32)
+    for i in range(n):
+        for j in range(n):
+            c = float(kf[i, j])
+            if c != 0.0:
+                y += c * x[:, i:i + lado, j:j + lado]
     assert y.shape[1] == lado, f"conv valid dio {y.shape[1]}, se esperaba {lado}"
     r = recorte_de(n)
     out = y[:, r:r + FINAL, r:r + FINAL]
@@ -196,6 +206,25 @@ def _main() -> int:
             ok(f"§5 rechaza {motivo}", False, True)
         except ValueError:
             ok(f"§5 rechaza {motivo}", True, True)
+
+    # ⚠ GUARDIAN DE MEMORIA. El 2026-09-08 la version con `sliding_window_view` +
+    # `einsum` pidio 4,60 GiB para 800 imagenes con k=9 y mato la calibracion en un
+    # server de 3,8 GB. Aqui se mide lo que de verdad se reserva, no se confia en que
+    # la implementacion siga siendo la buena: un comentario no impide que alguien
+    # vuelva al einsum, y este numero si.
+    import tracemalloc                                       # noqa: PLC0415
+    grande = rng.random((200, MARCO, MARCO)).astype(np.float32) * 4080
+    k9 = rng.standard_normal((9, 9)).astype(np.float32)
+    tracemalloc.start()
+    _ = aplicar(grande, k9)
+    pico = tracemalloc.get_traced_memory()[1]
+    tracemalloc.stop()
+    salida_bytes = 200 * FINAL * FINAL * 4
+    veces = pico / salida_bytes
+    ok(f"memoria <= 6x la salida (200 img, k=9)", veces < 6.0, True)
+    print(f"         (pico {pico/1e6:.0f} MB = {veces:.1f} x la salida; con einsum eran "
+          f"~{9*9*200*138*138*4/1e9:.1f} GB)")
+    del grande
 
     # §6.5
     xs = aplicar(x, None)
