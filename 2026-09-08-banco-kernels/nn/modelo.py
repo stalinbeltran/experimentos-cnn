@@ -18,33 +18,52 @@ condiciones hasta hacerlas indistinguibles del ruido entre semillas, y con 100 m
 de entrenamiento ese efecto es severo. O sea: darle capacidad a la red REDUCE la
 evidencia que el banco puede producir. No se «mejora» esta red.
 
-⚠⚠ LA CONTRADICCION DEL §7.1, SIN RESOLVER Y CONMUTABLE
--------------------------------------------------------
-El §7.1 escribe la cadena `128 -> 64 -> 32 -> 16` y a la vez dice «todas las
-convoluciones son `valid`». LAS DOS COSAS NO PUEDEN SER CIERTAS:
+✅ EL PADDING DEL TRONCO ES `same`, Y LO DICE LA v1.2 EXPLICITAMENTE
+------------------------------------------------------------------
+La v1.0 se contradecia: escribia la cadena `128 -> 64 -> 32 -> 16` y a la vez decia
+«todas las convoluciones son `valid`». Se reporto, y la v1.2 lo cierra:
 
-    valid, stride 2:  (128-5)//2+1 = 62 -> (62-5)//2+1 = 29 -> (29-3)//2+1 = 14
-    padding "same":   128 -> 64 -> 32 -> 16          <- las dimensiones ESCRITAS
+    «Todas las convoluciones del tronco usan padding `same`. La cadena de rejillas
+     es 128 -> 64 -> 32 -> 16.»                                            (§7.1)
 
-El recuento de parametros NO desempata: 5.812 en los dos casos (el padding no anyade
-pesos), asi que la cifra del §7.1 es compatible con ambas lecturas. Lo que si desempata
-son TRES cosas del propio documento, y las tres apuntan a `same`:
+Y da el motivo, que es mejor que el que se habia deducido -- ALCANZABILIDAD. No es
+una cuestion de gusto ni de cuadrar una tabla: con `valid` los centros de campo
+receptivo de la rejilla caen en los pixeles de entrada 10 a 114, mientras que las
+etiquetas llegan hasta los extremos del marco. O sea que un borde cerca del pixel 8
+o del 119 seria INALCANZABLE POR CONSTRUCCION para el soft-argmax -- la misma clase
+de error irreducible que §3.3 existe para evitar.
 
-  1. §7.3 lee «cada marginal de 16 elementos» y divide por 15 para normalizar a [0,1];
-  2. §7.5 dice «la rejilla de 16 x 16 corresponde a 8 px por celda en el marco de 128»,
-     y 128/16 = 8 EXACTO (con 14 seria 9,14, que no es lo escrito);
-  3. §7.5 dice que el arreglo diagnostico es quitar el stride de la tercera conv
-     «pasando a 32 x 32», que es lo que sale de 64 -> 32 -> 32, no de 62 -> 29 -> 29.
+⚠ DISCREPANCIA ARITMETICA CON LA v1.2, anotada y no heredada. El §7.1 escribe que
+«§3.3 permite bordes de parrafo en el rango [8, 120]», tres veces (§7.1 y §7.5). Pero
+la aritmetica de la propia especificacion da 119, no 120:
 
-Asi que aqui se implementa `same` (PADDING_SAME = True), que es la lectura que
-reproduce las dimensiones escritas y las tres corroboraciones. Queda como INTERRUPTOR
-de una linea, no cableado, porque el §12 declara la arquitectura INVARIANTE: si el
-duenyo confirma que lo que manda es la palabra `valid`, se cambia la constante y el
-banco se congela con 14 x 14 -- pero entonces el §7.5 hay que reescribirlo tambien.
+    §3.3 acota la caja a [68, 512] en el marco de 584
+    §6.4 transforma  coord_final = (coord_584 / 4) - 9
+    ->  68/4 - 9 = 8   y   512/4 - 9 = 119
 
-⚠ Esto NO es lo mismo que el `valid` del §6, que si es `valid` y esta bien: alli la
-convolucion del KERNEL sobre la imagen de 146 es `valid` a proposito, y el recorte a
-128 la compensa (§6.2). Son dos convoluciones distintas en dos sitios distintos.
+Aqui se usa 119, que es lo que sale de §3.3 + §6.4. NO cambia ninguna conclusion --
+8 y 119 quedan los dos fuera del span 10..114 de `valid`, y los dos dentro del 0..120
+de `same` --, asi que el argumento de alcanzabilidad se sostiene igual. Lo que cambia
+es el MARGEN por arriba: 1 px (119 contra 120), no 0. Sigue siendo ajustado, y por eso
+§7.5 manda comprobarlo CONTRA EL DATASET REAL y no contra el rango teorico.
+
+Comprobado aqui, y es lo que verifica `--span` (medido el 2026-09-08):
+
+    same    rejilla=16   centros 0 … 120  paso 8   CUBRE  las etiquetas [8, 119]
+    valid   rejilla=14   centros 10 … 114 paso 8   NO cubre: [8,10) y (114,119]
+
+⚠ El recuento de parametros NO distingue las dos lecturas (5.812 en las dos: el
+padding no anyade pesos), asi que la v1.2 obliga a verificar sobre LAS DIMENSIONES:
+«La implementacion debe imprimir la cadena de dimensiones al ejecutar y compararla
+con 128/64/32/16 como asercion» (§7.1). Es lo que hace `main()`, y por eso
+`PADDING_SAME` sigue siendo una constante visible y no un `padding=2` enterrado en
+la definicion de las capas: la trampa tiene su propia fila en el §14 («Tronco con
+`valid` en vez de `same` … el recuento de parametros no lo detecta»).
+
+⚠ Esto NO contradice el §6, que si elimina el padding: lo que §6 quita es un
+artefacto DEPENDIENTE DEL KERNEL, confundible con la variable en estudio. El padding
+del tronco es identico en todas las condiciones -- degrada a todas por igual y no
+afecta la comparabilidad (§7.1, «Relacion con §6»).
 """
 
 from __future__ import annotations
@@ -52,9 +71,14 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-# La lectura del §7.1 que se implementa. Ver el docstring: `True` reproduce las
-# dimensiones ESCRITAS (64/32/16); `False` obedece a la palabra `valid` y da 62/29/14.
+# §7.1 de la v1.2: el tronco usa `same`. NO es una eleccion de esta implementacion.
+# Se deja como constante visible porque el recuento de parametros no detecta el error
+# (5.812 en los dos casos) y la comprobacion tiene que ser sobre las DIMENSIONES.
 PADDING_SAME = True
+CADENA_ESPERADA = (64, 32, 16, 16)     # §7.1: 128 -> 64 -> 32 -> 16
+SPAN_ESPERADO = (0, 120)               # §7.1/§7.5: centros de la rejilla en la entrada
+ETIQUETAS_EN_128 = (8, 119)            # §3.3 [68,512] + §6.4 (/4, -9). La spec
+#                                      escribe 120; su aritmetica da 119 (ver docstring)
 
 REJILLA = 16 if PADDING_SAME else 14   # el lado del mapa que llega a la cabeza
 TAU = 1.0                              # temperatura del soft-argmax (§7.3), fija
@@ -135,6 +159,26 @@ def _cadena(padding_same: bool) -> tuple[list[tuple[int, int, int]], int, int]:
     return dims, total, cabeza
 
 
+def centros_rejilla(padding_same: bool) -> list[int]:
+    """Los centros de campo receptivo de la rejilla final, en coordenadas de ENTRADA.
+
+    §7.5 de la v1.2 lo hace OBLIGATORIO: «el span de centros de la rejilla debe
+    contener el rango completo de coordenadas de etiqueta presentes en el dataset».
+    Si no lo contiene, esas muestras son INALCANZABLES para el soft-argmax y aportan
+    un error irreducible -- y no falla por ningun lado: sale como que todos los
+    kernels son un poco malos.
+
+    Es aritmetica pura, sin torch: se puede comprobar antes de tener dataset."""
+    capas = [(5, 2, 2), (5, 2, 2), (3, 2, 1)] if padding_same else [(5, 2, 0), (5, 2, 0), (3, 2, 0)]
+    n_in = ENTRADA
+    c = list(range(n_in))
+    for k, paso, pad in capas:
+        n_out = (n_in + 2 * pad - k) // paso + 1
+        c = [c[j * paso - pad + (k - 1) // 2] for j in range(n_out)]
+        n_in = n_out
+    return c
+
+
 def main() -> int:
     print(f"\nBancoCNN — especificacion §7 · PADDING_SAME = {PADDING_SAME}\n")
     fallos = []
@@ -167,6 +211,27 @@ def main() -> int:
     comprobar("rejilla que llega a la cabeza", rasgos.shape[-1], REJILLA)
     comprobar("canales de la cabeza (§7.4)", m.cabeza.out_channels, 4)
     comprobar("forma de la salida", tuple(salida.shape), (2, 4))
+    # --- §7.1: la cadena ENTERA, no solo la rejilla final. El recuento de
+    # parametros no detecta un tronco con `valid` (5.812 en los dos casos), asi que
+    # la v1.2 obliga a verificar las DIMENSIONES. Es una fila del §14.
+    dims_impl, _, _ = _cadena(PADDING_SAME)
+    comprobar("cadena de rejillas (§7.1)", tuple(d[1] for d in dims_impl), CADENA_ESPERADA)
+
+    # --- §7.5: el span de centros tiene que CUBRIR el rango de etiquetas ---
+    c = centros_rejilla(PADDING_SAME)
+    comprobar("span de centros en la entrada (§7.5)", (c[0], c[-1]), SPAN_ESPERADO)
+    lo, hi = ETIQUETAS_EN_128
+    alcanzable = c[0] <= lo and hi <= c[-1]
+    comprobar("el span CUBRE las etiquetas (§7.5)", alcanzable, True)
+    print(f"         etiquetas posibles [{lo}, {hi}] · centros [{c[0]}, {c[-1]}] "
+          f"paso {c[1] - c[0]} px"
+          + ("" if alcanzable else "  <-- HAY BORDES INALCANZABLES"))
+    # ⚠ El extremo superior es AJUSTADO -- 1 px: centros hasta 120, etiquetas hasta
+    # 119 -- y la v1.2 avisa de que lo es (aunque ella escribe 120 donde su propia
+    # aritmetica da 119; ver el docstring). Por eso §7.5 pide repetir esto CONTRA EL
+    # DATASET REAL y no contra el rango teorico: si el generador saca un borde por
+    # encima de 120, esas muestras son inalcanzables aunque esto salga en verde.
+
     # --- el soft-argmax, con mapas FABRICADOS: no depende de los pesos (§7.3) ---
     nulos = torch.zeros(1, 4, REJILLA, REJILLA)
     comprobar("mapa nulo -> centro exacto", [round(float(v), 4) for v in leer_coordenadas(nulos)[0]],

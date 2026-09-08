@@ -12,11 +12,13 @@
   "reporte": null,
   "especificacion": {
     "fuente": "artifact publicado por el dueno, transcrito VERBATIM a ESPECIFICACION.md",
-    "url": "https://claude.ai/public/artifacts/fe5ff2bb-2393-484a-87d0-cfacf2bfdf60",
-    "titulo_original": "ESPECIFICACION_Banco_Evaluacion_Kernels.md",
-    "version": "v1.0",
+    "version": "v1.2",
+    "titulo_original": "ESPECIFICACION_Banco_Kernels_v1.2.md",
+    "url": "https://claude.ai/public/artifacts/d38a6851-a9b5-4de8-8479-10a90402d2d6",
     "fecha": "2026-09-07",
-    "rescatada": "2026-09-08"
+    "revisada": "2026-09-08",
+    "url_v1_0": "https://claude.ai/public/artifacts/fe5ff2bb-2393-484a-87d0-cfacf2bfdf60",
+    "nota_versiones": "la v1.2 vive en OTRO uuid: el enlace de la v1.0 sigue sirviendo la v1.0. Un artifact publicado es una instantanea, asi que 'la especificacion' es esta copia del repo, no una URL"
   },
   "condiciones_previstas": [
     "caja-media",
@@ -25,13 +27,22 @@
     "gauss",
     "sobel"
   ],
-  "bloqueado_por": [
-    "P1: el §7.1 dice `valid` pero sus dimensiones (64/32/16) sólo salen con padding `same`. Con `valid` la rejilla es 14x14 y el §7.5 (8 px/celda) deja de cuadrar. La arquitectura es INVARIANTE (§12): se confirma antes de congelar",
-    "P2: dtype y empaquetado del dataset publicado (exacto en uint16 vs uint8 redondeado): un dataset publicado NO se reescribe nunca",
-    "P3: que variables estratifican el reparto 100/100/800 (§4.1 dice «las que el generador varie»)"
+  "congelado_por_la_spec": {
+    "padding_tronco": "same, cadena 128/64/32/16 (§7.1). Por ALCANZABILIDAD: con valid los centros de la rejilla van de 10 a 114 y las etiquetas llegan a [8,119], asi que los bordes extremos serian inalcanzables por construccion",
+    "almacenamiento": "uint16 con la SUMA del bloque 4x4, exacto, ~43 MB (§3.8)",
+    "semillas": 10,
+    "estratificacion": "explicita por area de caja en 4 bins de cuartil; balance marginal verificado en el resto (§3.6)",
+    "orden_de_muestreo": "tamano PRIMERO, luego la esquina restringida. NO se sobre-genera y rechaza (§3.4)",
+    "umbral_arranque_caja_media": 0.4,
+    "techo_identidad": "si identidad pasa de ~0,95 tampoco hay margen (§10.1.1)"
+  },
+  "bloqueado_por": [],
+  "pendiente": [
+    "publicar el dataset: hay que escribir nn/datos.py con el muestreo del §3.4 (tamano primero), las aserciones del §3.3 y el empaquetado uint16 del §3.8",
+    "elegir y documentar la RESERVA del §3.7: al menos una familia tipografica y un rango de densidad de uso exclusivo del banco, declarados en el contrato de kernel",
+    "comprobar que el generador puede variar los 7 factores del §3.5 (familia, tamano de fuente, interlineado, nivel de gris): NO comprobado todavia"
   ],
-  "no_bloqueado_pero_sin_decidir": [
-    "numero definitivo de semillas: lo fija la calibracion (§8.5, §11.4), no el diseno",
-    "si se corren los controles opcionales gauss y sobel (§10)"
+  "discrepancias_con_la_spec": [
+    "§7.1 y §7.5 escriben que §3.3 permite bordes en [8, 120]; la aritmetica de la propia spec (§3.3 [68,512] + §6.4 (coord/4)-9) da [8, 119]. Se usa 119. NO cambia ninguna conclusion (8 y 119 quedan fuera del span 10..114 de valid y dentro del 0..120 de same); solo cambia el margen por arriba, que es 1 px y no 0. Cosmetico, pero conviene corregirlo en la spec"
   ]
 }

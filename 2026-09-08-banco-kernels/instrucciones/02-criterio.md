@@ -2,7 +2,8 @@
 
 **Congelado el 2026-09-08**, con **cero runs corridos**, **cero épocas** y **ningún kernel en
 `kernels/`**. Esto es comprobable: no existe `resultados/`, ni `nn/pesos/`, ni un dataset
-publicado del que sacar una cifra.
+publicado del que sacar una cifra. **Actualizado el mismo día a la v1.2** de la especificación,
+que fijó las semillas en 10 y añadió el techo del §10.1.1 — **sin aflojar ningún criterio**.
 
 **No es un criterio nuevo.** Lo fija la [especificación §2](../ESPECIFICACION.md), que ya lo
 declara *«antes de ejecutar cualquier corrida»*. Este documento lo **operacionaliza** —lo deja en
@@ -20,6 +21,11 @@ La única variable es **el kernel aplicado a las entradas**. Semillas, arquitect
 hiperparámetros, particiones y **orden de los lotes** son idénticos en todas las condiciones
 (§8.2). Todo se lee en la **época 200** y como **media ± desviación estándar entre semillas**
 (§9.3); una cifra de una sola semilla **no es un resultado**.
+
+**Son 10 semillas, fijas** (§8.5 de la v1.2), no «≥ 5 y lo fija la calibración». ⚠ **Y eso
+endurece los dos criterios a propósito**: la desviación entre semillas es **el denominador** de
+los dos, así que cada semilla adicional **estrecha** el margen que un kernel tiene que superar.
+Con ~0,6 min por corrida, 10 semillas × 10 condiciones son **~1 h** de cómputo local.
 
 ## Criterio 1 — UTILIDAD (§2.1)
 
@@ -84,15 +90,25 @@ trampa con su propia fila en el §14.
 
 Se comprueba **en este orden** y **cada uno detiene el banco**:
 
-1. **La caja media saca un IoU alto** (§10.1). Ese predictor constante ignora la imagen: si
-   acierta mucho, el generador coloca los párrafos con poca variabilidad y todas las condiciones
-   quedan comprimidas. → **se corrige el generador y NO se continúa.**
-2. **El MAE se estanca cerca de 8 px** (§7.5). Es el tamaño de una celda de la rejilla: significa
+1. **La caja media saca un IoU alto** — concretamente **por encima de 0,40** (§10.1; umbral
+   *propuesto, no derivado*, que se valida en calibración). Ese predictor constante ignora la
+   imagen: si acierta mucho, el generador coloca los párrafos con poca variabilidad y todas las
+   condiciones quedan comprimidas. → **se amplía el rango de ANCHO y ALTO de caja** (§3.5), no el
+   de posición, **y NO se continúa.**
+2. **La identidad se pega al TECHO** (§10.1.1, nuevo en la v1.2): por encima de ~0,95 **no queda
+   margen** para que ningún kernel demuestre mejora, y las condiciones se comprimen igual que con
+   un piso alto. **El rango útil del banco es la distancia entre caja media e identidad**: si es
+   estrecha, **ninguna cantidad de semillas produce evidencia**.
+3. **El MAE se estanca cerca de 8 px** (§7.5). Es el tamaño de una celda de la rejilla: significa
    que el soft-argmax no está interpolando. → **quitar el stride de la tercera conv** (rejilla
    32 × 32) **antes de tocar cualquier otra cosa**, y **reiniciar la calibración**.
-3. **Alguna caja de párrafo queda fuera del marco final** (§3.3). Es un error irreducible que
+4. **Alguna caja queda fuera del marco final o fuera del lienzo de 584** (§3.3, «dos daños
+   distintos»; el segundo es **peor**, porque la etiqueta es **directamente falsa**).
+   ⚠ **Y no se arregla descartando** (§3.4): se muestrea el **tamaño primero** y la esquina
+   después. Rechazar sesga hacia párrafos pequeños y centrados, que es lo que sube la caja media
+   del punto 1. Es un error irreducible que
    desplaza el IoU medio. → **aserción en la generación**; no se entrena con muestras así.
-4. **La transformación de coordenadas no cuadra** en una muestra conocida (§6.4). Omitir el
+5. **La transformación de coordenadas no cuadra** en una muestra conocida (§6.4). Omitir el
    `−9` sesga **todas** las condiciones por igual, o sea que no se ve como error: se ve como que
    todos los kernels son uniformemente malos. → **aserción**.
 
@@ -110,7 +126,10 @@ Se comprueba **en este orden** y **cada uno detiene el banco**:
 - **La red va a memorizar las 100 muestras de `train`**, y eso es lo buscado, no un problema: la
   brecha `train − eval` en régimen de sobreajuste **es** la evidencia del criterio 2 (§8.4). Por
   eso no hay parada temprana.
-- **La desviación entre semillas puede caer en 0,03–0,05** (§8.5), y con la suma de dos
-  desviaciones como margen, **el criterio 1 es difícil de cumplir**. Si con 5 semillas ninguna
-  condición declara, la respuesta es **más semillas o un margen honesto**, nunca un margen más
-  flojo elegido después de ver los números.
+- **La desviación entre semillas puede caer en 0,03–0,05**, y con la suma de dos desviaciones
+  como margen, **el criterio 1 es difícil de cumplir**. Si con las 10 semillas ninguna condición
+  declara, la respuesta es **un margen honesto y decirlo**, nunca un margen más flojo elegido
+  después de ver los números.
+- **Y el banco puede resultar no medir nada**, que también es un desenlace previsto: si la
+  distancia entre caja media e identidad sale estrecha (§10.1.1), lo que hay que arreglar es el
+  **generador** (§3.5), y eso **no es un resultado del banco** sino de su calibración.

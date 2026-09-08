@@ -7,15 +7,22 @@ CNN de referencia de 5.812 parámetros entrenada con **100 muestras**.
 El banco es **agnóstico al origen del kernel**: el kernel entra como **dato** (`.npy`), y los
 procedimientos que producen kernels quedan **fuera de alcance**.
 
-> 📄 **La fuente de verdad es [`ESPECIFICACION.md`](ESPECIFICACION.md)** — la especificación v1.0
-> del dueño (2026-09-07), copiada verbatim. Este README no la resume para reemplazarla; donde
+> 📄 **La fuente de verdad es [`ESPECIFICACION.md`](ESPECIFICACION.md)** — la especificación
+> **v1.2** del dueño, copiada verbatim. Este README no la resume para reemplazarla; donde
 > difieran, gana ella.
+>
+> ⚠ **Cada versión se publica en su propio `uuid`**: el enlace de la v1.0 sigue sirviendo la v1.0.
+> Por eso la especificación de este experimento es **esta copia**, no una URL.
 
-## ⚠ Estado: montado, NADA corrido
+## ⚠ Estado: montado sobre la v1.2, NADA corrido
 
 **2026-09-08.** Existe la carpeta, sus dos obligaciones, la arquitectura comprobable y el
 criterio congelado. **No hay dataset publicado, ni pesos, ni una sola cifra medida de este
 banco.** `experimento.json` declara `estado: "abierto"` y `dataset: null`, que es el estado real.
+
+✅ **Las tres decisiones que bloqueaban están cerradas por la v1.2** — padding del tronco `same`
+(§7.1), almacenamiento `uint16` con la suma del bloque (§3.8), y qué varía el generador con su
+estratificación (§3.5-§3.6). `bloqueado_por` está **vacío**.
 
 ```bash
 python nn/entrenar_local.py              # se NIEGA y lista qué falta (código 2)
@@ -23,18 +30,19 @@ python nn/entrenar_local.py --comprobar  # comprueba la arquitectura del §7 (c�
 python nn/modelo.py                      # lo mismo, con las dos lecturas del padding
 ```
 
-### Lo que falta, y quién lo tiene que decidir
+### Lo que falta ahora: TRABAJO, no decisiones
 
-Tres cosas necesitan al **dueño** antes de poder correr, porque las tres son **irreversibles**:
-una toca un **invariante** (§12) y dos congelan un **dataset publicado**, que no se reescribe
-nunca. Están enteras, con su evidencia, en
+Nada espera a nadie. En `pendiente` de `experimento.json`, y con el detalle en
 [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md):
 
-| | qué | por qué bloquea |
-|---|---|---|
-| **P1** | el §7.1 dice `valid` pero sus dimensiones (64/32/16) **sólo salen con `same`** | la arquitectura es invariante: elegir mal no da un error, da una serie que hay que tirar |
-| **P2** | `dtype` del dataset (exacto en `uint16` vs `uint8` redondeado) | un dataset publicado **no se reescribe nunca** |
-| **P3** | qué varía el generador y qué estratifica el reparto 100/100/800 | decide si el §10.1 (caja media) deja margen para medir algo |
+1. **Comprobar que el generador puede variar los siete factores del §3.5** — familia tipográfica,
+   tamaño de fuente, interlineado y nivel de gris **no están comprobados**. Va primero porque
+   puede obligar a tocar el generador, y §3.5 es de lo que depende que el banco mida algo.
+2. **`nn/datos.py`**: muestreo del §3.4 (**tamaño primero, esquina después**), aserciones del
+   §3.3, empaquetado `uint16` del §3.8, estratificación del §3.6, y **publicar**.
+3. **Elegir la reserva del §3.7** (≥ 1 familia tipográfica y un rango de densidad de uso
+   exclusivo del banco) y declararla en el contrato de kernel.
+4. **`nn/pipeline.py`** (§6) y **`nn/evaluar.py`** (§9.1).
 
 ## Lo que ya está comprobado ejecutándolo
 
@@ -49,9 +57,19 @@ nunca. Están enteras, con su evidencia, en
   **⇒ se corre aquí; no hace falta alquilar nada.**
 - ⚠⚠ **`placement.area` acota sólo la esquina superior-izquierda, no la caja entera** — lo dice
   el código del generador y lo confirman 6 renders (los 6 pegados al borde del área). **Y una caja
-  puede salirse del lienzo**: uno dio `y1 = 641,62` sobre 584, o sea un párrafo cortado. Así que la
-  restricción **obligatoria** del §3.3 va como **aserción + descarte** —de las dos cosas— y no
-  confiando en la receta.
+  puede salirse del lienzo**: uno dio `y1 = 641,62` sobre 584, o sea un párrafo cortado. La v1.2
+  recogió las dos cosas en §3.3 como «dos daños distintos», y llama al segundo **peor**: *«la
+  etiqueta es directamente falsa»*.
+  ⚠⚠ **Pero NO se arregla descartando**, y eso corrige lo que yo había escrito: el §3.4 nuevo
+  **prohíbe** sobre-generar y rechazar, porque rechazar elimina selectivamente las cajas grandes y
+  periféricas y sesga hacia párrafos **pequeños y centrados** — justo lo que sube el control de
+  caja media y comprime el banco. Se muestrea **el tamaño primero** y la esquina después.
+- ✅ **La cadena de rejillas y el span de centros ya se comprueban**, que la v1.2 vuelve
+  aserciones obligatorias (§7.1, §7.5, §11.8-9): cadena `128/64/32/16` y centros **0…120**, que
+  cubren las etiquetas `[8, 119]` *(la v1.2 escribe `[8, 120]`; su propia aritmética
+  —`512/4 − 9`— da 119. Off-by-one anotado; no cambia ninguna conclusión)*. Con `valid` serían **10…114** y los bordes extremos quedarían
+  **inalcanzables por construcción** — el motivo real del `same`, mejor que las tres
+  corroboraciones textuales con las que se había deducido.
 
 ## Cómo está pensado (las cuatro decisiones que más sorprenden al leerlo)
 
@@ -90,7 +108,7 @@ registra como tal**.
 ## Qué hay en esta carpeta
 
 ```
-ESPECIFICACION.md     la especificación v1.0 del dueño, VERBATIM. Manda sobre todo lo demás
+ESPECIFICACION.md     la especificación v1.2 del dueño, VERBATIM. Manda sobre todo lo demás
 experimento.json      identidad legible por máquina: id, estado, gasta, lo que bloquea
 REGLAS.md             las reglas de ESTE experimento: entradas, salidas, procesos, scripts
 instrucciones/
@@ -112,12 +130,20 @@ que es lo que el §11 manda hacer primero.
 
 **No es un experimento y sus cifras no se reportan como hallazgos.** Fija el instrumento:
 
-1. **caja media primero.** Si ese predictor constante saca un IoU alto, **se corrige el generador
-   y no se continúa**.
-2. **identidad y aleatorio con 10 semillas**, para medir la desviación real del IoU.
-3. **fijar el número definitivo de semillas** con ese dato (§8.5 avisa de que puede estar en
-   0,03–0,05, lo que vuelve exigente el margen).
-4. **verificar la resolución:** si el MAE se estanca cerca de **8 px** —el tamaño de una celda—,
+Son **10 pasos** en la v1.2 (antes 7). Los que deciden si el banco sirve:
+
+1. **caja media primero, con umbral: IoU ≤ 0,40.** Si queda por encima, se amplía el rango de
+   **ancho y alto** de caja (§3.5) —no el de posición— y **no se continúa**.
+2. **identidad con las 10 semillas**, y que **deje margen bajo el techo**: por encima de ~0,95
+   tampoco hay sitio para demostrar nada (§10.1.1).
+3. **que el rango entre caja media e identidad sea amplio.** Si es estrecho, **ninguna cantidad de
+   semillas produce evidencia**.
+4. **aleatorio con las 10 semillas**, cuya desviación es **el denominador de los dos criterios**.
+5. **verificar la resolución:** si el MAE se estanca cerca de **8 px** —el tamaño de una celda—,
    quitar el stride de la tercera conv **antes de tocar nada más** y reiniciar la calibración.
+6-10. las **aserciones**: caja dentro del marco **y del lienzo**, la transformación de
+   coordenadas, la **cadena 128/64/32/16**, el **span de centros** contra el rango real del
+   dataset, y el **balance marginal** de factores entre particiones. ✅ Las dos de la arquitectura
+   ya las corre `python nn/modelo.py`.
 
 Concluida la calibración, los parámetros quedan **congelados** (§12).

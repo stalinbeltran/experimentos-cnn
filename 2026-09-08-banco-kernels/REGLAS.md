@@ -1,9 +1,14 @@
 # Reglas de `banco-k`
 
-**Escritas el 2026-09-08**, al montar la carpeta, a partir de la
-[especificación v1.0 del dueño](ESPECIFICACION.md) (fechada 2026-09-07). Su
-`experimento.json` declara el estado **`abierto`** y **nada se ha corrido**: no hay dataset
-publicado, no hay pesos y no hay ninguna cifra medida de este experimento.
+**Escritas el 2026-09-08** al montar la carpeta y **actualizadas el mismo día a la
+[especificación v1.2](ESPECIFICACION.md)**, que cerró las tres decisiones que bloqueaban el
+arranque y **corrigió una cosa que estas reglas decían mal** (el sobre-generar y rechazar del
+§3.4: ver § Procesos, paso 2). Su `experimento.json` declara el estado **`abierto`** y **nada se
+ha corrido**: no hay dataset publicado, no hay pesos y no hay ninguna cifra medida.
+
+⚠ **La v1.2 vive en otro `uuid`, no en el enlace de la v1.0** — un artifact publicado es una
+instantánea. Por eso «la especificación» de este experimento es **esta copia del repo**, no una
+URL; las dos URLs quedan en `experimento.json`.
 
 ⚠ **Estas reglas son de este experimento y de ninguno más.** **No se copió de ningún
 experimento** (§ «Qué NO hereda»), así que no hay condiciones heredadas que releer — pero sí
@@ -58,7 +63,33 @@ subir las dos juntas (facilitación)?
     **descartar y aseverar** — y descartar **dos** cosas, no una: caja fuera de `[68, 512]`
     **y caja fuera del lienzo de 584**, porque un párrafo cortado da una etiqueta que no
     describe lo que se ve. Detalle en `instrucciones/01-encargo.md` § «Lo que se comprobó»;
-  - reparto **estratificado** (§4.1) según lo que el generador varíe.
+  - **los siete factores de variación del §3.5**, y de ellos depende que el banco mida algo:
+    **ancho y alto de caja son los críticos** y quieren **≥ 2× entre mínimo y máximo**; luego
+    posición (ejes independientes), tamaño de fuente, interlineado, familia tipográfica y nivel
+    de gris del texto.
+    ⚠ **Variar sólo la posición NO basta**, y esto es fino: un párrafo de tamaño constante
+    desplazado deja que la red aprenda *«el borde derecho está siempre a X del izquierdo»*, y el
+    problema **colapsa de cuatro coordenadas a dos** — o sea que la cabeza de 4 canales deja de
+    medir lo que se cree. Tiene su fila en el §14.
+  - **reparto estratificado** así (§3.6, porque estratificar sobre siete factores con 100
+    muestras es inviable): **explícitamente por área de caja en 4 bins de cuartil** —el factor
+    que domina la métrica—, **balance marginal verificado** (no forzado) en los demás, y
+    muestreo tipo **hipercubo latino** en los continuos para que `train` cubra el espacio parejo
+    en vez de agruparse por azar.
+  - **guardado en `uint16` con la SUMA del bloque 4 × 4** (§3.8), no el promedio: 16 píxeles
+    `uint8` suman como máximo 4080, que cabe en `uint16`, así que la representación es
+    **exacta** — sin cuantización. ~43 MB para 1000 × 146 × 146.
+    ⚠ **`uint8` está descartado a propósito**: ahorraría 21 MB metiendo un **piso de ruido en el
+    propio instrumento**, y el banco busca resolver diferencias de IoU de **0,02–0,05**. Es el
+    intercambio equivocado, y tiene su fila en el §14.
+    ⚠ **Y la suma NO hay que «corregirla» después**: es un factor 16 global, la convolución es
+    lineal y §6.5 estandariza con μ y σ del propio dataset, así que **desaparece por completo**.
+    Dividir entre 16 es opcional.
+  - **una RESERVA de configuraciones del generador** (§3.7): al menos **una familia tipográfica y
+    un rango de densidad** de uso **exclusivo del banco**, que los procedimientos que producen
+    kernels **no pueden usar**. Es contra la **fuga de distribución**: un kernel obtenido por
+    meta-aprendizaje sobre el mismo generador tiene fuga **aunque las muestras sean distintas**.
+    Se documenta en el contrato de kernel. **Todavía sin elegir** (`pendiente`).
 - **Qué se normaliza o transforma al cargar:** nada del dato crudo. Todo lo que se le hace a
   la entrada es el **pipeline** (§6), que es idéntico para las tres particiones: convolución
   `valid` con el kernel → recorte central a 128 × 128 → **estandarización con la media y la
@@ -80,12 +111,14 @@ subir las dos juntas (facilitación)?
 Nada de esto existe todavía. Es dónde va a caer, declarado antes de producirlo.
 
 - **Pesos:** `nn/pesos/<condicion>-s<semilla>/best.pt` y `last.pt`.
-  - ⚠ **Con el tope del repo (≈5 MB por experimento) esto NO cabe entero y hay que decidirlo
-    antes de correr**: 5.812 parámetros son ~23 KB por checkpoint, pero el banco tiene ~5
-    condiciones × ≥5 semillas × 2 ficheros ≈ 50 checkpoints ≈ 1,2 MB *(calculado, no medido)* —
-    eso sí cabe. Lo que no cabe es la calibración (§11) con 10 semillas si además se guardan sus
-    pesos: **la calibración no guarda pesos**, sólo métricas, porque es puesta a punto del
-    instrumento y sus resultados no se reportan como hallazgos (§11).
+  - ⚠ **Cabe, pero justo, y con las 10 semillas de la v1.2 hay que rehacer la cuenta**: 5.812
+    parámetros son ~23 KB por checkpoint, y **5 condiciones × 10 semillas × 2 ficheros = 100
+    checkpoints ≈ 2,3 MB** *(calculado, no medido)*, contra el tope de **≈5 MB por experimento**.
+    Entra — pero con **10 condiciones**, que es el número que usa el §8.5 para su cuenta de coste,
+    serían **~4,6 MB** y el tope queda al borde. **Si se llega ahí, se guarda sólo `best.pt`** (la
+    mitad) y se dice aquí.
+  - **La calibración NO guarda pesos**, sólo métricas: es puesta a punto del instrumento y sus
+    resultados no se reportan como hallazgos (§11). Ella sola serían otros ~0,9 MB.
 - **Métricas:** `resultados/<condicion>/metricas.csv`, una fila por **(semilla × parada ×
   métrica)**. Las paradas son **25, 50, 100 y 200** y en cada una se registra, **para cada
   semilla**: IoU en `train`, IoU en `monitor`, IoU en `eval`, brecha `train − eval`, y MAE por
@@ -116,32 +149,60 @@ Los pasos, en orden. **Hoy sólo está hecho el 0.**
 0. ✅ **Montar la carpeta y dejar la especificación a salvo.** `ESPECIFICACION.md` es la copia
    **verbatim** del artifact del dueño. Se rescató porque un artifact es una URL y esta máquina
    se rehace sin aviso: *lo que no está empujado, no existe*.
-1. ⛔ **Cerrar las tres decisiones bloqueantes** (`bloqueado_por` en `experimento.json`, y el
-   detalle en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md)). Las tres tocan
-   **invariantes** (§12) o un dataset publicado, y las dos cosas son irreversibles.
+1. ✅ **Las tres decisiones que bloqueaban están CERRADAS por la v1.2**: el padding del tronco
+   (`same`, §7.1), el almacenamiento (`uint16` con la suma, §3.8) y qué varía el generador con su
+   estratificación (§3.5-§3.6). `bloqueado_por` está vacío; lo que queda es **trabajo**, en
+   `pendiente`. El detalle en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md).
 2. ⛔ **Generar y publicar el dataset** (§3, §4). Una vez en la vida, con su `manifiesto.json`
    y la huella SHA-256 de cada partición. Las **aserciones** de §3.3 (caja dentro de
    `[68, 512]` **y dentro del lienzo**) y §6.4 (la transformación de coordenadas sobre una
    muestra conocida) van en el código de generación, no en un comentario.
-   ⚠ **Se piden más de 1000 imágenes para conseguir 1000 válidas** (descartes por caja fuera,
-   por solape y por render sin bloque). **Cuántas más no está medido**, y medirlo sale gratis
-   aquí: el contador de descartes por motivo va en el `manifiesto.json`.
+   ⚠⚠ **NO se sobre-genera y se rechaza** (§3.4, y es **obligatorio**). Se muestrea **primero
+   el tamaño** de la caja y **después** la esquina superior-izquierda, restringida al rango que
+   garantiza que la caja **entera** cae en `[68, 512]`. Así **1000 generadas son 1000 válidas** y
+   no hay descartes.
+   **Por qué, y es el motivo por el que esto se corrigió:** rechazar elimina **selectivamente**
+   las cajas grandes y las periféricas, así que sesga la distribución hacia párrafos **pequeños y
+   centrados** — que es exactamente el factor que §3.5 manda **maximizar**, y lo que hace subir
+   el control de caja media y comprimir el banco contra el techo (§10.1). Un filtro que parece
+   inocente y estropea el instrumento: tiene su fila en el §14.
+   La aserción de §3.3 **se queda como red de seguridad, NO como mecanismo de filtrado.**
    ⚠ **Publicar es irreversible**: un dataset publicado **no se reescribe nunca**, y dato nuevo
    es nombre nuevo. Por eso va después del paso 1 y no antes.
 3. ⛔ **Escribir el criterio operativo antes de mirar** (R13) en
    [`instrucciones/02-criterio.md`](instrucciones/02-criterio.md). Ya está escrito lo que la
    especificación §2 fija; lo que falta es el número de semillas, que **lo fija la calibración**.
-4. ⛔ **Calibrar el banco** (§11), que **no es un experimento** y cuyos resultados **no se
-   reportan como hallazgos**:
-   1. **caja media primero, antes de cualquier kernel.** Si ese predictor trivial saca un IoU
-      alto, el generador coloca los párrafos con poca variabilidad, todas las condiciones
-      quedan comprimidas y el banco no discrimina nada. **Si sale alto se corrige el generador
-      y NO se continúa** (§10.1);
-   2. **identidad y aleatorio con 10 semillas**, para medir la desviación real del IoU;
-   3. **fijar el número definitivo de semillas** a partir de ese dato (no por defecto);
-   4. **verificar la resolución de coordenada** (§7.5): si el MAE se estanca cerca de **8 px**,
+4. ⛔ **Calibrar el banco** (§11 de la v1.2: **10 pasos**, antes 7), que **no es un experimento**
+   y cuyos resultados **no se reportan como hallazgos**:
+   1. **caja media primero, antes de cualquier kernel**, y con umbral: **IoU ≤ 0,40**
+      *(propuesto, no derivado; se valida en calibración)*. Si queda por encima, el remedio es
+      **ampliar el rango de ancho y alto** de caja (§3.5), **no el de posición**. **Si sale alto
+      se corrige el generador y NO se continúa** (§10.1);
+   2. **identidad con las 10 semillas**, y verificar que **deja margen bajo el TECHO**: si la
+      identidad pasa de ~0,95 **tampoco** hay sitio para que un kernel demuestre nada, y las
+      condiciones se comprimen igual que con un piso alto (§10.1.1 — nuevo en la v1.2);
+   3. **verificar que el rango entre caja media e identidad es suficientemente amplio** para
+      resolver diferencias del orden de la desviación entre semillas. **Si es estrecho, ninguna
+      cantidad de semillas produce evidencia** y hay que revisar §3.5;
+   4. **aleatorio con las 10 semillas**, registrando su desviación real, que es **el denominador
+      de los criterios** de §2;
+   5. **verificar la resolución de coordenada** (§7.5): si el MAE se estanca cerca de **8 px**,
       quitar el stride de la tercera convolución (rejilla 32 × 32) **antes de tocar cualquier
-      otra cosa** de la arquitectura, y **reiniciar la calibración**.
+      otra cosa**, y **reiniciar la calibración**;
+   6. **aserción**: ninguna caja fuera del marco final **ni fuera del lienzo de 584** (§3.3);
+   7. **aserción**: la transformación de coordenadas sobre una muestra conocida (§6.4);
+   8. **aserción**: la cadena de rejillas del tronco es **128/64/32/16** (§7.1). ✅ Ya la corre
+      `python nn/modelo.py`;
+   9. **aserción**: el **span de centros de la rejilla contiene el rango REAL de coordenadas del
+      dataset** (§7.5). ✅ Ya se comprueba contra el rango teórico en `nn/modelo.py`; **contra el
+      dataset real, cuando exista**. ⚠ El extremo superior es **ajustado**: centros hasta 120
+      y etiquetas hasta **119**, o sea **1 px de margen**.
+      ⚠⚠ **Y aquí la v1.2 tiene un off-by-one, anotado y no heredado**: escribe tres veces que
+      §3.3 permite bordes *«en el rango [8, 120]»*, pero su propia aritmética da **119**
+      (`512/4 − 9 = 119`). Se usa **119**, que es lo que sale de §3.3 + §6.4. **No cambia
+      ninguna conclusión** —8 y 119 quedan los dos fuera del span `10…114` de `valid` y los dos
+      dentro del `0…120` de `same`—; sólo cambia el margen, que es de 1 px y no de 0;
+   10. **verificar el balance marginal** de factores entre particiones (§3.6).
    Concluida la calibración, los parámetros quedan **congelados**.
 5. ⛔ **Correr las condiciones** con el protocolo de §8, idéntico para todas.
 6. ⛔ **Informe.** Y **la decisión de si esto lleva reporte al repo central** se toma con la
@@ -157,9 +218,13 @@ Los pasos, en orden. **Hoy sólo está hecho el 0.**
   si además su brecha es menor que la de la identidad bajo el mismo margen**.
 - **Cuántas condiciones y cuántas semillas:** condiciones de control **caja media · identidad ·
   aleatorio** (obligatorias) y **gauss · sobel** (opcionales, §10), más un brazo por kernel
-  evaluado. **Semillas ≥ 5, idénticas en todas las condiciones**, y el número definitivo lo
-  fija la calibración (§8.5). El **aleatorio necesita varias semillas de aleatoriedad**, no una:
-  su desempeño también varía (§10.2).
+  evaluado. **10 semillas, fijas e idénticas en todas las condiciones** (§8.5 de la v1.2: ya no
+  es «≥ 5 y lo fija la calibración»). El **aleatorio necesita varias semillas de aleatoriedad**,
+  no una: su desempeño también varía (§10.2).
+  ⚠ **El motivo de que sean 10 es el coste medido en esta carpeta**: ~35 ms por paso → ~0,6 min
+  por corrida, o sea **~1 h para 10 semillas × 10 condiciones**. Con ese coste no hay razón para
+  economizar semillas, y **la desviación entre semillas es el denominador de los dos criterios**:
+  cada semilla extra **estrecha** el margen que un kernel tiene que superar.
 - **Qué se llama «ganar»:** **no se declara un ganador**; se reporta si cada kernel cumple
   **2.1 y 2.2 por separado**. Un kernel que cumple 2.1 y falla 2.2 es un **resultado válido** y
   se registra como tal (§2.3). La cadena que el banco permite sostener es
@@ -178,7 +243,7 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 
 | script | qué hace | cómo se llama |
 |---|---|---|
-| `nn/modelo.py` | La CNN de referencia (§7), **autónoma**: sólo importa `torch`. Trae la comprobación de sus invariantes | `python nn/modelo.py` → imprime la cadena de dimensiones y comprueba 5.812 / 68 / rejilla 16 × 16 |
+| `nn/modelo.py` | La CNN de referencia (§7), **autónoma**: sólo importa `torch`. Trae las comprobaciones que la v1.2 hace **obligatorias** | `python nn/modelo.py` → imprime la cadena de dimensiones y comprueba 5.812 / 68 / cadena **128-64-32-16** / **span de centros 0…120** / el soft-argmax y el colapso del §7.4 |
 | `nn/entrenar_local.py` | La **entrada declarada**. Hoy **se niega a entrenar** porque no hay dataset publicado, y dice qué falta | `python nn/entrenar_local.py` (se niega, código 2) · `--comprobar` (comprueba la arquitectura sin dataset, código 0) |
 | `nn/receta.json` | La receta de render 584 × 584 con el área de colocación de §3.3. **Dato, no script** | la lee el generador de dataset del paso 2 |
 
@@ -220,9 +285,14 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
   - **`gasta: "entrena-local"`** desde el primer commit, con su `entrenar_local.py` negándose,
     en vez de `gasta: "no"` hasta que hubiera algo que correr;
   - **la especificación se copia al repo verbatim** en vez de sólo enlazar el artifact;
-  - **`nn/modelo.py` implementa el padding que reproduce las dimensiones escritas** en §7.1
-    (64 → 32 → 16), y **deja la contradicción anotada y conmutable** en vez de elegir en
-    silencio. Ver la § siguiente y `instrucciones/01-encargo.md` § P1.
+  - **`nn/modelo.py` implementaba el padding que reproduce las dimensiones escritas** (64 → 32
+    → 16) cuando la v1.0 se contradecía, **dejándolo anotado y conmutable** en vez de elegir en
+    silencio. **La v1.2 lo confirmó**: el tronco es `same`, y por un motivo mejor que el
+    deducido — **alcanzabilidad** (con `valid` los centros van de 10 a 114 y las etiquetas
+    llegan a `[8, 119]`, así que los bordes extremos serían inalcanzables **por
+    construcción**). La constante `PADDING_SAME` **se queda visible** porque el recuento de
+    parámetros no detecta el error (5.812 en los dos casos) y la comprobación tiene que ser
+    sobre **las dimensiones**: es una fila del §14.
 - **Qué se conservó, y por qué se decidió conservarlo:** **todo lo que dice la especificación**,
   sin excepción — que aquí no es inercia sino el encargo: §12 declara **invariantes** y §1.2 da
   el criterio único del que sale cada decisión (*maximizar la sensibilidad de la medición al

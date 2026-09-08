@@ -1,6 +1,7 @@
 # 01 — Encargo: montar el banco de evaluación de kernels
 
-**Fecha:** 2026-09-08 · **Estado:** carpeta montada, **nada corrido**, tres decisiones abiertas.
+**Fecha:** 2026-09-08 · **Estado:** carpeta montada sobre la **v1.2** de la especificación,
+**nada corrido**, **cero decisiones abiertas** — lo que queda es trabajo (§ «Lo que falta ahora»).
 
 ## Qué pidió el dueño
 
@@ -8,20 +9,31 @@
 > https://claude.ai/public/artifacts/fe5ff2bb-2393-484a-87d0-cfacf2bfdf60, y dime si necesitas
 > algo más. Documenta todo»
 
-O sea: **montar la carpeta y decir qué falta**, no correr el banco. Esto último es lo que este
-documento contesta, en su § «Lo que hace falta».
+O sea: **montar la carpeta y decir qué falta**, no correr el banco.
+
+Y después, el 2026-09-08: **«Actualicé el documento. Revísalo»** → la revisión contra la **v1.2**
+está en la § «La v1.2 cerró las tres decisiones».
 
 ## De dónde salió la especificación, y por qué está copiada aquí
 
-El artifact es la **especificación técnica v1.0** del banco, fechada **2026-09-07** y titulada
-`ESPECIFICACION_Banco_Evaluacion_Kernels.md`. Está copiada **verbatim** a
-[`ESPECIFICACION.md`](../ESPECIFICACION.md) (21.324 caracteres, 469 líneas), sin editar una
-palabra.
+La copia de [`ESPECIFICACION.md`](../ESPECIFICACION.md) es **verbatim**, sin editar una palabra,
+y hoy es la **v1.2** (`ESPECIFICACION_Banco_Kernels_v1.2.md`, 29.959 caracteres, 566 líneas). La
+v1.0 con la que se montó la carpeta tenía 21.324 caracteres y 469 líneas.
 
 **Se copia y no se enlaza porque una URL no es un artefacto.** Estos servidores se rehacen sin
 aviso y de ellos sólo sobrevive lo que está empujado; un banco cuyas condiciones viven en una
-página web es un banco que en el próximo server no se puede reproducir. Lo que sí se conserva es
-la URL, en `experimento.json` → `especificacion.url`, para poder cotejar si algún día sale una v2.
+página web es un banco que en el próximo server no se puede reproducir.
+
+⚠⚠ **Y esto quedó demostrado a los dos días, por donde no se esperaba: cada versión se publica en
+su PROPIO `uuid`.** El enlace de la v1.0 (`fe5ff2bb-…`) siguió sirviendo la v1.0 **byte a byte**
+después de que el documento se actualizara —comprobado tres veces, con respuestas frescas del
+origen (`cf-cache-status: DYNAMIC`, sin cabecera `age`)—, y la v1.2 apareció en
+`d38a6851-…`. **Un artifact publicado es una instantánea, no un documento vivo**, así que «la
+última versión» no es una propiedad de la URL: la URL **es** la versión. Las dos quedan en
+`experimento.json` → `especificacion.url` y `url_v1_0`.
+
+⚠ **Consecuencia práctica:** *«mismo link»* no basta para revisar una actualización. Hay que
+comprobar el `sha256` o la línea de versión del propio documento, que es lo que se hizo.
 
 ⚠ **Cómo se rescató, que costó y conviene saberlo:** la página es una aplicación cliente y
 `WebFetch` sólo ve el armazón vacío; la API (`/api/published_artifacts/<uuid>`) está detrás de
@@ -62,9 +74,10 @@ encargo y va después de ellas, no antes.
 3. ✅ **Entrenar es BARATO, y esto cambia la forma del encargo.** Un paso de lote 20 tarda
    **35,1 ms** (100 pasos cronometrados, torch 2.14.0+cpu, 2 hilos), así que **un run entero de
    200 épocas = 1000 pasos ≈ 0,6 min de entrenamiento puro**.
-   → el banco completo —calibración de 20 runs (§11.2) más ~5 condiciones × 5 semillas— es del
-   orden de **~45 runs ≈ 30-45 min** *(estimado desde el paso medido; no incluye la carga del
-   dato ni las 4 paradas de evaluación, que son forward sobre 1000 muestras y son menores)*.
+   → ⚠ **Recalculado para la v1.2, que fija 10 semillas** (§8.5): **10 condiciones × 10 semillas
+   = ~100 corridas ≈ 1 h** *(estimado desde el paso medido; no incluye la carga del dato ni las 4
+   paradas de evaluación, que son forward sobre 1000 muestras y son menores)*. Coincide con la
+   cuenta que hace la propia §8.5, que **cita este mismo número medido**.
    **⇒ Esto se corre AQUÍ. No hace falta alquilar nada**, y por eso `gasta` es
    `entrena-local` y no `alquila`: no entran las obligaciones de flota (prefijo, vigilante,
    destrucción por etiqueta).
@@ -83,97 +96,117 @@ encargo y va después de ellas, no antes.
    LIENZO.** En la segunda tanda, un render dio **`y1 = 641,62` sobre un lienzo de 584** — un
    párrafo **cortado por abajo**. Una caja cortada da una etiqueta que **no describe lo que se
    ve**, que es un daño distinto del que describe el §3.3 (él sólo habla del marco final).
-   → hay que **descartar las dos cosas**: caja fuera de `[68, 512]` **y** caja fuera del lienzo.
-   Y por tanto **para 1000 muestras válidas hay que pedir más de 1000 imágenes**; cuántas más
-   **no está medido**, y sale gratis medirlo al generar.
-   ⚠ Además el generador puede devolver solape o ningún bloque (`has_overlap`, `blocks` vacío),
-   que son dos descartes más.
+   → la aserción tiene que cubrir **las dos cosas**: caja fuera de `[68, 512]` **y** caja fuera
+   del lienzo. **La v1.2 recogió las dos** como «dos daños distintos» en §3.3, y llama al segundo
+   **peor**: *«la etiqueta es directamente falsa»*.
+   ⚠⚠ **Y aquí la v1.2 corrige lo que yo había escrito.** Yo concluí «pues hay que pedir más de
+   1000 imágenes y descartar»; el §3.4 nuevo lo **prohíbe**: *«No se admite sobre-generar y
+   rechazar»*. Ver la § «Lo que la v1.2 cambió» más abajo.
 
-## ⚠⚠ Lo que hace falta: una contradicción y tres decisiones
+## ✅ La v1.2 cerró las tres decisiones — y corrigió una cosa que yo había escrito
 
-### P1 — el §7.1 se contradice consigo mismo, y la arquitectura es INVARIANTE
+**Revisado el 2026-09-08.** El dueño publicó la **v1.2** de la especificación
+(`ESPECIFICACION_Banco_Kernels_v1.2.md`, 566 líneas contra 469, +108/−11), y la copia del repo
+está reemplazada.
 
-**Es lo único que puede invalidar el banco entero, así que va primero.** El §7.1 escribe la
-cadena `128 → 64 → 32 → 16` y a la vez dice *«todas las convoluciones son `valid`»*. **Las dos
-cosas no pueden ser ciertas** *(comprobado el 2026-09-08 con torch)*:
+⚠ **La v1.2 vive en otro `uuid`** (`d38a6851-…`), no en el enlace de la v1.0 (`fe5ff2bb-…`), que
+sigue sirviendo la v1.0 byte a byte — comprobado tres veces con respuestas frescas del origen
+(`cf-cache-status: DYNAMIC`). **Un artifact publicado es una instantánea**, no un documento vivo,
+así que «la especificación» de este experimento es **la copia de este repo**. Las dos URLs quedan
+en `experimento.json`.
 
-| lectura | cadena real | rejilla a la cabeza | parámetros |
-|---|---|---|---|
-| `valid` (la **palabra** del §7.1) | 128 → **62 → 29 → 14** | **14 × 14** | 5.812 |
-| padding `same` (las **dimensiones escritas**) | 128 → **64 → 32 → 16** | **16 × 16** | 5.812 |
+### Las tres que bloqueaban, resueltas
 
-⚠ **El recuento de parámetros no desempata**: son 5.812 en los dos casos, porque el padding no
-añade pesos. La cifra del §7.1 es compatible con ambas lecturas.
-
-**Lo que sí desempata son tres cosas del propio documento, y las tres apuntan a `same`:**
-
-1. §7.3 lee *«cada marginal de **16 elementos**»* y divide por **15** para normalizar a [0,1];
-2. §7.5 dice *«la rejilla de 16 × 16 corresponde a **8 px por celda** en el marco de 128»*, y
-   128/16 = 8 **exacto** (con 14 saldría 9,14, que no es lo escrito);
-3. §7.5 da como arreglo diagnóstico quitar el stride de la tercera conv *«pasando a **32 × 32**»*,
-   que es lo que sale de 64 → 32 → 32, no de 62 → 29 → 29.
-
-**Qué se hizo mientras se decide:** `nn/modelo.py` implementa **`same`** —la lectura que
-reproduce las dimensiones escritas y las tres corroboraciones— y lo deja como **interruptor de
-una línea** (`PADDING_SAME`), con las dos cadenas impresas al ejecutarlo. **No se eligió en
-silencio.**
-
-**Qué se necesita del dueño:** confirmar que manda la **cadena de dimensiones** y no la palabra
-`valid`. Si manda `valid`, hay que **reescribir el §7.5** (la rejilla sería 14 × 14, a 9,14 px
-por celda) y el §7.3 (marginales de 14, dividir por 13). Se pregunta porque el §12 declara la
-arquitectura **invariante**: elegir mal no da un error, da una serie de mediciones que hay que
-tirar entera.
-
-### P2 — cómo se empaqueta el dataset, que se publica una sola vez
-
-Las imágenes reducidas son **146 × 146 en 1 canal**, y hay 1000. El promedio por área de un
-`uint8` sobre bloques de 4 × 4 da múltiplos de 1/16, o sea **valores no enteros**, así que el
-`dtype` es una decisión con consecuencias y **no se puede cambiar después** *(cifras calculadas,
-no medidas)*:
-
-| opción | tamaño en crudo | ¿exacto? |
+| | qué decía yo | qué dice la v1.2 |
 |---|---|---|
-| `float32` | ~85 MB | sí, pero es el más grande y **git guarda todas las versiones** |
-| `uint16` guardando la **suma** del bloque (0…4080) | ~43 MB | **sí, exactamente** |
-| `uint8` redondeando | ~21 MB | **no**: pierde hasta ½ nivel por píxel |
-| `float16` | ~43 MB | **no** cerca de 255 (el paso es 0,25 ahí) |
+| **P1** padding | el §7.1 se contradice; implementé `same` como interruptor, sin elegir en silencio | **§7.1: «todas las convoluciones del tronco usan padding `same`», cadena 128 → 64 → 32 → 16.** ✅ Coincide |
+| **P2** dtype | recomendé `uint16` con la suma del bloque (exacto, ~43 MB) | **§3.8: `uint16`, suma del bloque 4 × 4, ~43 MB, exacto.** ✅ Coincide, y con el mismo motivo |
+| **P3** generador | había que decidir qué varía y qué estratifica | **§3.5 (siete factores, ancho y alto críticos con ≥ 2×) y §3.6 (área en 4 bins de cuartil + balance marginal + hipercubo latino).** ✅ Resuelto |
 
-**Recomendación: `uint16` con la suma del bloque** — es exacto, cabe en la mitad que `float32`, y
-lo que se guarda es un entero reproducible en vez de un flotante. ⚠ **El `.npz` comprime mucho**
-(el fondo es blanco uniforme), así que el tamaño real será bastante menor; **no está medido**.
+**Y el motivo del padding es mejor que el que yo había deducido.** Yo lo apoyé en tres
+corroboraciones textuales; la v1.2 lo apoya en **alcanzabilidad**, que es un argumento de
+construcción y no de lectura:
 
-⚠ **Por qué se pregunta en vez de elegir:** este banco existe para medir diferencias **finas**
-entre kernels, y un redondeo en la entrada es ruido que entra **antes** del kernel, igual para
-todas las condiciones pero no necesariamente inocuo. Y el dataset **no se reescribe nunca**.
+| | rejilla | centros en la entrada | ¿cubre las etiquetas `[8, 119]`? |
+|---|---|---|---|
+| `same` | 16 × 16 | **0 … 120**, paso 8 | **sí** |
+| `valid` | 14 × 14 | **10 … 114**, paso 8 | **no**: `[8,10)` y `(114,119]` quedan **inalcanzables** |
 
-### P3 — qué varía el generador, que es lo que la estratificación tiene que equilibrar
+*Comprobado el 2026-09-08 propagando los centros capa a capa, y de forma independiente con
+impulsos sobre convoluciones reales.*
 
-§4.1 pide muestreo **estratificado** *«según las características que el generador varíe»*, pero
-la especificación **no dice cuáles son**: el §3.1 fija resolución, fondo, reducción y número de
-muestras, y nada sobre el tamaño ni la densidad del párrafo.
+⚠ **Un off-by-one de la v1.2, que se anota en vez de heredarlo.** La v1.2 escribe **tres veces**
+(§7.1 y §7.5) que §3.3 permite bordes *«en el rango [8, 120]»*. Su propia aritmética da **119**:
+§3.3 acota la caja a `[68, 512]` y §6.4 transforma `(coord/4) − 9`, o sea `512/4 − 9 = 119`. Aquí
+se usa **119**.
 
-`nn/receta.json` lleva hoy, **como valor de partida y no como decisión tomada**, ancho
-`[200, 300]` px y `[80, 160]` palabras a 14 px — traído de la receta que ya funciona en este
-repo y **re-escalado al lienzo de 584**. Hay que confirmar (o cambiar) las tres cosas:
+**No cambia ninguna conclusión** —8 y 119 quedan los dos fuera del span `10…114` de `valid`, y los
+dos dentro del `0…120` de `same`—, así que el argumento de alcanzabilidad se sostiene igual. Lo
+único que cambia es el **margen por arriba: 1 px, no 0**. Sigue siendo ajustado, y por eso §7.5
+manda comprobarlo **contra el dataset real** y no contra el rango teórico. **Es lo único de la v1.2
+que convendría corregir**, y es cosmético. Un borde inalcanzable es error irreducible — la misma clase que §3.3 existe para evitar.
+Y la v1.2 lo vuelve **aserción obligatoria** (§7.1 y §11.8-9), que es justo lo que
+`nn/modelo.py` ya hacía y ahora también comprueba el **span**.
 
-1. **el rango de tamaño y de palabras** del párrafo;
-2. **qué variables estratifican** el reparto 100/100/800 (tamaño · densidad · posición son las
-   que nombra el §4.1);
-3. **cuántas imágenes se piden** para conseguir 1000 válidas, dado el descarte del punto 5 de
-   arriba.
+### ⚠⚠ Lo que yo tenía MAL: el sobre-generar y rechazar
 
-⚠ **Y esto es lo que decide si el banco mide algo**, por el §10.1: si el generador coloca los
-párrafos con **poca variabilidad**, el control de **caja media** —un predictor constante que
-ignora la imagen— saca un IoU alto, todas las condiciones quedan comprimidas en un rango
-estrecho y **el banco no discrimina nada**. Por eso la caja media se corre **primero**, y
-**si sale alta se corrige el generador y no se continúa**.
+Del hallazgo de que `placement.area` no acota la caja entera concluí *«hay que pedir más de 1000
+imágenes y descartar las inválidas»*. **La v1.2 lo prohíbe**, y tiene razón:
 
-### Y una cosa que NO es un bloqueo, pero hay que saber que está pendiente
+> **§3.4 Orden de muestreo — OBLIGATORIO.** «La colocación debe muestrear **primero el tamaño**
+> de la caja y **después** la esquina superior-izquierda, restringida al rango que garantiza que
+> la caja completa quede dentro de [68, 512]. **No se admite sobre-generar y rechazar.**»
 
-**El número de semillas no lo decide el diseño: lo fija la calibración** (§8.5, §11.4), midiendo
-la desviación real del IoU con **10 semillas** de identidad y aleatorio. La especificación dice
-que puede estar en **0,03–0,05**, lo que vuelve exigente el margen de los criterios. Hasta
-entonces, «≥ 5» es un suelo, no un plan.
+**Por qué mi versión estropeaba el instrumento sin fallar:** rechazar elimina **selectivamente**
+las cajas **grandes** y las **periféricas**, así que sesga la distribución hacia párrafos
+**pequeños y centrados** — que es exactamente el factor que §3.5 manda **maximizar**, y lo que
+hace **subir el control de caja media** y comprimir el banco (§10.1). Un filtro de aspecto
+inocente que ataca justo la variabilidad de la que depende que se mida algo.
+
+Con el orden correcto **no hay rechazos: 1000 generadas son 1000 válidas**, y la aserción de §3.3
+se queda como **red de seguridad, no como filtro**. Corregido en `REGLAS.md`, en `nn/receta.json`
+y arriba, en el punto 5.
+
+⚠ **Y tiene una consecuencia de implementación:** `placement.area` es un rectángulo **fijo** para
+la esquina, así que **la receta no puede expresar el §3.4** —el rango de esquina depende del
+tamaño sorteado—. La colocación la tiene que calcular **`nn/datos.py`**: sortea el tamaño, deriva
+el rango válido de esquina *para ese tamaño*, y sortea dentro. Anotado en `nn/receta.json`.
+
+### Lo demás que cambió, y qué toca
+
+- **Semillas: 10 fijas** (§8.1, §8.5 y Anexo A), ya no «≥ 5 y lo fija la calibración». ⚠ **Y el
+  argumento es el coste que se midió en esta carpeta**: ~35 ms/paso → ~0,6 min por corrida →
+  **~1 h para 10 semillas × 10 condiciones**. Actualizado en `REGLAS.md`, `README.md` y
+  `02-criterio.md`.
+- **§10.1: umbral de arranque `IoU` de caja media ≤ 0,40** *(propuesto, no derivado)*. Y si queda
+  por encima, el remedio es **ampliar ancho y alto**, no la posición.
+- **§10.1.1 NUEVO — el techo también importa.** Si la **identidad** pasa de ~0,95 tampoco hay
+  margen: es el mismo fallo por el extremo opuesto. **El rango útil del banco es la distancia
+  entre caja media e identidad**; si es estrecha, ninguna cantidad de semillas produce evidencia.
+- **§11: la calibración pasa de 7 a 10 pasos**, con las dos aserciones nuevas (cadena de rejillas
+  y span) y el balance marginal.
+- **§3.7 NUEVO — reserva contra fuga de distribución.** Se reservan configuraciones del generador
+  (≥ 1 familia tipográfica y un rango de densidad) de **uso exclusivo del banco**: un kernel
+  obtenido con el mismo generador tiene **fuga aunque las muestras sean distintas**. **Sin elegir
+  todavía** — está en `pendiente`.
+- **§14: nueve trampas nuevas**, entre ellas las dos que me tocaban: *«tronco con `valid` en vez
+  de `same` — el recuento de parámetros no lo detecta»* y *«sobre-generar y rechazar»*.
+
+### Lo que falta ahora, y ya no necesita a nadie: es TRABAJO
+
+`bloqueado_por` está **vacío**. En `pendiente`:
+
+1. **`nn/datos.py`**: el muestreo del §3.4 (tamaño primero), las aserciones del §3.3, el
+   empaquetado `uint16` del §3.8, la estratificación del §3.6, y **publicar**.
+2. **Elegir la reserva del §3.7** y declararla en el contrato de kernel.
+3. **Comprobar que el generador puede variar los siete factores del §3.5** — familia
+   tipográfica, tamaño de fuente, interlineado y nivel de gris **no están comprobados**, y de
+   ellos depende §3.5. Es lo primero que haría, porque puede obligar a tocar el generador.
+4. **`nn/pipeline.py`** (§6) y **`nn/evaluar.py`** (§9.1).
+
+⚠ **Y el rango de tamaño de `nn/receta.json` sigue pendiente de ampliar** al **≥ 2×** que pide
+§3.5: hoy tiene ancho `[200, 300]`, que es 1,5×. Se cambia al escribir `nn/datos.py`, que es
+quien pasa a decidir la colocación.
 
 ## Y no hay ningún kernel que evaluar todavía
 

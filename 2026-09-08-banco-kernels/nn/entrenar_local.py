@@ -60,8 +60,13 @@ def _falta_para_entrenar() -> list[str]:
         if ruta_dataset(nombre) is None:
             falta.append(f"el dataset '{nombre}' no esta publicado en el repo de datos")
 
-    for p in datos.get("bloqueado_por", []):
-        falta.append(f"una decision del duenyo -- {p}")
+    # `bloqueado_por` = decisiones del duenyo que faltan (v1.2 cerro las tres).
+    # `pendiente` = trabajo por hacer, que no necesita a nadie. Se distinguen porque
+    # no se desbloquean igual: una se pregunta, la otra se escribe.
+    for q in datos.get("bloqueado_por", []):
+        falta.append(f"una DECISION del duenyo -- {q}")
+    for q in datos.get("pendiente", []):
+        falta.append(f"TRABAJO por hacer -- {q}")
 
     for script, para_que in (("pipeline.py", "kernel + recorte + estandarizacion (§6)"),
                              ("evaluar.py", "IoU, MAE por borde y brecha (§9.1)")):

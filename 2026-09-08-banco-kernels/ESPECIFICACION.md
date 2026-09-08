@@ -1,6 +1,6 @@
 # Banco de evaluación de kernels
 
-**Especificación técnica — v1.0**
+**Especificación técnica — v1.2**
 Fecha: 2026-09-07
 
 ---
@@ -77,7 +77,64 @@ El pipeline descarta 9 px por lado (§5). Un párrafo colocado cerca del borde p
 
 Esta restricción debe implementarse como **aserción en el código de generación**, no como supuesto. Con 1000 muestras, 20 mal colocadas ya desplazan el IoU medio de forma perceptible.
 
-### 3.4 Etiquetas
+La aserción debe cubrir **dos daños distintos**:
+
+1. **Caja fuera del rango válido [68, 512]** — el borde existe en la imagen pero queda fuera del marco final tras el descarte de 9 px.
+2. **Caja fuera del lienzo de 584 px** — el párrafo aparece cortado y la etiqueta no corresponde al borde visible. Este daño es peor: la etiqueta es directamente falsa.
+
+### 3.4 Orden de muestreo — OBLIGATORIO
+
+La colocación debe muestrear **primero el tamaño** de la caja y **después** la esquina superior-izquierda, restringida al rango que garantiza que la caja completa quede dentro de [68, 512].
+
+**No se admite sobre-generar y rechazar.** El rechazo elimina selectivamente las cajas grandes y las periféricas, sesgando la distribución hacia párrafos pequeños y centrados — exactamente el factor que §3.5 requiere maximizado. Con el orden correcto no hay rechazos y 1000 imágenes generadas son 1000 imágenes válidas.
+
+La aserción de §3.3 se mantiene como red de seguridad, no como mecanismo de filtrado.
+
+### 3.5 Factores de variación del generador
+
+De estos factores depende que el banco mida algo. Si los párrafos varían poco, el control de caja media alcanza IoU alto y todas las condiciones se comprimen contra el techo (§10.1).
+
+| Factor | Rango | Función |
+|---|---|---|
+| **Ancho de caja** | Amplio, ≥ 2× entre mínimo y máximo | Domina el IoU del control de caja media |
+| **Alto de caja** | Amplio, ≥ 2× | Íd. |
+| **Posición** | Todo el rango válido, ejes independientes | |
+| **Tamaño de fuente** | Varias escalas | Determina la frecuencia espacial del texto — es lo que hace que kernels distintos se comporten distinto |
+| **Interlineado** | Varias escalas | Íd. |
+| **Familia tipográfica** | Varias, con reserva (§3.7) | Molestia; premia invarianza |
+| **Nivel de gris del texto** | Rango moderado | Molestia; separa kernels de suma cero de suma positiva |
+
+**Ancho y alto son los factores críticos.** La variación de posición sola no basta: un párrafo de tamaño constante desplazado permite que la red aprenda «el borde derecho está siempre a X del izquierdo», reduciendo el problema de cuatro coordenadas a dos. Variar el tamaño obliga a localizar cada borde de forma independiente, que es lo que la cabeza de 4 canales está diseñada para hacer.
+
+### 3.6 Estratificación del reparto
+
+Estratificar sobre siete factores es inviable con 100 muestras de `train`. La regla práctica:
+
+- **Estratificación explícita** sobre el **área de la caja**, en 4 bins de cuartil. Es el factor que domina la métrica.
+- **Balance marginal verificado** sobre los demás factores: cada partición debe tener distribuciones marginales comparables en tamaño de fuente, interlineado, familia y nivel de gris. Se verifica, no se fuerza.
+- El muestreo de los factores continuos sigue un diseño tipo hipercubo latino, para que `train` cubra el espacio de forma pareja en vez de agruparse por azar.
+
+### 3.7 Reserva contra fuga de distribución
+
+Si un kernel se obtiene mediante meta-aprendizaje, contrastivo o cualquier método que use datos del mismo generador, hay fuga aunque las muestras sean distintas.
+
+**Se reservan configuraciones completas del generador —al menos una familia tipográfica y un rango de densidad— para uso exclusivo del banco.** Los procedimientos que producen kernels no pueden usarlas. La reserva se documenta en el contrato de kernel (§5).
+
+### 3.8 Almacenamiento
+
+| Aspecto | Valor |
+|---|---|
+| Tipo | `uint16` |
+| Contenido | **Suma** del bloque 4×4 (no el promedio) |
+| Tamaño | ~43 MB para 1000 × 146 × 146 |
+
+La suma de 16 píxeles `uint8` alcanza como máximo 4080, dentro del rango de `uint16`. La representación es **exacta**: no hay cuantización.
+
+**Motivo.** Redondear a `uint8` ahorraría 21 MB a cambio de introducir un piso de ruido en el propio instrumento. Todo el diseño del banco busca resolver diferencias de IoU del orden de 0,02–0,05; añadir ruido evitable a la medición es el intercambio equivocado.
+
+**Nota — no "corregir" después.** Guardar la suma en vez del promedio equivale a un factor 16 global sobre la imagen. Como la convolución es lineal y §6.5 estandariza con μ y σ del propio dataset filtrado, ese factor **desaparece por completo** y no afecta ningún resultado. Dividir entre 16 es opcional.
+
+### 3.9 Etiquetas
 
 Cuatro coordenadas enteras en el marco de 584 px: `borde_izq`, `borde_der`, `borde_sup`, `borde_inf`.
 
@@ -216,7 +273,23 @@ soft-argmax sobre marginales 1D         →  4 coordenadas
 
 Total: **5.812 parámetros**. La convolución 1×1 final constituye la cabeza completa: **68 parámetros**.
 
-Todas las convoluciones son `valid` con las dimensiones indicadas. La arquitectura es **fija e inmutable** para todas las condiciones.
+**Todas las convoluciones del tronco usan padding `same`.** La cadena de rejillas es 128 → 64 → 32 → 16. La arquitectura es **fija e inmutable** para todas las condiciones.
+
+El recuento de parámetros no distingue entre `same` y `valid` —el padding no añade pesos—, por lo que la verificación debe hacerse sobre las **dimensiones de las rejillas**, no sobre el total de parámetros. La implementación debe imprimir la cadena de dimensiones al ejecutar y compararla con 128/64/32/16 como aserción.
+
+**Motivo — alcanzabilidad.** Con `valid` la cadena sería 128 → 62 → 29 → 14, y los centros de campo receptivo de esa rejilla caerían en los píxeles de entrada 10 a 114:
+
+| Capa | Centro en coordenadas de entrada | Rango |
+|---|---|---|
+| 1 (k5, s2) | `2j + 2` | 2 … 124 |
+| 2 (k5, s2) | `4m + 6` | 6 … 118 |
+| 3 (k3, s2) | `8n + 10` | 10 … 114 |
+
+Pero §3.3 permite bordes de párrafo en el rango [8, 120]. Un borde situado en el píxel 8 o en el 120 quedaría fuera del span de la rejilla y el soft-argmax no podría alcanzarlo por construcción — la misma clase de error irreducible que §3.3 busca evitar.
+
+Con `same` los centros siguen la cadena `2j → 4m → 8n`, con span 0 … 120, que sí cubre el rango de etiquetas.
+
+**Relación con §6.** El padding del tronco no contradice la eliminación de padding en §6. Lo que §6 elimina es un artefacto **dependiente del kernel**, confundido con la variable en estudio. El padding del tronco es idéntico en todas las condiciones: degrada a todas por igual y no afecta la comparabilidad. Su magnitud además es modesta (2 px de 128 en la primera capa, aproximadamente 3 % de los píxeles).
 
 ### 7.2 Cabeza mínima, deliberada
 
@@ -255,6 +328,8 @@ La rejilla de 16×16 corresponde a 8 px por celda en el marco de 128. El soft-ar
 
 **Diagnóstico:** si en calibración el error se estanca cerca de 8 px, eliminar el stride de la tercera convolución (pasando a 32×32) **antes** de modificar cualquier otro elemento de la arquitectura.
 
+**Verificación de span — obligatoria.** El span de centros de la rejilla (0 … 120 con `same`) debe contener el rango completo de coordenadas de etiqueta presentes en el dataset. El extremo superior es ajustado: si el generador produce bordes por encima del píxel 120 en el marco final, esas muestras son inalcanzables. Verificar con aserción sobre el dataset construido, no sobre el rango teórico de §3.3.
+
 ---
 
 ## 8. Protocolo de entrenamiento
@@ -270,7 +345,7 @@ La rejilla de 16×16 corresponde a 8 px por celda en el marco de 128. El soft-ar
 | Épocas | 200 (1000 pasos) | Fijas |
 | Aumento de datos | **Ninguno** | §8.3 |
 | Parada temprana | **Ninguna** | §8.4 |
-| Semillas | ≥5, idénticas en todas las condiciones | §8.5 |
+| Semillas | 10, idénticas en todas las condiciones | §8.5 |
 | Paradas de evaluación | 25, 50, 100, 200 | |
 
 ### 8.2 Invariancia entre condiciones
@@ -289,7 +364,9 @@ Con 100 muestras la red memorizará el conjunto de entrenamiento. Eso es lo busc
 
 ### 8.5 Número de semillas
 
-Con n=100 la desviación del IoU entre semillas puede situarse en el rango 0.03–0.05, lo que vuelve exigente el margen de los criterios de éxito. El número definitivo se fija en la calibración (§11), no por defecto.
+**10 semillas, fijas, idénticas en todas las condiciones.**
+
+El costo medido es de ~35 ms por paso, es decir ~0,6 min por corrida de 200 épocas. Diez semillas sobre diez condiciones son aproximadamente una hora de cómputo local. Con ese costo no existe razón para economizar semillas, y la desviación entre semillas es el denominador de ambos criterios de éxito (§2): cada semilla adicional estrecha directamente el margen que un kernel debe superar para considerarse útil.
 
 ---
 
@@ -339,6 +416,14 @@ Debe ejecutarse **antes que cualquier kernel**. Si el generador coloca los párr
 
 **Si el control de caja media resulta alto, se corrige el generador. No se continúa con el experimento.**
 
+**Umbral de arranque: IoU de caja media ≤ 0,40.** Es un valor propuesto, no derivado; se valida en calibración. Si queda por encima, el remedio es ampliar el rango de **ancho y alto** de caja (§3.5), no el de posición.
+
+### 10.1.1 El techo también importa
+
+Un piso bajo no basta. Si la condición **identidad** alcanza un IoU muy alto —digamos por encima de 0,95—, no queda margen para que ningún kernel demuestre mejora y todas las condiciones se comprimen contra el techo. Es el mismo fallo del control de caja media, por el extremo opuesto.
+
+Ambos límites se verifican en calibración. El rango útil del banco es la distancia entre caja media e identidad; si es estrecha, ninguna cantidad de semillas produce evidencia.
+
 ### 10.2 Kernel aleatorio — control indispensable
 
 Es posible que convolucionar con ruido mejore el resultado, actuando como perturbación o decorrelación de la entrada. En ese caso un kernel aprendido podría superar a la identidad por una razón ajena a lo que aprendió.
@@ -363,13 +448,16 @@ Si el kernel evaluado supera a la identidad pero **no** al aleatorio, la conclus
 
 Procedimiento de puesta a punto del instrumento. **No es un experimento** y sus resultados no se reportan como hallazgos.
 
-1. Ejecutar el control de **caja media**. Verificar que su IoU es suficientemente bajo para dejar margen de discriminación. Si no lo es, corregir el generador y repetir.
-2. Ejecutar **identidad** y **aleatorio** con **10 semillas**.
-3. Medir la desviación estándar real del IoU en ambas.
-4. Fijar el número definitivo de semillas para todas las condiciones a partir de ese dato.
+1. Ejecutar el control de **caja media**. Verificar IoU ≤ 0,40 (§10.1). Si no, ampliar el rango de ancho y alto de caja (§3.5) y repetir.
+2. Ejecutar **identidad** con las 10 semillas. Verificar que su IoU deja margen bajo el techo (§10.1.1).
+3. Verificar que el rango entre caja media e identidad es suficientemente amplio para resolver diferencias del orden de la desviación entre semillas. Si no lo es, el banco no puede producir evidencia y hay que revisar §3.5.
+4. Ejecutar **aleatorio** con las 10 semillas y registrar su desviación estándar real, que es el denominador de los criterios de §2.
 5. Verificar la resolución de coordenada (§7.5). Si el MAE se estanca cerca de 8 px, aplicar el ajuste indicado y reiniciar la calibración.
-6. Verificar mediante aserción que ninguna caja de párrafo queda fuera del marco final (§3.3).
+6. Verificar mediante aserción que ninguna caja de párrafo queda fuera del marco final ni fuera del lienzo de 584 px (§3.3).
 7. Verificar mediante aserción la transformación de coordenadas (§6.4) sobre una muestra conocida.
+8. Verificar mediante aserción que la cadena de rejillas del tronco es 128/64/32/16 (§7.1).
+9. Verificar mediante aserción que el span de centros de la rejilla contiene el rango real de coordenadas del dataset (§7.5).
+10. Verificar el balance marginal de factores entre particiones (§3.6).
 
 Concluida la calibración, los parámetros quedan congelados.
 
@@ -431,6 +519,14 @@ Registro de errores que producen resultados silenciosamente inválidos.
 | No registrar `train` | Facilitación indistinguible de transferencia | §9.2 |
 | Cabeza grande | Diferencias entre condiciones comprimidas | §7.2 |
 | Reducción /8 | Todas las condiciones convergen; banco insensible | §3.2 |
+| Tronco con `valid` en vez de `same` | Rejilla 14×14 en vez de 16×16; bordes extremos inalcanzables. **El recuento de parámetros no lo detecta** | §7.1, aserción sobre dimensiones |
+| Span de rejilla menor que el rango de etiquetas | Subconjunto de muestras con error irreducible | §7.5 |
+| Sobre-generar y rechazar cajas inválidas | Sesgo silencioso hacia párrafos pequeños y centrados; el control de caja media sube | §3.4 — muestrear tamaño primero |
+| Caja fuera del lienzo de 584 px | Etiqueta falsa: no corresponde al borde visible | Aserción §3.3, daño (2) |
+| Tamaño de caja constante | La red aprende ancho fijo; el problema colapsa de 4 coordenadas a 2 | §3.5 |
+| Identidad contra el techo | Sin margen para demostrar mejora; condiciones comprimidas | §10.1.1 |
+| Guardar en `uint8` | Piso de ruido en el instrumento, del orden del efecto medido | §3.8 |
+| Meta-aprender el kernel con el generador del banco | Fuga de distribución sin fuga de muestras | §3.7 |
 
 ---
 
@@ -457,6 +553,7 @@ Registro de errores que producen resultados silenciosamente inválidos.
 | Rango de colocación (marco 584) | [68, 512] |
 | Transformación de etiquetas | `/4` luego `−9` |
 | Muestras totales | 1000 |
+| Almacenamiento | uint16, suma de bloque 4×4 |
 | Particiones | 100 / 100 / 800 |
 | Parámetros de la CNN | 5.812 |
 | Parámetros de la cabeza | 68 |
@@ -466,4 +563,4 @@ Registro de errores que producen resultados silenciosamente inválidos.
 | Épocas | 200 |
 | Paradas de evaluación | 25 / 50 / 100 / 200 |
 | Temperatura soft-argmax | 1.0 |
-| Semillas | ≥5, definitivo tras calibración |
+| Semillas | 10, fijas |
