@@ -7,6 +7,8 @@
 #                            (~9 min cada uno; +9 si su `k` no tiene control aleatorio)
 #   nn/lanzar.sh --estado    ¿esta vivo? ¿por donde va? ¿fallo? ¿se relanzo?
 #
+#   BANCOK_SECO=1 nn/lanzar.sh <modo> ...   imprime QUE lanzaria y no lanza nada
+#
 # POR QUE ESTO ES UN SCRIPT COMMITEADO Y NO UNA LINEA QUE SE TECLEA
 # -----------------------------------------------------------------
 # Tecleada, la cadena no deja rastro de QUE se lanzo: si el resultado sale raro, no
@@ -99,15 +101,6 @@ case "$MODO" in
     *) echo "uso: $0 datos|calibrar|kernel <ruta.npy>|--estado"; exit 2 ;;
 esac
 
-# No se lanza dos veces: dos procesos escribiendo los mismos ficheros los corrompen,
-# y el segundo lanzamiento es lo mas facil de hacer por error justo cuando no sabes
-# si el primero sigue vivo.
-if [ "$(systemctl is-active "$UNIDAD" 2>&1)" = "active" ]; then
-    echo "✗ '$UNIDAD' YA esta corriendo. No se lanza dos veces."
-    echo "  Mira como va:  $0 --estado"
-    exit 1
-fi
-
 cd "$EXP"
 if [ "$MODO" = "kernel" ]; then
     ORDEN=""
@@ -126,6 +119,31 @@ node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: calibracion terminada. Result
 else
     echo "✗ modo '$MODO' sin orden que ejecutar. Esto es un fallo del lanzador."
     exit 2
+fi
+
+# ⚠ SIEMPRE se imprime QUE se va a correr, seco o no. El fallo del 2026-09-08 fue
+# invisible precisamente porque nadie veia la orden: la unidad decia Result=success y
+# habia corrido otra cosa. Una orden impresa se lee de un vistazo al lanzar.
+echo "unidad:  $UNIDAD"
+echo "orden:"
+echo "$ORDEN" | sed 's/^/    /'
+if [ -n "$BANCOK_SECO" ]; then
+    echo
+    echo "🧪 SECO — no he lanzado nada. Quita BANCOK_SECO para lanzarlo de verdad."
+    exit 0
+fi
+
+# ⚠ El guardia de "ya esta corriendo" va DESPUES del seco, y a proposito: un ensayo no
+# lanza nada, asi que no puede haber doble lanzamiento -- y bloquearlo impediria mirar
+# que se lanzaria justo cuando hay algo vivo, que es cuando mas falta hace. Lo descubrio
+# la prueba del despacho, que fallaba segun si habia una unidad corriendo.
+# No se lanza dos veces: dos procesos escribiendo los mismos ficheros los corrompen,
+# y el segundo lanzamiento es lo mas facil de hacer por error justo cuando no sabes
+# si el primero sigue vivo.
+if [ "$(systemctl is-active "$UNIDAD" 2>&1)" = "active" ]; then
+    echo "✗ '$UNIDAD' YA esta corriendo. No se lanza dos veces."
+    echo "  Mira como va:  $0 --estado"
+    exit 1
 fi
 
 COORD_HOME="$COORD_HOME" "$COORD_HOME/scripts/desacoplar-persistente.sh" "$UNIDAD" \

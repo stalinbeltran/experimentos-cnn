@@ -263,8 +263,17 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
 | `nn/evaluar_kernel.py` | **la puerta del banco**: mete un kernel, saca un veredicto | `--contrato k.npy` (sólo valida) · `--kernel k.npy [--nombre n]` |
 | `nn/muestras.py` | las **tres** figuras: el dataset en sus dos marcos y las 4 condiciones | `nn/datos.py --muestras 20 [--condiciones 6]` |
-| `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `--estado` |
+| `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `kernel <r.npy>…` · `--estado` · `BANCOK_SECO=1` para ver qué lanzaría |
+| `nn/probar_lanzador.sh` | que el lanzador despache **cada modo a lo suyo** | `nn/probar_lanzador.sh` (5 casos) |
+| `nn/importar_kernel.py` | saca un kernel aprendido de otro experimento, **por su `id`** | `--de esq-k --brazos k07 k09 k11` |
 
+- ⚠⚠ **El lanzador tiene varios modos, y eso ya falló una vez** (2026-09-08): se pidió evaluar
+  kernels y corrió **la calibración**, con la unidad en `Result=success` y `NRestarts=0`. La
+  causa fue releer `$1` después de un `shift`. Ahora el modo se guarda al entrar, el último caso
+  **se niega** en vez de tener acción por defecto, la orden **se imprime** antes de desacoplar, y
+  `nn/probar_lanzador.sh` lo comprueba — **2 de sus 5 casos fallan** con el código anterior.
+  La trampa, con su porqué y las cuatro reglas que salen de ella, está donde se dispara: el
+  `CLAUDE.md` del coordinador, § «`Result=success` NO dice que se corriera lo que pediste».
 - ⚠ **`entrenar_local.py` se llama así porque es un contrato, no por estética.** `experimento.json`
   declara `gasta: "entrena-local"` y el freno del coordinador (`cerrable.mjs`) casa **ese
   nombre exacto** en su lista de trabajos: con otro nombre, el veredicto *«¿se puede apagar este
