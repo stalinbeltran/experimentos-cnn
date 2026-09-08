@@ -426,6 +426,66 @@ def informe() -> int:
               "error relativo, así que el ≈0,0035 es un orden de magnitud, no una medida "
               "fina. Lo robusto es la comparación: **σ del aleatorio ≈ σ de los de kernel "
               "fijo**.", ""]
+    # Los dos criterios del §2, APLICADOS a los controles con kernel. Se leen de los
+    # resumen.json de cada condicion, no de una tabla escrita a mano.
+    res = {}
+    for c in ("identidad", "aleatorio", "gauss", "sobel"):
+        f = RESULTADOS / c / "resumen.json"
+        if f.is_file():
+            res[c] = json.loads(f.read_text(encoding="utf-8"))
+    if {"identidad", "aleatorio", "gauss", "sobel"} <= set(res):
+        from evaluar import criterio_generalizacion          # noqa: PLC0415
+        L += ["## ¿Cuál de los kernels de referencia generaliza mejor?", "",
+              "Los dos criterios del §2 aplicados a los controles. **Cuidado con leer esto "
+              "como un hallazgo**: son los controles del §10 sobre los que se calibró el "
+              "instrumento, no kernels evaluados (§1). Pero los números son reales y los "
+              "criterios son los declarados antes de mirar.", "",
+              "| condición | IoU `train` | IoU `eval` | **brecha** | MAE px |",
+              "|---|---|---|---|---|"]
+        for c in ("identidad", "aleatorio", "gauss", "sobel"):
+            r = res[c]
+            L.append(f"| {c} | {r['iou_train']['media']:.4f} ± {r['iou_train']['desv']:.4f} "
+                     f"| {r['iou_eval']['media']:.4f} ± {r['iou_eval']['desv']:.4f} "
+                     f"| **{r['brecha']['media']:+.4f} ± {r['brecha']['desv']:.4f}** "
+                     f"| {r['mae_medio']['media']:.2f} |")
+        L += ["", "### El veredicto formal: ninguno declara", ""]
+        L += ["| | §2.1 utilidad (contra el aleatorio) | §2.2 generalización (brecha vs identidad) |",
+              "|---|---|---|"]
+        for c in ("gauss", "sobel"):
+            u = criterio_utilidad(res[c]["iou_eval"], res["aleatorio"]["iou_eval"])
+            g = criterio_generalizacion(res[c]["brecha"], res["identidad"]["brecha"], u["cumple"])
+            L.append(f"| **{c}** | {u['diferencia']:+.4f} contra un margen de "
+                     f"{u['margen']:.4f} → **no cumple** | {g['diferencia']:+.4f} contra "
+                     f"{g['margen']:.4f} → **no cumple**"
+                     + (" *(pero pasaría si no fuera condicional al §2.1)*"
+                        if g["cumple_ignorando_2_1"] else "") + " |")
+        u_g = criterio_utilidad(res["gauss"]["iou_eval"], res["aleatorio"]["iou_eval"])
+        g_g = criterio_generalizacion(res["gauss"]["brecha"], res["identidad"]["brecha"],
+                                      u_g["cumple"])
+        L += ["",
+              f"⚠⚠ **Lo interesante es `gauss`.** Es el que **menos brecha** tiene de los "
+              f"cuatro ({res['gauss']['brecha']['media']:+.4f} contra "
+              f"{res['identidad']['brecha']['media']:+.4f} de la identidad), y esa reducción "
+              f"**sí supera su margen** ({g_g['diferencia']:+.4f} > {g_g['margen']:.4f}). "
+              f"Pero el §2.2 dice «**además de** cumplir 2.1», y `gauss` no supera al "
+              f"aleatorio en `eval`. Así que **el banco no permite declararlo**, y eso no es "
+              f"un tecnicismo: sin superar al aleatorio, la brecha más pequeña podría venir "
+              f"de que el kernel simplemente aprende menos, no de que transfiera mejor.", "",
+              "### Y la forma de los números dice de qué mecanismo se trata (§2.3)", "",
+              "| condición | `train` respecto a la identidad | `eval` | forma |",
+              "|---|---|---|---|"]
+        b = res["identidad"]
+        for c in ("aleatorio", "gauss", "sobel"):
+            dt = res[c]["iou_train"]["media"] - b["iou_train"]["media"]
+            de = res[c]["iou_eval"]["media"] - b["iou_eval"]["media"]
+            forma = ("**transferencia**: sube `eval` sin subir `train`"
+                     if de > 0 and dt < de / 2 else
+                     "**facilitación**: suben las dos juntas")
+            L.append(f"| {c} | {dt:+.4f} | {de:+.4f} | {forma} |")
+        L += ["", "`gauss` tiene la **firma** de la transferencia y `sobel` y el aleatorio la "
+              "de la facilitación — pero **firma no es declaración**: con estos márgenes "
+              "ninguno cruza el listón, y decir lo contrario sería leer el ranking como si "
+              "fuera evidencia, que es justo lo que los criterios existen para impedir.", ""]
     if p5:
         L += ["## Resolución (§7.5)", "",
               f"MAE medio de la identidad: **{p5['mae_medio_identidad']:.2f} px** contra "

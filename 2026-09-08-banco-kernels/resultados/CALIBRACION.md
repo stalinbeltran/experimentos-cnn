@@ -75,6 +75,36 @@ En este banco las condiciones no se sortean igual, y es deliberado (§10.2):
 
 ⚠ *Descomposición aproximada:* con n=10 por condición, una σ tiene ~24 % de error relativo, así que el ≈0,0035 es un orden de magnitud, no una medida fina. Lo robusto es la comparación: **σ del aleatorio ≈ σ de los de kernel fijo**.
 
+## ¿Cuál de los kernels de referencia generaliza mejor?
+
+Los dos criterios del §2 aplicados a los controles. **Cuidado con leer esto como un hallazgo**: son los controles del §10 sobre los que se calibró el instrumento, no kernels evaluados (§1). Pero los números son reales y los criterios son los declarados antes de mirar.
+
+| condición | IoU `train` | IoU `eval` | **brecha** | MAE px |
+|---|---|---|---|---|
+| identidad | 0.8401 ± 0.0059 | 0.7981 ± 0.0057 | **+0.0421 ± 0.0059** | 2.40 |
+| aleatorio | 0.8514 ± 0.0121 | 0.8083 ± 0.0077 | **+0.0431 ± 0.0117** | 2.26 |
+| gauss | 0.8428 ± 0.0096 | 0.8130 ± 0.0086 | **+0.0298 ± 0.0054** | 2.16 |
+| sobel | 0.8531 ± 0.0073 | 0.8164 ± 0.0064 | **+0.0367 ± 0.0044** | 2.12 |
+
+### El veredicto formal: ninguno declara
+
+| | §2.1 utilidad (contra el aleatorio) | §2.2 generalización (brecha vs identidad) |
+|---|---|---|
+| **gauss** | +0.0047 contra un margen de 0.0163 → **no cumple** | +0.0123 contra 0.0113 → **no cumple** *(pero pasaría si no fuera condicional al §2.1)* |
+| **sobel** | +0.0081 contra un margen de 0.0142 → **no cumple** | +0.0054 contra 0.0103 → **no cumple** |
+
+⚠⚠ **Lo interesante es `gauss`.** Es el que **menos brecha** tiene de los cuatro (+0.0298 contra +0.0421 de la identidad), y esa reducción **sí supera su margen** (+0.0123 > 0.0113). Pero el §2.2 dice «**además de** cumplir 2.1», y `gauss` no supera al aleatorio en `eval`. Así que **el banco no permite declararlo**, y eso no es un tecnicismo: sin superar al aleatorio, la brecha más pequeña podría venir de que el kernel simplemente aprende menos, no de que transfiera mejor.
+
+### Y la forma de los números dice de qué mecanismo se trata (§2.3)
+
+| condición | `train` respecto a la identidad | `eval` | forma |
+|---|---|---|---|
+| aleatorio | +0.0113 | +0.0103 | **facilitación**: suben las dos juntas |
+| gauss | +0.0026 | +0.0149 | **transferencia**: sube `eval` sin subir `train` |
+| sobel | +0.0129 | +0.0183 | **facilitación**: suben las dos juntas |
+
+`gauss` tiene la **firma** de la transferencia y `sobel` y el aleatorio la de la facilitación — pero **firma no es declaración**: con estos márgenes ninguno cruza el listón, y decir lo contrario sería leer el ranking como si fuera evidencia, que es justo lo que los criterios existen para impedir.
+
 ## Resolución (§7.5)
 
 MAE medio de la identidad: **2.40 px** contra una celda de rejilla de **8.0 px**. El soft-argmax **interpola entre celdas**, que es lo que §7.5 espera.
