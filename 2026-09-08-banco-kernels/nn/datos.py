@@ -65,7 +65,7 @@ sys.path.insert(0, str(EXP.parent))
 from expcnn import SUBDIR_DATASETS, exigir_datos, exigir_generador, ruta_dataset  # noqa: E402
 
 # ---------------------------------------------------------------- constantes
-NOMBRE = "parrafos1000-584px-r4-r20260908"
+NOMBRE = "parrafos1000-584px-r4-r20260908b"
 LIENZO = 584
 REDUCCION = 4
 MARCO = LIENZO // REDUCCION          # 146
@@ -78,9 +78,33 @@ SEMILLA = 1
 DATOS = EXP / "datos"
 
 # §3.5: los siete factores. Ancho y alto son los CRITICOS y quieren >= 2x.
-ANCHO = (180.0, 400.0)                # 2,22x
-ALTO_OBJETIVO = (120.0, 400.0)        # 3,33x
-CUERPO = (11.0, 26.0)                 # 2,36x
+#
+# ⚠⚠ ESTOS RANGOS SON LA SEGUNDA VERSION, Y EL MOTIVO ES UNA MEDIDA. Los primeros
+# (ancho 180-400, alto 120-400, uniformes) dieron un control de CAJA MEDIA de
+# IoU = 0,5278 sobre 1000 muestras, muy por encima del umbral <= 0,40 del §10.1: un
+# predictor constante que ni mira la imagen acertaba la mitad. Con eso el banco no
+# discrimina nada, y el §10.1 dice exactamente que hacer -- «se AMPLIA el rango de
+# ancho y alto de caja, NO el de posicion, y NO se continua».
+#
+# Y hay una segunda parte que no es el rango sino la FORMA de sortearlo: LOG-uniforme
+# en vez de uniforme. Uniforme en pixeles concentra las cajas en las grandes (una caja
+# de 400 y otra de 380 son casi la misma), y las grandes ademas no pueden moverse: en
+# una ventana de 444 px, una caja de 400 tiene 44 px de juego. Log-uniforme reparte las
+# ESCALAS, que es lo que el §3.5 quiere decir con «>= 2x entre minimo y maximo».
+#
+# Medido ANTES de renderizar nada, porque la caja media depende SOLO de la distribucion
+# de cajas y no de las imagenes -- asi que se puede simular en segundos en vez de pagar
+# 21 min de renders por cada intento (buscar_rangos.py; el simulador da 0,513 contra el
+# 0,528 real con los rangos viejos, o sea que es fiel):
+#
+#     rangos viejos, uniforme     -> 0,513 simulado   (0,528 real)   ✗
+#     estos rangos, uniforme      -> 0,366 simulado                  margen escaso
+#     estos rangos, LOG-uniforme  -> 0,231 simulado                  ✓
+ANCHO = (80.0, 420.0)                 # 5,25x  (log-uniforme)
+ALTO_OBJETIVO = (45.0, 420.0)         # 9,33x  (log-uniforme)
+CUERPO = (11.0, 30.0)                 # 2,73x. El tope sube a 30 para acercarse al
+                                      # §3.2: «altura de linea ~10 px en el marco
+                                      # reducido» son ~40 px en el de 584.
 INTERLINEADO = (1.15, 1.60)
 GRIS = (0.0, 0.40)                    # fraccion de negro->gris: 0 = #000, 0,4 = #666
 FUENTES = ["DejaVuSans", "DejaVuSerif", "LiberationMono", "LiberationSans",
@@ -96,7 +120,7 @@ RESERVA_DENSIDAD = (1.45, 1.60)       # interlineado alto, reservado
 CONST_PALABRA = {"DejaVuSans": 0.293, "DejaVuSerif": 0.289, "LiberationMono": 0.248,
                  "LiberationSans": 0.327, "LiberationSerif": 0.375}
 # El ancho minimo en cuerpos: por debajo, `justify` estira lineas de 2 palabras.
-ANCHO_MIN_CUERPOS = 12.0
+ANCHO_MIN_CUERPOS = 6.0
 MAX_LADO = COLOCACION[1] - COLOCACION[0]     # 444: lo mas grande que puede caber
 
 
@@ -113,6 +137,17 @@ def _hipercubo(n: int, dims: int, rng: np.random.Generator) -> np.ndarray:
     return u
 
 
+def _log_uniforme(lo: float, hi: float, u: float) -> float:
+    """Sortea entre `lo` y `hi` repartiendo las ESCALAS, no los pixeles.
+
+    Uniforme en px concentra las cajas en las grandes -- 400 y 380 son casi la misma
+    caja -- y las grandes ademas casi no se pueden mover dentro de la ventana de 444.
+    El resultado es que todas se parecen y el control de caja media se dispara."""
+    if hi <= lo:
+        return float(lo)
+    return float(np.exp(np.log(lo) + u * (np.log(hi) - np.log(lo))))
+
+
 def factores(n: int, semilla: int) -> list[dict]:
     """Los factores de cada imagen. Sorteados ANTES de renderizar nada (§3.4)."""
     rng = np.random.default_rng(semilla)
@@ -127,8 +162,8 @@ def factores(n: int, semilla: int) -> list[dict]:
         # El ancho depende del cuerpo: con un cuerpo grande en una caja estrecha,
         # `justify` estira lineas de 2 palabras. Se acota por abajo y se DICE.
         ancho_lo = max(ANCHO[0], ANCHO_MIN_CUERPOS * cuerpo)
-        ancho = ancho_lo + u[i, 1] * (ANCHO[1] - ancho_lo)
-        alto = ALTO_OBJETIVO[0] + u[i, 2] * (ALTO_OBJETIVO[1] - ALTO_OBJETIVO[0])
+        ancho = _log_uniforme(ancho_lo, ANCHO[1], u[i, 1])
+        alto = _log_uniforme(ALTO_OBJETIVO[0], ALTO_OBJETIVO[1], u[i, 2])
         lh = INTERLINEADO[0] + u[i, 3] * (INTERLINEADO[1] - INTERLINEADO[0])
         g = int(round(255 * (GRIS[0] + u[i, 4] * (GRIS[1] - GRIS[0]))))
         out.append({
@@ -403,6 +438,7 @@ def _guardar(r: dict, semilla: int) -> int:
         "alineacion": "justify: sin ella la tinta no llega al borde derecho de la caja",
         "factores": {
             "ancho_px": list(ANCHO), "alto_objetivo_px": list(ALTO_OBJETIVO),
+            "ancho_y_alto_se_sortean": "LOG-uniforme (§3.5: reparte escalas)",
             "cuerpo_px": list(CUERPO), "interlineado": list(INTERLINEADO),
             "gris_fraccion": list(GRIS), "fuentes": FUENTES,
             "ancho_minimo_en_cuerpos": ANCHO_MIN_CUERPOS,

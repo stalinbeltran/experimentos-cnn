@@ -56,7 +56,7 @@ LR = 3e-4
 LOTE = 20
 EPOCAS = 200
 PARADAS = (25, 50, 100, 200)
-NOMBRE_DATASET = "parrafos1000-584px-r4-r20260908"
+NOMBRE_DATASET = "parrafos1000-584px-r4-r20260908b"
 
 
 def cargar(nombre: str = NOMBRE_DATASET):
