@@ -3,7 +3,8 @@
 #
 #   nn/lanzar.sh datos       genera las 1000 imagenes del dataset (~30 min)
 #   nn/lanzar.sh calibrar    corre la calibracion del §11 (~1 h)
-#   nn/lanzar.sh kernel R    evalua el kernel R contra los criterios del §2 (~9 min)
+#   nn/lanzar.sh kernel R... evalua uno o VARIOS kernels contra los criterios del §2
+#                            (~9 min cada uno; +9 si su `k` no tiene control aleatorio)
 #   nn/lanzar.sh --estado    ¿esta vivo? ¿por donde va? ¿fallo? ¿se relanzo?
 #
 # POR QUE ESTO ES UN SCRIPT COMMITEADO Y NO UNA LINEA QUE SE TECLEA
@@ -73,16 +74,28 @@ if [ "$1" = "--estado" ]; then
     exit 0
 fi
 
-case "$1" in
+# ⚠⚠ EL MODO SE GUARDA EN SU PROPIA VARIABLE Y NO SE RELEE DE "$1".
+# Fallo del 2026-09-08: el `shift` de la rama `kernel` se lleva el "kernel" de $1, asi
+# que el `if [ "$1" = "kernel" ]` de mas abajo daba FALSO y la cadena caia al `else`
+# -> corrio la CALIBRACION en vez de evaluar los kernels. La unidad salio con
+# Result=success y NRestarts=0, o sea que el fallo era INVISIBLE desde el freno: lo
+# unico que lo delataba era que no aparecia ningun resultado nuevo en resultados/.
+# Releer un argumento que ya has consumido es la forma barata de que un despacho
+# mienta.
+MODO="$1"
+case "$MODO" in
     datos)     UNIDAD=bancok-datos ;;
     calibrar)  UNIDAD=bancok-calibrar ;;
     kernel)
-        [ -n "$2" ] || { echo "uso: $0 kernel <ruta.npy>"; exit 2; }
-        # El contrato del §5 se comprueba AQUI, en primer plano, antes de desacoplar
-        # nada: un kernel invalido tiene que fallar donde lo estas mirando, no dentro
-        # de una unidad cuyo log hay que ir a buscar.
-        "$PY" nn/evaluar_kernel.py --contrato "$2" || exit 2
-        UNIDAD="bancok-$(basename "$2" .npy)" ;;
+        [ -n "$2" ] || { echo "uso: $0 kernel <ruta.npy> [mas.npy ...]"; exit 2; }
+        # El contrato del §5 se comprueba AQUI, en primer plano y para TODOS, antes de
+        # desacoplar nada: un kernel invalido tiene que fallar donde lo estas mirando,
+        # no dentro de una unidad cuyo log hay que ir a buscar -- y sobre todo no
+        # despues de que los tres anteriores ya hayan gastado media hora.
+        shift
+        for K in "$@"; do "$PY" nn/evaluar_kernel.py --contrato "$K" || exit 2; done
+        if [ "$#" -eq 1 ]; then UNIDAD="bancok-$(basename "$1" .npy)"
+        else UNIDAD="bancok-kernels"; fi ;;
     *) echo "uso: $0 datos|calibrar|kernel <ruta.npy>|--estado"; exit 2 ;;
 esac
 
@@ -96,16 +109,23 @@ if [ "$(systemctl is-active "$UNIDAD" 2>&1)" = "active" ]; then
 fi
 
 cd "$EXP"
-if [ "$1" = "kernel" ]; then
-    ORDEN="$PY -u nn/evaluar_kernel.py --kernel '$2'
-node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: kernel $(basename "$2") evaluado. Veredicto en resultados/$(basename "$2" .npy)/criterios.json' || true"
-elif [ "$1" = "datos" ]; then
+if [ "$MODO" = "kernel" ]; then
+    ORDEN=""
+    for K in "$@"; do
+        ORDEN="$ORDEN$PY -u nn/evaluar_kernel.py --kernel '$K'
+"
+    done
+    ORDEN="${ORDEN}node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: $# kernel(s) evaluado(s). Veredictos en resultados/*/criterios.json' || true"
+elif [ "$MODO" = "datos" ]; then
     ORDEN="$PY -u nn/datos.py --imagenes 1000
 $PY -u nn/datos.py --muestras 16
 node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: dataset de 1000 parrafos generado. Mira nn/lanzar.sh --estado' || true"
-else
+elif [ "$MODO" = "calibrar" ]; then
     ORDEN="$PY -u nn/calibrar.py --todo
 node \"\$COORD_HOME/scripts/notify.mjs\" 'banco-k: calibracion terminada. Resultados en resultados/' || true"
+else
+    echo "✗ modo '$MODO' sin orden que ejecutar. Esto es un fallo del lanzador."
+    exit 2
 fi
 
 COORD_HOME="$COORD_HOME" "$COORD_HOME/scripts/desacoplar-persistente.sh" "$UNIDAD" \

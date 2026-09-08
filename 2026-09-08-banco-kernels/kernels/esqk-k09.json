@@ -1,0 +1,18 @@
+{
+  "nombre": "esqk-k09",
+  "origen_id": "esq-k",
+  "origen_brazo": "k09",
+  "origen_estado": "cerrado",
+  "origen_dataset": "esquina-tl300-32px-r4-r20260906",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": 66,
+  "k": 9,
+  "norma_original": 12.208782196044922,
+  "suma": -61.645511627197266,
+  "sha256_16": "aa3cc12490712a7d",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": true,
+    "detalle": "familia: sin fijar -> sortea TODAS, incluida LiberationMono · interlineado: (1.15, 1.6) contra la reserva (1.45, 1.6) -> SOLAPA"
+  }
+}
