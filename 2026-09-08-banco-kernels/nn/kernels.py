@@ -60,11 +60,28 @@ def sobel(k: int, sigma: float | None = None) -> np.ndarray:
     return np.outer(suave, deriv).astype(np.float32)
 
 
+def laplaciano(k: int, sigma: float | None = None) -> np.ndarray:
+    """Laplaciana de gaussiana. Suma CERO e ISOTROPA: ni pasa-bajos ni direccional.
+
+    Se anyade aqui el 2026-09-08 porque ya se habia EVALUADO con un script suelto, y un
+    kernel que no se puede regenerar desde codigo commiteado es un dato huerfano: su
+    `.npy` esta en git, pero la receta que lo produjo vivia en la linea de comandos de
+    una sesion que se va con la maquina. Los controles se regeneran; este tambien."""
+    sigma = sigma if sigma is not None else k / 6.0
+    r = np.arange(k, dtype=np.float32) - (k - 1) / 2.0
+    X, Y = np.meshgrid(r, r)
+    r2 = X ** 2 + Y ** 2
+    g = np.exp(-r2 / (2 * sigma ** 2))
+    lap = (r2 - 2 * sigma ** 2) / (sigma ** 4) * g
+    return (lap - lap.mean()).astype(np.float32)      # suma cero exacta
+
+
 def controles(k: int = K_CONTROL, semillas: int = 10) -> dict[str, np.ndarray]:
     """Todos los controles con kernel. `identidad` y `caja-media` NO llevan kernel."""
     out = {f"aleatorio-r{s}": aleatorio(k, 1000 + s) for s in range(semillas)}
     out["gauss"] = gauss(k)
     out["sobel"] = sobel(k)
+    out["laplaciano"] = laplaciano(k)
     return out
 
 
