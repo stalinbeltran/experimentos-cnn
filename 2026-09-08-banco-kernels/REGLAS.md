@@ -140,8 +140,10 @@ Nada de esto existe todavía. Es dónde va a caer, declarado antes de producirlo
 - **Trazabilidad:** `resultados/<condicion>/config.json` con el kernel, su `k`, **su norma
   original antes de normalizar**, su hash **antes** de normalizar, las semillas, el hash del
   dataset y la **versión de la especificación** (§13.3).
-- **Figuras:** ninguna es obligatoria. Si se hacen, van a `resultados/figuras/` y su comando de
-  regeneración se anota aquí en el mismo commit.
+- **Figuras:** tres, en `muestras/`, y **condensadas a propósito** — una rejilla por fichero,
+  no un fichero por muestra: `parrafos-20-marco146.png` (como se guarda),
+  `parrafos-20-marco128.png` (como lo ve la red) y `condiciones-4x6.png` (6 muestras × las 4
+  condiciones). Se regeneran las tres con `python nn/datos.py --muestras 20`.
 - **Qué se commitea y qué no:** se commitean métricas, resúmenes, criterios, configs y los
   `kernels/*.npy` evaluados. **No** se commitea `datos/` (etapa local de render) ni ningún
   `.npz`: el `.gitignore` de la raíz del repo ya excluye `*.npz` porque **este repo es público
@@ -256,7 +258,7 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/kernels.py` | los controles del §10: aleatorio ×10, gauss, sobel | `python nn/kernels.py [--k 9] [--guardar]` |
 | `nn/entrenar_local.py` | entrena **una** condición con el protocolo del §8 | `--condicion identidad --semilla 0` · `--kernel k.npy` · `--comprobar` |
 | `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
-| `nn/muestras.py` | figuras para **mirar** el dataset, en los dos marcos | `nn/datos.py --muestras N` |
+| `nn/muestras.py` | las **tres** figuras: el dataset en sus dos marcos y las 4 condiciones | `nn/datos.py --muestras 20 [--condiciones 6]` |
 | `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `--estado` |
 
 - ⚠ **`entrenar_local.py` se llama así porque es un contrato, no por estética.** `experimento.json`

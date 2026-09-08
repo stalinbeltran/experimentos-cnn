@@ -39,6 +39,26 @@ sea que en este banco **filtrar con un detector de bordes clásico no es mejor q
 con ruido** — que es exactamente la confusión que el control aleatorio existe para separar
 (§10.3).
 
+### Las muestras, para revisar sin correr nada
+
+Tres PNG en [`muestras/`](muestras/), condensados a propósito — una rejilla por fichero, no
+un fichero por muestra:
+
+| | |
+|---|---|
+| `parrafos-20-marco146.png` | 20 muestras **como se guardan** (146 × 146), con la etiqueta en rojo y el recorte a 128 en azul |
+| `parrafos-20-marco128.png` | las mismas **como las ve la red** en la identidad, con la etiqueta ya transformada por `(coord/4) − 9` |
+| `condiciones-4x6.png` | **6 muestras × las 4 condiciones** (identidad · gauss · sobel · aleatorio): lo que cada kernel le hace a los mismos píxeles |
+
+⚠ **La tercera es la que enseña el invariante del §6.2**: las cuatro condiciones ven
+*exactamente* los mismos píxeles del original —el descarte es siempre 9 px por lado, sea cual
+sea `k`—, así que cualquier diferencia entre filas es del kernel y de nada más.
+
+⚠ **Y enseña también por qué las condiciones están tan juntas** (0,7981 a 0,8164, o sea 2,4 ×
+la desviación, contra las 96 × del rango útil): la caja del párrafo **sobrevive a cualquier
+filtro**. El banco separa con holgura *filtrar* de *no mirar*, y con mucho menos margen *un
+filtro de otro*.
+
 ⚠ **Lo que NO hay es ningún kernel evaluado**, y es correcto: el banco es agnóstico a su
 origen (§1) y los métodos para obtenerlos están **fuera de alcance** (§15). `kernels/` sólo
 tiene los controles.

@@ -371,6 +371,33 @@ def informe() -> int:
                          + (f"{it['media']:.4f} | " if it else "— | ")
                          + f"{d['brecha']['media']:+.4f} ± {d['brecha']['desv']:.4f} |")
         L.append("")
+    # Lo que separa a las condiciones ENTRE SI, que no es lo mismo que el rango util
+    cond = [("identidad", p2), ("aleatorio", p4), ("gauss", e.get("extra_gauss")),
+            ("sobel", e.get("extra_sobel"))]
+    vals = [(n, d["iou_eval"]["media"]) for n, d in cond if d]
+    if len(vals) >= 2 and p3:
+        lo_n, lo_v = min(vals, key=lambda x: x[1])
+        hi_n, hi_v = max(vals, key=lambda x: x[1])
+        sigma = p4["iou_eval"]["desv"]
+        L += ["## ⚠ La distancia entre CONDICIONES no es el rango útil", "",
+              f"El rango útil ({p3['rango']:.4f}) mide **caja media → identidad**, o sea "
+              f"cuánto hay entre no mirar la imagen y mirarla sin filtrar. Pero todas las "
+              f"condiciones **que sí filtran** caben en mucho menos:", "",
+              f"| | IoU `eval` |", "|---|---|"]
+        for n, v in sorted(vals, key=lambda x: x[1]):
+            L.append(f"| {n} | {v:.4f} |")
+        L += ["", f"De **{lo_n}** ({lo_v:.4f}) a **{hi_n}** ({hi_v:.4f}) hay "
+              f"**{hi_v - lo_v:.4f}**, que son **{(hi_v - lo_v) / sigma:.1f} ×** la "
+              f"desviación entre semillas del aleatorio — no las 96 × del rango útil.", "",
+              "**Qué significa, sin adornarlo:** la tarea está dominada por *dónde está la "
+              "mancha oscura*, y eso **sobrevive a cualquier filtro** — se ve en "
+              "`muestras/condiciones-4x6.png`, donde las cuatro condiciones conservan la "
+              "caja igual de clara. El banco distingue con holgura **filtrar de no mirar**, "
+              "y con mucho menos margen **un filtro de otro**. Un kernel que quiera "
+              "declararse útil aquí tiene que moverse dentro de esa franja estrecha, y por "
+              "eso el margen del §2.1 no es una formalidad.", "",
+              "⚠ Esto es una **observación sobre el instrumento**, medida en la "
+              "calibración, no un hallazgo sobre kernels (§11).", ""]
     if p5:
         L += ["## Resolución (§7.5)", "",
               f"MAE medio de la identidad: **{p5['mae_medio_identidad']:.2f} px** contra "

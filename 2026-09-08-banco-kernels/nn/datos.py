@@ -601,6 +601,8 @@ def main() -> int:
     ap.add_argument("--rederivar", type=int, default=0)
     ap.add_argument("--muestras", type=int, default=0)
     ap.add_argument("--semilla-fig", type=int, default=7)
+    ap.add_argument("--condiciones", type=int, default=6,
+                    help="cuantas muestras en la figura de condiciones")
     a = ap.parse_args()
     if a.imagenes:
         return _guardar(asyncio.run(generar(a.imagenes, a.semilla)), a.semilla)
@@ -611,8 +613,9 @@ def main() -> int:
     if a.rederivar:
         return _rederivar(a.rederivar, a.semilla)
     if a.muestras:
-        from muestras import figura                 # noqa: PLC0415
-        return figura(a.muestras, a.semilla_fig)
+        from muestras import figura, figura_condiciones     # noqa: PLC0415
+        rc = figura(a.muestras, a.semilla_fig)
+        return rc or figura_condiciones(a.condiciones, a.semilla_fig)
     ap.error("dime que hacer: --imagenes N · --publicar · --comprobar · "
              "--rederivar N · --muestras N")
 

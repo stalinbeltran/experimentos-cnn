@@ -37,6 +37,23 @@ Un kernel evaluado con esa misma desviación tendría que superarlo por más de 
 | gauss | 0.8130 ± 0.0086 | — | +0.0298 ± 0.0054 |
 | sobel | 0.8164 ± 0.0064 | — | +0.0367 ± 0.0044 |
 
+## ⚠ La distancia entre CONDICIONES no es el rango útil
+
+El rango útil (0.5501) mide **caja media → identidad**, o sea cuánto hay entre no mirar la imagen y mirarla sin filtrar. Pero todas las condiciones **que sí filtran** caben en mucho menos:
+
+| | IoU `eval` |
+|---|---|
+| identidad | 0.7981 |
+| aleatorio | 0.8083 |
+| gauss | 0.8130 |
+| sobel | 0.8164 |
+
+De **identidad** (0.7981) a **sobel** (0.8164) hay **0.0183**, que son **2.4 ×** la desviación entre semillas del aleatorio — no las 96 × del rango útil.
+
+**Qué significa, sin adornarlo:** la tarea está dominada por *dónde está la mancha oscura*, y eso **sobrevive a cualquier filtro** — se ve en `muestras/condiciones-4x6.png`, donde las cuatro condiciones conservan la caja igual de clara. El banco distingue con holgura **filtrar de no mirar**, y con mucho menos margen **un filtro de otro**. Un kernel que quiera declararse útil aquí tiene que moverse dentro de esa franja estrecha, y por eso el margen del §2.1 no es una formalidad.
+
+⚠ Esto es una **observación sobre el instrumento**, medida en la calibración, no un hallazgo sobre kernels (§11).
+
 ## Resolución (§7.5)
 
 MAE medio de la identidad: **2.40 px** contra una celda de rejilla de **8.0 px**. El soft-argmax **interpola entre celdas**, que es lo que §7.5 espera.

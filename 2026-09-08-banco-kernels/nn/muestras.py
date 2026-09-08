@@ -127,3 +127,65 @@ if __name__ == "__main__":
     ap.add_argument("--semilla-fig", type=int, default=7)
     a = ap.parse_args()
     raise SystemExit(figura(a.muestras, a.semilla_fig))
+
+
+# --------------------------------------------------------------- condiciones
+def _estirar(a: np.ndarray) -> np.ndarray:
+    """z-scores -> 0..255 para MIRAR, recortando al 1-99 % .
+
+    ⚠ Es SOLO para la figura. Cada panel se estira por su cuenta, asi que los grises
+    NO son comparables entre paneles: lo que la figura ensenya es la ESTRUCTURA que
+    deja cada kernel, no su magnitud. La magnitud, de hecho, ya no significa nada
+    despues de la normalizacion de norma (§5.4) y la estandarizacion (§6.5) -- que es
+    justamente el punto de las dos."""
+    lo, hi = np.percentile(a, (1, 99))
+    if hi <= lo:
+        lo, hi = float(a.min()), float(a.max()) or 1.0
+    return np.clip((a - lo) / (hi - lo) * 255, 0, 255).astype(np.uint8)
+
+
+def figura_condiciones(n_img: int, semilla: int) -> int:
+    """Una rejilla: filas = muestras, columnas = lo que la RED ve en cada condicion.
+
+    Es la figura que hace falta para revisar el BANCO y no solo el dataset: las cuatro
+    condiciones ven exactamente los mismos pixeles del original (§6.2, descarte fijo de
+    9 px por lado sea cual sea `k`), asi que cualquier diferencia visible entre columnas
+    es del kernel y de nada mas. Es el invariante entero, en una imagen."""
+    import sys                                              # noqa: PLC0415
+    sys.path.insert(0, str(AQUI))
+    from pipeline import aplicar, estadisticos, estandarizar  # noqa: PLC0415
+
+    if not (DATOS / "manifiesto.json").is_file():
+        print("✗ no hay etapa local. Genera primero: --imagenes 1000")
+        return 1
+    d = {k: np.load(DATOS / f"{k}.npz") for k in ("train", "eval")}
+    rng = np.random.default_rng(semilla)
+    sel = rng.choice(len(d["eval"]["etiquetas"]), size=n_img, replace=False)
+    imgs = d["eval"]["imagenes"][sel]
+    cajas = d["eval"]["etiquetas"][sel]
+
+    kdir = EXP / "kernels"
+    condiciones = [("identidad", None)]
+    for nombre in ("gauss", "sobel", "aleatorio-r0"):
+        f = kdir / f"{nombre}.npy"
+        if f.is_file():
+            condiciones.append((nombre, np.load(f)))
+
+    celdas = []
+    for nombre, k in condiciones:
+        # mu y sigma SIEMPRE de `train` con ESE kernel (§6.5), no de lo que se dibuja
+        mu, sd = estadisticos(aplicar(d["train"]["imagenes"], k))
+        x = estandarizar(aplicar(imgs, k), mu, sd)
+        for j in range(n_img):
+            caja = tuple(v / REDUCCION - DESCARTE for v in
+                         (cajas[j][0], cajas[j][1], cajas[j][2], cajas[j][3]))
+            celdas.append(_celda(_estirar(x[j]).astype(np.uint16) * (REDUCCION ** 2),
+                                 caja, f"{nombre}", recorte=False))
+
+    MUESTRAS.mkdir(parents=True, exist_ok=True)
+    f = MUESTRAS / f"condiciones-{len(condiciones)}x{n_img}.png"
+    # una FILA por condicion, para poder recorrerlas con la vista
+    _rejilla(celdas, n_img).save(f, optimize=True)
+    print(f"  {f.relative_to(EXP)}  ({f.stat().st_size/1024:.0f} KB)  "
+          f"{len(condiciones)} condiciones x {n_img} muestras")
+    return 0
