@@ -1,0 +1,104 @@
+{
+  "paso10_balance": {
+    "balance": {
+      "cuerpo": {
+        "train": 18.59,
+        "monitor": 18.692,
+        "eval": 18.465
+      },
+      "interlineado": {
+        "train": 1.346,
+        "monitor": 1.377,
+        "eval": 1.378
+      },
+      "gris_nivel": {
+        "train": 52.52,
+        "monitor": 50.03,
+        "eval": 50.932
+      },
+      "ancho_real": {
+        "train": 324.507,
+        "monitor": 311.16,
+        "eval": 313.527
+      },
+      "alto_real": {
+        "train": 262.768,
+        "monitor": 274.006,
+        "eval": 271.106
+      },
+      "fuente": {
+        "train": {
+          "DejaVuSans": 12,
+          "DejaVuSerif": 18,
+          "LiberationMono": 20,
+          "LiberationSans": 23,
+          "LiberationSerif": 27
+        },
+        "monitor": {
+          "DejaVuSans": 21,
+          "DejaVuSerif": 21,
+          "LiberationMono": 19,
+          "LiberationSans": 22,
+          "LiberationSerif": 17
+        },
+        "eval": {
+          "DejaVuSans": 167,
+          "DejaVuSerif": 161,
+          "LiberationMono": 161,
+          "LiberationSans": 155,
+          "LiberationSerif": 156
+        }
+      }
+    },
+    "peor_dispersion_relativa": 0.048670202369007466,
+    "familia_chi2": {
+      "train": {
+        "chi2": 6.3,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 12,
+          "DejaVuSerif": 18,
+          "LiberationMono": 20,
+          "LiberationSans": 23,
+          "LiberationSerif": 27
+        }
+      },
+      "monitor": {
+        "chi2": 0.8,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 21,
+          "DejaVuSerif": 21,
+          "LiberationMono": 19,
+          "LiberationSans": 22,
+          "LiberationSerif": 17
+        }
+      },
+      "eval": {
+        "chi2": 0.57,
+        "gl": 4,
+        "umbral_95": 9.49,
+        "cabe_en_el_azar": true,
+        "cuenta": {
+          "DejaVuSans": 167,
+          "DejaVuSerif": 161,
+          "LiberationMono": 161,
+          "LiberationSans": 155,
+          "LiberationSerif": 156
+        }
+      }
+    },
+    "familia_pasa": true,
+    "pasa": true
+  },
+  "paso1_caja_media": {
+    "iou_eval": 0.5260536518979788,
+    "iou_train": 0.5349955169629399,
+    "umbral": 0.4,
+    "pasa": false
+  }
+}

@@ -232,10 +232,30 @@ def calibrar(pasos: list[int]) -> int:
             peor = max(peor, rel)
             print(f"    {campo:14} " + " · ".join(f"{k}={x:.3f}" for k, x in v.items())
                   + f"   dispersion relativa {rel*100:.1f} %")
+
+        # ⚠ La FAMILIA tambien esta en la lista del §3.6 («tamanyo de fuente,
+        # interlineado, FAMILIA y nivel de gris») y no se puede medir con la misma
+        # regla: es categorica, asi que la dispersion relativa de una media no
+        # significa nada. Se mide con una chi-cuadrado contra el reparto uniforme,
+        # que es lo que contesta la pregunta de verdad: ¿este desvio cabe en el azar?
+        chi = {}
+        for part, cuenta in bal["fuente"].items():
+            obs = np.array(list(cuenta.values()), dtype=float)
+            esp = obs.sum() / len(obs)
+            x2 = float(((obs - esp) ** 2 / esp).sum()) if esp > 0 else 0.0
+            # 4 grados de libertad (5 familias): el 95 % de la chi2 cae bajo 9,49.
+            chi[part] = {"chi2": round(x2, 2), "gl": len(obs) - 1,
+                         "umbral_95": 9.49, "cabe_en_el_azar": bool(x2 <= 9.49),
+                         "cuenta": cuenta}
+            print(f"    fuente/{part:8} chi2={x2:5.2f} (gl={len(obs)-1}, 95 % < 9,49)  "
+                  f"{'cabe en el azar' if x2 <= 9.49 else 'DESBALANCEADA'}  {cuenta}")
+        fam_ok = all(v["cabe_en_el_azar"] for v in chi.values())
         est["paso10_balance"] = {"balance": bal, "peor_dispersion_relativa": peor,
-                                 "pasa": bool(peor < 0.10)}
-        print(f"    peor dispersion: {peor*100:.1f} %  "
-              f"{'PASA (<10 %)' if peor < 0.10 else 'DESBALANCEADO'}")
+                                 "familia_chi2": chi, "familia_pasa": fam_ok,
+                                 "pasa": bool(peor < 0.10 and fam_ok)}
+        print(f"    peor dispersion continua: {peor*100:.1f} %  "
+              f"{'(<10 %)' if peor < 0.10 else 'DESBALANCEADO'}  ·  "
+              f"familia: {'OK' if fam_ok else 'DESBALANCEADA'}")
         guardar()
 
     # ---- extra: gauss y sobel (§10, opcionales) -----------------------------

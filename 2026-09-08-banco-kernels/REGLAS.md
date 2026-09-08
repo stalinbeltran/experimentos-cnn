@@ -153,7 +153,7 @@ Los pasos, en orden. **Hoy sólo está hecho el 0.**
    (`same`, §7.1), el almacenamiento (`uint16` con la suma, §3.8) y qué varía el generador con su
    estratificación (§3.5-§3.6). `bloqueado_por` está vacío; lo que queda es **trabajo**, en
    `pendiente`. El detalle en [`instrucciones/01-encargo.md`](instrucciones/01-encargo.md).
-2. ⛔ **Generar y publicar el dataset** (§3, §4). Una vez en la vida, con su `manifiesto.json`
+2. ✅/⛔ **Generar y publicar el dataset** (§3, §4). Una vez en la vida, con su `manifiesto.json`
    y la huella SHA-256 de cada partición. Las **aserciones** de §3.3 (caja dentro de
    `[68, 512]` **y dentro del lienzo**) y §6.4 (la transformación de coordenadas sobre una
    muestra conocida) van en el código de generación, no en un comentario.
@@ -243,9 +243,16 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 
 | script | qué hace | cómo se llama |
 |---|---|---|
-| `nn/modelo.py` | La CNN de referencia (§7), **autónoma**: sólo importa `torch`. Trae las comprobaciones que la v1.2 hace **obligatorias** | `python nn/modelo.py` → imprime la cadena de dimensiones y comprueba 5.812 / 68 / cadena **128-64-32-16** / **span de centros 0…120** / el soft-argmax y el colapso del §7.4 |
-| `nn/entrenar_local.py` | La **entrada declarada**. Hoy **se niega a entrenar** porque no hay dataset publicado, y dice qué falta | `python nn/entrenar_local.py` (se niega, código 2) · `--comprobar` (comprueba la arquitectura sin dataset, código 0) |
-| `nn/receta.json` | La receta de render 584 × 584 con el área de colocación de §3.3. **Dato, no script** | la lee el generador de dataset del paso 2 |
+| `nn/datos.py` | genera, comprueba y **publica** el dataset (§3-§4) | `--imagenes 1000` · `--publicar` · `--comprobar` · `--rederivar N` · `--muestras N` |
+| `nn/modelo.py` | la CNN del §7, **autónoma** (sólo `torch`), con sus invariantes | `python nn/modelo.py` |
+| `nn/pipeline.py` | el §6: kernel → recorte → estandarización. **Autónomo** | `python nn/pipeline.py` (24 comprobaciones) |
+| `nn/evaluar.py` | el §9: IoU, MAE por borde, brecha y los dos criterios. **Autónomo** | `python nn/evaluar.py` (15 casos) |
+| `nn/kernels.py` | los controles del §10: aleatorio ×10, gauss, sobel | `python nn/kernels.py [--k 9] [--guardar]` |
+| `nn/entrenar_local.py` | entrena **una** condición con el protocolo del §8 | `--condicion identidad --semilla 0` · `--kernel k.npy` · `--comprobar` |
+| `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
+| `nn/muestras.py` | figuras para **mirar** el dataset, en los dos marcos | `nn/datos.py --muestras N` |
+| `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `--estado` |
+| `nn/receta.json` | la receta de render 584 × 584. **Dato, no script** | la lee `nn/datos.py` |
 
 - ⚠ **`entrenar_local.py` se llama así porque es un contrato, no por estética.** `experimento.json`
   declara `gasta: "entrena-local"` y el freno del coordinador (`cerrable.mjs`) casa **ese
@@ -255,10 +262,11 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
   escritura del proyecto —*el freno nunca llega después del acelerador*— cumplida por
   adelantado. El nombre visible para el freno está puesto **antes** de que haya algo que gastar
   tiempo, en vez de añadirse en el commit que lo estrena.
-- **Qué falta por escribir** (y se declara para que su ausencia no se lea como olvido):
-  `nn/datos.py` (generar, verificar y publicar el dataset), `nn/pipeline.py` (kernel + recorte +
-  estandarización), `nn/evaluar.py` (IoU, MAE por borde, brecha) y `nn/informe.py`. Sus
-  interfaces se anotan **en esta tabla** en el mismo commit en que se escriban.
+- **Todas las piezas están escritas y las cuatro autónomas corren solas** (R17): `modelo.py`,
+  `pipeline.py` y `evaluar.py` traen su comprobación y salen con 0 o 1; `entrenar_local.py
+  --comprobar` corre las tres de una vez. **No hay `informe.py`**: el informe lo escribe
+  `calibrar.py --informe` releyendo `resultados/calibracion.json`, para que **nada se transcriba
+  a mano** — una tabla copiada es como nacen los números que nadie puede auditar.
 - **Dependencias:** el venv del repo, `~/src/experimentos-cnn/.venv` — **torch 2.14.0+cpu y
   numpy 2.5.3** *(comprobado el 2026-09-08)*. No hace falta nada más para entrenar. Para
   **generar** el dataset hace falta además el generador de párrafos, que trae su propio venv

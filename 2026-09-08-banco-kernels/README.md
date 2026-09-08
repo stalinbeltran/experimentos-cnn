@@ -30,19 +30,34 @@ python nn/entrenar_local.py --comprobar  # comprueba la arquitectura del §7 (c�
 python nn/modelo.py                      # lo mismo, con las dos lecturas del padding
 ```
 
-### Lo que falta ahora: TRABAJO, no decisiones
+### El generador: comprobado, y NO hizo falta cambiarlo
 
-Nada espera a nadie. En `pendiente` de `experimento.json`, y con el detalle en
-[`instrucciones/01-encargo.md`](instrucciones/01-encargo.md):
+**2026-09-08.** Los **siete factores del §3.5** salen del generador tal cual está: las **5
+familias tipográficas** registradas, cuerpo, interlineado, nivel de gris, ancho y densidad. Lo
+que hubo que cambiar es **cómo se le pide**.
 
-1. **Comprobar que el generador puede variar los siete factores del §3.5** — familia tipográfica,
-   tamaño de fuente, interlineado y nivel de gris **no están comprobados**. Va primero porque
-   puede obligar a tocar el generador, y §3.5 es de lo que depende que el banco mida algo.
-2. **`nn/datos.py`**: muestreo del §3.4 (**tamaño primero, esquina después**), aserciones del
-   §3.3, empaquetado `uint16` del §3.8, estratificación del §3.6, y **publicar**.
-3. **Elegir la reserva del §3.7** (≥ 1 familia tipográfica y un rango de densidad de uso
-   exclusivo del banco) y declararla en el contrato de kernel.
-4. **`nn/pipeline.py`** (§6) y **`nn/evaluar.py`** (§9.1).
+⚠⚠ **El alto de un párrafo no se puede pedir: emerge.** Medido: 240 palabras a 28 px dan
+**2195 px** de alto sobre un lienzo de 584. Así que «muestrear primero el tamaño» (§3.4) se hace
+al revés de como suena — se sortea el **alto objetivo** y se **deriva** el número de palabras —, y
+cada muestra se renderiza **dos veces**: una en la esquina mínima para **medir** la caja real, y
+otra en la esquina sorteada **para esa caja**. Sin el primer pase no se conoce el rango de esquina
+válido, y sin ese rango la única salida sería rechazar, que es lo que §3.4 prohíbe.
+
+**Resultado: 0 rechazadas.** Lo que hay son **reparos de densidad** (~1,5 %), que **conservan** la
+muestra bajándole las palabras hasta que cabe, y se cuentan en el manifiesto.
+
+Y dos correcciones de lectura, las dos por leer el código del generador:
+
+- **`Box` es `(x, y, w, h)`**, no `(x0, y0, x1, y1)`. El cuarto número es el **alto**.
+- **`placement.area` sí resta el tamaño** (`hi_y = max(y0, y1 - rh)`), pero uno **estimado**, y
+  para párrafos la estimación se queda corta. No es que no acote la caja: **la acota con un número
+  equivocado**. Da igual para la decisión —no se puede confiar en él— pero el diagnóstico correcto
+  es otro. La esquina se fija con `placement.x/y`, que el resolver respeta literalmente.
+
+**Dos decisiones de este experimento**, con su motivo: la **etiqueta es la caja de TINTA** (unión
+de cajas de palabra), no la de maquetación, y el texto va **`justify`**. Las dos por lo mismo:
+cada uno de los cuatro bordes tiene que tener **evidencia visual**, o el soft-argmax busca algo
+que no está ahí.
 
 ## Lo que ya está comprobado ejecutándolo
 
