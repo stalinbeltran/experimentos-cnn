@@ -261,7 +261,7 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/kernels.py` | los controles del §10: aleatorio ×10, gauss, sobel | `python nn/kernels.py [--k 9] [--guardar]` |
 | `nn/entrenar_local.py` | entrena **una** condición con el protocolo del §8 | `--condicion identidad --semilla 0` · `--kernel k.npy` · `--comprobar` |
 | `nn/calibrar.py` | los **10 pasos** del §11, **reanudable** | `--todo` · `--paso N` · `--informe` |
-| `nn/evaluar_kernel.py` | **la puerta del banco**: mete un kernel, saca un veredicto | `--contrato k.npy` (sólo valida) · `--kernel k.npy [--nombre n]` |
+| `nn/evaluar_kernel.py` | **la puerta del banco**: mete un kernel, saca un veredicto | `--contrato k.npy` (sólo valida) · `--kernel k.npy [--nombre n]` · `--informe` |
 | `nn/muestras.py` | las **tres** figuras: el dataset en sus dos marcos y las 4 condiciones | `nn/datos.py --muestras 20 [--condiciones 6]` |
 | `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `kernel <r.npy>…` · `--estado` · `BANCOK_SECO=1` para ver qué lanzaría |
 | `nn/probar_lanzador.sh` | que el lanzador despache **cada modo a lo suyo** | `nn/probar_lanzador.sh` (5 casos) |

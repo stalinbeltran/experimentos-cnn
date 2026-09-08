@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/esqk-k11.npy",
+  "nombre": "esqk-k11",
+  "contrato": {
+    "k": 11,
+    "norma_original": 19.960037231445312,
+    "suma": -113.1978759765625,
+    "suma_normalizada": -5.671226501464844,
+    "sha256_16": "fc87fb95f110298d",
+    "min": -0.3057241439819336,
+    "max": 0.13819265365600586
+  },
+  "dataset": "esqk-k11",
+  "comparado_contra": {
+    "aleatorio": "aleatorio-k11",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.825610627058715,
+    "desv": 0.008658018009141316,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.851601154967511,
+    "desv": 0.011346404396560626,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.025990527908795948,
+    "desv": 0.004328055261141637,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": 0.01620442610309869,
+    "margen": 0.020817740718536787,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": 0.016079377384044198,
+    "margen": 0.010275891260472764,
+    "cumple": false,
+    "cumple_ignorando_2_1": true
+  },
+  "§2.3_mecanismo": "transferencia",
+  "veredicto": "NO DECLARA"
+}

@@ -1,0 +1,26 @@
+{
+  "condicion": "esqk-k09",
+  "semilla": 3,
+  "kernel": "kernels/esqk-k09.npy",
+  "kernel_k": 9,
+  "kernel_norma_original": 12.208782196044922,
+  "kernel_sha256_16": "aa3cc12490712a7d",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": -20297.919921875,
+    "sigma": 759.9509887695312
+  },
+  "segundos": 43.9
+}

@@ -3,6 +3,7 @@
 
     python nn/evaluar_kernel.py --contrato kernels/mio.npy    solo valida (§5), no entrena
     python nn/evaluar_kernel.py --kernel   kernels/mio.npy    lo evalua entero
+    python nn/evaluar_kernel.py --informe                     reescribe KERNELS.md
     python nn/evaluar_kernel.py --kernel kernels/mio.npy --nombre mio-v2
 
 Es lo unico que hay que saber para probar un kernel. Todo lo demas -- el pipeline, el
@@ -161,7 +162,11 @@ def main() -> int:
     ap.add_argument("--kernel")
     ap.add_argument("--contrato", help="solo valida el §5, no entrena")
     ap.add_argument("--nombre")
+    ap.add_argument("--informe", action="store_true",
+                    help="relee los criterios.json y reescribe resultados/KERNELS.md")
     a = ap.parse_args()
+    if a.informe:
+        return informe()
     # Un contrato incumplido es un ERROR DEL USUARIO, no un fallo del banco: se dice
     # en una linea y se sale con 2, en vez de escupir un traceback que hay que leer
     # entero para encontrar el motivo al final.
@@ -177,6 +182,84 @@ def main() -> int:
         print("\n§5 contrato OK\n" + "\n".join(f"  {k:20} {v}" for k, v in c.items()) + "\n")
         return 0
     ap.error("dime que kernel: --kernel k.npy  ·  --contrato k.npy para solo validar")
+
+
+
+
+def informe() -> int:
+    """Relee los criterios.json y reescribe resultados/KERNELS.md. Nada a mano.
+
+    Va aparte de CALIBRACION.md a proposito: la calibracion mide el INSTRUMENTO y sus
+    cifras no son hallazgos (§11); esto son kernels EVALUADOS, que es lo que el banco
+    existe para producir."""
+    import glob                                              # noqa: PLC0415
+    fichas = []
+    for f in sorted(glob.glob(str(RESULTADOS / "*/criterios.json"))):
+        fichas.append(json.loads(Path(f).read_text(encoding="utf-8")))
+    if not fichas:
+        print("✗ no hay ningun kernel evaluado todavia")
+        return 1
+
+    ctrl = {}
+    for c in ("identidad", "aleatorio", "gauss", "sobel"):
+        p = RESULTADOS / c / "resumen.json"
+        if p.is_file():
+            ctrl[c] = json.loads(p.read_text(encoding="utf-8"))
+
+    L = ["# Kernels evaluados en `banco-k`", "",
+         "Generado por `python nn/evaluar_kernel.py --informe` leyendo los "
+         "`resultados/*/criterios.json`. **No se transcribe nada a mano.**", "",
+         "⚠ Esto **no** es la calibración: aquéllas son cifras del **instrumento** y no se "
+         "reportan como hallazgos (§11). [`CALIBRACION.md`](CALIBRACION.md) es la otra.", "",
+         "| kernel | `k` | IoU `eval` | IoU `train` | brecha | §2.1 | §2.2 | mecanismo | veredicto |",
+         "|---|---|---|---|---|---|---|---|---|"]
+    for d in sorted(fichas, key=lambda x: -x["iou_eval"]["media"]):
+        u, g = d["§2.1_utilidad"], d["§2.2_generalizacion"]
+        m21 = ("✅" if u["cumple"] else
+               f"{u['diferencia']:+.4f} / {u['margen']:.4f}")
+        m22 = ("✅" if g["cumple"] else
+               (f"({g['diferencia']:+.4f} / {g['margen']:.4f}) *pasaría, pero es condicional*"
+                if g["cumple_ignorando_2_1"] else f"{g['diferencia']:+.4f} / {g['margen']:.4f}"))
+        L.append(f"| **{d['nombre']}** | {d['contrato']['k']} | "
+                 f"{d['iou_eval']['media']:.4f} ± {d['iou_eval']['desv']:.4f} | "
+                 f"{d['iou_train']['media']:.4f} ± {d['iou_train']['desv']:.4f} | "
+                 f"**{d['brecha']['media']:+.4f} ± {d['brecha']['desv']:.4f}** | "
+                 f"{m21} | {m22} | {d['§2.3_mecanismo']} | **{d['veredicto']}** |")
+    L += ["", "Contra los controles del §10 (mismo dataset, mismas 10 semillas):", "",
+          "| control | IoU `eval` | brecha |", "|---|---|---|"]
+    for c, r in ctrl.items():
+        L.append(f"| {c} | {r['iou_eval']['media']:.4f} ± {r['iou_eval']['desv']:.4f} "
+                 f"| {r['brecha']['media']:+.4f} ± {r['brecha']['desv']:.4f} |")
+    L += ["", "⚠ **Cada kernel se compara contra el aleatorio de SU `k`** (§2.1: «igual norma "
+          "y mismo `k`»), que puede no ser el de la tabla de arriba. El que se usó está en "
+          "`comparado_contra` de cada `criterios.json`.", ""]
+
+    # La fuga del §3.7 viaja con el resultado, o no sirve de nada.
+    conf = []
+    for d in fichas:
+        j = (EXP / "kernels" / f"{d['nombre']}.json")
+        if j.is_file():
+            m = json.loads(j.read_text(encoding="utf-8"))
+            fuga = m.get("§3.7_fuga_de_distribucion", {})
+            if fuga.get("usa_la_reserva"):
+                conf.append((d["nombre"], m.get("origen_id"), fuga.get("detalle", "")))
+    if conf:
+        L += ["## ⚠⚠ Fuga de distribución (§3.7): estos resultados salen OPTIMISTAS", "",
+              "Estos kernels se aprendieron con **el mismo generador** que el banco, y sobre "
+              "datos que **alcanzan la reserva** del §3.7. El §3.7 es explícito: *«hay fuga "
+              "aunque las muestras sean distintas»*.", "",
+              "| kernel | viene de | por qué hay fuga |", "|---|---|---|"]
+        for n, o, det in conf:
+            L.append(f"| `{n}` | `{o}` | {det} |")
+        L += ["", "**No invalida la medición y no se ocultó**: la reserva se declaró el "
+              "2026-09-08 y esos kernels son anteriores, así que nadie rompió ninguna regla. "
+              "Pero la advertencia **tiene que viajar con el número**: un kernel que vio la "
+              "reserva parte con ventaja sobre uno que no la vio, y comparar los dos como "
+              "iguales sería exactamente el error que el §3.7 existe para evitar.", ""]
+
+    (RESULTADOS / "KERNELS.md").write_text("\n".join(L), encoding="utf-8")
+    print(f"informe: {RESULTADOS / 'KERNELS.md'}  ({len(fichas)} kernel(s))")
+    return 0
 
 
 if __name__ == "__main__":

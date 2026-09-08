@@ -84,6 +84,13 @@ fi
 # unico que lo delataba era que no aparecia ningun resultado nuevo en resultados/.
 # Releer un argumento que ya has consumido es la forma barata de que un despacho
 # mienta.
+# ⚠ El `cd` va AQUI, antes del despacho, y no mas abajo. El modo `kernel` comprueba el
+# contrato en primer plano con una ruta RELATIVA (`nn/evaluar_kernel.py`), asi que con el
+# `cd` despues el lanzador solo funcionaba si ya estabas dentro de la carpeta: desde el
+# repo padre fallaba con «no such file». Lo caza `probar_lanzador.sh`, que llama al
+# lanzador por ruta absoluta -- o sea desde cualquier cwd, que es como se usa de verdad.
+cd "$EXP"
+
 MODO="$1"
 case "$MODO" in
     datos)     UNIDAD=bancok-datos ;;
@@ -101,7 +108,6 @@ case "$MODO" in
     *) echo "uso: $0 datos|calibrar|kernel <ruta.npy>|--estado"; exit 2 ;;
 esac
 
-cd "$EXP"
 if [ "$MODO" = "kernel" ]; then
     ORDEN=""
     for K in "$@"; do

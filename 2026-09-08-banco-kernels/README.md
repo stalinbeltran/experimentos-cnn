@@ -84,8 +84,9 @@ nn/lanzar.sh kernel kernels/mio.npy                      # igual, pero como unid
 la norma **original** y el hash de **antes** de normalizar (§13.3). Dos kernels que sólo se
 diferencian en escala son **el mismo detector** y dan exactamente el mismo resultado.
 
-**Qué sale:** `resultados/<nombre>/` con `metricas.csv` por semilla, `config.json`,
-`resumen.json` y **`criterios.json`** — la evaluación de §2.1 y §2.2 por separado, más el
+**Qué sale:** [`resultados/KERNELS.md`](resultados/KERNELS.md) —la tabla de todo lo evaluado,
+que **se regenera** con `--informe`— y `resultados/<nombre>/` con `metricas.csv` por semilla,
+`config.json`, `resumen.json` y **`criterios.json`** — la evaluación de §2.1 y §2.2 por separado, más el
 mecanismo del §2.3 (facilitación o transferencia) y un veredicto.
 
 ⚠ **El control aleatorio tiene que ser del mismo `k`** (§2.1: «igual norma y **mismo `k`**»).
