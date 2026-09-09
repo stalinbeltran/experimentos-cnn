@@ -1,0 +1,25 @@
+{
+  "id": "bor-p",
+  "titulo": "Paginas limpias con varios parrafos separados, y la caja que encierra a cada uno: el dato de entrada para aprender kernels de hasta 19 px que localicen bordes de parrafo",
+  "pregunta": "Que kernel de convolucion de k <= 19 localiza los cuatro bordes del recuadro que encierra un parrafo, sobre paginas de papel limpio con varios parrafos que nunca se solapan",
+  "creado": "2026-09-09",
+  "estado": "abierto",
+  "dataset": "parrafos1000-pagina1024-r20260909",
+  "usa_fv": false,
+  "gasta": "no",
+  "reporte": null,
+  "hecho": [
+    "el dataset: generado, comprobado y publicado (paso 1 de `REGLAS.md` § Procesos)"
+  ],
+  "pendiente": [
+    "el recorte de ventanas de entrenamiento: el encargo lo deja para despues ('por ahora solo obten las paginas'). `cajas.npz` trae `ventana_limpia` por parrafo, que es el tope que ese recorte tiene que respetar",
+    "la red, el criterio escrito antes de mirar (R13) y las semillas: nada de eso esta decidido, y por eso `instrucciones/02-criterio.md` no existe todavia",
+    "cuando haya entrenamiento, `gasta` pasa a 'entrena-local' y su entrada TIENE que llamarse `nn/entrenar_local.py`, que es lo que casa el freno del coordinador"
+  ],
+  "gasta_por_que": "'no' es lo honesto HOY: aqui solo se genera un dataset, una vez en la vida, y no hay entrenamiento. Lo que si tarda (~20 min de renders) es `nn/generar_paginas.py`, y por eso ese nombre esta declarado en la lista TRABAJOS de `telegram-coordinator/scripts/cerrable.mjs`: el freno lo ve aunque `gasta` sea 'no'",
+  "relacion_con_banco_k": {
+    "que_es": "linaje de DESTINO, no herencia: los kernels que salgan de aqui se pensaron para evaluarse en el banco `banco-k`",
+    "no_hereda": "ninguna condicion suya. Ni el lienzo de 584, ni la reduccion /4, ni un parrafo por imagen, ni las particiones 100/100/800, ni las 10 semillas (Regla 0 del repo)",
+    "lo_unico_que_si": "la RESERVA de su §3.7, que no es una condicion del experimento sino una prohibicion del sistema: LiberationMono y el interlineado [1.45, 1.60] son de uso exclusivo del banco, y un kernel aprendido sobre datos que los alcancen sale optimista al evaluarlo alli. Se comprueba en codigo (`comprobar_reserva()`), no se supone"
+  }
+}

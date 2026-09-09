@@ -1,0 +1,70 @@
+{
+  "_comentario": [
+    "La receta de `bor-p`. Es LA fuente de los rangos: `nn/datos.py` la lee y sortea de",
+    "aqui, asi que este fichero y lo que se renderizo no pueden divergir (R15: dos mandos",
+    "para un solo hecho pueden discrepar sin que nada falle).",
+    "",
+    "⚠⚠ Y ADEMAS es el CONTRATO ANTI-FUGA del §3.7 de `banco-k`. `banco-k/nn/",
+    "importar_kernel.py` lee exactamente este fichero -- `blocks[0].typography.font_family`",
+    "o el `fonts` de arriba, y `blocks[0].typography.line_height` -- para decidir si un",
+    "kernel aprendido aqui vio la reserva del banco. Las dos claves se declaran EXPLICITAS",
+    "porque omitirlas es filtrar: sin `fonts` el generador sortea TODAS las familias",
+    "registradas (incluida la reservada LiberationMono), y sin `line_height` su defecto es",
+    "Range(1.15, 1.6), que SOLAPA con la banda reservada [1.45, 1.60].",
+    "",
+    "Reservado para el banco y por tanto PROHIBIDO aqui: familia LiberationMono, e",
+    "interlineado en [1.45, 1.60]. El tope de aqui es 1.42, con 0.03 de holgura."
+  ],
+
+  "canvas": { "width": 1024, "height": 1024 },
+
+  "background": { "kind": "solid", "color": "#ffffff" },
+
+  "fonts": ["DejaVuSans", "DejaVuSerif", "LiberationSans", "LiberationSerif"],
+
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "count": 1,
+      "width": { "range": [120, 920] },
+      "content": { "source": "words", "lang": "es", "words": { "range": [6, 1400], "step": 1 } },
+      "typography": {
+        "font_family": ["DejaVuSans", "DejaVuSerif", "LiberationSans", "LiberationSerif"],
+        "font_size": { "range": [11, 30] },
+        "line_height": { "range": [1.10, 1.42] },
+        "color": "#000000",
+        "min_contrast": 1.0,
+        "align": "justify",
+        "font_weight": 400
+      },
+      "placement": { "x": 0, "y": 0, "angle": 0, "avoid_overlap": false }
+    }
+  ],
+
+  "_derivados": [
+    "⚠ `width` y `content.words` NO se sortean de su rango tal cual: se DERIVAN de la",
+    "celda que el reparto de `nn/geometria.py` le toco al parrafo (un parrafo de una celda",
+    "grande es grande). Lo que el rango de aqui pone es el TOPE, y `nn/datos.py` recorta",
+    "contra el: `ancho = clamp(derivado_de_la_celda, 120, min(ancho_de_la_ranura, 920))`.",
+    "",
+    "Va escrito porque la primera version de este fichero declaraba [120, 460] mientras se",
+    "generaban parrafos de 887 px: nadie leia ese rango, asi que era decoracion que se leia",
+    "como especificacion. Ahora `nn/datos.py` lo lee Y ADEMAS comprueba al empaquetar que",
+    "lo generado cae dentro; si no, se niega a publicar (R15: un solo mando por hecho).",
+    "",
+    "El tope de 920 no es de gusto: es (1024 - 2*32) - 40, o sea la ranura mas ancha que",
+    "puede existir -- el papel menos sus margenes, menos el hueco entre parrafos."
+  ],
+
+  "_placement": [
+    "`x`/`y` se FIJAN en px por `nn/datos.py`, uno por parrafo, y `avoid_overlap` es false",
+    "a proposito: el reparto en celdas de `nn/geometria.py` ya garantiza la separacion.",
+    "",
+    "⚠ El `avoid_overlap` del generador NO se usa porque NO es una garantia. Su propio",
+    "codigo lo dice (`app/core/resolver.py:394`): «the margin stays what it is -- a",
+    "preference, not a hard constraint», y cuando no cabe nada «se conserva el reparto",
+    "menos malo en vez de fallar» (docs/SAMPLE_FORMAT.md §5, ~1% de solape en recetas",
+    "apretadas). El encargo pide que los parrafos NUNCA se solapen, y una preferencia no",
+    "puede dar un nunca."
+  ]
+}
