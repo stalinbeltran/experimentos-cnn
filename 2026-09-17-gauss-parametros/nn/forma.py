@@ -135,7 +135,12 @@ def tabla(k: int = 0) -> int:
         fila = " ".join(f"{truncamiento(k, s):<11.2e}" for k in ks)
         print(f"  {s:6.2f} {fila}")
 
-    print(f"\n  El `k` mas pequenyo que corta <= {TRUNCAMIENTO_AVISO:.0%}:\n")
+    # ⚠ Esta segunda tabla NO depende de `--k`, y es a proposito: contesta «que
+    # `k` HARIA FALTA para cada sigma», que es justo lo que no sabes cuando estas
+    # eligiendo uno. Se dice porque con `--k 9` la primera tabla se encoge a una
+    # columna y esta no, y eso se lee como que el flag no hace nada.
+    print(f"\n  El `k` mas pequenyo que corta <= {TRUNCAMIENTO_AVISO:.0%}"
+          f" (esto no cambia con `--k`: dice cual HARIA FALTA):\n")
     print(f"  {'sigma':>6}  {'k minimo':>9}  {'sigma del banco con ese k':>26}")
     for s in sigmas:
         km = k_minimo(s)
