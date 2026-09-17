@@ -51,6 +51,27 @@ python nn/evaluar_kernel.py --contrato kernels/<nombre>.npy   # imprime su sha25
 | **controles** `aleatorio-*` · `gauss` · `sobel` · `laplaciano` | `nn/kernels.py`, con semilla fija | **se regeneran del código**. El `.npy` es una comodidad |
 | **evaluados** `esqk-k03..k11` | los pesos aprendidos de `esq-k` | **NO se regeneran desde este experimento**: dependen de un entrenamiento ajeno. Por eso llevan su `<nombre>.json` con origen, brazo, norma original y hash |
 
+### Y desde el 2026-09-17, una TERCERA: los gauss con `sigma` elegido
+
+`gauss-kNN-sS.npy`, que entran por `nn/kernels.py --gauss --k K --sigma S --guardar`.
+Son de la primera familia —**se regeneran del código**, la receta cabe en dos números— pero
+llevan su `.json` como los evaluados, y por un motivo que los controles no tienen:
+
+⚠ **su `sigma` NO se eligió a ciegas.** Sale del experimento `gauss-p`, donde se elige
+**mirando** muestras de `train` de este mismo dataset. Cumple el §3.7 —las muestras miradas
+excluyen la familia y el interlineado reservados, y eso se comprueba en código— pero un
+kernel así **no es ciego**, y el informe que lo cite tiene que decirlo. Por eso el aviso va
+dentro del `.json`, y no en una nota que alguien tenga que recordar.
+
+⚠ **Y la puerta EXIGE la huella.** `--esperado <sha256_16>` es lo que `gauss-p` mostró al
+enseñar el kernel: si no coincide, **no se escribe nada**. Sin eso, la copia del §6 que vive
+en aquel experimento podría desviarse de aquí y se elegiría mirando una gaussiana mientras el
+banco mide otra, sin un solo error a la vista.
+
+⚠ **El nombre `gauss` a secas NO se reutiliza**: es el control del §10 (k=9, σ=k/6) y ya tiene
+sus resultados. Dos condiciones distintas con el mismo nombre escribirían en el mismo
+`resultados/<nombre>/`.
+
 ⚠ **`laplaciano` estuvo en el lado equivocado hasta el 2026-09-08.** Se evaluó con un script
 suelto tecleado en una sesión, así que su `.npy` estaba en git pero **la receta que lo produjo
 no**: un dato huérfano, que se iba con la máquina. Ahora `nn/kernels.py` lo genera, y

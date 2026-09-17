@@ -28,6 +28,7 @@ generaliza sin inventar nada. Se dice porque no es "el" Sobel: es su familia.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -76,6 +77,95 @@ def laplaciano(k: int, sigma: float | None = None) -> np.ndarray:
     return (lap - lap.mean()).astype(np.float32)      # suma cero exacta
 
 
+def nombre_gauss(k: int, sigma: float) -> str:
+    """El nombre de un gauss con sigma elegido. Lleva los DOS parametros dentro.
+
+    `gauss` a secas se queda para el control del §10 (k=9, sigma=k/6), que es lo
+    que ya esta evaluado: un nombre reutilizado haria que dos condiciones
+    distintas escribieran en el mismo `resultados/<nombre>/`.
+    """
+    return f"gauss-k{k:02d}-s{sigma:g}"
+
+
+def guardar_gauss(k: int, sigma: float, esperado: str | None = None,
+                  origen: str | None = None) -> int:
+    """Escribe `kernels/gauss-kNN-sS.npy` y su `.json`. NO evalua nada.
+
+    ⚠ EL APRETON DE MANOS (`esperado`) NO ES DECORACION. `gauss-p` ensenya la
+    gaussiana con SU COPIA del §6, y el dueno elige mirando esa. Si esa copia se
+    desviara de este fichero, se elegiria mirando una cosa y el banco mediria
+    otra, EN SILENCIO -- que es el unico fallo de este camino que no se ve venir.
+    Con la huella, la divergencia se niega aqui, en la puerta.
+
+    ⚠ Y NO PISA UN `.npy` QUE YA ESTE. Un kernel ya evaluado tiene resultados
+    apuntando a su sha; reescribirlo los deja mintiendo sin tocar ni un fichero
+    de `resultados/`.
+    """
+    import sys
+    sys.path.insert(0, str(AQUI))
+    from pipeline import comprobar_contrato, normalizar_kernel   # noqa: PLC0415
+
+    g = gauss(k, sigma)
+    comprobar_contrato(g)                        # §5: k impar, 3 <= k <= 19
+    sha = hashlib.sha256(np.ascontiguousarray(g).tobytes()).hexdigest()[:16]
+
+    if esperado and esperado != sha:
+        print(f"\n✗ NO es el kernel que se miro.")
+        print(f"    esperado  {esperado}")
+        print(f"    generado  {sha}")
+        print(f"  Este fichero y la copia de `gauss-p` han DIVERGIDO: se elegiria")
+        print(f"  mirando una gaussiana y se evaluaria otra. No se guarda nada.")
+        print(f"  → corre el `nn/probar.py` del experimento `gauss-p`, que mide")
+        print(f"    exactamente ese acuerdo y dice en que se han separado.")
+        print(f"    (donde esta: python3 -c \"from expcnn import por_id;"
+              f"print(por_id('gauss-p').carpeta)\")\n")
+        return 2
+
+    KERNELS.mkdir(parents=True, exist_ok=True)
+    nom = nombre_gauss(k, sigma)
+    destino = KERNELS / f"{nom}.npy"
+    if destino.is_file():
+        previo = hashlib.sha256(np.ascontiguousarray(
+            np.load(destino)).tobytes()).hexdigest()[:16]
+        igual = previo == sha
+        print(f"\n{'ok' if igual else '✗'} '{nom}.npy' YA existe (sha {previo}).")
+        if igual:
+            print("  Es bit a bit el mismo: no hay nada que hacer.\n")
+            return 0
+        print("  Y NO es el mismo. Un `.npy` evaluado no se reescribe: sus")
+        print("  `resultados/*/criterios.json` guardan el sha viejo.\n")
+        return 2
+
+    np.save(destino, g.astype(np.float32))
+    (KERNELS / f"{nom}.json").write_text(json.dumps({
+        "nombre": nom,
+        "familia": "control parametrizado",
+        "receta": {"funcion": "kernels.gauss", "k": k, "sigma": sigma},
+        "sha256_16": sha,
+        "suma": float(g.sum()),
+        "norma_original": float(np.linalg.norm(g)),
+        "suma_normalizada": float(normalizar_kernel(g).sum()),
+        "regenerar": f"python nn/kernels.py --gauss --k {k} --sigma {sigma:g} --guardar",
+        "sigma_por_defecto_del_banco": k / 6.0,
+        "es_el_control_gauss": abs(sigma - k / 6.0) < 1e-9 and k == K_CONTROL,
+        "origen": origen or "sigma elegido a mano",
+        "⚠ sesgo": (
+            "El `sigma` de este kernel NO se eligio a ciegas: se eligio MIRANDO "
+            "muestras de `train` de este mismo dataset (experimento `gauss-p`). "
+            "Cumple el §3.7 -- las muestras miradas excluyen la familia y el "
+            "interlineado reservados --, pero NO es un kernel ciego, y el informe "
+            "que lo cite tiene que decirlo."),
+    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    print(f"\nok  {destino}")
+    print(f"    k={k}  sigma={sigma:g}  sha {sha}  suma {g.sum():+.4f}")
+    print(f"    receta en {KERNELS / (nom + '.json')}\n")
+    print("  Evaluarlo (NO lo hace esto):")
+    print(f"    BANCOK_SECO=1 nn/lanzar.sh kernel kernels/{nom}.npy   # que se lanzaria")
+    print(f"    nn/lanzar.sh kernel kernels/{nom}.npy                 # ~9 min\n")
+    return 0
+
+
 def controles(k: int = K_CONTROL, semillas: int = 10) -> dict[str, np.ndarray]:
     """Todos los controles con kernel. `identidad` y `caja-media` NO llevan kernel."""
     out = {f"aleatorio-r{s}": aleatorio(k, 1000 + s) for s in range(semillas)}
@@ -89,7 +179,33 @@ def _main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--k", type=int, default=K_CONTROL)
     ap.add_argument("--guardar", action="store_true")
+    # Un gauss con `sigma` ELEGIDO, que es lo que produce `gauss-p`. Va aqui y no
+    # en aquel experimento porque un kernel que no se regenera desde el codigo del
+    # banco es un dato huerfano (la leccion del laplaciano, commit e777060).
+    ap.add_argument("--gauss", action="store_true",
+                    help="genera UN gauss con el --sigma dado, en vez de los controles")
+    ap.add_argument("--sigma", type=float, default=None)
+    ap.add_argument("--esperado", default=None,
+                    help="sha256_16 que `gauss-p` mostro: se niega si no coincide")
+    ap.add_argument("--origen", default=None)
     a = ap.parse_args()
+
+    # ⚠ EL MODO SE DECIDE UNA VEZ Y NO SE VUELVE A LEER DE UN ARGUMENTO. Es la
+    # leccion del 2026-09-08: `lanzar.sh` releia `$1` despues de consumirlo y
+    # corrio la calibracion en vez de los kernels, con `Result=success`.
+    modo = "gauss" if a.gauss else "controles"
+    if modo == "gauss":
+        if a.sigma is None:
+            ap.error("--gauss necesita --sigma. No hay defecto a proposito: el "
+                     "defecto k/6 es justo el punto que ya esta evaluado")
+        if not a.guardar:
+            print(f"\n(seco) --gauss con k={a.k} sigma={a.sigma:g} escribiria "
+                  f"kernels/{nombre_gauss(a.k, a.sigma)}.npy\n"
+                  f"  anyade --guardar para escribirlo de verdad\n")
+            return 0
+        return guardar_gauss(a.k, a.sigma, a.esperado, a.origen)
+    if modo != "controles":                      # el ultimo caso se NIEGA (2026-09-08)
+        ap.error(f"modo desconocido: {modo}")
 
     import sys
     sys.path.insert(0, str(AQUI))

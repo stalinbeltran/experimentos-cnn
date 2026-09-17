@@ -1,0 +1,12 @@
+{
+  "id": "gauss-p",
+  "titulo": "Elegir MIRANDO los dos parametros de la gaussiana que el banco de kernels evalua, sobre muestras libres de su reserva",
+  "pregunta": "Que sigma (y que k para contenerlo) merece la pena meter por la puerta de banco-k, visto sobre 10 muestras de train de su propio dataset, dado que el unico punto gaussiano ya evaluado es el defecto k/6 y nadie lo eligio",
+  "creado": "2026-09-17",
+  "estado": "abierto",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": "nn/app.py",
+  "reporte": null
+}

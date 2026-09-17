@@ -1,0 +1,19 @@
+{
+  "name": "gaussp",
+  "descripcion": "La app para ELEGIR MIRANDO el sigma de la gaussiana de `banco-k`, sobre 10 muestras de train libres de la reserva del §3.7. `url` da la direccion para el movil, ya comprobada contra el socket y el cortafuegos en vez de componerla a ciegas; `instalar` la repone entera en una maquina recien hecha (unidad + ufw). No gasta nada: lee el dataset y dibuja.",
+  "ejemplos": [
+    "url",
+    "estado",
+    "forma",
+    "instalar",
+    "cerrar"
+  ],
+  "command": "./.venv/bin/python -c \"import sys,runpy;from expcnn import por_id;p=por_id('gauss-p').carpeta/'nn'/'app.py';sys.argv=[str(p)]+sys.argv[1:];runpy.run_path(str(p),run_name='__main__')\" {{input}}",
+  "encargados": [
+    "echo"
+  ],
+  "requiere": [
+    "python3"
+  ],
+  "timeoutMs": 120000
+}
