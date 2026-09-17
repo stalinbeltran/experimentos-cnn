@@ -90,6 +90,24 @@ truncamiento.* O sea que el único punto gaussiano evaluado está pegado a un ex
 y **ensanchar más exige subir `k`**, que está topado en 19 (§5.2, congelado): σ ≈ 3,2 es el
 techo real.
 
+**2 bis. Y por dónde queda sitio, que es el mapa de esto.** *Medido el 2026-09-17:*
+
+| `sigma` | `k` mínimo | corta | distancia a la identidad |
+|---:|---:|---:|---:|
+| 0,2 | 3 | 0,0 % | 0,000 |
+| 0,5 | 3 | 0,1 % | 0,266 |
+| 0,9 | 5 | 0,7 % | 0,864 |
+| **1,5** *(el ya evaluado, k=9)* | **9** | 0,4 % | **1,117** |
+| 2,0 | 13 | 0,2 % | 1,198 |
+| 3,0 | 17 | 0,9 % | 1,274 |
+| 3,2 *(el techo: k=19)* | 19 | 0,6 % | 1,284 |
+
+**De los 1,333 de recorrido que tiene el eje entero, 1,117 quedan por DEBAJO del punto ya
+evaluado y sólo 0,167 por encima.** O sea que subir `sigma` desde 1,5 apenas cambia el
+filtro —y además obliga a subir `k`, que topa en 19—, mientras que **entre la identidad y
+1,5 está casi todo lo que nadie ha mirado**. Es descripción de la forma, no una
+recomendación: dónde hay sitio, no qué es mejor.
+
 **3. Se ve lo que la red recibe, no una versión legible.** Kernel normalizado en L2 (§5.4),
 convolución válida, recorte a 128 (§6.2) y estandarizado (§6.5). Importa porque la
 gaussiana apaga el contraste **y el §6.5 lo devuelve entero**: un visor que enseñara la
