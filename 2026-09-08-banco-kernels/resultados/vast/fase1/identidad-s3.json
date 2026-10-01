@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-01T22:43:01+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-01T22:43:04+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-01T22:43:53+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-01T22:44:01+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-01T22:44:52+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-01T22:44:58+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-01T22:46:10+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-01T22:46:10+00:00"
   }
  ],
  "id": "identidad-s3",
@@ -23,5 +51,17 @@
   "fiabilidad": 0.9948
  },
  "horas_max": 1.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53766047,
+ "intentos_clave": 1,
+ "payload_mb": 3.36,
+ "sha256": "21ddc59687c92799",
+ "segundos_max": 2888,
+ "rc": 0,
+ "traido": [],
+ "apartado": [
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s3"
+ ],
+ "minutos": 3.1,
+ "coste_usd": 0.0025
 }

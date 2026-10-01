@@ -81,19 +81,31 @@ y el margen que exige un kernel de 19 px **a esa escala**.
       busca. No se sortea-y-rechaza: eso eliminaría los párrafos grandes.
    3. **Cada página se rinde DOS veces**: el pase A apila los párrafos y **mide** su caja
       real; el pase B coloca cada uno donde toca para esa caja.
-   4. **El descarte existe y es la RED DE SEGURIDAD.** ⚠ Aquí **no es 0**, a diferencia de
-      `bor-p`, y es honesto decirlo: con la geometría ×4 las ranuras son estrechas, y un
-      párrafo de cuerpo grande puede no caber ni en una línea (demasiado corto, < 45 px) ni
-      en dos (más alto que su ranura). La página se tira y se repite con la semilla
-      siguiente. El número va en el manifiesto (`descartadas`), y el sesgo que mete —un poco
-      menos de cuerpo grande en ranura baja— se ve en `factores.cuerpo_px_usado` y en
-      `meta.json`. **Medido en el ensayo del 2026-10-01: 1 descarte en 6 páginas.**
-   5. **Se REDUCE /4 cada página en cuanto se rinde** (suma del bloque 4×4) y se guarda.
-   6. **Se comprueba la TINTA contra las cajas en la página reducida**: ningún bloque con
+   4. **Los cuerpos se EMPAREJAN con las ranuras**: se sortean los `n` cuerpos de la página
+      y el mayor va a la ranura más ancha (`cuerpos_emparejados()`). ⚠⚠ **Esto no estaba en
+      `bor-p`, y se añadió porque el primer render salió sesgado** (2026-10-01): con la
+      geometría ×4 hay ranuras de 120 px de ancho, y ahí un cuerpo de 30 px no mete ni las
+      6 palabras mínimas sin pasarse de alto. La página se descartaba —91 descartes, 6
+      páginas perdidas enteras, **977 párrafos**— y el cuarto de cuerpo más grande quedó un
+      **11 % por debajo** del uniforme (`[270, 251, 237, 217]` por cuartos de `[11, 30]`,
+      ~244 cada uno). Era sortear-y-rechazar sobre el cuerpo, justo lo que el paso 2
+      prohíbe. Aquel render no se publicó; su metadata está en el almacén
+      (`foveal-vision-data/temporal/dev/2026-10-01/bor-p4-primer-render/`).
+      Emparejar **no cambia ninguna distribución marginal** (los cuerpos se sortean igual y
+      las ranuras salen del mismo reparto); lo que cambia es **qué cuerpo cae en qué
+      ranura**: dentro de una página, el ancho del párrafo y su cuerpo quedan
+      correlacionados en positivo. Es una decisión de este experimento y se dice aquí.
+   5. **El descarte existe y es la RED DE SEGURIDAD**, con **10 intentos por página** (eran
+      3; los intentos son deterministas, así que subirlo no cambia ninguna página que ya
+      saliera). Lo que queda de él es sobre todo la cota **declarada** de ancho de tinta
+      (`ancho ≥ 120` px de render): un párrafo cuyas líneas no llenan la columna. El número
+      va en el manifiesto (`descartadas`) y el porqué de cada uno en `meta.json`.
+   6. **Se REDUCE /4 cada página en cuanto se rinde** (suma del bloque 4×4) y se guarda.
+   7. **Se comprueba la TINTA contra las cajas en la página reducida**: ningún bloque con
       tinta puede caer fuera de toda caja (con 1 bloque de tolerancia, porque las cajas se
       guardan redondeadas al px de render). Si cae, **no se empaqueta**: la etiqueta no
       describiría la imagen. *Ensayo del 2026-10-01: 0 bloques fuera, incluso sin tolerancia.*
-   7. **Publicar es irreversible.** `--publicar` se niega a pisar uno existente.
+   8. **Publicar es irreversible.** `--publicar` se niega a pisar uno existente.
 2. **Comprobar el publicado** (`--comprobar`): huellas, garantías geométricas y tinta,
    recalculadas sobre lo que está en el repo de datos.
 
@@ -141,6 +153,8 @@ y el margen que exige un kernel de 19 px **a esa escala**.
   - **la geometría ×4** (separación 160, margen 128 en render): las garantías se derivan de
     `k = 19` **a la escala guardada**. `bor-p` no se puede reducir tal cual: su separación
     mínima (41,88 px) queda en 10,5 a /4;
+  - **los cuerpos emparejados con las ranuras** y **10 intentos por página** (paso 1.4 y
+    1.5 de Procesos): sin eso el primer render salió sesgado contra el cuerpo grande;
   - **2–4 párrafos por página, no 2–5**: con la geometría ×4, 5 párrafos no caben en el
     **22 %** de las páginas (simulado el 2026-10-01 con `celdas()` sobre 2000 repartos), y el
     código de `bor-p` bajaba la densidad en silencio, dejando el total por debajo de 1000;
