@@ -1,0 +1,23 @@
+{
+  "id": "dim-gen",
+  "titulo": "Reducir las DIMENSIONES de la imagen y medir que le hace a la GENERALIZACION de una CNN de L capas sin padding, entrenada con el 10 % del dataset y validada con el 90 %",
+  "pregunta": "Con el 10 % del dataset para entrenar y el 90 % para validar, L capas fijas sin padding y un kernel que siempre ve la misma FRACCION f del ancho de la imagen, ¿como cambia el IoU sobre las imagenes no vistas —y la brecha train-val— al reducir la imagen de 128 a 64, 32, 16 y 8 px? ¿Hay un W minimo suficiente, y hay un W a partir del cual la resolucion sobra o estorba?",
+  "creado": "2026-10-01",
+  "estado": "abierto",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "usa_fv": false,
+  "gasta": "no",
+  "reporte": null,
+  "plan": "ESPECIFICACION.md de esta carpeta (lo escribio Claude el 2026-10-01; es historial). Lo VIGENTE manda en REGLAS.md y en instrucciones/02-criterio.md. SOLO PLAN: nada ejecutado, ningun script escrito, nada entrenado",
+  "brazos_previstos": ["w128", "w064", "w032", "w016", "w008"],
+  "semillas_previstas": [1, 2, 3, 4, 5],
+  "control_previsto": "w128-de16: la imagen de 16 reescalada a 128 (misma red y parametros que w128, informacion de w016). Separa parametros de informacion; sin el, una caida a W alto queda 'sin cerrar (confundido)' segun el criterio del propio ESTADO.md del repo central",
+  "gasta_previsto": "alquila (recomendado: 5 maquinas de Vast, una por semilla con sus cinco W; ≈2 h de reloj y ≈0,4-0,55 $ sin el control, ≈3,5 h y ≈0,8-1,05 $ con el; estimado a partir del paso MEDIDO en el dev) o entrena-local (dev: ≈8,5 h con C=8 o ≈4,5 h con C=4, compartiendo las 2 vCPU con el bot)",
+  "gasta_por_que": "'no' es lo honesto HOY: no hay codigo, asi que nada puede tardar ni costar. El freno casa por nombre de proceso (`entrenar_local.py`, cerrable.mjs), no por este campo, asi que cuando haya codigo lo vera igual; lo unico que este 'no' pierde es que comprobar.py vigile el nombre mientras tanto",
+  "pendiente": [
+    "Los 4 supuestos y las 6 decisiones del dueno (ESPECIFICACION.md §0 y §7) ANTES de escribir codigo",
+    "El commit que traiga nn/entrenar_local.py pone gasta en 'alquila' (o 'entrena-local') y entrada en nn/entrenar_local.py, EN EL MISMO COMMIT. Si alquila, el freno de Telegram es el `exp-vast` que ya existe (prefijo expc-dimgen-) y el descriptor va en nn/vast.json",
+    "Confirmar con el dueno si un experimento de este repo lleva reporte en el central aunque no mueva ESTADO.md: las dos reglas escritas se contradicen (ESPECIFICACION.md §6)"
+  ],
+  "linaje": "ninguno. Lee el mismo dataset que banco-k y NO hereda nada de el: otra red, otra cabeza, otra pregunta; y sus pesos no se importan nunca al banco (REGLAS.md § Que NO hereda)"
+}
