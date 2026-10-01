@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-01T22:34:40+00:00"
+  }
+ ],
+ "id": "identidad-s3",
+ "etiqueta": "expc-bancok-f1-identidad-s3",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase1.json",
+ "oferta": 53744004,
+ "precio_hora": 0.04222,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Core i7-4790",
+  "ram_gb": 15.6,
+  "ghz": 4.0,
+  "gpu": "GTX 1080 Ti",
+  "ubicacion": "United Kingdom, GB",
+  "host": 152600,
+  "fiabilidad": 0.9251
+ },
+ "horas_max": 1.0,
+ "tope_precio": 0.12
+}
