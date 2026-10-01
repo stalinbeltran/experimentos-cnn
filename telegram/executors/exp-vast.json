@@ -1,0 +1,13 @@
+{
+  "name": "exp-vast",
+  "descripcion": "El freno de los experimentos que ALQUILAN en Vast (modo `trabajo` del lanzador). `estado` lee el libro de cada flota del repo y lo cruza con lo vivo en la cuenta; `apagar <prefijo>` para las unidades y destruye las maquinas con ese prefijo (solo `expc-*`). Lanzar se hace con `nn/vast.sh` de cada experimento.",
+  "ejemplos": [
+    "estado",
+    "apagar expc-bork-",
+    "apagar expc-"
+  ],
+  "command": "python3 -m expcnn.vast {{input}}",
+  "encargados": ["echo"],
+  "requiere": ["python3"],
+  "timeoutMs": 300000
+}

@@ -7,8 +7,8 @@ caso, nunca con el primero.
 """
 
 from .entorno import (SUBDIR_DATASETS, exigir_datos, exigir_dataset, exigir_fv,
-                      exigir_generador, hay_fv, ruta_datos, ruta_dataset, ruta_fv,
-                      ruta_generador)
+                      exigir_generador, exigir_lanzador, hay_fv, ruta_datos, ruta_dataset,
+                      ruta_fv, ruta_generador, ruta_lanzador)
 from .registro import ESTADOS, GASTOS, Experimento, experimentos, por_id, raiz
 
 __all__ = [
@@ -20,12 +20,14 @@ __all__ = [
     "exigir_dataset",
     "exigir_fv",
     "exigir_generador",
+    "exigir_lanzador",
     "experimentos",
     "hay_fv",
     "por_id",
     "ruta_datos",
     "ruta_dataset",
     "ruta_generador",
+    "ruta_lanzador",
     "raiz",
     "ruta_fv",
 ]

@@ -1,0 +1,14 @@
+{
+  "id": "bor-p4",
+  "titulo": "Las paginas de bor-p A LA ESCALA DEL BANCO: rendidas a 1024 con la geometria x4 y guardadas reducidas /4, el dato de entrada de bor-k, bor-ae y bor-pca",
+  "pregunta": "No contesta ninguna: produce el dato. Paginas limpias con 2-4 parrafos y la caja de tinta de cada uno, a la escala en que banco-k aplica el kernel (/4), con la separacion y el margen que exige un kernel de 19 px A ESA ESCALA",
+  "creado": "2026-10-01",
+  "estado": "abierto",
+  "dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "usa_fv": false,
+  "gasta": "no",
+  "reporte": null,
+  "hereda_de": "bor-p",
+  "gasta_por_que": "'no' es lo honesto: solo genera un dataset, una vez en la vida (~13 min de renders en el dev, 0 $). Lo que tarda es `nn/generar_paginas.py`, y ese nombre ya esta en la lista TRABAJOS de `telegram-coordinator/scripts/cerrable.mjs`: el freno lo ve aunque `gasta` sea 'no'",
+  "plan": "docs/plan-kernels-banco-2026-10-01.md, fase 0a (decision 1 del dueno: dataset nuevo a /4 con la geometria x4)"
+}

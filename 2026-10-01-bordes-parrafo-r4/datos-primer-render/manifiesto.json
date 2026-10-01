@@ -1,0 +1,180 @@
+{
+ "nombre": "parrafos1000-pagina1024-r4-r20261001",
+ "experimento": "bor-p4",
+ "generado": "2026-10-01T22:26:56Z",
+ "semilla": 1,
+ "lienzo": 1024,
+ "reduccion": 4,
+ "marco": 256,
+ "almacenamiento": "uint16, SUMA del bloque 4x4 (el §3.8 de `banco-k`): exacto, sin cuantizacion. Papel blanco = 4080; tinta negra pura = 0",
+ "fondo": "solid #ffffff (papel limpio; NADA de fondos sucios)",
+ "etiqueta": "4 enteros por parrafo en pixeles del LIENZO DE RENDER (1024): izq, der, sup, inf. Es la caja de TINTA (union de cajas de palabra), no la de maquetacion",
+ "etiqueta_en_la_pagina_guardada": "coord / 4, sin redondear: la misma aritmetica que el banco aplica a las suyas (§6.4 de alli)",
+ "alineacion": "justify: sin ella la tinta no llega al borde derecho de la caja",
+ "paginas": 325,
+ "parrafos": 977,
+ "parrafos_por_pagina": {
+  "2": 108,
+  "3": 107,
+  "4": 110
+ },
+ "geometria": {
+  "k_max_guardado": 19,
+  "radio_guardado": 9,
+  "separacion_dura": {
+   "guardado": 19,
+   "render": 76
+  },
+  "margen_duro": {
+   "guardado": 9,
+   "render": 36
+  },
+  "separacion_construida": {
+   "guardado": 40.0,
+   "render": 160
+  },
+  "margen_construido": {
+   "guardado": 32.0,
+   "render": 128
+  },
+  "ancho_min_render": 120.0,
+  "alto_min_render": 45.0,
+  "de_donde_salen": "todo de k_max=19 A LA ESCALA GUARDADA, que es donde corre el kernel: radio 9, separacion dura 2*9+1=19, margen duro 9 (una convolucion valid k=19 sobre 256 solo cubre [9, 246]). En render, x4: 76 y 36. La construccion es la de `bor-p` x4: separacion 160, margen 128",
+  "metrica": "L-infinito (Chebyshev): es la que corresponde a una ventana CUADRADA"
+ },
+ "medido": {
+  "escala": "px de la pagina GUARDADA (256), que es donde se recortan las ventanas",
+  "separacion_min": 40.42,
+  "separacion_mediana": 49.62,
+  "margen_min": 52.0,
+  "margen_mediana": 54.83,
+  "ventana_limpia_min": 79,
+  "ventana_limpia_mediana": 97,
+  "ventana_limpia_p10": 83,
+  "que_es_ventana_limpia": "el lado IMPAR de la ventana mas grande que se puede centrar en CUALQUIER punto del borde de un parrafo sin salirse del papel y sin ver tinta de otro. Es lo que se puede recortar despues",
+  "ancho_tinta": [
+   30.0,
+   152.0
+  ],
+  "alto_tinta": [
+   11.25,
+   82.25
+  ],
+  "tinta_fuera_de_cajas": 0,
+  "tinta_fuera_de_cajas_sin_tolerancia": 111,
+  "tolerancia_tinta_bloques": 1
+ },
+ "factores": {
+  "fuentes": [
+   "DejaVuSans",
+   "DejaVuSerif",
+   "LiberationSans",
+   "LiberationSerif"
+  ],
+  "cuerpo_px": [
+   11,
+   30
+  ],
+  "cuerpo_px_usado": [
+   11.1,
+   30.0
+  ],
+  "interlineado": [
+   1.1,
+   1.42
+  ],
+  "interlineado_usado": [
+   1.1,
+   1.42
+  ],
+  "ancho_px_tope_receta": [
+   120,
+   608
+  ],
+  "ancho_px_usado": [
+   120.0,
+   607.7
+  ],
+  "palabras_tope_receta": [
+   6,
+   1400
+  ],
+  "palabras_usado": [
+   6,
+   203
+  ],
+  "ancho_y_alto_se_derivan": "de la celda que el reparto le toco al parrafo; el rango de la receta es el TOPE, comprobado al empaquetar",
+  "color_texto": "#000000 fijo (no se vario: el encargo pide papel limpio)",
+  "parrafos_por_pagina": [
+   2,
+   3,
+   4
+  ]
+ },
+ "reserva_banco_k_§3.7": {
+  "respetada": true,
+  "fuente_prohibida": "LiberationMono",
+  "interlineado_prohibido": [
+   1.45,
+   1.6
+  ],
+  "interlineado_usado": [
+   1.1,
+   1.42
+  ],
+  "regla": "`banco-k` reserva LiberationMono y el interlineado [1.45, 1.60] para uso exclusivo suyo. Un kernel aprendido sobre datos que los alcancen tiene fuga de distribucion AUNQUE las muestras sean distintas, y sale optimista al evaluarlo alli. Este dataset no los usa, y `nn/receta.json` lo declara EXPLICITO porque omitir cualquiera de las dos claves equivale a usarlas"
+ },
+ "reparto": {
+  "criterio": "POR PAGINA, no por parrafo: dos ventanas de la misma pagina comparten fuente, fondo y vecinos",
+  "fracciones": {
+   "train": 0.7,
+   "val": 0.1,
+   "eval": 0.2
+  },
+  "paginas": {
+   "train": 227,
+   "val": 32,
+   "eval": 66
+  },
+  "parrafos": {
+   "train": 695,
+   "val": 93,
+   "eval": 189
+  }
+ },
+ "descartadas": 91,
+ "paginas_planeadas": 331,
+ "renders": 820,
+ "segundos": 2485.7,
+ "ficheros": {
+  "paginas.npz": {
+   "sha256_16": "f420820e486ff750",
+   "forma": [
+    325,
+    256,
+    256
+   ],
+   "dtype": "uint16",
+   "bytes": 2000250,
+   "como_se_lee": "np.load('paginas.npz')['paginas'][i]  -> (256, 256) uint16"
+  },
+  "cajas.npz": {
+   "sha256_16": "364d2e07f97f57b6",
+   "columnas": [
+    "pagina",
+    "izq",
+    "der",
+    "sup",
+    "inf"
+   ],
+   "escala_columnas": "px del lienzo de RENDER (1024); /4 en la guardada",
+   "derivadas": [
+    "margen_r4",
+    "separacion_r4",
+    "ventana_limpia_r4"
+   ],
+   "escala_derivadas": "px de la pagina GUARDADA (256)",
+   "bytes": 13847
+  }
+ }
+}

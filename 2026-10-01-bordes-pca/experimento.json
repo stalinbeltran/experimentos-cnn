@@ -1,0 +1,14 @@
+{
+  "id": "bor-pca",
+  "titulo": "La COMPONENTE PRINCIPAL de los parches k x k centrados en bordes de parrafo, en k = 3..19: la referencia barata, sin entrenar, para el banco `banco-k`",
+  "pregunta": "¿Cual es la direccion de mayor varianza de los parches de borde de parrafo a la escala del banco, y sirve como kernel?",
+  "creado": "2026-10-01",
+  "estado": "abierto",
+  "dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": "nn/pca.py",
+  "reporte": null,
+  "plan": "docs/plan-kernels-banco-2026-10-01.md, E3",
+  "gasta_por_que": "Una SVD por k, segundos en el dev. Ni entrena ni alquila."
+}

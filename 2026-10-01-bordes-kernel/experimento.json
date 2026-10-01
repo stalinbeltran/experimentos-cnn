@@ -1,0 +1,15 @@
+{
+  "id": "bor-k",
+  "titulo": "UN kernel k x k para los CUATRO bordes de un parrafo, supervisado: la lectura maximo/minimo de un mapa llevada a los dos ejes, en k = 3..19 y 3 semillas, para el banco `banco-k`",
+  "pregunta": "Un solo kernel de convolucion de k <= 19, leido por los extremos de sus perfiles horizontal y vertical, ¿localiza los cuatro bordes de la caja de tinta de un parrafo? Y por k: ¿cuales aprende y cuales no?",
+  "creado": "2026-10-01",
+  "estado": "abierto",
+  "dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "linaje": "esq-2d (la lectura por el maximo y el minimo de UN mapa); no hereda nada de el",
+  "plan": "docs/plan-kernels-banco-2026-10-01.md, E1 (decision 2 del dueno: UN kernel para los cuatro bordes; decision 3: 3 semillas)",
+  "gasta_por_que": "Los 27 brazos (9 k x 3 semillas) entrenan en Vast, una maquina por k con sus 3 semillas a la vez, con el modo `trabajo` del lanzador (`nn/vast.sh`). El freno de Telegram es `/use exp-vast`."
+}

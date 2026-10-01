@@ -178,3 +178,46 @@ def exigir_generador() -> Path:
     if p is None:
         raise RuntimeError(AYUDA_GENERADOR)
     return p
+
+
+# --- el LANZADOR de Vast (la cuarta puerta, 2026-10-01) --------------------------
+#
+# Para los experimentos que alquilan (`gasta: "alquila"`): el modo `trabajo` de
+# `digital-ocean-dropplet-auto-launching/scripts/vast_instance.py` reparte N trabajos
+# en N maquinas, trae un directorio y destruye en `finally`. Plan:
+# `docs/plan-kernels-banco-2026-10-01.md` §4.1.
+#
+# ⚠ No basta con que el repo ESTE: un clon viejo no tiene el subcomando `trabajo`, y
+# descubrirlo despues de alquilar es pagar por un error. Por eso la puerta pregunta
+# al propio lanzador si lo tiene (`trabajo --help`), que cuesta medio segundo.
+
+AYUDA_LANZADOR = (
+    "Este experimento alquila maquinas en Vast con el modo `trabajo` del lanzador, y no "
+    "lo encuentro (o es un clon viejo sin ese modo).\n"
+    "  → clonalo o actualizalo al lado:  git -C ~/src/digital-ocean-dropplet-auto-launching pull\n"
+    "  → o dime donde esta: EXPCNN_LANZADOR=/ruta/al/lanzador"
+)
+
+
+def ruta_lanzador() -> Path | None:
+    """Donde esta el lanzador, o None.
+
+        EXPCNN_LANZADOR  >  hermano ../digital-ocean-dropplet-auto-launching  >  None
+    """
+    declarado = os.environ.get("EXPCNN_LANZADOR")
+    p = (Path(declarado).expanduser().resolve() if declarado
+         else raiz().parent / "digital-ocean-dropplet-auto-launching")
+    return p if (p / "scripts" / "vast_instance.py").is_file() else None
+
+
+def exigir_lanzador() -> Path:
+    """La raiz del lanzador CON el modo `trabajo`, o se niega AHORA."""
+    import subprocess                                           # noqa: PLC0415
+    p = ruta_lanzador()
+    if p is None:
+        raise RuntimeError(AYUDA_LANZADOR)
+    r = subprocess.run([sys.executable, str(p / "scripts" / "vast_instance.py"), "trabajo",
+                        "--help"], capture_output=True, text=True, timeout=60)
+    if r.returncode != 0 or "--descriptor" not in r.stdout:
+        raise RuntimeError(AYUDA_LANZADOR)
+    return p

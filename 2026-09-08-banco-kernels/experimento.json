@@ -6,7 +6,7 @@
   "estado": "abierto",
   "dataset": "parrafos1000-584px-r4-r20260908b",
   "usa_fv": false,
-  "gasta": "entrena-local",
+  "gasta": "alquila",
   "entrada": "nn/entrenar_local.py",
   "reporte": null,
   "especificacion": {
@@ -71,5 +71,6 @@
       1.6
     ],
     "elegida": "2026-09-08"
-  }
+  },
+  "gasta_por_que": "Desde el 2026-10-01 el banco tambien corre en Vast: la fase 1 del plan de kernels (identidad s3, para validar la cadena y medir la deriva) y la fase 3 (evaluar los kernels de bor-k/bor-ae/bor-pca, una maquina por k). Va con el modo `trabajo` del lanzador (`nn/vast.sh`), y su freno de Telegram es `/use exp-vast`. Lo que corre en el dev sigue siendo `nn/entrenar_local.py` (y `nn/lanzar.sh`)."
 }

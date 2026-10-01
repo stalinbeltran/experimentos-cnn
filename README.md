@@ -30,6 +30,10 @@ renombrar y re-ordenar sin romper nada.
 | [`2026-09-08-banco-kernels/`](2026-09-08-banco-kernels/) `banco-k` | abierto | Dado un kernel k x k cualquiera, aplicado a las entradas antes de la red, mejora el IoU sobre eval por encima del kernel aleatorio de igual norma, y ademas REDUCE la brecha train-eval respecto de la identidad (transferencia) en vez de solo subir las dos juntas (facilitacion) |
 | [`2026-09-09-bordes-parrafo/`](2026-09-09-bordes-parrafo/) `bor-p` | abierto | Que kernel de convolucion de k <= 19 localiza los cuatro bordes del recuadro que encierra un parrafo, sobre paginas de papel limpio con varios parrafos que nunca se solapan |
 | [`2026-09-17-gauss-parametros/`](2026-09-17-gauss-parametros/) `gauss-p` | abierto | Que sigma (y que k para contenerlo) merece la pena meter por la puerta de banco-k, visto sobre 10 muestras de train de su propio dataset, dado que el unico punto gaussiano ya evaluado es el defecto k/6 y nadie lo eligio |
+| [`2026-10-01-bordes-autoencoder/`](2026-10-01-bordes-autoencoder/) `bor-ae` | abierto | Con un solo filtro, una penalizacion de dispersion y un decodificador de norma 1, ¿que kernel sale de reconstruir las ventanas de borde de parrafo? ¿Algo distinto de la identidad y de un pasa-bajos? |
+| [`2026-10-01-bordes-kernel/`](2026-10-01-bordes-kernel/) `bor-k` | abierto | Un solo kernel de convolucion de k <= 19, leido por los extremos de sus perfiles horizontal y vertical, ¿localiza los cuatro bordes de la caja de tinta de un parrafo? Y por k: ¿cuales aprende y cuales no? |
+| [`2026-10-01-bordes-parrafo-r4/`](2026-10-01-bordes-parrafo-r4/) `bor-p4` | abierto | No contesta ninguna: produce el dato. Paginas limpias con 2-4 parrafos y la caja de tinta de cada uno, a la escala en que banco-k aplica el kernel (/4), con la separacion y el margen que exige un kernel de 19 px A ESA ESCALA |
+| [`2026-10-01-bordes-pca/`](2026-10-01-bordes-pca/) `bor-pca` | abierto | ¿Cual es la direccion de mayor varianza de los parches de borde de parrafo a la escala del banco, y sirve como kernel? |
 
 <!-- FIN INDICE -->
 

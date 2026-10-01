@@ -272,7 +272,10 @@ Los de este experimento, con su interfaz exacta. **Los nombres y las banderas so
 | `nn/muestras.py` | las **tres** figuras: el dataset en sus dos marcos y las 4 condiciones | `nn/datos.py --muestras 20 [--condiciones 6]` |
 | `nn/lanzar.sh` | lo que tarda, como **unidad de systemd** | `datos` · `calibrar` · `kernel <r.npy>…` · `--estado` · `BANCOK_SECO=1` para ver qué lanzaría |
 | `nn/probar_lanzador.sh` | que el lanzador despache **cada modo a lo suyo** | `nn/probar_lanzador.sh` (5 casos) |
-| `nn/importar_kernel.py` | saca un kernel aprendido de otro experimento, **por su `id`** | `--de esq-k --brazos k07 k09 k11` |
+| `nn/importar_kernel.py` | saca un kernel aprendido de otro experimento, **por su `id`**, y anota si sus datos alcanzan la reserva §3.7: lo lee de su `nn/receta.json` o, si no la tiene, del **manifiesto del dataset que declara** (desde el 2026-10-01); sin ninguno, asume fuga | `--de esq-k --brazos k07 k09 k11` · `--probar` (las tres ramas) |
+| `nn/vast.sh` | (desde el 2026-10-01) corre el banco en **Vast** con el modo `trabajo` del lanzador: `fase1` (identidad s3 en una máquina, para validar la cadena y medir la deriva Vast↔dev) y `fase3` (evaluar los kernels nuevos, una máquina por `k`). Commitea el libro (`resultados/vast/<fase>/`) **al alquilar**. Su freno: `/use exp-vast` | `fase1` · `fase3 [k…]` · `--estado [fase]` · `apagar` · `VAST_SECO=1 …` |
+| `nn/vast-fase1.json` | el descriptor de la fase 1 (dato: qué se sube, qué se instala, qué se corre y qué vuelve). Lo que vuelve **no pisa** `resultados/identidad-s3`: queda en el libro para compararlo | lo lee `vast_instance.py trabajo` |
+| `nn/probar_vast.sh` | el despacho de `vast.sh`, en seco (R17) | sale 0 si pasan los 4 casos |
 
 - ⚠⚠ **El lanzador tiene varios modos, y eso ya falló una vez** (2026-09-08): se pidió evaluar
   kernels y corrió **la calibración**, con la unidad en `Result=success` y `NRestarts=0`. La

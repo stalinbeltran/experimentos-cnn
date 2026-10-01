@@ -1,0 +1,14 @@
+{
+  "id": "bor-ae",
+  "titulo": "El filtro que mejor RECONSTRUYE las ventanas de borde: un autoencoder disperso de UN solo filtro, en k = 3..19 y 3 semillas, para el banco `banco-k`",
+  "pregunta": "Con un solo filtro, una penalizacion de dispersion y un decodificador de norma 1, ¿que kernel sale de reconstruir las ventanas de borde de parrafo? ¿Algo distinto de la identidad y de un pasa-bajos?",
+  "creado": "2026-10-01",
+  "estado": "abierto",
+  "dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "docs/plan-kernels-banco-2026-10-01.md, E2 (decision 4 del dueno: los tres experimentos; lambda calibrado antes con un tanteo en el dev)",
+  "gasta_por_que": "El tanteo de lambda corre en el dev (~minutos). Los 27 brazos, si el tanteo da un lambda, en Vast con `nn/vast.sh`. El freno de Telegram es `/use exp-vast`."
+}
