@@ -1,9 +1,21 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
-   "hora": "2026-10-01T22:37:31+00:00"
+   "hora": "2026-10-01T22:34:40+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-01T22:34:42+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-01T22:35:43+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-01T22:35:44+00:00"
   }
  ],
  "id": "identidad-s3",
@@ -23,5 +35,9 @@
   "fiabilidad": 0.9251
  },
  "horas_max": 1.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53765324,
+ "error": "RuntimeError: no pude subir el payload",
+ "minutos": 1.0,
+ "coste_usd": 0.0007
 }
