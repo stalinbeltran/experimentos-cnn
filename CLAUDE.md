@@ -303,6 +303,13 @@ tienen reporte). Si se confirma, la enmienda se escribe **allí**, no aquí en s
 
 ## Los datasets viven en el repo de DATOS, y se reusan por NOMBRE
 
+⚠ **Desde el 2026-10-01 el `origin` de ese repo es el ALMACÉN** —el volumen del mini—, no
+GitHub: `git push` desde `~/src/foveal-vision-data` va al mini, y allí **nadie borra**. Las
+rutas de aquí no cambian —el repo se sigue llamando `foveal-vision-data` y está al lado—;
+cambia a dónde empuja, y que **lo temporal también se guarda** (`temporal/<máquina>/<fecha>/`
+del repo de datos, en vez de `/tmp`). La regla entera, en `telegram-coordinator/CLAUDE.md`
+§ «EL ALMACÉN».
+
 **Orden del dueño, dos veces y con dos motivos distintos:**
 
 > «Guarda los datasets en el repo de data, de modo que sean siempre los mismos, por
