@@ -1,7 +1,13 @@
 # Plan: kernels de TODOS los tamaños para `banco-k`, entrenados y evaluados en Vast
 
-**2026-10-01 · ES UN PLAN. Nada ejecutado, nada alquilado, ningún fichero de código
-escrito, ninguna carpeta de experimento creada.** Lo pidió el dueño así:
+**2026-10-01 · ES UN PLAN.** ⚠ **Desde el 2026-10-01 por la noche, las fases 0 y 1 están
+EJECUTADAS** —el dueño dijo «Ejecútalo» con sus decisiones (1 recomendado · 2 un kernel · 3 tres
+semillas · 4 todos · 5 recomendado)—: lo medido está en el
+[reporte #25](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/reportes/infraestructura/2026/10-octubre/2026-10-01-kernels-banco-fases-0-1.md).
+Lo que cambió respecto de lo de abajo: el peaje medido es 1 min 48 s (no 8,4), la deriva Vast↔dev
+pasó del umbral (la fase 3 corre los controles en cada máquina), y la fase 2 son 9 máquinas **por
+experimento**, no 9 en total. El texto de abajo es el plan tal como se escribió. Lo pidió el
+dueño así:
 
 > «Ahí tenemos un banco de kernels. Ahora necesito que crees varios experimentos para
 > generar los kernels de los distintos tamaños esperados por el banco. Detalla el plan de

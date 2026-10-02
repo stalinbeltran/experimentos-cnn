@@ -9,7 +9,7 @@
   "gasta": "no",
   "reporte": null,
   "hereda_de": "bor-p",
-  "gasta_por_que": "'no' es lo honesto: solo genera un dataset, una vez en la vida (~13 min de renders en el dev, 0 $). Lo que tarda es `nn/generar_paginas.py`, y ese nombre ya esta en la lista TRABAJOS de `telegram-coordinator/scripts/cerrable.mjs`: el freno lo ve aunque `gasta` sea 'no'",
+  "gasta_por_que": "'no' es lo honesto: solo genera un dataset, una vez en la vida (~24 min de renders en el dev, medido el 2026-10-01; 0 $). Lo que tarda es `nn/generar_paginas.py`, y ese nombre ya esta en la lista TRABAJOS de `telegram-coordinator/scripts/cerrable.mjs`: el freno lo ve aunque `gasta` sea 'no'",
   "plan": "docs/plan-kernels-banco-2026-10-01.md, fase 0a (decision 1 del dueno: dataset nuevo a /4 con la geometria x4)",
   "hecho": [
     "el dataset: rendido (segundo render, 1412 s), comprobado y publicado el 2026-10-01 -- 331 paginas, 1000 parrafos, tinta fuera de las cajas 0, cuerpo sin sesgo (chi2 0,66). El primer render se descarto por sesgo contra el cuerpo grande y no se publico"
