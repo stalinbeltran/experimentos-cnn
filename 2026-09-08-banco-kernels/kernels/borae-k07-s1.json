@@ -1,0 +1,19 @@
+{
+  "nombre": "borae-k07-s1",
+  "origen_id": "bor-ae",
+  "origen_brazo": "k07-s1",
+  "origen_estado": "abierto",
+  "origen_dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": 149,
+  "k": 7,
+  "norma_original": 1.128170132637024,
+  "suma": 3.3208160400390625,
+  "sha256_16": "0ac480d60b1e04e5",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": false,
+    "detalle": "familia: ['DejaVuSans', 'DejaVuSerif', 'LiberationSans', 'LiberationSerif'] · interlineado: (1.1, 1.42) contra la reserva (1.45, 1.6) -> no solapa",
+    "fuente": "manifiesto del dataset declarado 'parrafos1000-pagina1024-r4-r20261001'"
+  }
+}

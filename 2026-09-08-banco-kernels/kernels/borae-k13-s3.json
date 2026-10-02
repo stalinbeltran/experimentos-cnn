@@ -1,0 +1,19 @@
+{
+  "nombre": "borae-k13-s3",
+  "origen_id": "bor-ae",
+  "origen_brazo": "k13-s3",
+  "origen_estado": "abierto",
+  "origen_dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": 296,
+  "k": 13,
+  "norma_original": 1.06376314163208,
+  "suma": 4.236597537994385,
+  "sha256_16": "89a06e3ee869b341",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": false,
+    "detalle": "familia: ['DejaVuSans', 'DejaVuSerif', 'LiberationSans', 'LiberationSerif'] · interlineado: (1.1, 1.42) contra la reserva (1.45, 1.6) -> no solapa",
+    "fuente": "manifiesto del dataset declarado 'parrafos1000-pagina1024-r4-r20261001'"
+  }
+}

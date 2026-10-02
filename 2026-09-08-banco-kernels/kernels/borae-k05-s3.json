@@ -1,0 +1,19 @@
+{
+  "nombre": "borae-k05-s3",
+  "origen_id": "bor-ae",
+  "origen_brazo": "k05-s3",
+  "origen_estado": "abierto",
+  "origen_dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": 203,
+  "k": 5,
+  "norma_original": 1.1196389198303223,
+  "suma": 2.465935707092285,
+  "sha256_16": "efcace8a62fc5bd0",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": false,
+    "detalle": "familia: ['DejaVuSans', 'DejaVuSerif', 'LiberationSans', 'LiberationSerif'] · interlineado: (1.1, 1.42) contra la reserva (1.45, 1.6) -> no solapa",
+    "fuente": "manifiesto del dataset declarado 'parrafos1000-pagina1024-r4-r20261001'"
+  }
+}
