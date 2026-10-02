@@ -1,0 +1,278 @@
+{
+ "criterio": "instrucciones/02-criterio.md, seccion B",
+ "particion": "eval",
+ "lambda": 0.0,
+ "max_delta": 0.5,
+ "brazos": [
+  {
+   "brazo": "k03-s1",
+   "k": 3,
+   "semilla": 1,
+   "epoca_best": 187,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.1498,
+   "al_banco": false
+  },
+  {
+   "brazo": "k03-s2",
+   "k": 3,
+   "semilla": 2,
+   "epoca_best": 193,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.2064,
+   "al_banco": false
+  },
+  {
+   "brazo": "k03-s3",
+   "k": 3,
+   "semilla": 3,
+   "epoca_best": 252,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.149,
+   "al_banco": false
+  },
+  {
+   "brazo": "k05-s1",
+   "k": 5,
+   "semilla": 1,
+   "epoca_best": 299,
+   "r2": 0.9951,
+   "delta": 0.468,
+   "activa": 0.3184,
+   "al_banco": true
+  },
+  {
+   "brazo": "k05-s2",
+   "k": 5,
+   "semilla": 2,
+   "epoca_best": 236,
+   "r2": 1.0,
+   "delta": 0.979,
+   "activa": 0.3201,
+   "al_banco": false
+  },
+  {
+   "brazo": "k05-s3",
+   "k": 5,
+   "semilla": 3,
+   "epoca_best": 203,
+   "r2": 0.99,
+   "delta": 0.43,
+   "activa": 0.3154,
+   "al_banco": true
+  },
+  {
+   "brazo": "k07-s1",
+   "k": 7,
+   "semilla": 1,
+   "epoca_best": 149,
+   "r2": 0.9749,
+   "delta": 0.335,
+   "activa": 0.3635,
+   "al_banco": true
+  },
+  {
+   "brazo": "k07-s2",
+   "k": 7,
+   "semilla": 2,
+   "epoca_best": 300,
+   "r2": 0.9927,
+   "delta": 0.429,
+   "activa": 0.3641,
+   "al_banco": true
+  },
+  {
+   "brazo": "k07-s3",
+   "k": 7,
+   "semilla": 3,
+   "epoca_best": 248,
+   "r2": 0.99,
+   "delta": 0.38,
+   "activa": 0.3604,
+   "al_banco": true
+  },
+  {
+   "brazo": "k09-s1",
+   "k": 9,
+   "semilla": 1,
+   "epoca_best": 219,
+   "r2": 0.9919,
+   "delta": 0.223,
+   "activa": 0.4039,
+   "al_banco": true
+  },
+  {
+   "brazo": "k09-s2",
+   "k": 9,
+   "semilla": 2,
+   "epoca_best": 276,
+   "r2": 0.9895,
+   "delta": 0.281,
+   "activa": 0.4007,
+   "al_banco": true
+  },
+  {
+   "brazo": "k09-s3",
+   "k": 9,
+   "semilla": 3,
+   "epoca_best": 297,
+   "r2": 0.9927,
+   "delta": 0.204,
+   "activa": 0.3992,
+   "al_banco": true
+  },
+  {
+   "brazo": "k11-s1",
+   "k": 11,
+   "semilla": 1,
+   "epoca_best": 281,
+   "r2": 0.9795,
+   "delta": 0.35,
+   "activa": 0.4268,
+   "al_banco": true
+  },
+  {
+   "brazo": "k11-s2",
+   "k": 11,
+   "semilla": 2,
+   "epoca_best": 271,
+   "r2": 0.983,
+   "delta": 0.184,
+   "activa": 0.4294,
+   "al_banco": true
+  },
+  {
+   "brazo": "k11-s3",
+   "k": 11,
+   "semilla": 3,
+   "epoca_best": 284,
+   "r2": 0.9925,
+   "delta": 0.146,
+   "activa": 0.4385,
+   "al_banco": true
+  },
+  {
+   "brazo": "k13-s1",
+   "k": 13,
+   "semilla": 1,
+   "epoca_best": 300,
+   "r2": 0.9942,
+   "delta": 0.626,
+   "activa": 0.4475,
+   "al_banco": false
+  },
+  {
+   "brazo": "k13-s2",
+   "k": 13,
+   "semilla": 2,
+   "epoca_best": 157,
+   "r2": 1.0,
+   "delta": 0.927,
+   "activa": 0.2341,
+   "al_banco": false
+  },
+  {
+   "brazo": "k13-s3",
+   "k": 13,
+   "semilla": 3,
+   "epoca_best": 296,
+   "r2": 0.9836,
+   "delta": 0.14,
+   "activa": 0.4661,
+   "al_banco": true
+  },
+  {
+   "brazo": "k15-s1",
+   "k": 15,
+   "semilla": 1,
+   "epoca_best": 300,
+   "r2": 0.9834,
+   "delta": 0.311,
+   "activa": 0.4805,
+   "al_banco": true
+  },
+  {
+   "brazo": "k15-s2",
+   "k": 15,
+   "semilla": 2,
+   "epoca_best": 293,
+   "r2": 0.9926,
+   "delta": 0.601,
+   "activa": 0.4595,
+   "al_banco": false
+  },
+  {
+   "brazo": "k15-s3",
+   "k": 15,
+   "semilla": 3,
+   "epoca_best": 293,
+   "r2": 0.9963,
+   "delta": 0.681,
+   "activa": 0.4709,
+   "al_banco": false
+  },
+  {
+   "brazo": "k17-s1",
+   "k": 17,
+   "semilla": 1,
+   "epoca_best": 270,
+   "r2": 1.0,
+   "delta": 0.99,
+   "activa": 0.2567,
+   "al_banco": false
+  },
+  {
+   "brazo": "k17-s2",
+   "k": 17,
+   "semilla": 2,
+   "epoca_best": 156,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.2333,
+   "al_banco": false
+  },
+  {
+   "brazo": "k17-s3",
+   "k": 17,
+   "semilla": 3,
+   "epoca_best": 223,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.2512,
+   "al_banco": false
+  },
+  {
+   "brazo": "k19-s1",
+   "k": 19,
+   "semilla": 1,
+   "epoca_best": 272,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.2481,
+   "al_banco": false
+  },
+  {
+   "brazo": "k19-s2",
+   "k": 19,
+   "semilla": 2,
+   "epoca_best": 243,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.1853,
+   "al_banco": false
+  },
+  {
+   "brazo": "k19-s3",
+   "k": 19,
+   "semilla": 3,
+   "epoca_best": 253,
+   "r2": 1.0,
+   "delta": 1.0,
+   "activa": 0.2429,
+   "al_banco": false
+  }
+ ]
+}

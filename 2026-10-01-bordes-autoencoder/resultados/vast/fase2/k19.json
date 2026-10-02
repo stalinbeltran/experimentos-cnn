@@ -1,5 +1,5 @@
 {
- "estado": "alquilada",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
@@ -8,6 +8,30 @@
   {
    "paso": "alquilada",
    "hora": "2026-10-02T18:25:52+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-02T18:31:16+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-02T18:31:24+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-02T18:32:06+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-02T18:32:12+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T19:17:25+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T19:17:25+00:00"
   }
  ],
  "id": "k19",
@@ -28,5 +52,18 @@
  },
  "horas_max": 3.0,
  "tope_precio": 0.12,
- "iid": 53899832
+ "iid": 53899832,
+ "intentos_clave": 1,
+ "payload_mb": 5.31,
+ "sha256": "0112790c84dd3d01",
+ "segundos_max": 9822,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-01-bordes-autoencoder/nn/pesos/k19-s1",
+  "experimentos-cnn/2026-10-01-bordes-autoencoder/nn/pesos/k19-s2",
+  "experimentos-cnn/2026-10-01-bordes-autoencoder/nn/pesos/k19-s3"
+ ],
+ "apartado": [],
+ "minutos": 51.6,
+ "coste_usd": 0.0605
 }
