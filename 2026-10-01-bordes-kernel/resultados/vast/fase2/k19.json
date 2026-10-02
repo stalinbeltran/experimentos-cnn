@@ -3,24 +3,24 @@
  "pasos": [
   {
    "paso": "pendiente",
-   "hora": "2026-10-02T10:49:26+00:00"
+   "hora": "2026-10-02T10:55:58+00:00"
   }
  ],
  "id": "k19",
  "etiqueta": "expc-bork-k19",
  "experimento": "bor-k",
  "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
- "oferta": 28852196,
- "precio_hora": 0.06889,
+ "oferta": 53837492,
+ "precio_hora": 0.06089,
  "maquina": {
-  "vcpu": 4.0,
-  "cpu": "Xeon E5-2640 0",
-  "ram_gb": 18.3,
-  "ghz": 3.0,
+  "vcpu": 5.6000000000000005,
+  "cpu": "Xeon E5-2690 v4",
+  "ram_gb": 25.2,
+  "ghz": 3.5,
   "gpu": "RTX 3060",
   "ubicacion": "Quebec, CA",
-  "host": 17579,
-  "fiabilidad": 0.9965
+  "host": 45315,
+  "fiabilidad": 0.943
  },
  "horas_max": 3.0,
  "tope_precio": 0.12

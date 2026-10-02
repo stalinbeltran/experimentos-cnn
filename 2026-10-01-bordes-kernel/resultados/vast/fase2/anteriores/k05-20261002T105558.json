@@ -1,0 +1,43 @@
+{
+ "estado": "destruida",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T10:49:26+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T10:49:37+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-02T10:54:58+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T10:54:58+00:00"
+  }
+ ],
+ "id": "k05",
+ "etiqueta": "expc-bork-k05",
+ "experimento": "bor-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
+ "oferta": 52708846,
+ "precio_hora": 0.05556,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "Xeon E5-2609 v3",
+  "ram_gb": 15.5,
+  "ghz": 1.9,
+  "gpu": "GTX 1080",
+  "ubicacion": "South Korea, KR",
+  "host": 59091,
+  "fiabilidad": 0.9931
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12,
+ "iid": 53847615,
+ "error": "RuntimeError: sshd no contesto en ssh3.vast.ai:10030",
+ "minutos": 5.4,
+ "coste_usd": 0.005
+}
