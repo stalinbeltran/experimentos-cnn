@@ -1,0 +1,19 @@
+{
+  "nombre": "bork-k09-s3",
+  "origen_id": "bor-k",
+  "origen_brazo": "k09-s3",
+  "origen_estado": "abierto",
+  "origen_dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": 93,
+  "k": 9,
+  "norma_original": 12.472684860229492,
+  "suma": 18.46685028076172,
+  "sha256_16": "ea9dcbc85c0aa61f",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": false,
+    "detalle": "familia: ['DejaVuSans', 'DejaVuSerif', 'LiberationSans', 'LiberationSerif'] · interlineado: (1.1, 1.42) contra la reserva (1.45, 1.6) -> no solapa",
+    "fuente": "manifiesto del dataset declarado 'parrafos1000-pagina1024-r4-r20261001'"
+  }
+}
