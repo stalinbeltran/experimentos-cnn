@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k09",
+ "etiqueta": "expc-borae-k09",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 45604165,
+ "precio_hora": 0.06148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+  "ram_gb": 15.6,
+  "ghz": 3.7,
+  "gpu": "RTX 3060",
+  "ubicacion": "Poland, PL",
+  "host": 21769,
+  "fiabilidad": 0.9987
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

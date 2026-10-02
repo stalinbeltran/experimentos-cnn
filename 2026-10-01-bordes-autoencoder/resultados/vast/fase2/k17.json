@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k17",
+ "etiqueta": "expc-borae-k17",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 53025344,
+ "precio_hora": 0.06963,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "Xeon Gold 5118",
+  "ram_gb": 94.3,
+  "ghz": 3.2,
+  "gpu": "RTX 3060",
+  "ubicacion": "Ohio, US",
+  "host": 37187,
+  "fiabilidad": 0.9757
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

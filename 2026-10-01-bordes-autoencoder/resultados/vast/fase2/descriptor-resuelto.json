@@ -1,0 +1,127 @@
+{
+ "experimento": "bor-ae",
+ "descripcion": "Fase 2 del plan de kernels: los 27 brazos de bor-ae (9 k x 3 semillas), UNA maquina por k con sus tres semillas a la vez. Exige LAMBDA congelado por el tanteo.",
+ "maquina": {
+  "cpus": 4,
+  "max_cpus": 8,
+  "min_ram": 8,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.12
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "resultados-r20260908-descartado",
+    "muestras"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/parrafos1000-pagina1024-r4-r20261001",
+   "destino": "foveal-vision-data/experimentos-cnn/parrafos1000-pagina1024-r4-r20261001"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "k03",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k03-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k03-s$s --hilos $H > nn/pesos/k03-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k03-s1",
+    "pesos/k03-s2",
+    "pesos/k03-s3"
+   ]
+  },
+  {
+   "id": "k05",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k05-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k05-s$s --hilos $H > nn/pesos/k05-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k05-s1",
+    "pesos/k05-s2",
+    "pesos/k05-s3"
+   ]
+  },
+  {
+   "id": "k07",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k07-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k07-s$s --hilos $H > nn/pesos/k07-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k07-s1",
+    "pesos/k07-s2",
+    "pesos/k07-s3"
+   ]
+  },
+  {
+   "id": "k09",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k09-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k09-s$s --hilos $H > nn/pesos/k09-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k09-s1",
+    "pesos/k09-s2",
+    "pesos/k09-s3"
+   ]
+  },
+  {
+   "id": "k11",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k11-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k11-s$s --hilos $H > nn/pesos/k11-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k11-s1",
+    "pesos/k11-s2",
+    "pesos/k11-s3"
+   ]
+  },
+  {
+   "id": "k13",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k13-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k13-s$s --hilos $H > nn/pesos/k13-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k13-s1",
+    "pesos/k13-s2",
+    "pesos/k13-s3"
+   ]
+  },
+  {
+   "id": "k15",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k15-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k15-s$s --hilos $H > nn/pesos/k15-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k15-s1",
+    "pesos/k15-s2",
+    "pesos/k15-s3"
+   ]
+  },
+  {
+   "id": "k17",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k17-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k17-s$s --hilos $H > nn/pesos/k17-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k17-s1",
+    "pesos/k17-s2",
+    "pesos/k17-s3"
+   ]
+  },
+  {
+   "id": "k19",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k19-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k19-s$s --hilos $H > nn/pesos/k19-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/k19-s1",
+    "pesos/k19-s2",
+    "pesos/k19-s3"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y por eso `pesos/...`. Asi el descriptor no nombra su carpeta (R16).",
+  "torch, numpy y pillow FIJADOS a las versiones del venv del dev del 2026-10-01: lo que difiera entre maquinas tiene que ser de la maquina, no de una version.",
+  "Cada semilla escribe su log en `nn/pesos/kNN-sS/log.txt`, y vuelve con sus pesos.",
+  "Los hilos se reparten con TRABAJO_VCPU (las vCPU que se pagan, de la oferta), no con nproc: dentro de Vast nproc cuenta las del HOST (28 en una de 4, medido 2026-10-01)."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-01-bordes-autoencoder/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json"
+}

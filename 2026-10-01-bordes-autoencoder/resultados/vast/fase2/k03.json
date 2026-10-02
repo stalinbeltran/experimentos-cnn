@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k03",
+ "etiqueta": "expc-borae-k03",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 45958967,
+ "precio_hora": 0.04148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "AMD Ryzen 5 5500",
+  "ram_gb": 15.6,
+  "ghz": 4.2685718,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Missouri, US",
+  "host": 145557,
+  "fiabilidad": 0.9967
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

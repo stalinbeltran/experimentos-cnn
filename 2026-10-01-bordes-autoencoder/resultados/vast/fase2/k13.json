@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k13",
+ "etiqueta": "expc-borae-k13",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 53776846,
+ "precio_hora": 0.06222,
+ "maquina": {
+  "vcpu": 6.4,
+  "cpu": "Xeon E5-2697A v4",
+  "ram_gb": 22.0,
+  "ghz": 3.6,
+  "gpu": "RTX 3060",
+  "ubicacion": "Quebec, CA",
+  "host": 31486,
+  "fiabilidad": 0.9952
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

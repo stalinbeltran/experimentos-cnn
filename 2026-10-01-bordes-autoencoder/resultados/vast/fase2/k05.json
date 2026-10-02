@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k05",
+ "etiqueta": "expc-borae-k05",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 53103417,
+ "precio_hora": 0.05141,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Core i3-2120",
+  "ram_gb": 15.6,
+  "ghz": 3.3,
+  "gpu": "GTX 1660 S",
+  "ubicacion": "Oregon, US",
+  "host": 149453,
+  "fiabilidad": 0.9942
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

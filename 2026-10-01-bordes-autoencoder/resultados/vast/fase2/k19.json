@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  }
+ ],
+ "id": "k19",
+ "etiqueta": "expc-borae-k19",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 43680173,
+ "precio_hora": 0.07037,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Core i5-6600",
+  "ram_gb": 31.3,
+  "ghz": 3.9,
+  "gpu": "RTX 3060",
+  "ubicacion": "South Korea, KR",
+  "host": 140479,
+  "fiabilidad": 0.9983
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}
