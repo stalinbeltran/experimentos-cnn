@@ -1,0 +1,43 @@
+{
+ "estado": "destruida",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T01:48:58+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T01:49:02+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-02T01:54:16+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T01:54:16+00:00"
+  }
+ ],
+ "id": "s4",
+ "etiqueta": "expc-dimgen-s4",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 48124766,
+ "precio_hora": 0.05289,
+ "maquina": {
+  "vcpu": 12.0,
+  "cpu": "Xeon E5-2673 v3",
+  "ram_gb": 31.3,
+  "ghz": 3.1,
+  "gpu": "GTX 1660 S",
+  "ubicacion": "Vietnam, VN",
+  "host": 147357,
+  "fiabilidad": 0.995
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25,
+ "iid": 53787006,
+ "error": "RuntimeError: SSH no acepto la clave en ssh2.vast.ai:13132 tras 12 intentos (rc=255)",
+ "minutos": 5.2,
+ "coste_usd": 0.0046
+}

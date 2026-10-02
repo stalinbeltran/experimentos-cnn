@@ -1,9 +1,29 @@
 {
- "estado": "pendiente",
+ "estado": "corriendo",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T01:48:58+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T01:49:03+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-02T01:50:21+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-02T01:50:29+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-02T01:51:59+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-02T01:52:05+00:00"
   }
  ],
  "id": "s5",
@@ -23,5 +43,10 @@
   "fiabilidad": 0.9964
  },
  "horas_max": 6.0,
- "tope_precio": 0.25
+ "tope_precio": 0.25,
+ "iid": 53787007,
+ "intentos_clave": 1,
+ "payload_mb": 2.67,
+ "sha256": "8b72d82cb4e600d4",
+ "segundos_max": 20820
 }
