@@ -11,5 +11,9 @@
   "plan": "SOLO PLAN (2026-10-02): ESPECIFICACION.md; criterio antes de mirar en instrucciones/02-criterio.md. Sin codigo todavia",
   "gasta_por_que": "'no' hoy: no hay codigo. El commit que traiga nn/entrenar_local.py lo pasa a 'entrena-local' (dev; ~27 s por corrida medidos en dim-nist)",
   "linaje": "dim-nist (mismo dataset y reparto); no hereda nada mas",
-  "pendiente": ["Confirmar los supuestos S1-S5 de ESPECIFICACION.md §0", "Escribir el codigo, ensayo de mecanismo, fase 1 (tipos)"]
+  "pendiente": [
+    "Escribir el codigo, ensayo de mecanismo, fase 1 (tipos)",
+    "Despues: ruido en linea (una realizacion por epoca) para mas variedad — pedido del dueno 2026-10-02"
+  ],
+  "decisiones_del_dueno": "2026-10-02: S2 = copia ruidosa fija (anadida a las 180 originales); S1, S3-S5 como se propusieron; semillas: pesos 1,2,3 · lotes 101-103 · ruido 1000+10t+i"
 }

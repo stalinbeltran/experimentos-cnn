@@ -11,6 +11,9 @@ exactitud de validación, y cuánto?
 
 - **Dataset**: `uci-optdigits-8px-r20261002` (publicado por `dim-nist`), leído con
   `expcnn.exigir_dataset`. Su reparto 180 / 1617 tal cual. Validación **nunca** se toca.
+- **Train de cada escenario** = las 180 originales + 180 copias con ese ruido (una realización fija,
+  generada con la semilla de ruido del escenario y guardada con huella); `limpio` = las 180
+  duplicadas. Semillas: pesos 1/2/3, lotes 100+s, ruido 1000+10·t+i (`ESPECIFICACION.md` §1 bis).
 - **Transformación**: `x/16 ∈ [0,1]`. El ruido se dibuja a 32×32 y se reduce a 8×8 por conteo de
   bloques 4×4 (gaussiano y sal-pimienta, directamente a 8×8). Ver `ESPECIFICACION.md` §2.
 

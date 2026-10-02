@@ -7,6 +7,12 @@ y lo mismo sobre las 180 de train limpias. Por tipo de ruido y semilla:
 **Δ = acc_val(ruido, s) − acc_val(limpio, s)** — pareado: mismos pesos iniciales, mismo orden de
 lotes. Por tipo: media de los 3 Δ y `SE = sd/√3`.
 
+## Base
+
+`limpio` = las 180 originales **duplicadas** (360, sin ruido): mismo número de pasos e imágenes
+que los escenarios con ruido. Lo que diferencia un escenario de la base es sólo el ruido de la
+copia.
+
 ## Qué se declara
 
 - **Ayuda**: `media(Δ) > max(2·SE, 0,01)` — al menos un punto de exactitud (16 imágenes de 1617).
