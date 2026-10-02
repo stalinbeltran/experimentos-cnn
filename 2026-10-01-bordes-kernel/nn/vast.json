@@ -36,7 +36,7 @@
  "trabajos": [
   {
    "id": "k03",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k03-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k03-s$s --hilos $H > nn/pesos/k03-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k03-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k03-s$s --hilos $H > nn/pesos/k03-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k03-s1",
     "pesos/k03-s2",
@@ -45,7 +45,7 @@
   },
   {
    "id": "k05",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k05-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k05-s$s --hilos $H > nn/pesos/k05-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k05-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k05-s$s --hilos $H > nn/pesos/k05-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k05-s1",
     "pesos/k05-s2",
@@ -54,7 +54,7 @@
   },
   {
    "id": "k07",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k07-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k07-s$s --hilos $H > nn/pesos/k07-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k07-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k07-s$s --hilos $H > nn/pesos/k07-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k07-s1",
     "pesos/k07-s2",
@@ -63,7 +63,7 @@
   },
   {
    "id": "k09",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k09-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k09-s$s --hilos $H > nn/pesos/k09-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k09-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k09-s$s --hilos $H > nn/pesos/k09-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k09-s1",
     "pesos/k09-s2",
@@ -72,7 +72,7 @@
   },
   {
    "id": "k11",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k11-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k11-s$s --hilos $H > nn/pesos/k11-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k11-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k11-s$s --hilos $H > nn/pesos/k11-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k11-s1",
     "pesos/k11-s2",
@@ -81,7 +81,7 @@
   },
   {
    "id": "k13",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k13-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k13-s$s --hilos $H > nn/pesos/k13-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k13-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k13-s$s --hilos $H > nn/pesos/k13-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k13-s1",
     "pesos/k13-s2",
@@ -90,7 +90,7 @@
   },
   {
    "id": "k15",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k15-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k15-s$s --hilos $H > nn/pesos/k15-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k15-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k15-s$s --hilos $H > nn/pesos/k15-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k15-s1",
     "pesos/k15-s2",
@@ -99,7 +99,7 @@
   },
   {
    "id": "k17",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k17-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k17-s$s --hilos $H > nn/pesos/k17-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k17-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k17-s$s --hilos $H > nn/pesos/k17-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k17-s1",
     "pesos/k17-s2",
@@ -108,7 +108,7 @@
   },
   {
    "id": "k19",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc); H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k19-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k19-s$s --hilos $H > nn/pesos/k19-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=${TRABAJO_VCPU:-$(nproc)}; H=$((N / 3)); [ \"$H\" -ge 1 ] || H=1\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · hilos por semilla: $H\"\nfor s in 1 2 3; do\n  mkdir -p nn/pesos/k19-s$s\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo k19-s$s --hilos $H > nn/pesos/k19-s$s/log.txt 2>&1 &\n  eval \"p$s=$!\"\ndone\nfallos=0\nfor s in 1 2 3; do eval \"wait \\$p$s\" || fallos=$((fallos + 1)); done\necho \"semillas con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos/k19-s1",
     "pesos/k19-s2",
@@ -119,6 +119,7 @@
  "notas": [
   "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y por eso `pesos/...`. Asi el descriptor no nombra su carpeta (R16).",
   "torch, numpy y pillow FIJADOS a las versiones del venv del dev del 2026-10-01: lo que difiera entre maquinas tiene que ser de la maquina, no de una version.",
-  "Cada semilla escribe su log en `nn/pesos/kNN-sS/log.txt`, y vuelve con sus pesos."
+  "Cada semilla escribe su log en `nn/pesos/kNN-sS/log.txt`, y vuelve con sus pesos.",
+  "Los hilos se reparten con TRABAJO_VCPU (las vCPU que se pagan, de la oferta), no con nproc: dentro de Vast nproc cuenta las del HOST (28 en una de 4, medido 2026-10-01)."
  ]
 }

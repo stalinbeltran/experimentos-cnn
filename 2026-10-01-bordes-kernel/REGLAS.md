@@ -50,10 +50,19 @@ Y por `k`: ¿cuáles aprende y cuáles no?
 
 ## Procesos
 
-1. **Suelos y `LAMBDA_COORD`**, antes de la primera época: `nn/entrenar_local.py --suelos`.
+1. ✅ **Suelos y `LAMBDA_COORD`**, antes de la primera época: `nn/entrenar_local.py --suelos`.
    Mide el **suelo trivial** de cada borde (prevalencia y coordenada mediana de `train`) y el
    `λ` que iguala `bce` y `l1` en la red sin entrenar; ese `λ` se escribe en el código y aquí
-   y **se congela**.
+   y **se congela**. **Medido el 2026-10-02, antes de entrenar nada:**
+
+   | ventanas | train 3510 (2808 de borde + 702 al azar) · val 485 · eval 1005 |
+   |---|---|
+   | suelo trivial en `val`, error medio | izq **6,28** px (SE 0,34) · der **6,13** (0,31) · sup **6,49** (0,31) · inf **6,19** (0,31) |
+   | suelo trivial en `val`, acierto ≤ 2 px | izq 19,2 % · der 19,8 % · sup 20,5 % · inf 22,5 % |
+   | **`LAMBDA_COORD`** | **0,1240** = mediana de bce/l1 de la red sin entrenar en los 9 `k` (0,1217–0,1257) |
+
+   El suelo de `eval`, que es contra el que se decide «aprendió», sale del **mismo** predictor
+   constante (prevalencia y mediana de `train`), así que también quedó fijado aquí.
 2. **Ensayo de mecanismo** en el dev (k=9, 20 épocas): sólo comprueba que la pérdida de
    `train` baja sin oscilar con la `lr` elegida. **No se mira `val`.**
 3. **Entrenar los 27 brazos en Vast**, `nn/vast.sh fase2`: una máquina por `k`, sus tres

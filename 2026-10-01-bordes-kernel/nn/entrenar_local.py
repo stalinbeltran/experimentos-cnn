@@ -41,8 +41,10 @@ LOTE = 128
 # Elegido por ESTABILIDAD, no por resultado: con 0,02 la perdida de train baja sin
 # oscilar en el ensayo de mecanismo (k=9, 20 epocas, 2026-10-01). Ver `REGLAS.md`.
 LR = 0.02
-# ⏳ SE CONGELA CON `--suelos` ANTES DE LA PRIMERA EPOCA (ver `REGLAS.md`).
-LAMBDA_COORD = None
+# ✅ CONGELADO el 2026-10-02 con `--suelos`, ANTES de la primera epoca: 0,1240 es la mediana
+# de los 9 k del cociente bce/l1 en la red sin entrenar (de 0,1217 a 0,1257). La regla que
+# se fija es «los dos terminos parten iguales», no el numero (ver `REGLAS.md`).
+LAMBDA_COORD = 0.1240
 EPOCAS_DEF = 300
 
 
