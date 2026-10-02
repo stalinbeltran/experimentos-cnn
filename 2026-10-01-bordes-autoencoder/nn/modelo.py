@@ -62,7 +62,17 @@ class AutoencoderUnFiltro(nn.Module):
             raise ValueError(f"k tiene que ser impar y estar en [3, 19]; es {k}")
         self.k = k
         self.conv = nn.Conv2d(1, 1, k, stride=1, padding=0, bias=False)
-        self.dec = nn.Parameter(torch.randn(1, 1, k, k) / k)
+        # ⚠⚠ EL DECODIFICADOR SE INICIALIZA IGUAL AL CODIFICADOR (2026-10-02), y no es estetica.
+        # Con los dos sorteados por separado, el primer tanteo de lambda MURIO: con lambda = 0
+        # -- donde la identidad es una solucion perfecta -- el codigo acabo muerto (activa
+        # 0,0 %, R2 -0,001). Diagnostico medido ese dia: al iniciar, <e,d> = -0,14 (signos
+        # OPUESTOS), y en la primera epoca el optimizador encontro mas barato apagar el codigo
+        # que reconstruir con el signo cambiado: la suma del kernel bajo a -2,5 y la fraccion
+        # activa de 26 % a 1,9 %. Un ReLU sin pre-activaciones positivas no recibe gradiente:
+        # no se recupera nunca. Iniciado alineado, el codigo sigue vivo (24-35 % activo, R2
+        # 0,80-0,86 en 12 epocas, con lambda 0 y 0,1). La ARQUITECTURA no cambia: el
+        # decodificador sigue siendo libre y de norma 1.
+        self.dec = nn.Parameter(self.conv.weight.detach().clone())
         self.b = nn.Parameter(torch.zeros(()))
 
     def kernel(self) -> torch.Tensor:
@@ -109,6 +119,9 @@ def _comprobar() -> int:
         bien = (xh.shape == x.shape and z.shape[-1] == LADO - k + 1
                 and zo.shape[-1] == O[1] - O[0]
                 and abs(float(red.decodificador().detach().norm()) - 1) < 1e-6)
+        # el decodificador nace ALINEADO con el codificador (ver __init__): si no, el codigo muere
+        alineado = float((red.conv.weight * red.decodificador()).sum().detach()) > 0
+        bien &= alineado
         # con codificador y decodificador deltas, la reconstruccion en R es EXACTA:
         # es la identidad que el criterio tiene que poder detectar
         with torch.no_grad():
