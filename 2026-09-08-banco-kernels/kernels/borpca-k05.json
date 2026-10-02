@@ -1,0 +1,19 @@
+{
+  "nombre": "borpca-k05",
+  "origen_id": "bor-pca",
+  "origen_brazo": "k05",
+  "origen_estado": "abierto",
+  "origen_dataset": "parrafos1000-pagina1024-r4-r20261001",
+  "clave_del_checkpoint": "conv.weight",
+  "epoca": null,
+  "k": 5,
+  "norma_original": 1.0,
+  "suma": 0.9668010473251343,
+  "sha256_16": "4e5b708c64da57e1",
+  "§3.7_fuga_de_distribucion": {
+    "mismo_generador": true,
+    "usa_la_reserva": false,
+    "detalle": "familia: ['DejaVuSans', 'DejaVuSerif', 'LiberationSans', 'LiberationSerif'] · interlineado: (1.1, 1.42) contra la reserva (1.45, 1.6) -> no solapa",
+    "fuente": "manifiesto del dataset declarado 'parrafos1000-pagina1024-r4-r20261001'"
+  }
+}
