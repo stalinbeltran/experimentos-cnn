@@ -1,0 +1,12 @@
+empiezo w6-s2: W=6 n=3 754 parametros, 444 epocas, lr 0.003, hilos 2
+  w6-s2 ep   1/444 perdida 2.3197 acc_train~0.100
+  w6-s2 ep  50/444 perdida 0.5033 acc_train~0.833 · acc_val 0.7959 brecha +0.0374
+  w6-s2 ep 100/444 perdida 0.3120 acc_train~0.894 · acc_val 0.8361 brecha +0.0694
+  w6-s2 ep 150/444 perdida 0.2101 acc_train~0.917 · acc_val 0.8343 brecha +0.0991
+  w6-s2 ep 200/444 perdida 0.1534 acc_train~0.944 · acc_val 0.8503 brecha +0.1163
+  w6-s2 ep 250/444 perdida 0.0979 acc_train~0.983 · acc_val 0.8479 brecha +0.1299
+  w6-s2 ep 300/444 perdida 0.0806 acc_train~0.983 · acc_val 0.8528 brecha +0.1250
+  w6-s2 ep 350/444 perdida 0.0611 acc_train~0.989 · acc_val 0.8479 brecha +0.1410
+  w6-s2 ep 400/444 perdida 0.0393 acc_train~0.994 · acc_val 0.8553 brecha +0.1447
+  w6-s2 ep 444/444 perdida 0.0327 acc_train~1.000 · acc_val 0.8547 brecha +0.1453
+listo w6-s2: acc_train 1.0000 acc_val 0.8547 brecha +0.1453 · ce_train 0.0278 ce_val 0.7386 en 23.8 s

@@ -1,0 +1,12 @@
+empiezo w4-s3: W=4 n=2 394 parametros, 444 epocas, lr 0.003, hilos 2
+  w4-s3 ep   1/444 perdida 2.3183 acc_train~0.100
+  w4-s3 ep  50/444 perdida 1.4431 acc_train~0.583 · acc_val 0.5170 brecha +0.0830
+  w4-s3 ep 100/444 perdida 0.9038 acc_train~0.689 · acc_val 0.6382 brecha +0.0785
+  w4-s3 ep 150/444 perdida 0.7457 acc_train~0.750 · acc_val 0.6766 brecha +0.0790
+  w4-s3 ep 200/444 perdida 0.6637 acc_train~0.789 · acc_val 0.6933 brecha +0.0956
+  w4-s3 ep 250/444 perdida 0.6049 acc_train~0.783 · acc_val 0.6945 brecha +0.0999
+  w4-s3 ep 300/444 perdida 0.5615 acc_train~0.794 · acc_val 0.7050 brecha +0.0839
+  w4-s3 ep 350/444 perdida 0.5299 acc_train~0.789 · acc_val 0.7100 brecha +0.0900
+  w4-s3 ep 400/444 perdida 0.5108 acc_train~0.800 · acc_val 0.7063 brecha +0.0938
+  w4-s3 ep 444/444 perdida 0.5065 acc_train~0.794 · acc_val 0.7038 brecha +0.1129
+listo w4-s3: acc_train 0.8167 acc_val 0.7038 brecha +0.1129 · ce_train 0.4878 ce_val 1.0160 en 20.8 s

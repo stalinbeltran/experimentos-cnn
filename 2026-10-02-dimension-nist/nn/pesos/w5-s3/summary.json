@@ -1,0 +1,83 @@
+{
+ "id": "w5-s3",
+ "brazo": "w5",
+ "W": 5,
+ "control": false,
+ "semilla": 3,
+ "pasos": 3996,
+ "epocas": 444,
+ "lote": 20,
+ "lr": 0.003,
+ "L": 2,
+ "f": 0.5,
+ "C": 8,
+ "n": 3,
+ "mapas": [
+  3,
+  1
+ ],
+ "parametros": 754,
+ "dataset": "uci-optdigits-8px-r20261002",
+ "huella_x": "3bdbbc60af71beec",
+ "huella_y": "8ba4f891220f5e4c",
+ "acc_train": 1.0,
+ "acc_val": 0.80952,
+ "brecha": 0.19048,
+ "ce_train": 0.01071,
+ "ce_val": 1.35446,
+ "brecha_ce": 1.34375,
+ "piso": 0.1,
+ "acc_val_por_clase": {
+  "0": {
+   "n": 160,
+   "acc": 0.925
+  },
+  "1": {
+   "n": 164,
+   "acc": 0.68293
+  },
+  "2": {
+   "n": 159,
+   "acc": 0.87421
+  },
+  "3": {
+   "n": 165,
+   "acc": 0.8
+  },
+  "4": {
+   "n": 163,
+   "acc": 0.7546
+  },
+  "5": {
+   "n": 164,
+   "acc": 0.85366
+  },
+  "6": {
+   "n": 163,
+   "acc": 0.90184
+  },
+  "7": {
+   "n": 161,
+   "acc": 0.85093
+  },
+  "8": {
+   "n": 156,
+   "acc": 0.5641
+  },
+  "9": {
+   "n": 162,
+   "acc": 0.88272
+  }
+ },
+ "segundos": 19.0,
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-02T16:49:09+00:00"
+}
