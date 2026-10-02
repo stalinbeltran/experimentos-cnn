@@ -1,0 +1,800 @@
+{"epoca": 1, "paso": 5, "perdida_train": 0.604884, "iou_train_paso": 0.05063, "s": 6.34}
+{"epoca": 2, "paso": 10, "perdida_train": 0.502586, "iou_train_paso": 0.0, "s": 6.42}
+{"epoca": 3, "paso": 15, "perdida_train": 0.468981, "iou_train_paso": 0.0, "s": 6.44}
+{"epoca": 4, "paso": 20, "perdida_train": 0.402057, "iou_train_paso": 0.0, "s": 6.34}
+{"epoca": 5, "paso": 25, "perdida_train": 0.290829, "iou_train_paso": 0.0, "s": 6.36}
+{"epoca": 6, "paso": 30, "perdida_train": 0.209481, "iou_train_paso": 0.05373, "s": 6.3}
+{"epoca": 7, "paso": 35, "perdida_train": 0.160363, "iou_train_paso": 0.24739, "s": 6.32}
+{"epoca": 8, "paso": 40, "perdida_train": 0.154397, "iou_train_paso": 0.28587, "s": 6.28}
+{"epoca": 9, "paso": 45, "perdida_train": 0.139186, "iou_train_paso": 0.29334, "s": 6.32}
+{"epoca": 10, "paso": 50, "perdida_train": 0.144081, "iou_train_paso": 0.28853, "iou_train": 0.27506, "iou_val": 0.24968, "brecha": 0.02538, "s": 9.44}
+{"epoca": 11, "paso": 55, "perdida_train": 0.133808, "iou_train_paso": 0.2838, "s": 6.32}
+{"epoca": 12, "paso": 60, "perdida_train": 0.131783, "iou_train_paso": 0.27425, "s": 6.32}
+{"epoca": 13, "paso": 65, "perdida_train": 0.12249, "iou_train_paso": 0.32114, "s": 6.29}
+{"epoca": 14, "paso": 70, "perdida_train": 0.121085, "iou_train_paso": 0.3497, "s": 6.28}
+{"epoca": 15, "paso": 75, "perdida_train": 0.120811, "iou_train_paso": 0.33143, "s": 6.42}
+{"epoca": 16, "paso": 80, "perdida_train": 0.118977, "iou_train_paso": 0.34878, "s": 6.27}
+{"epoca": 17, "paso": 85, "perdida_train": 0.116134, "iou_train_paso": 0.34188, "s": 6.32}
+{"epoca": 18, "paso": 90, "perdida_train": 0.112454, "iou_train_paso": 0.36204, "s": 6.32}
+{"epoca": 19, "paso": 95, "perdida_train": 0.108126, "iou_train_paso": 0.38834, "s": 6.32}
+{"epoca": 20, "paso": 100, "perdida_train": 0.10226, "iou_train_paso": 0.3945, "iou_train": 0.39609, "iou_val": 0.37215, "brecha": 0.02394, "s": 9.39}
+{"epoca": 21, "paso": 105, "perdida_train": 0.10075, "iou_train_paso": 0.39929, "s": 6.28}
+{"epoca": 22, "paso": 110, "perdida_train": 0.100036, "iou_train_paso": 0.40085, "s": 6.28}
+{"epoca": 23, "paso": 115, "perdida_train": 0.09671, "iou_train_paso": 0.41312, "s": 6.32}
+{"epoca": 24, "paso": 120, "perdida_train": 0.097831, "iou_train_paso": 0.40444, "s": 6.33}
+{"epoca": 25, "paso": 125, "perdida_train": 0.098675, "iou_train_paso": 0.40148, "s": 6.29}
+{"epoca": 26, "paso": 130, "perdida_train": 0.095221, "iou_train_paso": 0.41053, "s": 6.35}
+{"epoca": 27, "paso": 135, "perdida_train": 0.098879, "iou_train_paso": 0.40465, "s": 6.3}
+{"epoca": 28, "paso": 140, "perdida_train": 0.093032, "iou_train_paso": 0.42414, "s": 6.45}
+{"epoca": 29, "paso": 145, "perdida_train": 0.087583, "iou_train_paso": 0.44347, "s": 6.28}
+{"epoca": 30, "paso": 150, "perdida_train": 0.085797, "iou_train_paso": 0.4477, "iou_train": 0.45437, "iou_val": 0.42919, "brecha": 0.02518, "s": 9.37}
+{"epoca": 31, "paso": 155, "perdida_train": 0.083603, "iou_train_paso": 0.4542, "s": 6.32}
+{"epoca": 32, "paso": 160, "perdida_train": 0.08464, "iou_train_paso": 0.44893, "s": 6.28}
+{"epoca": 33, "paso": 165, "perdida_train": 0.083615, "iou_train_paso": 0.4478, "s": 6.29}
+{"epoca": 34, "paso": 170, "perdida_train": 0.082837, "iou_train_paso": 0.45902, "s": 6.29}
+{"epoca": 35, "paso": 175, "perdida_train": 0.078688, "iou_train_paso": 0.47808, "s": 6.33}
+{"epoca": 36, "paso": 180, "perdida_train": 0.077755, "iou_train_paso": 0.47921, "s": 6.27}
+{"epoca": 37, "paso": 185, "perdida_train": 0.078313, "iou_train_paso": 0.4817, "s": 6.35}
+{"epoca": 38, "paso": 190, "perdida_train": 0.080088, "iou_train_paso": 0.48018, "s": 6.32}
+{"epoca": 39, "paso": 195, "perdida_train": 0.077705, "iou_train_paso": 0.47727, "s": 6.27}
+{"epoca": 40, "paso": 200, "perdida_train": 0.078118, "iou_train_paso": 0.47788, "iou_train": 0.50226, "iou_val": 0.45019, "brecha": 0.05207, "s": 9.39}
+{"epoca": 41, "paso": 205, "perdida_train": 0.076166, "iou_train_paso": 0.49014, "s": 6.29}
+{"epoca": 42, "paso": 210, "perdida_train": 0.077264, "iou_train_paso": 0.48132, "s": 6.31}
+{"epoca": 43, "paso": 215, "perdida_train": 0.074404, "iou_train_paso": 0.49722, "s": 6.3}
+{"epoca": 44, "paso": 220, "perdida_train": 0.075831, "iou_train_paso": 0.49722, "s": 6.24}
+{"epoca": 45, "paso": 225, "perdida_train": 0.071382, "iou_train_paso": 0.51411, "s": 6.32}
+{"epoca": 46, "paso": 230, "perdida_train": 0.070099, "iou_train_paso": 0.52514, "s": 6.26}
+{"epoca": 47, "paso": 235, "perdida_train": 0.070166, "iou_train_paso": 0.51276, "s": 6.29}
+{"epoca": 48, "paso": 240, "perdida_train": 0.070635, "iou_train_paso": 0.51052, "s": 6.27}
+{"epoca": 49, "paso": 245, "perdida_train": 0.07238, "iou_train_paso": 0.49308, "s": 6.32}
+{"epoca": 50, "paso": 250, "perdida_train": 0.072781, "iou_train_paso": 0.49948, "iou_train": 0.47299, "iou_val": 0.41632, "brecha": 0.05667, "s": 9.39}
+{"epoca": 51, "paso": 255, "perdida_train": 0.07838, "iou_train_paso": 0.47259, "s": 6.27}
+{"epoca": 52, "paso": 260, "perdida_train": 0.073938, "iou_train_paso": 0.48858, "s": 6.34}
+{"epoca": 53, "paso": 265, "perdida_train": 0.074253, "iou_train_paso": 0.48895, "s": 6.3}
+{"epoca": 54, "paso": 270, "perdida_train": 0.073352, "iou_train_paso": 0.5079, "s": 6.3}
+{"epoca": 55, "paso": 275, "perdida_train": 0.073358, "iou_train_paso": 0.50744, "s": 6.31}
+{"epoca": 56, "paso": 280, "perdida_train": 0.072663, "iou_train_paso": 0.5055, "s": 6.28}
+{"epoca": 57, "paso": 285, "perdida_train": 0.070655, "iou_train_paso": 0.50226, "s": 6.32}
+{"epoca": 58, "paso": 290, "perdida_train": 0.069744, "iou_train_paso": 0.51468, "s": 6.3}
+{"epoca": 59, "paso": 295, "perdida_train": 0.0686, "iou_train_paso": 0.52367, "s": 6.36}
+{"epoca": 60, "paso": 300, "perdida_train": 0.06849, "iou_train_paso": 0.52035, "iou_train": 0.52222, "iou_val": 0.45652, "brecha": 0.06569, "s": 9.39}
+{"epoca": 61, "paso": 305, "perdida_train": 0.06741, "iou_train_paso": 0.51912, "s": 6.32}
+{"epoca": 62, "paso": 310, "perdida_train": 0.068786, "iou_train_paso": 0.52702, "s": 6.3}
+{"epoca": 63, "paso": 315, "perdida_train": 0.067673, "iou_train_paso": 0.5228, "s": 6.27}
+{"epoca": 64, "paso": 320, "perdida_train": 0.064958, "iou_train_paso": 0.5369, "s": 6.35}
+{"epoca": 65, "paso": 325, "perdida_train": 0.068821, "iou_train_paso": 0.51782, "s": 6.34}
+{"epoca": 66, "paso": 330, "perdida_train": 0.067153, "iou_train_paso": 0.52629, "s": 6.33}
+{"epoca": 67, "paso": 335, "perdida_train": 0.066615, "iou_train_paso": 0.53646, "s": 6.3}
+{"epoca": 68, "paso": 340, "perdida_train": 0.063895, "iou_train_paso": 0.54481, "s": 6.75}
+{"epoca": 69, "paso": 345, "perdida_train": 0.067707, "iou_train_paso": 0.51786, "s": 6.29}
+{"epoca": 70, "paso": 350, "perdida_train": 0.070122, "iou_train_paso": 0.5167, "iou_train": 0.53148, "iou_val": 0.47795, "brecha": 0.05353, "s": 9.44}
+{"epoca": 71, "paso": 355, "perdida_train": 0.070346, "iou_train_paso": 0.51588, "s": 6.32}
+{"epoca": 72, "paso": 360, "perdida_train": 0.073247, "iou_train_paso": 0.49725, "s": 6.3}
+{"epoca": 73, "paso": 365, "perdida_train": 0.07296, "iou_train_paso": 0.50982, "s": 6.79}
+{"epoca": 74, "paso": 370, "perdida_train": 0.071501, "iou_train_paso": 0.49731, "s": 6.27}
+{"epoca": 75, "paso": 375, "perdida_train": 0.074248, "iou_train_paso": 0.48066, "s": 6.29}
+{"epoca": 76, "paso": 380, "perdida_train": 0.067133, "iou_train_paso": 0.5315, "s": 6.29}
+{"epoca": 77, "paso": 385, "perdida_train": 0.06947, "iou_train_paso": 0.52157, "s": 6.3}
+{"epoca": 78, "paso": 390, "perdida_train": 0.065001, "iou_train_paso": 0.52975, "s": 6.37}
+{"epoca": 79, "paso": 395, "perdida_train": 0.065933, "iou_train_paso": 0.54703, "s": 6.32}
+{"epoca": 80, "paso": 400, "perdida_train": 0.065979, "iou_train_paso": 0.53288, "iou_train": 0.52225, "iou_val": 0.45792, "brecha": 0.06433, "s": 9.49}
+{"epoca": 81, "paso": 405, "perdida_train": 0.068351, "iou_train_paso": 0.51973, "s": 6.32}
+{"epoca": 82, "paso": 410, "perdida_train": 0.0676, "iou_train_paso": 0.52805, "s": 6.27}
+{"epoca": 83, "paso": 415, "perdida_train": 0.069628, "iou_train_paso": 0.52456, "s": 6.3}
+{"epoca": 84, "paso": 420, "perdida_train": 0.071283, "iou_train_paso": 0.51284, "s": 6.28}
+{"epoca": 85, "paso": 425, "perdida_train": 0.072329, "iou_train_paso": 0.50888, "s": 6.24}
+{"epoca": 86, "paso": 430, "perdida_train": 0.072357, "iou_train_paso": 0.50566, "s": 6.28}
+{"epoca": 87, "paso": 435, "perdida_train": 0.072698, "iou_train_paso": 0.50368, "s": 6.25}
+{"epoca": 88, "paso": 440, "perdida_train": 0.078861, "iou_train_paso": 0.46802, "s": 6.25}
+{"epoca": 89, "paso": 445, "perdida_train": 0.075786, "iou_train_paso": 0.48434, "s": 6.28}
+{"epoca": 90, "paso": 450, "perdida_train": 0.074226, "iou_train_paso": 0.49708, "iou_train": 0.50229, "iou_val": 0.44808, "brecha": 0.0542, "s": 9.42}
+{"epoca": 91, "paso": 455, "perdida_train": 0.070964, "iou_train_paso": 0.50559, "s": 6.23}
+{"epoca": 92, "paso": 460, "perdida_train": 0.066468, "iou_train_paso": 0.52654, "s": 6.34}
+{"epoca": 93, "paso": 465, "perdida_train": 0.066236, "iou_train_paso": 0.5358, "s": 6.28}
+{"epoca": 94, "paso": 470, "perdida_train": 0.064153, "iou_train_paso": 0.5488, "s": 6.3}
+{"epoca": 95, "paso": 475, "perdida_train": 0.065556, "iou_train_paso": 0.53614, "s": 6.3}
+{"epoca": 96, "paso": 480, "perdida_train": 0.061642, "iou_train_paso": 0.55621, "s": 6.3}
+{"epoca": 97, "paso": 485, "perdida_train": 0.06128, "iou_train_paso": 0.56405, "s": 6.33}
+{"epoca": 98, "paso": 490, "perdida_train": 0.060471, "iou_train_paso": 0.56042, "s": 6.27}
+{"epoca": 99, "paso": 495, "perdida_train": 0.060053, "iou_train_paso": 0.5609, "s": 6.28}
+{"epoca": 100, "paso": 500, "perdida_train": 0.060272, "iou_train_paso": 0.56114, "iou_train": 0.54027, "iou_val": 0.47848, "brecha": 0.06178, "s": 9.45}
+{"epoca": 101, "paso": 505, "perdida_train": 0.06366, "iou_train_paso": 0.54701, "s": 6.3}
+{"epoca": 102, "paso": 510, "perdida_train": 0.061645, "iou_train_paso": 0.5563, "s": 6.32}
+{"epoca": 103, "paso": 515, "perdida_train": 0.063437, "iou_train_paso": 0.55038, "s": 6.28}
+{"epoca": 104, "paso": 520, "perdida_train": 0.059898, "iou_train_paso": 0.56576, "s": 6.42}
+{"epoca": 105, "paso": 525, "perdida_train": 0.061571, "iou_train_paso": 0.55604, "s": 6.32}
+{"epoca": 106, "paso": 530, "perdida_train": 0.062945, "iou_train_paso": 0.54174, "s": 6.31}
+{"epoca": 107, "paso": 535, "perdida_train": 0.060229, "iou_train_paso": 0.56441, "s": 6.33}
+{"epoca": 108, "paso": 540, "perdida_train": 0.060851, "iou_train_paso": 0.5638, "s": 6.28}
+{"epoca": 109, "paso": 545, "perdida_train": 0.059463, "iou_train_paso": 0.56485, "s": 6.32}
+{"epoca": 110, "paso": 550, "perdida_train": 0.060664, "iou_train_paso": 0.55901, "iou_train": 0.56303, "iou_val": 0.47847, "brecha": 0.08456, "s": 9.44}
+{"epoca": 111, "paso": 555, "perdida_train": 0.059982, "iou_train_paso": 0.56358, "s": 6.28}
+{"epoca": 112, "paso": 560, "perdida_train": 0.061327, "iou_train_paso": 0.55947, "s": 6.28}
+{"epoca": 113, "paso": 565, "perdida_train": 0.06537, "iou_train_paso": 0.52821, "s": 6.28}
+{"epoca": 114, "paso": 570, "perdida_train": 0.066793, "iou_train_paso": 0.52776, "s": 6.28}
+{"epoca": 115, "paso": 575, "perdida_train": 0.064817, "iou_train_paso": 0.54418, "s": 6.28}
+{"epoca": 116, "paso": 580, "perdida_train": 0.063492, "iou_train_paso": 0.54776, "s": 6.32}
+{"epoca": 117, "paso": 585, "perdida_train": 0.060636, "iou_train_paso": 0.56688, "s": 6.3}
+{"epoca": 118, "paso": 590, "perdida_train": 0.065855, "iou_train_paso": 0.52859, "s": 6.47}
+{"epoca": 119, "paso": 595, "perdida_train": 0.063981, "iou_train_paso": 0.5319, "s": 6.59}
+{"epoca": 120, "paso": 600, "perdida_train": 0.061545, "iou_train_paso": 0.55488, "iou_train": 0.55831, "iou_val": 0.49214, "brecha": 0.06617, "s": 9.41}
+{"epoca": 121, "paso": 605, "perdida_train": 0.059212, "iou_train_paso": 0.56974, "s": 6.4}
+{"epoca": 122, "paso": 610, "perdida_train": 0.060204, "iou_train_paso": 0.55809, "s": 6.31}
+{"epoca": 123, "paso": 615, "perdida_train": 0.058005, "iou_train_paso": 0.57476, "s": 6.28}
+{"epoca": 124, "paso": 620, "perdida_train": 0.06135, "iou_train_paso": 0.55087, "s": 6.31}
+{"epoca": 125, "paso": 625, "perdida_train": 0.061437, "iou_train_paso": 0.55329, "s": 6.31}
+{"epoca": 126, "paso": 630, "perdida_train": 0.066438, "iou_train_paso": 0.52312, "s": 6.34}
+{"epoca": 127, "paso": 635, "perdida_train": 0.067607, "iou_train_paso": 0.51273, "s": 6.3}
+{"epoca": 128, "paso": 640, "perdida_train": 0.062727, "iou_train_paso": 0.54006, "s": 6.31}
+{"epoca": 129, "paso": 645, "perdida_train": 0.058338, "iou_train_paso": 0.57175, "s": 6.29}
+{"epoca": 130, "paso": 650, "perdida_train": 0.058304, "iou_train_paso": 0.57025, "iou_train": 0.55216, "iou_val": 0.46642, "brecha": 0.08574, "s": 9.44}
+{"epoca": 131, "paso": 655, "perdida_train": 0.062263, "iou_train_paso": 0.54288, "s": 6.35}
+{"epoca": 132, "paso": 660, "perdida_train": 0.05932, "iou_train_paso": 0.56018, "s": 6.29}
+{"epoca": 133, "paso": 665, "perdida_train": 0.059041, "iou_train_paso": 0.56771, "s": 6.39}
+{"epoca": 134, "paso": 670, "perdida_train": 0.057589, "iou_train_paso": 0.5796, "s": 6.28}
+{"epoca": 135, "paso": 675, "perdida_train": 0.059423, "iou_train_paso": 0.56225, "s": 6.3}
+{"epoca": 136, "paso": 680, "perdida_train": 0.061322, "iou_train_paso": 0.54937, "s": 6.3}
+{"epoca": 137, "paso": 685, "perdida_train": 0.061885, "iou_train_paso": 0.55413, "s": 6.31}
+{"epoca": 138, "paso": 690, "perdida_train": 0.064951, "iou_train_paso": 0.52844, "s": 6.34}
+{"epoca": 139, "paso": 695, "perdida_train": 0.062735, "iou_train_paso": 0.54731, "s": 6.26}
+{"epoca": 140, "paso": 700, "perdida_train": 0.059667, "iou_train_paso": 0.56305, "iou_train": 0.56486, "iou_val": 0.46887, "brecha": 0.09599, "s": 9.47}
+{"epoca": 141, "paso": 705, "perdida_train": 0.058573, "iou_train_paso": 0.56323, "s": 6.28}
+{"epoca": 142, "paso": 710, "perdida_train": 0.057788, "iou_train_paso": 0.5759, "s": 6.28}
+{"epoca": 143, "paso": 715, "perdida_train": 0.056546, "iou_train_paso": 0.58227, "s": 6.33}
+{"epoca": 144, "paso": 720, "perdida_train": 0.059062, "iou_train_paso": 0.56084, "s": 6.28}
+{"epoca": 145, "paso": 725, "perdida_train": 0.057434, "iou_train_paso": 0.56468, "s": 6.3}
+{"epoca": 146, "paso": 730, "perdida_train": 0.060024, "iou_train_paso": 0.5573, "s": 6.29}
+{"epoca": 147, "paso": 735, "perdida_train": 0.059996, "iou_train_paso": 0.55892, "s": 6.3}
+{"epoca": 148, "paso": 740, "perdida_train": 0.058919, "iou_train_paso": 0.57265, "s": 6.29}
+{"epoca": 149, "paso": 745, "perdida_train": 0.05463, "iou_train_paso": 0.58372, "s": 6.3}
+{"epoca": 150, "paso": 750, "perdida_train": 0.053809, "iou_train_paso": 0.5991, "iou_train": 0.60145, "iou_val": 0.48328, "brecha": 0.11817, "s": 9.44}
+{"epoca": 151, "paso": 755, "perdida_train": 0.05512, "iou_train_paso": 0.59143, "s": 6.3}
+{"epoca": 152, "paso": 760, "perdida_train": 0.05821, "iou_train_paso": 0.5629, "s": 6.3}
+{"epoca": 153, "paso": 765, "perdida_train": 0.058268, "iou_train_paso": 0.57575, "s": 6.3}
+{"epoca": 154, "paso": 770, "perdida_train": 0.054208, "iou_train_paso": 0.59002, "s": 6.32}
+{"epoca": 155, "paso": 775, "perdida_train": 0.058832, "iou_train_paso": 0.57186, "s": 6.3}
+{"epoca": 156, "paso": 780, "perdida_train": 0.05544, "iou_train_paso": 0.57339, "s": 6.31}
+{"epoca": 157, "paso": 785, "perdida_train": 0.052414, "iou_train_paso": 0.60852, "s": 6.3}
+{"epoca": 158, "paso": 790, "perdida_train": 0.051027, "iou_train_paso": 0.61572, "s": 6.31}
+{"epoca": 159, "paso": 795, "perdida_train": 0.051198, "iou_train_paso": 0.60571, "s": 6.28}
+{"epoca": 160, "paso": 800, "perdida_train": 0.052098, "iou_train_paso": 0.60109, "iou_train": 0.60486, "iou_val": 0.48696, "brecha": 0.1179, "s": 9.4}
+{"epoca": 161, "paso": 805, "perdida_train": 0.052458, "iou_train_paso": 0.60143, "s": 6.31}
+{"epoca": 162, "paso": 810, "perdida_train": 0.054134, "iou_train_paso": 0.58827, "s": 6.35}
+{"epoca": 163, "paso": 815, "perdida_train": 0.058848, "iou_train_paso": 0.57715, "s": 6.54}
+{"epoca": 164, "paso": 820, "perdida_train": 0.055408, "iou_train_paso": 0.57846, "s": 6.53}
+{"epoca": 165, "paso": 825, "perdida_train": 0.052598, "iou_train_paso": 0.59297, "s": 6.27}
+{"epoca": 166, "paso": 830, "perdida_train": 0.051306, "iou_train_paso": 0.60328, "s": 6.3}
+{"epoca": 167, "paso": 835, "perdida_train": 0.05523, "iou_train_paso": 0.56866, "s": 6.32}
+{"epoca": 168, "paso": 840, "perdida_train": 0.053927, "iou_train_paso": 0.58477, "s": 6.29}
+{"epoca": 169, "paso": 845, "perdida_train": 0.053416, "iou_train_paso": 0.59503, "s": 6.29}
+{"epoca": 170, "paso": 850, "perdida_train": 0.054955, "iou_train_paso": 0.5805, "iou_train": 0.59531, "iou_val": 0.46494, "brecha": 0.13038, "s": 9.43}
+{"epoca": 171, "paso": 855, "perdida_train": 0.052206, "iou_train_paso": 0.59246, "s": 6.28}
+{"epoca": 172, "paso": 860, "perdida_train": 0.056132, "iou_train_paso": 0.56809, "s": 6.3}
+{"epoca": 173, "paso": 865, "perdida_train": 0.051899, "iou_train_paso": 0.60262, "s": 6.29}
+{"epoca": 174, "paso": 870, "perdida_train": 0.049733, "iou_train_paso": 0.59817, "s": 6.25}
+{"epoca": 175, "paso": 875, "perdida_train": 0.046019, "iou_train_paso": 0.63022, "s": 6.31}
+{"epoca": 176, "paso": 880, "perdida_train": 0.047975, "iou_train_paso": 0.61507, "s": 6.29}
+{"epoca": 177, "paso": 885, "perdida_train": 0.046954, "iou_train_paso": 0.62736, "s": 6.43}
+{"epoca": 178, "paso": 890, "perdida_train": 0.048933, "iou_train_paso": 0.61508, "s": 6.24}
+{"epoca": 179, "paso": 895, "perdida_train": 0.044577, "iou_train_paso": 0.64242, "s": 6.39}
+{"epoca": 180, "paso": 900, "perdida_train": 0.045886, "iou_train_paso": 0.629, "iou_train": 0.63839, "iou_val": 0.47542, "brecha": 0.16297, "s": 9.34}
+{"epoca": 181, "paso": 905, "perdida_train": 0.050105, "iou_train_paso": 0.59211, "s": 6.35}
+{"epoca": 182, "paso": 910, "perdida_train": 0.052524, "iou_train_paso": 0.5885, "s": 6.39}
+{"epoca": 183, "paso": 915, "perdida_train": 0.051104, "iou_train_paso": 0.58861, "s": 6.32}
+{"epoca": 184, "paso": 920, "perdida_train": 0.049244, "iou_train_paso": 0.60657, "s": 6.35}
+{"epoca": 185, "paso": 925, "perdida_train": 0.049906, "iou_train_paso": 0.5917, "s": 6.31}
+{"epoca": 186, "paso": 930, "perdida_train": 0.051935, "iou_train_paso": 0.59396, "s": 6.81}
+{"epoca": 187, "paso": 935, "perdida_train": 0.047814, "iou_train_paso": 0.61291, "s": 6.28}
+{"epoca": 188, "paso": 940, "perdida_train": 0.046787, "iou_train_paso": 0.61851, "s": 6.31}
+{"epoca": 189, "paso": 945, "perdida_train": 0.04158, "iou_train_paso": 0.65999, "s": 6.33}
+{"epoca": 190, "paso": 950, "perdida_train": 0.043572, "iou_train_paso": 0.64168, "iou_train": 0.60647, "iou_val": 0.46886, "brecha": 0.13761, "s": 9.4}
+{"epoca": 191, "paso": 955, "perdida_train": 0.04867, "iou_train_paso": 0.60682, "s": 6.35}
+{"epoca": 192, "paso": 960, "perdida_train": 0.046614, "iou_train_paso": 0.62043, "s": 6.31}
+{"epoca": 193, "paso": 965, "perdida_train": 0.044036, "iou_train_paso": 0.6402, "s": 6.32}
+{"epoca": 194, "paso": 970, "perdida_train": 0.041518, "iou_train_paso": 0.65045, "s": 6.25}
+{"epoca": 195, "paso": 975, "perdida_train": 0.040542, "iou_train_paso": 0.65998, "s": 6.29}
+{"epoca": 196, "paso": 980, "perdida_train": 0.040502, "iou_train_paso": 0.64634, "s": 6.4}
+{"epoca": 197, "paso": 985, "perdida_train": 0.040649, "iou_train_paso": 0.64928, "s": 6.3}
+{"epoca": 198, "paso": 990, "perdida_train": 0.040473, "iou_train_paso": 0.66282, "s": 6.32}
+{"epoca": 199, "paso": 995, "perdida_train": 0.038003, "iou_train_paso": 0.67073, "s": 6.28}
+{"epoca": 200, "paso": 1000, "perdida_train": 0.038362, "iou_train_paso": 0.67733, "iou_train": 0.63734, "iou_val": 0.50556, "brecha": 0.13178, "s": 9.43}
+{"epoca": 201, "paso": 1005, "perdida_train": 0.043378, "iou_train_paso": 0.62465, "s": 6.3}
+{"epoca": 202, "paso": 1010, "perdida_train": 0.038931, "iou_train_paso": 0.66442, "s": 6.27}
+{"epoca": 203, "paso": 1015, "perdida_train": 0.038594, "iou_train_paso": 0.6771, "s": 6.36}
+{"epoca": 204, "paso": 1020, "perdida_train": 0.038489, "iou_train_paso": 0.66566, "s": 6.3}
+{"epoca": 205, "paso": 1025, "perdida_train": 0.03651, "iou_train_paso": 0.68401, "s": 6.29}
+{"epoca": 206, "paso": 1030, "perdida_train": 0.036895, "iou_train_paso": 0.67454, "s": 6.27}
+{"epoca": 207, "paso": 1035, "perdida_train": 0.035101, "iou_train_paso": 0.69285, "s": 6.33}
+{"epoca": 208, "paso": 1040, "perdida_train": 0.035452, "iou_train_paso": 0.69111, "s": 6.25}
+{"epoca": 209, "paso": 1045, "perdida_train": 0.033742, "iou_train_paso": 0.6947, "s": 6.65}
+{"epoca": 210, "paso": 1050, "perdida_train": 0.035718, "iou_train_paso": 0.68054, "iou_train": 0.71007, "iou_val": 0.50859, "brecha": 0.20148, "s": 9.47}
+{"epoca": 211, "paso": 1055, "perdida_train": 0.033071, "iou_train_paso": 0.7029, "s": 6.3}
+{"epoca": 212, "paso": 1060, "perdida_train": 0.034146, "iou_train_paso": 0.69066, "s": 6.3}
+{"epoca": 213, "paso": 1065, "perdida_train": 0.041032, "iou_train_paso": 0.65083, "s": 6.3}
+{"epoca": 214, "paso": 1070, "perdida_train": 0.036284, "iou_train_paso": 0.68381, "s": 6.29}
+{"epoca": 215, "paso": 1075, "perdida_train": 0.034709, "iou_train_paso": 0.69376, "s": 6.29}
+{"epoca": 216, "paso": 1080, "perdida_train": 0.034203, "iou_train_paso": 0.6918, "s": 6.31}
+{"epoca": 217, "paso": 1085, "perdida_train": 0.036037, "iou_train_paso": 0.67896, "s": 6.31}
+{"epoca": 218, "paso": 1090, "perdida_train": 0.040328, "iou_train_paso": 0.65794, "s": 6.31}
+{"epoca": 219, "paso": 1095, "perdida_train": 0.038795, "iou_train_paso": 0.65619, "s": 6.29}
+{"epoca": 220, "paso": 1100, "perdida_train": 0.03366, "iou_train_paso": 0.6913, "iou_train": 0.69499, "iou_val": 0.51987, "brecha": 0.17512, "s": 9.45}
+{"epoca": 221, "paso": 1105, "perdida_train": 0.034541, "iou_train_paso": 0.69133, "s": 6.3}
+{"epoca": 222, "paso": 1110, "perdida_train": 0.032403, "iou_train_paso": 0.70389, "s": 6.36}
+{"epoca": 223, "paso": 1115, "perdida_train": 0.033021, "iou_train_paso": 0.69522, "s": 6.3}
+{"epoca": 224, "paso": 1120, "perdida_train": 0.03794, "iou_train_paso": 0.66631, "s": 6.31}
+{"epoca": 225, "paso": 1125, "perdida_train": 0.031328, "iou_train_paso": 0.71689, "s": 6.3}
+{"epoca": 226, "paso": 1130, "perdida_train": 0.033418, "iou_train_paso": 0.69811, "s": 6.38}
+{"epoca": 227, "paso": 1135, "perdida_train": 0.036473, "iou_train_paso": 0.67564, "s": 6.34}
+{"epoca": 228, "paso": 1140, "perdida_train": 0.034733, "iou_train_paso": 0.68419, "s": 6.33}
+{"epoca": 229, "paso": 1145, "perdida_train": 0.035573, "iou_train_paso": 0.67937, "s": 6.34}
+{"epoca": 230, "paso": 1150, "perdida_train": 0.034247, "iou_train_paso": 0.68443, "iou_train": 0.63199, "iou_val": 0.45611, "brecha": 0.17587, "s": 9.41}
+{"epoca": 231, "paso": 1155, "perdida_train": 0.039726, "iou_train_paso": 0.61841, "s": 6.32}
+{"epoca": 232, "paso": 1160, "perdida_train": 0.037172, "iou_train_paso": 0.67212, "s": 6.27}
+{"epoca": 233, "paso": 1165, "perdida_train": 0.036751, "iou_train_paso": 0.67887, "s": 6.32}
+{"epoca": 234, "paso": 1170, "perdida_train": 0.036089, "iou_train_paso": 0.66796, "s": 6.29}
+{"epoca": 235, "paso": 1175, "perdida_train": 0.033898, "iou_train_paso": 0.68879, "s": 6.31}
+{"epoca": 236, "paso": 1180, "perdida_train": 0.03826, "iou_train_paso": 0.65712, "s": 6.3}
+{"epoca": 237, "paso": 1185, "perdida_train": 0.039612, "iou_train_paso": 0.65245, "s": 6.31}
+{"epoca": 238, "paso": 1190, "perdida_train": 0.034532, "iou_train_paso": 0.68669, "s": 6.3}
+{"epoca": 239, "paso": 1195, "perdida_train": 0.03835, "iou_train_paso": 0.65785, "s": 6.27}
+{"epoca": 240, "paso": 1200, "perdida_train": 0.035307, "iou_train_paso": 0.67734, "iou_train": 0.6682, "iou_val": 0.50892, "brecha": 0.15928, "s": 9.44}
+{"epoca": 241, "paso": 1205, "perdida_train": 0.033117, "iou_train_paso": 0.70761, "s": 6.39}
+{"epoca": 242, "paso": 1210, "perdida_train": 0.032381, "iou_train_paso": 0.70346, "s": 6.3}
+{"epoca": 243, "paso": 1215, "perdida_train": 0.033055, "iou_train_paso": 0.69263, "s": 6.29}
+{"epoca": 244, "paso": 1220, "perdida_train": 0.028689, "iou_train_paso": 0.73177, "s": 6.29}
+{"epoca": 245, "paso": 1225, "perdida_train": 0.026929, "iou_train_paso": 0.75108, "s": 6.29}
+{"epoca": 246, "paso": 1230, "perdida_train": 0.031974, "iou_train_paso": 0.69938, "s": 6.28}
+{"epoca": 247, "paso": 1235, "perdida_train": 0.032189, "iou_train_paso": 0.70486, "s": 6.34}
+{"epoca": 248, "paso": 1240, "perdida_train": 0.031631, "iou_train_paso": 0.69738, "s": 6.3}
+{"epoca": 249, "paso": 1245, "perdida_train": 0.030735, "iou_train_paso": 0.70591, "s": 6.32}
+{"epoca": 250, "paso": 1250, "perdida_train": 0.031636, "iou_train_paso": 0.70488, "iou_train": 0.69119, "iou_val": 0.5109, "brecha": 0.18029, "s": 9.41}
+{"epoca": 251, "paso": 1255, "perdida_train": 0.032747, "iou_train_paso": 0.69654, "s": 6.3}
+{"epoca": 252, "paso": 1260, "perdida_train": 0.035585, "iou_train_paso": 0.67783, "s": 6.27}
+{"epoca": 253, "paso": 1265, "perdida_train": 0.033696, "iou_train_paso": 0.67845, "s": 6.31}
+{"epoca": 254, "paso": 1270, "perdida_train": 0.031789, "iou_train_paso": 0.70956, "s": 6.72}
+{"epoca": 255, "paso": 1275, "perdida_train": 0.027832, "iou_train_paso": 0.73065, "s": 6.31}
+{"epoca": 256, "paso": 1280, "perdida_train": 0.032063, "iou_train_paso": 0.69558, "s": 6.33}
+{"epoca": 257, "paso": 1285, "perdida_train": 0.03124, "iou_train_paso": 0.70492, "s": 6.33}
+{"epoca": 258, "paso": 1290, "perdida_train": 0.032459, "iou_train_paso": 0.70162, "s": 6.3}
+{"epoca": 259, "paso": 1295, "perdida_train": 0.030211, "iou_train_paso": 0.70248, "s": 6.29}
+{"epoca": 260, "paso": 1300, "perdida_train": 0.030287, "iou_train_paso": 0.72783, "iou_train": 0.75767, "iou_val": 0.51317, "brecha": 0.2445, "s": 9.46}
+{"epoca": 261, "paso": 1305, "perdida_train": 0.029514, "iou_train_paso": 0.72781, "s": 6.29}
+{"epoca": 262, "paso": 1310, "perdida_train": 0.02801, "iou_train_paso": 0.73175, "s": 6.31}
+{"epoca": 263, "paso": 1315, "perdida_train": 0.031506, "iou_train_paso": 0.71239, "s": 6.28}
+{"epoca": 264, "paso": 1320, "perdida_train": 0.026495, "iou_train_paso": 0.75197, "s": 6.29}
+{"epoca": 265, "paso": 1325, "perdida_train": 0.026258, "iou_train_paso": 0.75082, "s": 6.3}
+{"epoca": 266, "paso": 1330, "perdida_train": 0.030161, "iou_train_paso": 0.71098, "s": 6.28}
+{"epoca": 267, "paso": 1335, "perdida_train": 0.029133, "iou_train_paso": 0.7255, "s": 6.27}
+{"epoca": 268, "paso": 1340, "perdida_train": 0.030146, "iou_train_paso": 0.71498, "s": 6.31}
+{"epoca": 269, "paso": 1345, "perdida_train": 0.030104, "iou_train_paso": 0.72152, "s": 6.32}
+{"epoca": 270, "paso": 1350, "perdida_train": 0.030528, "iou_train_paso": 0.71283, "iou_train": 0.75412, "iou_val": 0.49943, "brecha": 0.25469, "s": 9.4}
+{"epoca": 271, "paso": 1355, "perdida_train": 0.029515, "iou_train_paso": 0.72004, "s": 6.32}
+{"epoca": 272, "paso": 1360, "perdida_train": 0.027949, "iou_train_paso": 0.73548, "s": 6.26}
+{"epoca": 273, "paso": 1365, "perdida_train": 0.027923, "iou_train_paso": 0.73958, "s": 6.29}
+{"epoca": 274, "paso": 1370, "perdida_train": 0.03436, "iou_train_paso": 0.68465, "s": 6.27}
+{"epoca": 275, "paso": 1375, "perdida_train": 0.031695, "iou_train_paso": 0.71015, "s": 6.3}
+{"epoca": 276, "paso": 1380, "perdida_train": 0.030165, "iou_train_paso": 0.73452, "s": 6.28}
+{"epoca": 277, "paso": 1385, "perdida_train": 0.030433, "iou_train_paso": 0.70958, "s": 6.26}
+{"epoca": 278, "paso": 1390, "perdida_train": 0.033741, "iou_train_paso": 0.70602, "s": 6.28}
+{"epoca": 279, "paso": 1395, "perdida_train": 0.034148, "iou_train_paso": 0.68859, "s": 6.35}
+{"epoca": 280, "paso": 1400, "perdida_train": 0.030347, "iou_train_paso": 0.71571, "iou_train": 0.67602, "iou_val": 0.4632, "brecha": 0.21282, "s": 9.45}
+{"epoca": 281, "paso": 1405, "perdida_train": 0.031005, "iou_train_paso": 0.71874, "s": 6.29}
+{"epoca": 282, "paso": 1410, "perdida_train": 0.030583, "iou_train_paso": 0.72185, "s": 6.27}
+{"epoca": 283, "paso": 1415, "perdida_train": 0.027543, "iou_train_paso": 0.73881, "s": 6.26}
+{"epoca": 284, "paso": 1420, "perdida_train": 0.024973, "iou_train_paso": 0.76185, "s": 6.29}
+{"epoca": 285, "paso": 1425, "perdida_train": 0.025105, "iou_train_paso": 0.76047, "s": 6.29}
+{"epoca": 286, "paso": 1430, "perdida_train": 0.024372, "iou_train_paso": 0.76328, "s": 6.31}
+{"epoca": 287, "paso": 1435, "perdida_train": 0.030039, "iou_train_paso": 0.71375, "s": 6.33}
+{"epoca": 288, "paso": 1440, "perdida_train": 0.035121, "iou_train_paso": 0.69298, "s": 6.29}
+{"epoca": 289, "paso": 1445, "perdida_train": 0.032812, "iou_train_paso": 0.70259, "s": 6.25}
+{"epoca": 290, "paso": 1450, "perdida_train": 0.026642, "iou_train_paso": 0.73802, "iou_train": 0.69243, "iou_val": 0.47536, "brecha": 0.21707, "s": 9.46}
+{"epoca": 291, "paso": 1455, "perdida_train": 0.02638, "iou_train_paso": 0.74129, "s": 6.28}
+{"epoca": 292, "paso": 1460, "perdida_train": 0.023836, "iou_train_paso": 0.77613, "s": 6.31}
+{"epoca": 293, "paso": 1465, "perdida_train": 0.026542, "iou_train_paso": 0.74839, "s": 6.31}
+{"epoca": 294, "paso": 1470, "perdida_train": 0.025949, "iou_train_paso": 0.75248, "s": 6.3}
+{"epoca": 295, "paso": 1475, "perdida_train": 0.026644, "iou_train_paso": 0.73503, "s": 6.32}
+{"epoca": 296, "paso": 1480, "perdida_train": 0.028504, "iou_train_paso": 0.74245, "s": 6.3}
+{"epoca": 297, "paso": 1485, "perdida_train": 0.029294, "iou_train_paso": 0.73457, "s": 6.29}
+{"epoca": 298, "paso": 1490, "perdida_train": 0.027914, "iou_train_paso": 0.73265, "s": 6.32}
+{"epoca": 299, "paso": 1495, "perdida_train": 0.028357, "iou_train_paso": 0.72656, "s": 6.46}
+{"epoca": 300, "paso": 1500, "perdida_train": 0.025897, "iou_train_paso": 0.76359, "iou_train": 0.725, "iou_val": 0.48281, "brecha": 0.24219, "s": 9.83}
+{"epoca": 301, "paso": 1505, "perdida_train": 0.025685, "iou_train_paso": 0.75746, "s": 6.31}
+{"epoca": 302, "paso": 1510, "perdida_train": 0.022019, "iou_train_paso": 0.78216, "s": 6.34}
+{"epoca": 303, "paso": 1515, "perdida_train": 0.023671, "iou_train_paso": 0.7762, "s": 6.32}
+{"epoca": 304, "paso": 1520, "perdida_train": 0.02516, "iou_train_paso": 0.75223, "s": 6.29}
+{"epoca": 305, "paso": 1525, "perdida_train": 0.024956, "iou_train_paso": 0.76776, "s": 6.29}
+{"epoca": 306, "paso": 1530, "perdida_train": 0.025278, "iou_train_paso": 0.7536, "s": 6.28}
+{"epoca": 307, "paso": 1535, "perdida_train": 0.026995, "iou_train_paso": 0.74803, "s": 6.29}
+{"epoca": 308, "paso": 1540, "perdida_train": 0.026901, "iou_train_paso": 0.7307, "s": 6.3}
+{"epoca": 309, "paso": 1545, "perdida_train": 0.024411, "iou_train_paso": 0.77355, "s": 6.28}
+{"epoca": 310, "paso": 1550, "perdida_train": 0.027042, "iou_train_paso": 0.74084, "iou_train": 0.76317, "iou_val": 0.51894, "brecha": 0.24423, "s": 9.47}
+{"epoca": 311, "paso": 1555, "perdida_train": 0.025604, "iou_train_paso": 0.7551, "s": 6.26}
+{"epoca": 312, "paso": 1560, "perdida_train": 0.02652, "iou_train_paso": 0.74483, "s": 6.31}
+{"epoca": 313, "paso": 1565, "perdida_train": 0.02382, "iou_train_paso": 0.76626, "s": 6.31}
+{"epoca": 314, "paso": 1570, "perdida_train": 0.024028, "iou_train_paso": 0.76937, "s": 6.28}
+{"epoca": 315, "paso": 1575, "perdida_train": 0.0232, "iou_train_paso": 0.77248, "s": 6.32}
+{"epoca": 316, "paso": 1580, "perdida_train": 0.022167, "iou_train_paso": 0.78346, "s": 6.27}
+{"epoca": 317, "paso": 1585, "perdida_train": 0.026206, "iou_train_paso": 0.75753, "s": 6.32}
+{"epoca": 318, "paso": 1590, "perdida_train": 0.026949, "iou_train_paso": 0.74015, "s": 6.27}
+{"epoca": 319, "paso": 1595, "perdida_train": 0.027289, "iou_train_paso": 0.73044, "s": 6.3}
+{"epoca": 320, "paso": 1600, "perdida_train": 0.023549, "iou_train_paso": 0.77588, "iou_train": 0.78679, "iou_val": 0.50776, "brecha": 0.27903, "s": 9.46}
+{"epoca": 321, "paso": 1605, "perdida_train": 0.022719, "iou_train_paso": 0.78648, "s": 6.32}
+{"epoca": 322, "paso": 1610, "perdida_train": 0.021234, "iou_train_paso": 0.78229, "s": 6.31}
+{"epoca": 323, "paso": 1615, "perdida_train": 0.024615, "iou_train_paso": 0.75631, "s": 6.28}
+{"epoca": 324, "paso": 1620, "perdida_train": 0.024377, "iou_train_paso": 0.76797, "s": 6.3}
+{"epoca": 325, "paso": 1625, "perdida_train": 0.023396, "iou_train_paso": 0.77442, "s": 6.27}
+{"epoca": 326, "paso": 1630, "perdida_train": 0.024567, "iou_train_paso": 0.76021, "s": 6.32}
+{"epoca": 327, "paso": 1635, "perdida_train": 0.024951, "iou_train_paso": 0.75569, "s": 6.33}
+{"epoca": 328, "paso": 1640, "perdida_train": 0.023484, "iou_train_paso": 0.76315, "s": 6.31}
+{"epoca": 329, "paso": 1645, "perdida_train": 0.020943, "iou_train_paso": 0.79753, "s": 6.32}
+{"epoca": 330, "paso": 1650, "perdida_train": 0.022667, "iou_train_paso": 0.77388, "iou_train": 0.79349, "iou_val": 0.50355, "brecha": 0.28995, "s": 9.45}
+{"epoca": 331, "paso": 1655, "perdida_train": 0.021015, "iou_train_paso": 0.79669, "s": 6.31}
+{"epoca": 332, "paso": 1660, "perdida_train": 0.020075, "iou_train_paso": 0.80369, "s": 6.26}
+{"epoca": 333, "paso": 1665, "perdida_train": 0.022536, "iou_train_paso": 0.76994, "s": 6.28}
+{"epoca": 334, "paso": 1670, "perdida_train": 0.021121, "iou_train_paso": 0.79771, "s": 6.28}
+{"epoca": 335, "paso": 1675, "perdida_train": 0.019957, "iou_train_paso": 0.81265, "s": 6.39}
+{"epoca": 336, "paso": 1680, "perdida_train": 0.018895, "iou_train_paso": 0.81576, "s": 6.26}
+{"epoca": 337, "paso": 1685, "perdida_train": 0.022653, "iou_train_paso": 0.77859, "s": 6.28}
+{"epoca": 338, "paso": 1690, "perdida_train": 0.022176, "iou_train_paso": 0.77206, "s": 6.3}
+{"epoca": 339, "paso": 1695, "perdida_train": 0.022403, "iou_train_paso": 0.78173, "s": 6.29}
+{"epoca": 340, "paso": 1700, "perdida_train": 0.022717, "iou_train_paso": 0.7793, "iou_train": 0.72992, "iou_val": 0.51103, "brecha": 0.21889, "s": 9.43}
+{"epoca": 341, "paso": 1705, "perdida_train": 0.023603, "iou_train_paso": 0.7648, "s": 6.28}
+{"epoca": 342, "paso": 1710, "perdida_train": 0.021504, "iou_train_paso": 0.7885, "s": 6.31}
+{"epoca": 343, "paso": 1715, "perdida_train": 0.025302, "iou_train_paso": 0.75158, "s": 6.27}
+{"epoca": 344, "paso": 1720, "perdida_train": 0.025364, "iou_train_paso": 0.76329, "s": 6.3}
+{"epoca": 345, "paso": 1725, "perdida_train": 0.02543, "iou_train_paso": 0.75828, "s": 6.51}
+{"epoca": 346, "paso": 1730, "perdida_train": 0.022483, "iou_train_paso": 0.78277, "s": 6.29}
+{"epoca": 347, "paso": 1735, "perdida_train": 0.020822, "iou_train_paso": 0.79017, "s": 6.32}
+{"epoca": 348, "paso": 1740, "perdida_train": 0.019514, "iou_train_paso": 0.8056, "s": 6.31}
+{"epoca": 349, "paso": 1745, "perdida_train": 0.020349, "iou_train_paso": 0.80309, "s": 6.28}
+{"epoca": 350, "paso": 1750, "perdida_train": 0.022438, "iou_train_paso": 0.77095, "iou_train": 0.81795, "iou_val": 0.51409, "brecha": 0.30386, "s": 9.36}
+{"epoca": 351, "paso": 1755, "perdida_train": 0.020836, "iou_train_paso": 0.79044, "s": 6.32}
+{"epoca": 352, "paso": 1760, "perdida_train": 0.018507, "iou_train_paso": 0.80912, "s": 6.31}
+{"epoca": 353, "paso": 1765, "perdida_train": 0.019171, "iou_train_paso": 0.81016, "s": 6.32}
+{"epoca": 354, "paso": 1770, "perdida_train": 0.019087, "iou_train_paso": 0.80374, "s": 6.29}
+{"epoca": 355, "paso": 1775, "perdida_train": 0.022462, "iou_train_paso": 0.77859, "s": 6.34}
+{"epoca": 356, "paso": 1780, "perdida_train": 0.025415, "iou_train_paso": 0.76081, "s": 6.27}
+{"epoca": 357, "paso": 1785, "perdida_train": 0.021912, "iou_train_paso": 0.78981, "s": 6.31}
+{"epoca": 358, "paso": 1790, "perdida_train": 0.023736, "iou_train_paso": 0.76903, "s": 6.33}
+{"epoca": 359, "paso": 1795, "perdida_train": 0.027818, "iou_train_paso": 0.73073, "s": 6.29}
+{"epoca": 360, "paso": 1800, "perdida_train": 0.029363, "iou_train_paso": 0.71081, "iou_train": 0.77388, "iou_val": 0.51457, "brecha": 0.2593, "s": 9.44}
+{"epoca": 361, "paso": 1805, "perdida_train": 0.025273, "iou_train_paso": 0.75829, "s": 6.3}
+{"epoca": 362, "paso": 1810, "perdida_train": 0.026567, "iou_train_paso": 0.74114, "s": 6.3}
+{"epoca": 363, "paso": 1815, "perdida_train": 0.026864, "iou_train_paso": 0.73784, "s": 6.29}
+{"epoca": 364, "paso": 1820, "perdida_train": 0.029008, "iou_train_paso": 0.72848, "s": 6.28}
+{"epoca": 365, "paso": 1825, "perdida_train": 0.027445, "iou_train_paso": 0.74093, "s": 6.27}
+{"epoca": 366, "paso": 1830, "perdida_train": 0.03294, "iou_train_paso": 0.68683, "s": 6.26}
+{"epoca": 367, "paso": 1835, "perdida_train": 0.029836, "iou_train_paso": 0.72481, "s": 6.28}
+{"epoca": 368, "paso": 1840, "perdida_train": 0.025084, "iou_train_paso": 0.75624, "s": 6.28}
+{"epoca": 369, "paso": 1845, "perdida_train": 0.020909, "iou_train_paso": 0.78948, "s": 6.31}
+{"epoca": 370, "paso": 1850, "perdida_train": 0.020398, "iou_train_paso": 0.79655, "iou_train": 0.80304, "iou_val": 0.50461, "brecha": 0.29843, "s": 9.31}
+{"epoca": 371, "paso": 1855, "perdida_train": 0.021994, "iou_train_paso": 0.78719, "s": 6.27}
+{"epoca": 372, "paso": 1860, "perdida_train": 0.024777, "iou_train_paso": 0.76345, "s": 6.26}
+{"epoca": 373, "paso": 1865, "perdida_train": 0.019294, "iou_train_paso": 0.80182, "s": 6.27}
+{"epoca": 374, "paso": 1870, "perdida_train": 0.02028, "iou_train_paso": 0.79837, "s": 6.3}
+{"epoca": 375, "paso": 1875, "perdida_train": 0.018452, "iou_train_paso": 0.81064, "s": 6.32}
+{"epoca": 376, "paso": 1880, "perdida_train": 0.018172, "iou_train_paso": 0.81896, "s": 6.29}
+{"epoca": 377, "paso": 1885, "perdida_train": 0.019247, "iou_train_paso": 0.80089, "s": 6.32}
+{"epoca": 378, "paso": 1890, "perdida_train": 0.019407, "iou_train_paso": 0.80488, "s": 6.26}
+{"epoca": 379, "paso": 1895, "perdida_train": 0.018688, "iou_train_paso": 0.81962, "s": 6.26}
+{"epoca": 380, "paso": 1900, "perdida_train": 0.01829, "iou_train_paso": 0.81418, "iou_train": 0.76328, "iou_val": 0.50147, "brecha": 0.26181, "s": 9.35}
+{"epoca": 381, "paso": 1905, "perdida_train": 0.021117, "iou_train_paso": 0.77973, "s": 6.28}
+{"epoca": 382, "paso": 1910, "perdida_train": 0.023565, "iou_train_paso": 0.76892, "s": 6.26}
+{"epoca": 383, "paso": 1915, "perdida_train": 0.025654, "iou_train_paso": 0.76222, "s": 6.28}
+{"epoca": 384, "paso": 1920, "perdida_train": 0.026907, "iou_train_paso": 0.73522, "s": 6.3}
+{"epoca": 385, "paso": 1925, "perdida_train": 0.024046, "iou_train_paso": 0.76011, "s": 6.3}
+{"epoca": 386, "paso": 1930, "perdida_train": 0.023283, "iou_train_paso": 0.77761, "s": 6.3}
+{"epoca": 387, "paso": 1935, "perdida_train": 0.019134, "iou_train_paso": 0.81215, "s": 6.32}
+{"epoca": 388, "paso": 1940, "perdida_train": 0.01885, "iou_train_paso": 0.81267, "s": 6.32}
+{"epoca": 389, "paso": 1945, "perdida_train": 0.019715, "iou_train_paso": 0.79704, "s": 6.3}
+{"epoca": 390, "paso": 1950, "perdida_train": 0.020372, "iou_train_paso": 0.79658, "iou_train": 0.82026, "iou_val": 0.51724, "brecha": 0.30302, "s": 9.57}
+{"epoca": 391, "paso": 1955, "perdida_train": 0.019659, "iou_train_paso": 0.8038, "s": 6.3}
+{"epoca": 392, "paso": 1960, "perdida_train": 0.022224, "iou_train_paso": 0.78306, "s": 6.32}
+{"epoca": 393, "paso": 1965, "perdida_train": 0.024061, "iou_train_paso": 0.76521, "s": 6.26}
+{"epoca": 394, "paso": 1970, "perdida_train": 0.025794, "iou_train_paso": 0.75005, "s": 6.28}
+{"epoca": 395, "paso": 1975, "perdida_train": 0.025535, "iou_train_paso": 0.7448, "s": 6.33}
+{"epoca": 396, "paso": 1980, "perdida_train": 0.022591, "iou_train_paso": 0.77929, "s": 6.28}
+{"epoca": 397, "paso": 1985, "perdida_train": 0.025019, "iou_train_paso": 0.74442, "s": 6.27}
+{"epoca": 398, "paso": 1990, "perdida_train": 0.026354, "iou_train_paso": 0.73224, "s": 6.26}
+{"epoca": 399, "paso": 1995, "perdida_train": 0.023414, "iou_train_paso": 0.7612, "s": 6.28}
+{"epoca": 400, "paso": 2000, "perdida_train": 0.022453, "iou_train_paso": 0.78436, "iou_train": 0.79679, "iou_val": 0.5138, "brecha": 0.28299, "s": 9.36}
+{"epoca": 401, "paso": 2005, "perdida_train": 0.019698, "iou_train_paso": 0.81083, "s": 6.34}
+{"epoca": 402, "paso": 2010, "perdida_train": 0.021484, "iou_train_paso": 0.78062, "s": 6.3}
+{"epoca": 403, "paso": 2015, "perdida_train": 0.02299, "iou_train_paso": 0.75316, "s": 6.3}
+{"epoca": 404, "paso": 2020, "perdida_train": 0.025146, "iou_train_paso": 0.7577, "s": 6.28}
+{"epoca": 405, "paso": 2025, "perdida_train": 0.023005, "iou_train_paso": 0.77137, "s": 6.28}
+{"epoca": 406, "paso": 2030, "perdida_train": 0.021202, "iou_train_paso": 0.78891, "s": 6.29}
+{"epoca": 407, "paso": 2035, "perdida_train": 0.020842, "iou_train_paso": 0.78604, "s": 6.31}
+{"epoca": 408, "paso": 2040, "perdida_train": 0.021601, "iou_train_paso": 0.78222, "s": 6.3}
+{"epoca": 409, "paso": 2045, "perdida_train": 0.023299, "iou_train_paso": 0.76158, "s": 6.31}
+{"epoca": 410, "paso": 2050, "perdida_train": 0.023554, "iou_train_paso": 0.76422, "iou_train": 0.81234, "iou_val": 0.51455, "brecha": 0.29779, "s": 9.36}
+{"epoca": 411, "paso": 2055, "perdida_train": 0.021719, "iou_train_paso": 0.76972, "s": 6.31}
+{"epoca": 412, "paso": 2060, "perdida_train": 0.020941, "iou_train_paso": 0.79319, "s": 6.32}
+{"epoca": 413, "paso": 2065, "perdida_train": 0.021217, "iou_train_paso": 0.77146, "s": 6.3}
+{"epoca": 414, "paso": 2070, "perdida_train": 0.021811, "iou_train_paso": 0.78183, "s": 6.29}
+{"epoca": 415, "paso": 2075, "perdida_train": 0.020806, "iou_train_paso": 0.78175, "s": 6.37}
+{"epoca": 416, "paso": 2080, "perdida_train": 0.019348, "iou_train_paso": 0.79642, "s": 6.29}
+{"epoca": 417, "paso": 2085, "perdida_train": 0.01793, "iou_train_paso": 0.82694, "s": 6.34}
+{"epoca": 418, "paso": 2090, "perdida_train": 0.019028, "iou_train_paso": 0.80991, "s": 6.3}
+{"epoca": 419, "paso": 2095, "perdida_train": 0.020919, "iou_train_paso": 0.7931, "s": 6.3}
+{"epoca": 420, "paso": 2100, "perdida_train": 0.020077, "iou_train_paso": 0.80124, "iou_train": 0.78781, "iou_val": 0.51753, "brecha": 0.27029, "s": 9.34}
+{"epoca": 421, "paso": 2105, "perdida_train": 0.022333, "iou_train_paso": 0.78135, "s": 6.35}
+{"epoca": 422, "paso": 2110, "perdida_train": 0.021787, "iou_train_paso": 0.78162, "s": 6.29}
+{"epoca": 423, "paso": 2115, "perdida_train": 0.018991, "iou_train_paso": 0.81203, "s": 6.25}
+{"epoca": 424, "paso": 2120, "perdida_train": 0.019949, "iou_train_paso": 0.79943, "s": 6.3}
+{"epoca": 425, "paso": 2125, "perdida_train": 0.021285, "iou_train_paso": 0.79272, "s": 6.25}
+{"epoca": 426, "paso": 2130, "perdida_train": 0.022909, "iou_train_paso": 0.77234, "s": 6.37}
+{"epoca": 427, "paso": 2135, "perdida_train": 0.019678, "iou_train_paso": 0.80449, "s": 6.32}
+{"epoca": 428, "paso": 2140, "perdida_train": 0.02168, "iou_train_paso": 0.78098, "s": 6.39}
+{"epoca": 429, "paso": 2145, "perdida_train": 0.019257, "iou_train_paso": 0.80387, "s": 6.33}
+{"epoca": 430, "paso": 2150, "perdida_train": 0.021323, "iou_train_paso": 0.77829, "iou_train": 0.75436, "iou_val": 0.4914, "brecha": 0.26295, "s": 9.44}
+{"epoca": 431, "paso": 2155, "perdida_train": 0.019864, "iou_train_paso": 0.79805, "s": 6.29}
+{"epoca": 432, "paso": 2160, "perdida_train": 0.018226, "iou_train_paso": 0.81591, "s": 6.33}
+{"epoca": 433, "paso": 2165, "perdida_train": 0.017672, "iou_train_paso": 0.82287, "s": 6.3}
+{"epoca": 434, "paso": 2170, "perdida_train": 0.017372, "iou_train_paso": 0.82616, "s": 6.29}
+{"epoca": 435, "paso": 2175, "perdida_train": 0.019973, "iou_train_paso": 0.79961, "s": 6.38}
+{"epoca": 436, "paso": 2180, "perdida_train": 0.023141, "iou_train_paso": 0.76989, "s": 6.45}
+{"epoca": 437, "paso": 2185, "perdida_train": 0.026216, "iou_train_paso": 0.75283, "s": 6.32}
+{"epoca": 438, "paso": 2190, "perdida_train": 0.021972, "iou_train_paso": 0.77731, "s": 6.36}
+{"epoca": 439, "paso": 2195, "perdida_train": 0.019893, "iou_train_paso": 0.79898, "s": 6.29}
+{"epoca": 440, "paso": 2200, "perdida_train": 0.020655, "iou_train_paso": 0.78916, "iou_train": 0.82397, "iou_val": 0.52521, "brecha": 0.29876, "s": 9.39}
+{"epoca": 441, "paso": 2205, "perdida_train": 0.019077, "iou_train_paso": 0.80315, "s": 6.34}
+{"epoca": 442, "paso": 2210, "perdida_train": 0.019251, "iou_train_paso": 0.80615, "s": 6.28}
+{"epoca": 443, "paso": 2215, "perdida_train": 0.020039, "iou_train_paso": 0.79858, "s": 6.29}
+{"epoca": 444, "paso": 2220, "perdida_train": 0.021119, "iou_train_paso": 0.79009, "s": 6.31}
+{"epoca": 445, "paso": 2225, "perdida_train": 0.021362, "iou_train_paso": 0.78258, "s": 6.29}
+{"epoca": 446, "paso": 2230, "perdida_train": 0.01723, "iou_train_paso": 0.81683, "s": 6.3}
+{"epoca": 447, "paso": 2235, "perdida_train": 0.015236, "iou_train_paso": 0.83805, "s": 6.31}
+{"epoca": 448, "paso": 2240, "perdida_train": 0.014735, "iou_train_paso": 0.85179, "s": 6.31}
+{"epoca": 449, "paso": 2245, "perdida_train": 0.016308, "iou_train_paso": 0.82708, "s": 6.44}
+{"epoca": 450, "paso": 2250, "perdida_train": 0.015441, "iou_train_paso": 0.84123, "iou_train": 0.83071, "iou_val": 0.52796, "brecha": 0.30275, "s": 9.38}
+{"epoca": 451, "paso": 2255, "perdida_train": 0.016961, "iou_train_paso": 0.82543, "s": 6.29}
+{"epoca": 452, "paso": 2260, "perdida_train": 0.015926, "iou_train_paso": 0.83659, "s": 6.3}
+{"epoca": 453, "paso": 2265, "perdida_train": 0.016841, "iou_train_paso": 0.82016, "s": 6.6}
+{"epoca": 454, "paso": 2270, "perdida_train": 0.017276, "iou_train_paso": 0.81861, "s": 6.84}
+{"epoca": 455, "paso": 2275, "perdida_train": 0.02027, "iou_train_paso": 0.77825, "s": 6.41}
+{"epoca": 456, "paso": 2280, "perdida_train": 0.020175, "iou_train_paso": 0.78902, "s": 6.28}
+{"epoca": 457, "paso": 2285, "perdida_train": 0.019266, "iou_train_paso": 0.80313, "s": 6.29}
+{"epoca": 458, "paso": 2290, "perdida_train": 0.017692, "iou_train_paso": 0.80995, "s": 6.27}
+{"epoca": 459, "paso": 2295, "perdida_train": 0.018791, "iou_train_paso": 0.80303, "s": 6.3}
+{"epoca": 460, "paso": 2300, "perdida_train": 0.018676, "iou_train_paso": 0.80009, "iou_train": 0.77498, "iou_val": 0.48553, "brecha": 0.28946, "s": 9.47}
+{"epoca": 461, "paso": 2305, "perdida_train": 0.01808, "iou_train_paso": 0.81355, "s": 6.35}
+{"epoca": 462, "paso": 2310, "perdida_train": 0.023144, "iou_train_paso": 0.75827, "s": 6.34}
+{"epoca": 463, "paso": 2315, "perdida_train": 0.024565, "iou_train_paso": 0.74689, "s": 6.29}
+{"epoca": 464, "paso": 2320, "perdida_train": 0.019537, "iou_train_paso": 0.79889, "s": 6.3}
+{"epoca": 465, "paso": 2325, "perdida_train": 0.017614, "iou_train_paso": 0.81354, "s": 6.33}
+{"epoca": 466, "paso": 2330, "perdida_train": 0.021415, "iou_train_paso": 0.79562, "s": 6.3}
+{"epoca": 467, "paso": 2335, "perdida_train": 0.017098, "iou_train_paso": 0.8114, "s": 6.34}
+{"epoca": 468, "paso": 2340, "perdida_train": 0.016399, "iou_train_paso": 0.83054, "s": 6.3}
+{"epoca": 469, "paso": 2345, "perdida_train": 0.015447, "iou_train_paso": 0.84014, "s": 6.28}
+{"epoca": 470, "paso": 2350, "perdida_train": 0.017114, "iou_train_paso": 0.8185, "iou_train": 0.84524, "iou_val": 0.51404, "brecha": 0.3312, "s": 9.41}
+{"epoca": 471, "paso": 2355, "perdida_train": 0.017776, "iou_train_paso": 0.8197, "s": 6.32}
+{"epoca": 472, "paso": 2360, "perdida_train": 0.016989, "iou_train_paso": 0.81818, "s": 6.28}
+{"epoca": 473, "paso": 2365, "perdida_train": 0.01914, "iou_train_paso": 0.80335, "s": 6.3}
+{"epoca": 474, "paso": 2370, "perdida_train": 0.02077, "iou_train_paso": 0.78213, "s": 6.34}
+{"epoca": 475, "paso": 2375, "perdida_train": 0.019125, "iou_train_paso": 0.80591, "s": 6.31}
+{"epoca": 476, "paso": 2380, "perdida_train": 0.0206, "iou_train_paso": 0.79043, "s": 6.3}
+{"epoca": 477, "paso": 2385, "perdida_train": 0.021795, "iou_train_paso": 0.78133, "s": 6.3}
+{"epoca": 478, "paso": 2390, "perdida_train": 0.020766, "iou_train_paso": 0.78513, "s": 6.3}
+{"epoca": 479, "paso": 2395, "perdida_train": 0.016847, "iou_train_paso": 0.82719, "s": 6.34}
+{"epoca": 480, "paso": 2400, "perdida_train": 0.018511, "iou_train_paso": 0.81024, "iou_train": 0.79033, "iou_val": 0.51978, "brecha": 0.27055, "s": 9.66}
+{"epoca": 481, "paso": 2405, "perdida_train": 0.021171, "iou_train_paso": 0.77117, "s": 6.31}
+{"epoca": 482, "paso": 2410, "perdida_train": 0.021115, "iou_train_paso": 0.78533, "s": 6.29}
+{"epoca": 483, "paso": 2415, "perdida_train": 0.017419, "iou_train_paso": 0.81882, "s": 6.37}
+{"epoca": 484, "paso": 2420, "perdida_train": 0.018315, "iou_train_paso": 0.8081, "s": 6.27}
+{"epoca": 485, "paso": 2425, "perdida_train": 0.019402, "iou_train_paso": 0.78763, "s": 6.27}
+{"epoca": 486, "paso": 2430, "perdida_train": 0.017429, "iou_train_paso": 0.80723, "s": 6.33}
+{"epoca": 487, "paso": 2435, "perdida_train": 0.017681, "iou_train_paso": 0.81962, "s": 6.26}
+{"epoca": 488, "paso": 2440, "perdida_train": 0.016214, "iou_train_paso": 0.83418, "s": 6.26}
+{"epoca": 489, "paso": 2445, "perdida_train": 0.017185, "iou_train_paso": 0.81706, "s": 6.28}
+{"epoca": 490, "paso": 2450, "perdida_train": 0.015085, "iou_train_paso": 0.84731, "iou_train": 0.85752, "iou_val": 0.51908, "brecha": 0.33843, "s": 9.43}
+{"epoca": 491, "paso": 2455, "perdida_train": 0.014302, "iou_train_paso": 0.84814, "s": 6.32}
+{"epoca": 492, "paso": 2460, "perdida_train": 0.015134, "iou_train_paso": 0.84277, "s": 6.3}
+{"epoca": 493, "paso": 2465, "perdida_train": 0.015961, "iou_train_paso": 0.83467, "s": 6.3}
+{"epoca": 494, "paso": 2470, "perdida_train": 0.015004, "iou_train_paso": 0.84237, "s": 6.33}
+{"epoca": 495, "paso": 2475, "perdida_train": 0.01584, "iou_train_paso": 0.82803, "s": 6.28}
+{"epoca": 496, "paso": 2480, "perdida_train": 0.014757, "iou_train_paso": 0.8405, "s": 6.3}
+{"epoca": 497, "paso": 2485, "perdida_train": 0.014925, "iou_train_paso": 0.84239, "s": 6.31}
+{"epoca": 498, "paso": 2490, "perdida_train": 0.015373, "iou_train_paso": 0.83734, "s": 6.3}
+{"epoca": 499, "paso": 2495, "perdida_train": 0.017001, "iou_train_paso": 0.81505, "s": 6.31}
+{"epoca": 500, "paso": 2500, "perdida_train": 0.016387, "iou_train_paso": 0.82063, "iou_train": 0.81851, "iou_val": 0.51181, "brecha": 0.3067, "s": 9.37}
+{"epoca": 501, "paso": 2505, "perdida_train": 0.016919, "iou_train_paso": 0.82256, "s": 6.35}
+{"epoca": 502, "paso": 2510, "perdida_train": 0.015028, "iou_train_paso": 0.84482, "s": 6.28}
+{"epoca": 503, "paso": 2515, "perdida_train": 0.017494, "iou_train_paso": 0.82031, "s": 6.34}
+{"epoca": 504, "paso": 2520, "perdida_train": 0.017728, "iou_train_paso": 0.82031, "s": 6.28}
+{"epoca": 505, "paso": 2525, "perdida_train": 0.015995, "iou_train_paso": 0.83488, "s": 6.36}
+{"epoca": 506, "paso": 2530, "perdida_train": 0.017931, "iou_train_paso": 0.81325, "s": 6.33}
+{"epoca": 507, "paso": 2535, "perdida_train": 0.016391, "iou_train_paso": 0.83173, "s": 6.31}
+{"epoca": 508, "paso": 2540, "perdida_train": 0.015332, "iou_train_paso": 0.84101, "s": 6.38}
+{"epoca": 509, "paso": 2545, "perdida_train": 0.01722, "iou_train_paso": 0.82273, "s": 6.3}
+{"epoca": 510, "paso": 2550, "perdida_train": 0.015485, "iou_train_paso": 0.83911, "iou_train": 0.83, "iou_val": 0.50542, "brecha": 0.32459, "s": 9.42}
+{"epoca": 511, "paso": 2555, "perdida_train": 0.017585, "iou_train_paso": 0.81479, "s": 6.28}
+{"epoca": 512, "paso": 2560, "perdida_train": 0.017372, "iou_train_paso": 0.82666, "s": 6.36}
+{"epoca": 513, "paso": 2565, "perdida_train": 0.020114, "iou_train_paso": 0.79803, "s": 6.3}
+{"epoca": 514, "paso": 2570, "perdida_train": 0.019063, "iou_train_paso": 0.79561, "s": 6.33}
+{"epoca": 515, "paso": 2575, "perdida_train": 0.016066, "iou_train_paso": 0.83159, "s": 6.27}
+{"epoca": 516, "paso": 2580, "perdida_train": 0.018331, "iou_train_paso": 0.80973, "s": 6.32}
+{"epoca": 517, "paso": 2585, "perdida_train": 0.019251, "iou_train_paso": 0.79527, "s": 6.3}
+{"epoca": 518, "paso": 2590, "perdida_train": 0.020961, "iou_train_paso": 0.78635, "s": 6.27}
+{"epoca": 519, "paso": 2595, "perdida_train": 0.020278, "iou_train_paso": 0.78557, "s": 6.28}
+{"epoca": 520, "paso": 2600, "perdida_train": 0.018677, "iou_train_paso": 0.79307, "iou_train": 0.81515, "iou_val": 0.51152, "brecha": 0.30363, "s": 9.46}
+{"epoca": 521, "paso": 2605, "perdida_train": 0.019985, "iou_train_paso": 0.80188, "s": 6.32}
+{"epoca": 522, "paso": 2610, "perdida_train": 0.016168, "iou_train_paso": 0.83021, "s": 6.32}
+{"epoca": 523, "paso": 2615, "perdida_train": 0.016941, "iou_train_paso": 0.81074, "s": 6.29}
+{"epoca": 524, "paso": 2620, "perdida_train": 0.014625, "iou_train_paso": 0.8476, "s": 6.29}
+{"epoca": 525, "paso": 2625, "perdida_train": 0.013493, "iou_train_paso": 0.8572, "s": 6.31}
+{"epoca": 526, "paso": 2630, "perdida_train": 0.014106, "iou_train_paso": 0.84997, "s": 6.52}
+{"epoca": 527, "paso": 2635, "perdida_train": 0.015893, "iou_train_paso": 0.83194, "s": 6.31}
+{"epoca": 528, "paso": 2640, "perdida_train": 0.014505, "iou_train_paso": 0.84887, "s": 6.29}
+{"epoca": 529, "paso": 2645, "perdida_train": 0.014315, "iou_train_paso": 0.84747, "s": 6.29}
+{"epoca": 530, "paso": 2650, "perdida_train": 0.013353, "iou_train_paso": 0.85926, "iou_train": 0.8236, "iou_val": 0.52594, "brecha": 0.29766, "s": 9.45}
+{"epoca": 531, "paso": 2655, "perdida_train": 0.017009, "iou_train_paso": 0.81079, "s": 6.27}
+{"epoca": 532, "paso": 2660, "perdida_train": 0.01704, "iou_train_paso": 0.81724, "s": 6.31}
+{"epoca": 533, "paso": 2665, "perdida_train": 0.017061, "iou_train_paso": 0.82216, "s": 6.31}
+{"epoca": 534, "paso": 2670, "perdida_train": 0.017618, "iou_train_paso": 0.81224, "s": 6.3}
+{"epoca": 535, "paso": 2675, "perdida_train": 0.019308, "iou_train_paso": 0.80483, "s": 6.3}
+{"epoca": 536, "paso": 2680, "perdida_train": 0.017118, "iou_train_paso": 0.80843, "s": 6.3}
+{"epoca": 537, "paso": 2685, "perdida_train": 0.015729, "iou_train_paso": 0.82724, "s": 6.39}
+{"epoca": 538, "paso": 2690, "perdida_train": 0.015814, "iou_train_paso": 0.83701, "s": 6.28}
+{"epoca": 539, "paso": 2695, "perdida_train": 0.017014, "iou_train_paso": 0.82869, "s": 6.33}
+{"epoca": 540, "paso": 2700, "perdida_train": 0.014383, "iou_train_paso": 0.84866, "iou_train": 0.85586, "iou_val": 0.52148, "brecha": 0.33438, "s": 9.37}
+{"epoca": 541, "paso": 2705, "perdida_train": 0.014058, "iou_train_paso": 0.84573, "s": 6.29}
+{"epoca": 542, "paso": 2710, "perdida_train": 0.01873, "iou_train_paso": 0.80632, "s": 6.28}
+{"epoca": 543, "paso": 2715, "perdida_train": 0.01518, "iou_train_paso": 0.83834, "s": 6.29}
+{"epoca": 544, "paso": 2720, "perdida_train": 0.017737, "iou_train_paso": 0.81774, "s": 6.34}
+{"epoca": 545, "paso": 2725, "perdida_train": 0.016874, "iou_train_paso": 0.82401, "s": 6.3}
+{"epoca": 546, "paso": 2730, "perdida_train": 0.019612, "iou_train_paso": 0.79894, "s": 6.41}
+{"epoca": 547, "paso": 2735, "perdida_train": 0.020113, "iou_train_paso": 0.78834, "s": 6.31}
+{"epoca": 548, "paso": 2740, "perdida_train": 0.02189, "iou_train_paso": 0.77234, "s": 6.29}
+{"epoca": 549, "paso": 2745, "perdida_train": 0.020586, "iou_train_paso": 0.79723, "s": 6.33}
+{"epoca": 550, "paso": 2750, "perdida_train": 0.018156, "iou_train_paso": 0.81035, "iou_train": 0.84566, "iou_val": 0.53143, "brecha": 0.31423, "s": 9.41}
+{"epoca": 551, "paso": 2755, "perdida_train": 0.020142, "iou_train_paso": 0.78913, "s": 6.37}
+{"epoca": 552, "paso": 2760, "perdida_train": 0.0193, "iou_train_paso": 0.80955, "s": 6.31}
+{"epoca": 553, "paso": 2765, "perdida_train": 0.021374, "iou_train_paso": 0.77729, "s": 6.31}
+{"epoca": 554, "paso": 2770, "perdida_train": 0.023296, "iou_train_paso": 0.7769, "s": 6.3}
+{"epoca": 555, "paso": 2775, "perdida_train": 0.018676, "iou_train_paso": 0.8098, "s": 6.28}
+{"epoca": 556, "paso": 2780, "perdida_train": 0.019123, "iou_train_paso": 0.79294, "s": 6.33}
+{"epoca": 557, "paso": 2785, "perdida_train": 0.019069, "iou_train_paso": 0.80086, "s": 6.29}
+{"epoca": 558, "paso": 2790, "perdida_train": 0.019357, "iou_train_paso": 0.80045, "s": 6.32}
+{"epoca": 559, "paso": 2795, "perdida_train": 0.019536, "iou_train_paso": 0.80034, "s": 6.29}
+{"epoca": 560, "paso": 2800, "perdida_train": 0.014908, "iou_train_paso": 0.84361, "iou_train": 0.83308, "iou_val": 0.52247, "brecha": 0.31062, "s": 9.46}
+{"epoca": 561, "paso": 2805, "perdida_train": 0.015074, "iou_train_paso": 0.84069, "s": 6.39}
+{"epoca": 562, "paso": 2810, "perdida_train": 0.014116, "iou_train_paso": 0.84757, "s": 6.29}
+{"epoca": 563, "paso": 2815, "perdida_train": 0.018692, "iou_train_paso": 0.80922, "s": 6.37}
+{"epoca": 564, "paso": 2820, "perdida_train": 0.018236, "iou_train_paso": 0.80637, "s": 6.31}
+{"epoca": 565, "paso": 2825, "perdida_train": 0.017161, "iou_train_paso": 0.81678, "s": 6.31}
+{"epoca": 566, "paso": 2830, "perdida_train": 0.016154, "iou_train_paso": 0.83246, "s": 6.28}
+{"epoca": 567, "paso": 2835, "perdida_train": 0.018682, "iou_train_paso": 0.80197, "s": 6.35}
+{"epoca": 568, "paso": 2840, "perdida_train": 0.021485, "iou_train_paso": 0.77372, "s": 6.35}
+{"epoca": 569, "paso": 2845, "perdida_train": 0.020317, "iou_train_paso": 0.79203, "s": 6.32}
+{"epoca": 570, "paso": 2850, "perdida_train": 0.017478, "iou_train_paso": 0.81355, "iou_train": 0.87667, "iou_val": 0.52944, "brecha": 0.34724, "s": 9.47}
+{"epoca": 571, "paso": 2855, "perdida_train": 0.013232, "iou_train_paso": 0.85872, "s": 6.59}
+{"epoca": 572, "paso": 2860, "perdida_train": 0.014449, "iou_train_paso": 0.84559, "s": 6.3}
+{"epoca": 573, "paso": 2865, "perdida_train": 0.015739, "iou_train_paso": 0.82776, "s": 6.34}
+{"epoca": 574, "paso": 2870, "perdida_train": 0.01497, "iou_train_paso": 0.84457, "s": 6.28}
+{"epoca": 575, "paso": 2875, "perdida_train": 0.013412, "iou_train_paso": 0.85086, "s": 6.31}
+{"epoca": 576, "paso": 2880, "perdida_train": 0.012998, "iou_train_paso": 0.86786, "s": 6.28}
+{"epoca": 577, "paso": 2885, "perdida_train": 0.013841, "iou_train_paso": 0.85393, "s": 6.29}
+{"epoca": 578, "paso": 2890, "perdida_train": 0.014989, "iou_train_paso": 0.84316, "s": 6.31}
+{"epoca": 579, "paso": 2895, "perdida_train": 0.017007, "iou_train_paso": 0.81307, "s": 6.3}
+{"epoca": 580, "paso": 2900, "perdida_train": 0.015958, "iou_train_paso": 0.83137, "iou_train": 0.84924, "iou_val": 0.52718, "brecha": 0.32206, "s": 9.42}
+{"epoca": 581, "paso": 2905, "perdida_train": 0.01659, "iou_train_paso": 0.81655, "s": 6.3}
+{"epoca": 582, "paso": 2910, "perdida_train": 0.015044, "iou_train_paso": 0.84412, "s": 6.34}
+{"epoca": 583, "paso": 2915, "perdida_train": 0.014618, "iou_train_paso": 0.83986, "s": 6.34}
+{"epoca": 584, "paso": 2920, "perdida_train": 0.015359, "iou_train_paso": 0.82884, "s": 6.35}
+{"epoca": 585, "paso": 2925, "perdida_train": 0.020764, "iou_train_paso": 0.78351, "s": 6.38}
+{"epoca": 586, "paso": 2930, "perdida_train": 0.018122, "iou_train_paso": 0.8096, "s": 6.32}
+{"epoca": 587, "paso": 2935, "perdida_train": 0.01457, "iou_train_paso": 0.8457, "s": 6.31}
+{"epoca": 588, "paso": 2940, "perdida_train": 0.014204, "iou_train_paso": 0.84983, "s": 6.32}
+{"epoca": 589, "paso": 2945, "perdida_train": 0.013804, "iou_train_paso": 0.85201, "s": 6.32}
+{"epoca": 590, "paso": 2950, "perdida_train": 0.01736, "iou_train_paso": 0.80838, "iou_train": 0.80838, "iou_val": 0.53001, "brecha": 0.27836, "s": 9.43}
+{"epoca": 591, "paso": 2955, "perdida_train": 0.01972, "iou_train_paso": 0.80061, "s": 6.28}
+{"epoca": 592, "paso": 2960, "perdida_train": 0.023877, "iou_train_paso": 0.7649, "s": 6.31}
+{"epoca": 593, "paso": 2965, "perdida_train": 0.020134, "iou_train_paso": 0.78666, "s": 6.3}
+{"epoca": 594, "paso": 2970, "perdida_train": 0.015177, "iou_train_paso": 0.84137, "s": 6.3}
+{"epoca": 595, "paso": 2975, "perdida_train": 0.013341, "iou_train_paso": 0.85933, "s": 6.3}
+{"epoca": 596, "paso": 2980, "perdida_train": 0.014099, "iou_train_paso": 0.85028, "s": 6.35}
+{"epoca": 597, "paso": 2985, "perdida_train": 0.014669, "iou_train_paso": 0.83954, "s": 6.31}
+{"epoca": 598, "paso": 2990, "perdida_train": 0.01304, "iou_train_paso": 0.85464, "s": 6.32}
+{"epoca": 599, "paso": 2995, "perdida_train": 0.012672, "iou_train_paso": 0.86806, "s": 6.34}
+{"epoca": 600, "paso": 3000, "perdida_train": 0.01455, "iou_train_paso": 0.84579, "iou_train": 0.83018, "iou_val": 0.50318, "brecha": 0.327, "s": 9.42}
+{"epoca": 601, "paso": 3005, "perdida_train": 0.015059, "iou_train_paso": 0.83816, "s": 6.35}
+{"epoca": 602, "paso": 3010, "perdida_train": 0.01318, "iou_train_paso": 0.85929, "s": 6.36}
+{"epoca": 603, "paso": 3015, "perdida_train": 0.014503, "iou_train_paso": 0.8386, "s": 6.32}
+{"epoca": 604, "paso": 3020, "perdida_train": 0.014987, "iou_train_paso": 0.8406, "s": 6.31}
+{"epoca": 605, "paso": 3025, "perdida_train": 0.015455, "iou_train_paso": 0.84081, "s": 6.3}
+{"epoca": 606, "paso": 3030, "perdida_train": 0.01668, "iou_train_paso": 0.8192, "s": 6.32}
+{"epoca": 607, "paso": 3035, "perdida_train": 0.01688, "iou_train_paso": 0.82551, "s": 6.37}
+{"epoca": 608, "paso": 3040, "perdida_train": 0.015409, "iou_train_paso": 0.83348, "s": 6.35}
+{"epoca": 609, "paso": 3045, "perdida_train": 0.012801, "iou_train_paso": 0.85735, "s": 6.4}
+{"epoca": 610, "paso": 3050, "perdida_train": 0.012799, "iou_train_paso": 0.85502, "iou_train": 0.882, "iou_val": 0.52568, "brecha": 0.35632, "s": 9.88}
+{"epoca": 611, "paso": 3055, "perdida_train": 0.011281, "iou_train_paso": 0.87646, "s": 6.43}
+{"epoca": 612, "paso": 3060, "perdida_train": 0.01137, "iou_train_paso": 0.87949, "s": 6.31}
+{"epoca": 613, "paso": 3065, "perdida_train": 0.015156, "iou_train_paso": 0.82757, "s": 6.33}
+{"epoca": 614, "paso": 3070, "perdida_train": 0.01439, "iou_train_paso": 0.84775, "s": 6.36}
+{"epoca": 615, "paso": 3075, "perdida_train": 0.0148, "iou_train_paso": 0.84219, "s": 6.29}
+{"epoca": 616, "paso": 3080, "perdida_train": 0.015016, "iou_train_paso": 0.84457, "s": 6.59}
+{"epoca": 617, "paso": 3085, "perdida_train": 0.015422, "iou_train_paso": 0.81995, "s": 6.31}
+{"epoca": 618, "paso": 3090, "perdida_train": 0.013598, "iou_train_paso": 0.85299, "s": 6.35}
+{"epoca": 619, "paso": 3095, "perdida_train": 0.017642, "iou_train_paso": 0.82117, "s": 6.29}
+{"epoca": 620, "paso": 3100, "perdida_train": 0.01552, "iou_train_paso": 0.83232, "iou_train": 0.81817, "iou_val": 0.51439, "brecha": 0.30378, "s": 9.41}
+{"epoca": 621, "paso": 3105, "perdida_train": 0.016437, "iou_train_paso": 0.82359, "s": 6.28}
+{"epoca": 622, "paso": 3110, "perdida_train": 0.013754, "iou_train_paso": 0.85731, "s": 6.3}
+{"epoca": 623, "paso": 3115, "perdida_train": 0.014612, "iou_train_paso": 0.84138, "s": 6.3}
+{"epoca": 624, "paso": 3120, "perdida_train": 0.012732, "iou_train_paso": 0.85495, "s": 6.28}
+{"epoca": 625, "paso": 3125, "perdida_train": 0.012571, "iou_train_paso": 0.86607, "s": 6.32}
+{"epoca": 626, "paso": 3130, "perdida_train": 0.011668, "iou_train_paso": 0.86823, "s": 6.32}
+{"epoca": 627, "paso": 3135, "perdida_train": 0.012949, "iou_train_paso": 0.862, "s": 6.29}
+{"epoca": 628, "paso": 3140, "perdida_train": 0.017748, "iou_train_paso": 0.80982, "s": 6.33}
+{"epoca": 629, "paso": 3145, "perdida_train": 0.014646, "iou_train_paso": 0.84738, "s": 6.31}
+{"epoca": 630, "paso": 3150, "perdida_train": 0.015918, "iou_train_paso": 0.83026, "iou_train": 0.83496, "iou_val": 0.5194, "brecha": 0.31556, "s": 9.42}
+{"epoca": 631, "paso": 3155, "perdida_train": 0.015035, "iou_train_paso": 0.83589, "s": 6.28}
+{"epoca": 632, "paso": 3160, "perdida_train": 0.012325, "iou_train_paso": 0.86936, "s": 6.3}
+{"epoca": 633, "paso": 3165, "perdida_train": 0.012919, "iou_train_paso": 0.85849, "s": 6.34}
+{"epoca": 634, "paso": 3170, "perdida_train": 0.01407, "iou_train_paso": 0.84971, "s": 6.3}
+{"epoca": 635, "paso": 3175, "perdida_train": 0.014936, "iou_train_paso": 0.84876, "s": 6.31}
+{"epoca": 636, "paso": 3180, "perdida_train": 0.012838, "iou_train_paso": 0.86139, "s": 6.31}
+{"epoca": 637, "paso": 3185, "perdida_train": 0.013027, "iou_train_paso": 0.8599, "s": 6.33}
+{"epoca": 638, "paso": 3190, "perdida_train": 0.01377, "iou_train_paso": 0.85352, "s": 6.3}
+{"epoca": 639, "paso": 3195, "perdida_train": 0.013556, "iou_train_paso": 0.85612, "s": 6.3}
+{"epoca": 640, "paso": 3200, "perdida_train": 0.01314, "iou_train_paso": 0.86391, "iou_train": 0.87862, "iou_val": 0.53493, "brecha": 0.34368, "s": 9.44}
+{"epoca": 641, "paso": 3205, "perdida_train": 0.013355, "iou_train_paso": 0.86349, "s": 6.3}
+{"epoca": 642, "paso": 3210, "perdida_train": 0.014394, "iou_train_paso": 0.84691, "s": 6.36}
+{"epoca": 643, "paso": 3215, "perdida_train": 0.013344, "iou_train_paso": 0.86246, "s": 6.32}
+{"epoca": 644, "paso": 3220, "perdida_train": 0.012718, "iou_train_paso": 0.86499, "s": 6.33}
+{"epoca": 645, "paso": 3225, "perdida_train": 0.011442, "iou_train_paso": 0.87447, "s": 6.31}
+{"epoca": 646, "paso": 3230, "perdida_train": 0.01255, "iou_train_paso": 0.86785, "s": 6.32}
+{"epoca": 647, "paso": 3235, "perdida_train": 0.011106, "iou_train_paso": 0.87905, "s": 6.27}
+{"epoca": 648, "paso": 3240, "perdida_train": 0.012192, "iou_train_paso": 0.87186, "s": 6.33}
+{"epoca": 649, "paso": 3245, "perdida_train": 0.011984, "iou_train_paso": 0.87331, "s": 6.29}
+{"epoca": 650, "paso": 3250, "perdida_train": 0.012372, "iou_train_paso": 0.87114, "iou_train": 0.84798, "iou_val": 0.51817, "brecha": 0.32981, "s": 9.38}
+{"epoca": 651, "paso": 3255, "perdida_train": 0.013237, "iou_train_paso": 0.85849, "s": 6.28}
+{"epoca": 652, "paso": 3260, "perdida_train": 0.01301, "iou_train_paso": 0.86697, "s": 6.31}
+{"epoca": 653, "paso": 3265, "perdida_train": 0.016615, "iou_train_paso": 0.82045, "s": 6.33}
+{"epoca": 654, "paso": 3270, "perdida_train": 0.01595, "iou_train_paso": 0.82973, "s": 6.37}
+{"epoca": 655, "paso": 3275, "perdida_train": 0.016604, "iou_train_paso": 0.82936, "s": 6.84}
+{"epoca": 656, "paso": 3280, "perdida_train": 0.015465, "iou_train_paso": 0.82697, "s": 6.31}
+{"epoca": 657, "paso": 3285, "perdida_train": 0.018592, "iou_train_paso": 0.80994, "s": 6.28}
+{"epoca": 658, "paso": 3290, "perdida_train": 0.016261, "iou_train_paso": 0.82372, "s": 6.28}
+{"epoca": 659, "paso": 3295, "perdida_train": 0.017973, "iou_train_paso": 0.81077, "s": 6.32}
+{"epoca": 660, "paso": 3300, "perdida_train": 0.016128, "iou_train_paso": 0.82287, "iou_train": 0.83191, "iou_val": 0.51944, "brecha": 0.31247, "s": 9.36}
+{"epoca": 661, "paso": 3305, "perdida_train": 0.015136, "iou_train_paso": 0.8388, "s": 6.79}
+{"epoca": 662, "paso": 3310, "perdida_train": 0.015854, "iou_train_paso": 0.83523, "s": 6.29}
+{"epoca": 663, "paso": 3315, "perdida_train": 0.015604, "iou_train_paso": 0.83324, "s": 6.27}
+{"epoca": 664, "paso": 3320, "perdida_train": 0.015759, "iou_train_paso": 0.8356, "s": 6.32}
+{"epoca": 665, "paso": 3325, "perdida_train": 0.017613, "iou_train_paso": 0.81632, "s": 6.35}
+{"epoca": 666, "paso": 3330, "perdida_train": 0.011737, "iou_train_paso": 0.86845, "s": 6.32}
+{"epoca": 667, "paso": 3335, "perdida_train": 0.012473, "iou_train_paso": 0.87043, "s": 6.3}
+{"epoca": 668, "paso": 3340, "perdida_train": 0.013445, "iou_train_paso": 0.85034, "s": 6.3}
+{"epoca": 669, "paso": 3345, "perdida_train": 0.014871, "iou_train_paso": 0.84842, "s": 6.29}
+{"epoca": 670, "paso": 3350, "perdida_train": 0.016675, "iou_train_paso": 0.82643, "iou_train": 0.80451, "iou_val": 0.51519, "brecha": 0.28932, "s": 9.43}
+{"epoca": 671, "paso": 3355, "perdida_train": 0.017379, "iou_train_paso": 0.81401, "s": 6.33}
+{"epoca": 672, "paso": 3360, "perdida_train": 0.016887, "iou_train_paso": 0.8239, "s": 6.34}
+{"epoca": 673, "paso": 3365, "perdida_train": 0.021234, "iou_train_paso": 0.79008, "s": 6.32}
+{"epoca": 674, "paso": 3370, "perdida_train": 0.019474, "iou_train_paso": 0.78811, "s": 6.28}
+{"epoca": 675, "paso": 3375, "perdida_train": 0.017828, "iou_train_paso": 0.8167, "s": 6.31}
+{"epoca": 676, "paso": 3380, "perdida_train": 0.018777, "iou_train_paso": 0.81312, "s": 6.3}
+{"epoca": 677, "paso": 3385, "perdida_train": 0.014853, "iou_train_paso": 0.84842, "s": 6.32}
+{"epoca": 678, "paso": 3390, "perdida_train": 0.014816, "iou_train_paso": 0.8472, "s": 6.26}
+{"epoca": 679, "paso": 3395, "perdida_train": 0.014689, "iou_train_paso": 0.84819, "s": 6.36}
+{"epoca": 680, "paso": 3400, "perdida_train": 0.015859, "iou_train_paso": 0.83404, "iou_train": 0.82871, "iou_val": 0.518, "brecha": 0.31071, "s": 9.4}
+{"epoca": 681, "paso": 3405, "perdida_train": 0.014107, "iou_train_paso": 0.85248, "s": 6.33}
+{"epoca": 682, "paso": 3410, "perdida_train": 0.011812, "iou_train_paso": 0.8736, "s": 6.31}
+{"epoca": 683, "paso": 3415, "perdida_train": 0.014076, "iou_train_paso": 0.85436, "s": 6.39}
+{"epoca": 684, "paso": 3420, "perdida_train": 0.013471, "iou_train_paso": 0.85097, "s": 6.39}
+{"epoca": 685, "paso": 3425, "perdida_train": 0.013019, "iou_train_paso": 0.86509, "s": 6.33}
+{"epoca": 686, "paso": 3430, "perdida_train": 0.013111, "iou_train_paso": 0.86339, "s": 6.33}
+{"epoca": 687, "paso": 3435, "perdida_train": 0.012049, "iou_train_paso": 0.86683, "s": 6.3}
+{"epoca": 688, "paso": 3440, "perdida_train": 0.011927, "iou_train_paso": 0.86845, "s": 6.31}
+{"epoca": 689, "paso": 3445, "perdida_train": 0.011825, "iou_train_paso": 0.87395, "s": 6.36}
+{"epoca": 690, "paso": 3450, "perdida_train": 0.011261, "iou_train_paso": 0.87884, "iou_train": 0.87146, "iou_val": 0.53349, "brecha": 0.33797, "s": 9.53}
+{"epoca": 691, "paso": 3455, "perdida_train": 0.012611, "iou_train_paso": 0.86856, "s": 6.33}
+{"epoca": 692, "paso": 3460, "perdida_train": 0.012145, "iou_train_paso": 0.86632, "s": 6.32}
+{"epoca": 693, "paso": 3465, "perdida_train": 0.014728, "iou_train_paso": 0.84046, "s": 6.33}
+{"epoca": 694, "paso": 3470, "perdida_train": 0.012798, "iou_train_paso": 0.86564, "s": 6.28}
+{"epoca": 695, "paso": 3475, "perdida_train": 0.013361, "iou_train_paso": 0.84817, "s": 6.29}
+{"epoca": 696, "paso": 3480, "perdida_train": 0.013922, "iou_train_paso": 0.84647, "s": 6.27}
+{"epoca": 697, "paso": 3485, "perdida_train": 0.015652, "iou_train_paso": 0.83832, "s": 6.34}
+{"epoca": 698, "paso": 3490, "perdida_train": 0.012318, "iou_train_paso": 0.86258, "s": 6.27}
+{"epoca": 699, "paso": 3495, "perdida_train": 0.013316, "iou_train_paso": 0.85775, "s": 6.31}
+{"epoca": 700, "paso": 3500, "perdida_train": 0.013131, "iou_train_paso": 0.84955, "iou_train": 0.86639, "iou_val": 0.52719, "brecha": 0.3392, "s": 9.46}
+{"epoca": 701, "paso": 3505, "perdida_train": 0.012891, "iou_train_paso": 0.86549, "s": 6.27}
+{"epoca": 702, "paso": 3510, "perdida_train": 0.011083, "iou_train_paso": 0.87882, "s": 6.29}
+{"epoca": 703, "paso": 3515, "perdida_train": 0.014565, "iou_train_paso": 0.83964, "s": 6.28}
+{"epoca": 704, "paso": 3520, "perdida_train": 0.013458, "iou_train_paso": 0.85713, "s": 6.3}
+{"epoca": 705, "paso": 3525, "perdida_train": 0.012955, "iou_train_paso": 0.86054, "s": 6.32}
+{"epoca": 706, "paso": 3530, "perdida_train": 0.011551, "iou_train_paso": 0.87925, "s": 6.31}
+{"epoca": 707, "paso": 3535, "perdida_train": 0.013124, "iou_train_paso": 0.85011, "s": 6.42}
+{"epoca": 708, "paso": 3540, "perdida_train": 0.012174, "iou_train_paso": 0.87015, "s": 6.28}
+{"epoca": 709, "paso": 3545, "perdida_train": 0.012431, "iou_train_paso": 0.86487, "s": 6.31}
+{"epoca": 710, "paso": 3550, "perdida_train": 0.012454, "iou_train_paso": 0.86754, "iou_train": 0.82315, "iou_val": 0.53319, "brecha": 0.28996, "s": 9.36}
+{"epoca": 711, "paso": 3555, "perdida_train": 0.014508, "iou_train_paso": 0.84775, "s": 6.32}
+{"epoca": 712, "paso": 3560, "perdida_train": 0.015287, "iou_train_paso": 0.84135, "s": 6.35}
+{"epoca": 713, "paso": 3565, "perdida_train": 0.016687, "iou_train_paso": 0.80939, "s": 6.34}
+{"epoca": 714, "paso": 3570, "perdida_train": 0.013602, "iou_train_paso": 0.84977, "s": 6.3}
+{"epoca": 715, "paso": 3575, "perdida_train": 0.011724, "iou_train_paso": 0.8733, "s": 6.34}
+{"epoca": 716, "paso": 3580, "perdida_train": 0.014015, "iou_train_paso": 0.84597, "s": 6.45}
+{"epoca": 717, "paso": 3585, "perdida_train": 0.014043, "iou_train_paso": 0.84805, "s": 6.3}
+{"epoca": 718, "paso": 3590, "perdida_train": 0.012486, "iou_train_paso": 0.86248, "s": 6.29}
+{"epoca": 719, "paso": 3595, "perdida_train": 0.012206, "iou_train_paso": 0.86676, "s": 6.31}
+{"epoca": 720, "paso": 3600, "perdida_train": 0.013919, "iou_train_paso": 0.84898, "iou_train": 0.85905, "iou_val": 0.52375, "brecha": 0.33529, "s": 9.44}
+{"epoca": 721, "paso": 3605, "perdida_train": 0.014192, "iou_train_paso": 0.84653, "s": 6.31}
+{"epoca": 722, "paso": 3610, "perdida_train": 0.013239, "iou_train_paso": 0.85347, "s": 6.28}
+{"epoca": 723, "paso": 3615, "perdida_train": 0.012469, "iou_train_paso": 0.86359, "s": 6.31}
+{"epoca": 724, "paso": 3620, "perdida_train": 0.013112, "iou_train_paso": 0.86329, "s": 6.32}
+{"epoca": 725, "paso": 3625, "perdida_train": 0.012713, "iou_train_paso": 0.86275, "s": 6.32}
+{"epoca": 726, "paso": 3630, "perdida_train": 0.012145, "iou_train_paso": 0.86838, "s": 6.29}
+{"epoca": 727, "paso": 3635, "perdida_train": 0.012205, "iou_train_paso": 0.87229, "s": 6.33}
+{"epoca": 728, "paso": 3640, "perdida_train": 0.016962, "iou_train_paso": 0.81969, "s": 6.33}
+{"epoca": 729, "paso": 3645, "perdida_train": 0.017553, "iou_train_paso": 0.82223, "s": 6.28}
+{"epoca": 730, "paso": 3650, "perdida_train": 0.017408, "iou_train_paso": 0.8072, "iou_train": 0.74613, "iou_val": 0.49307, "brecha": 0.25306, "s": 9.41}
+{"epoca": 731, "paso": 3655, "perdida_train": 0.0223, "iou_train_paso": 0.781, "s": 6.3}
+{"epoca": 732, "paso": 3660, "perdida_train": 0.017588, "iou_train_paso": 0.81857, "s": 6.36}
+{"epoca": 733, "paso": 3665, "perdida_train": 0.017046, "iou_train_paso": 0.81874, "s": 6.33}
+{"epoca": 734, "paso": 3670, "perdida_train": 0.017559, "iou_train_paso": 0.81068, "s": 6.28}
+{"epoca": 735, "paso": 3675, "perdida_train": 0.013459, "iou_train_paso": 0.85812, "s": 6.36}
+{"epoca": 736, "paso": 3680, "perdida_train": 0.015641, "iou_train_paso": 0.83895, "s": 6.3}
+{"epoca": 737, "paso": 3685, "perdida_train": 0.019109, "iou_train_paso": 0.80151, "s": 6.31}
+{"epoca": 738, "paso": 3690, "perdida_train": 0.020171, "iou_train_paso": 0.79203, "s": 6.32}
+{"epoca": 739, "paso": 3695, "perdida_train": 0.024182, "iou_train_paso": 0.7633, "s": 6.32}
+{"epoca": 740, "paso": 3700, "perdida_train": 0.022198, "iou_train_paso": 0.76484, "iou_train": 0.82695, "iou_val": 0.53169, "brecha": 0.29526, "s": 9.41}
+{"epoca": 741, "paso": 3705, "perdida_train": 0.020654, "iou_train_paso": 0.7874, "s": 6.3}
+{"epoca": 742, "paso": 3710, "perdida_train": 0.021484, "iou_train_paso": 0.779, "s": 6.31}
+{"epoca": 743, "paso": 3715, "perdida_train": 0.01998, "iou_train_paso": 0.79514, "s": 6.3}
+{"epoca": 744, "paso": 3720, "perdida_train": 0.017656, "iou_train_paso": 0.8213, "s": 6.31}
+{"epoca": 745, "paso": 3725, "perdida_train": 0.014655, "iou_train_paso": 0.84665, "s": 6.34}
+{"epoca": 746, "paso": 3730, "perdida_train": 0.01448, "iou_train_paso": 0.84049, "s": 6.29}
+{"epoca": 747, "paso": 3735, "perdida_train": 0.017062, "iou_train_paso": 0.81387, "s": 6.32}
+{"epoca": 748, "paso": 3740, "perdida_train": 0.01775, "iou_train_paso": 0.82561, "s": 6.34}
+{"epoca": 749, "paso": 3745, "perdida_train": 0.016909, "iou_train_paso": 0.81734, "s": 6.31}
+{"epoca": 750, "paso": 3750, "perdida_train": 0.013413, "iou_train_paso": 0.85122, "iou_train": 0.8153, "iou_val": 0.52502, "brecha": 0.29028, "s": 9.38}
+{"epoca": 751, "paso": 3755, "perdida_train": 0.017249, "iou_train_paso": 0.82063, "s": 6.33}
+{"epoca": 752, "paso": 3760, "perdida_train": 0.015399, "iou_train_paso": 0.83355, "s": 6.64}
+{"epoca": 753, "paso": 3765, "perdida_train": 0.012077, "iou_train_paso": 0.87147, "s": 6.28}
+{"epoca": 754, "paso": 3770, "perdida_train": 0.013222, "iou_train_paso": 0.86129, "s": 6.38}
+{"epoca": 755, "paso": 3775, "perdida_train": 0.012999, "iou_train_paso": 0.85613, "s": 6.31}
+{"epoca": 756, "paso": 3780, "perdida_train": 0.013159, "iou_train_paso": 0.86158, "s": 6.33}
+{"epoca": 757, "paso": 3785, "perdida_train": 0.012534, "iou_train_paso": 0.86676, "s": 6.33}
+{"epoca": 758, "paso": 3790, "perdida_train": 0.011003, "iou_train_paso": 0.88289, "s": 6.35}
+{"epoca": 759, "paso": 3795, "perdida_train": 0.011097, "iou_train_paso": 0.881, "s": 6.33}
+{"epoca": 760, "paso": 3800, "perdida_train": 0.01349, "iou_train_paso": 0.85625, "iou_train": 0.81793, "iou_val": 0.51268, "brecha": 0.30525, "s": 9.38}
+{"epoca": 761, "paso": 3805, "perdida_train": 0.012768, "iou_train_paso": 0.85933, "s": 6.3}
+{"epoca": 762, "paso": 3810, "perdida_train": 0.013291, "iou_train_paso": 0.86048, "s": 6.32}
+{"epoca": 763, "paso": 3815, "perdida_train": 0.012791, "iou_train_paso": 0.8657, "s": 6.28}
+{"epoca": 764, "paso": 3820, "perdida_train": 0.014719, "iou_train_paso": 0.84309, "s": 6.31}
+{"epoca": 765, "paso": 3825, "perdida_train": 0.012817, "iou_train_paso": 0.8582, "s": 6.32}
+{"epoca": 766, "paso": 3830, "perdida_train": 0.013036, "iou_train_paso": 0.86765, "s": 6.32}
+{"epoca": 767, "paso": 3835, "perdida_train": 0.013335, "iou_train_paso": 0.85592, "s": 6.27}
+{"epoca": 768, "paso": 3840, "perdida_train": 0.01518, "iou_train_paso": 0.82575, "s": 6.3}
+{"epoca": 769, "paso": 3845, "perdida_train": 0.017259, "iou_train_paso": 0.81898, "s": 6.36}
+{"epoca": 770, "paso": 3850, "perdida_train": 0.014672, "iou_train_paso": 0.8474, "iou_train": 0.85744, "iou_val": 0.52971, "brecha": 0.32773, "s": 9.42}
+{"epoca": 771, "paso": 3855, "perdida_train": 0.013358, "iou_train_paso": 0.85665, "s": 6.37}
+{"epoca": 772, "paso": 3860, "perdida_train": 0.014878, "iou_train_paso": 0.84011, "s": 6.32}
+{"epoca": 773, "paso": 3865, "perdida_train": 0.01434, "iou_train_paso": 0.84599, "s": 6.32}
+{"epoca": 774, "paso": 3870, "perdida_train": 0.013277, "iou_train_paso": 0.85565, "s": 6.3}
+{"epoca": 775, "paso": 3875, "perdida_train": 0.015365, "iou_train_paso": 0.84126, "s": 6.33}
+{"epoca": 776, "paso": 3880, "perdida_train": 0.014149, "iou_train_paso": 0.85123, "s": 6.33}
+{"epoca": 777, "paso": 3885, "perdida_train": 0.012244, "iou_train_paso": 0.86917, "s": 6.3}
+{"epoca": 778, "paso": 3890, "perdida_train": 0.014298, "iou_train_paso": 0.84686, "s": 6.32}
+{"epoca": 779, "paso": 3895, "perdida_train": 0.014702, "iou_train_paso": 0.8424, "s": 6.28}
+{"epoca": 780, "paso": 3900, "perdida_train": 0.01527, "iou_train_paso": 0.83203, "iou_train": 0.84709, "iou_val": 0.52923, "brecha": 0.31786, "s": 9.48}
+{"epoca": 781, "paso": 3905, "perdida_train": 0.013748, "iou_train_paso": 0.8523, "s": 6.32}
+{"epoca": 782, "paso": 3910, "perdida_train": 0.01382, "iou_train_paso": 0.85093, "s": 6.28}
+{"epoca": 783, "paso": 3915, "perdida_train": 0.012641, "iou_train_paso": 0.86516, "s": 6.38}
+{"epoca": 784, "paso": 3920, "perdida_train": 0.012285, "iou_train_paso": 0.86539, "s": 6.37}
+{"epoca": 785, "paso": 3925, "perdida_train": 0.011947, "iou_train_paso": 0.86898, "s": 6.34}
+{"epoca": 786, "paso": 3930, "perdida_train": 0.013388, "iou_train_paso": 0.85448, "s": 6.3}
+{"epoca": 787, "paso": 3935, "perdida_train": 0.01198, "iou_train_paso": 0.87152, "s": 6.31}
+{"epoca": 788, "paso": 3940, "perdida_train": 0.012698, "iou_train_paso": 0.85919, "s": 6.3}
+{"epoca": 789, "paso": 3945, "perdida_train": 0.012649, "iou_train_paso": 0.8573, "s": 6.26}
+{"epoca": 790, "paso": 3950, "perdida_train": 0.01323, "iou_train_paso": 0.85851, "iou_train": 0.8103, "iou_val": 0.50851, "brecha": 0.3018, "s": 9.41}
+{"epoca": 791, "paso": 3955, "perdida_train": 0.015745, "iou_train_paso": 0.82756, "s": 6.34}
+{"epoca": 792, "paso": 3960, "perdida_train": 0.013242, "iou_train_paso": 0.8479, "s": 6.3}
+{"epoca": 793, "paso": 3965, "perdida_train": 0.013877, "iou_train_paso": 0.84731, "s": 6.32}
+{"epoca": 794, "paso": 3970, "perdida_train": 0.013034, "iou_train_paso": 0.86212, "s": 6.31}
+{"epoca": 795, "paso": 3975, "perdida_train": 0.013049, "iou_train_paso": 0.8598, "s": 6.31}
+{"epoca": 796, "paso": 3980, "perdida_train": 0.012803, "iou_train_paso": 0.85562, "s": 6.29}
+{"epoca": 797, "paso": 3985, "perdida_train": 0.013187, "iou_train_paso": 0.86074, "s": 6.51}
+{"epoca": 798, "paso": 3990, "perdida_train": 0.012297, "iou_train_paso": 0.86479, "s": 6.3}
+{"epoca": 799, "paso": 3995, "perdida_train": 0.014366, "iou_train_paso": 0.85322, "s": 6.31}
+{"epoca": 800, "paso": 4000, "perdida_train": 0.014404, "iou_train_paso": 0.8446, "iou_train": 0.85418, "iou_val": 0.53956, "brecha": 0.31462, "s": 9.4}

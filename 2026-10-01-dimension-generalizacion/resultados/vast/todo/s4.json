@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T03:52:45+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T03:52:46+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-02T03:53:30+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-02T03:53:40+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-02T03:55:11+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-02T03:55:18+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T06:24:49+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T06:24:49+00:00"
   }
  ],
  "id": "s4",
@@ -23,5 +51,21 @@
   "fiabilidad": 0.9794
  },
  "horas_max": 6.0,
- "tope_precio": 0.25
+ "tope_precio": 0.25,
+ "iid": 53800218,
+ "intentos_clave": 1,
+ "payload_mb": 2.67,
+ "sha256": "ba0cf6d92d67ed0d",
+ "segundos_max": 20851,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w128-s4",
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w064-s4",
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w032-s4",
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w016-s4",
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w008-s4"
+ ],
+ "apartado": [],
+ "minutos": 152.1,
+ "coste_usd": 0.1307
 }

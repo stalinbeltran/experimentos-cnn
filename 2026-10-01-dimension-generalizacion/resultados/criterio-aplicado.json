@@ -1,0 +1,32 @@
+{
+ "aprendio": {
+  "w128": true,
+  "w064": true,
+  "w032": true,
+  "w016": true,
+  "w008": true
+ },
+ "clasificacion": {
+  "w128": "mixta: cae train Y crece la brecha",
+  "w064": "(b) peor generalizacion — sin control: (b) o (c), sin cerrar",
+  "w032": "(b) peor generalizacion — sin control: (b) o (c), sin cerrar",
+  "w016": "W*",
+  "w008": "ninguna: dentro del umbral de W*"
+ },
+ "avisos": [],
+ "piso": 0.24636,
+ "W_estrella": "w016",
+ "suficientes": [
+  "w016",
+  "w008"
+ ],
+ "W_min_suficiente": "w008",
+ "estorba": true,
+ "brecha_crece": true,
+ "control": {
+  "lectura": "en medio: fraccion 0.38 del camino de w016 a w128 (se reporta, no se redondea)",
+  "fraccion": 0.37858115992099445,
+  "brecha_ctl_vs_w016": 0.21002799999999994,
+  "umbral_brecha": 0.06092900688506254
+ }
+}
