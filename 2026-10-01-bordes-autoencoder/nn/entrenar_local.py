@@ -33,8 +33,9 @@ PESOS = AQUI / "pesos"
 
 LOTE = 128
 LR = 0.01
-# ⏳ SE CONGELA CON EL TANTEO (`nn/tanteo_lambda.py`) Y LA REGLA DE 02-criterio.md.
-LAMBDA = None
+# ✅ CONGELADO el 2026-10-02 por el tanteo (resultados/tanteo-lambda.json) y la regla de
+# 02-criterio.md: el menor candidato fue 0 (delta 0,25, R2 0,988). Con dispersion, identidad.
+LAMBDA = 0.0
 EPOCAS_DEF = 300
 
 
