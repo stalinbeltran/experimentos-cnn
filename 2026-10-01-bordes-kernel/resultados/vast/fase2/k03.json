@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T10:49:26+00:00"
+  }
+ ],
+ "id": "k03",
+ "etiqueta": "expc-bork-k03",
+ "experimento": "bor-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
+ "oferta": 48455481,
+ "precio_hora": 0.04889,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Xeon E5-2660 v4",
+  "ram_gb": 9.0,
+  "ghz": 3.2,
+  "gpu": "Titan Xp",
+  "ubicacion": "South Korea, KR",
+  "host": 27747,
+  "fiabilidad": 0.995
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

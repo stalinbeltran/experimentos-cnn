@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T10:49:26+00:00"
+  }
+ ],
+ "id": "k11",
+ "etiqueta": "expc-bork-k11",
+ "experimento": "bor-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
+ "oferta": 53704099,
+ "precio_hora": 0.06148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "AMD Ryzen 5 5600 6-Core Processor",
+  "ram_gb": 15.6,
+  "ghz": 4.468560999999999,
+  "gpu": "GTX 1660 Ti",
+  "ubicacion": "Florida, US",
+  "host": 149980,
+  "fiabilidad": 0.9912
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

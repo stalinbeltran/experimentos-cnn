@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T10:49:26+00:00"
+  }
+ ],
+ "id": "k09",
+ "etiqueta": "expc-bork-k09",
+ "experimento": "bor-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
+ "oferta": 45598125,
+ "precio_hora": 0.06148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "Core i5-10400F",
+  "ram_gb": 15.6,
+  "ghz": 4.3,
+  "gpu": "RTX 3060",
+  "ubicacion": "Poland, PL",
+  "host": 19033,
+  "fiabilidad": 0.9982
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}
