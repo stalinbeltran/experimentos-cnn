@@ -75,7 +75,7 @@ y el margen que exige un kernel de 19 px **a esa escala**.
 
 ## Procesos
 
-1. **Generar y publicar el dataset**, una vez en la vida. En este orden:
+1. ✅ **Generar y publicar el dataset**, una vez en la vida — **hecho el 2026-10-01** (publicado y `--comprobar` → «TODO CASA»). En este orden:
    1. **La reserva §3.7 se comprueba ANTES de rendir.**
    2. **El reparto en celdas GARANTIZA la separación** (guillotina + `ranura()`), no la
       busca. No se sortea-y-rechaza: eso eliminaría los párrafos grandes.
@@ -100,6 +100,10 @@ y el margen que exige un kernel de 19 px **a esa escala**.
       saliera). Lo que queda de él es sobre todo la cota **declarada** de ancho de tinta
       (`ancho ≥ 120` px de render): un párrafo cuyas líneas no llenan la columna. El número
       va en el manifiesto (`descartadas`) y el porqué de cada uno en `meta.json`.
+      **Medido en el render publicado (2026-10-01, 1412 s): 40 descartes** —26 «no se pudo
+      ajustar el tamaño» y 14 de ancho de tinta—, **0 páginas perdidas, 1000 párrafos**, y el
+      cuerpo **sin sesgo**: `[253, 255, 239, 253]` por cuartos de `[11, 30]` (uniforme: 250),
+      χ² = 0,66 con 3 g.l. (el 5 % está en 7,81), media 20,39.
    6. **Se REDUCE /4 cada página en cuanto se rinde** (suma del bloque 4×4) y se guarda.
    7. **Se comprueba la TINTA contra las cajas en la página reducida**: ningún bloque con
       tinta puede caer fuera de toda caja (con 1 bloque de tolerancia, porque las cajas se
