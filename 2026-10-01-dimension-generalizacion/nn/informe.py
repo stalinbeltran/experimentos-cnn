@@ -112,7 +112,11 @@ def criterio(ag: dict[str, dict]) -> dict:
         elif cae_train and not brecha_crece:
             c["clasificacion"][w] = "(a) menos informacion: train tambien cae, la brecha no crece"
         elif brecha_crece and not cae_train:
-            c["clasificacion"][w] = "(b) peor generalizacion — sin control: (b) o (c), sin cerrar"
+            # (b) y (c) solo los separa el control: si existe, se remite a su lectura; si no, queda
+            # «sin cerrar (confundido)», que es la etiqueta de ESTADO.md para este mismo confound.
+            c["clasificacion"][w] = ("(b) peor generalizacion — (b) o (c): lo separa el control, ver abajo"
+                                     if CONTROL in ag else
+                                     "(b) peor generalizacion — sin control: (b) o (c), sin cerrar")
         elif cae_train and brecha_crece:
             c["clasificacion"][w] = "mixta: cae train Y crece la brecha"
         else:

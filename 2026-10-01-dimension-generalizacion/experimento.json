@@ -3,11 +3,11 @@
   "titulo": "Reducir las DIMENSIONES de la imagen y medir que le hace a la GENERALIZACION de una CNN de L capas sin padding, entrenada con el 10 % del dataset y validada con el 90 %",
   "pregunta": "Con el 10 % del dataset para entrenar y el 90 % para validar, L capas fijas sin padding y un kernel que siempre ve la misma FRACCION f del ancho de la imagen, ¿como cambia el IoU sobre las imagenes no vistas —y la brecha train-val— al reducir la imagen de 128 a 64, 32, 16 y 8 px? ¿Hay un W minimo suficiente, y hay un W a partir del cual la resolucion sobra o estorba?",
   "creado": "2026-10-01",
-  "estado": "abierto",
+  "estado": "cerrado",
   "dataset": "parrafos1000-584px-r4-r20260908b",
   "usa_fv": false,
   "gasta": "alquila",
-  "reporte": null,
+  "reporte": "estudios-redes-neuronales/reportes/estudios/2026/10-octubre/2026-10-02-dim-gen-resolucion-generalizacion.md",
   "plan": "ESPECIFICACION.md de esta carpeta (lo escribio Claude el 2026-10-01; es historial). Lo VIGENTE manda en REGLAS.md y en instrucciones/02-criterio.md",
   "brazos_previstos": [
     "w128",
@@ -28,10 +28,19 @@
   "gasta_previsto": "alquila: 10 maquinas de Vast de >= 12 vCPU (prefijo expc-dimgen-, tope 6 h cada una). Estimado: 1-2 h de reloj y ≈1-2 $; peor caso absoluto 10 x 6 h x 0,25 $/h = 15 $. El freno de Telegram es `/use exp-vast` (apagar expc-dimgen-)",
   "gasta_por_que": "Entrena 30 brazos; el caro (w128 y su control, kernels 32x32 a 4000 pasos) tarda ~6 h POR BRAZO en el dev de 2 vCPU (5,2 s por paso medidos), y la regla del repo dice que lo que entrena de verdad alquila. Va con el modo `trabajo` del lanzador (`nn/vast.sh`), cada brazo como proceso `nn/entrenar_local.py` (el nombre que casa el freno), y una unidad de cierre (`nn/cierre.sh`) que informa, commitea y copia TODO al volumen",
   "pendiente": [
-    "Al terminar: el veredicto con el criterio (resultados/RESULTADOS.md lo genera el cierre), el README.md de la carpeta, y la fila + reporte en estudios-redes-neuronales (alquila: el central contesta «que se pago ya»)",
-    "Fusionar la rama tema-2 en main (experimentos-cnn y foveal-vision-data): lo que no esta en main no lo ve el server siguiente"
+    "Fusionar la rama tema-2 en main (experimentos-cnn, foveal-vision-data, estudios-redes-neuronales): lo que no esta en main no lo ve el server siguiente",
+    "Si se quiere separar 'no entrena' de 'no generaliza' a W>=64: repetir w064/w128 con un lr o inicializacion que entrene las 5 semillas (3e-4 o LeakyReLU). NO esta hecho y no cambia el veredicto"
   ],
   "linaje": "ninguno. Lee el mismo dataset que banco-k y NO hereda nada de el: otra red, otra cabeza, otra pregunta; y sus pesos no se importan nunca al banco (REGLAS.md § Que NO hereda)",
   "entrada": "nn/entrenar_local.py",
-  "decisiones_del_dueno": "2026-10-02: «Usa tu mejor criterio para las decisiones. Usa Vast, contrata la mayor cantidad necesaria de servers para terminar ese estudio rapidamente, aun si cuesta el doble. Guarda todo en el volumen. Procede con el estudio. Guarda los resultados.» Tomadas: S1-S4 como estaban; L=4 f=0,25; C=8; 5 semillas; W=8 entra; control w128-de16 entra; Vast con DIEZ maquinas (una por semilla para w128 + los 4 baratos, y una por semilla para el control); 4000 pasos (no 1000: el ensayo de la perdida de train los dejo cortos); lr 1e-3"
+  "decisiones_del_dueno": "2026-10-02: «Usa tu mejor criterio para las decisiones. Usa Vast, contrata la mayor cantidad necesaria de servers para terminar ese estudio rapidamente, aun si cuesta el doble. Guarda todo en el volumen. Procede con el estudio. Guarda los resultados.» Tomadas: S1-S4 como estaban; L=4 f=0,25; C=8; 5 semillas; W=8 entra; control w128-de16 entra; Vast con DIEZ maquinas (una por semilla para w128 + los 4 baratos, y una por semilla para el control); 4000 pasos (no 1000: el ensayo de la perdida de train los dejo cortos); lr 1e-3",
+  "cerrado": "2026-10-02",
+  "resultado": "W*=16 px (IoU val 0,612); W minimo suficiente 8 px (0,579); la resolucion ESTORBA (128 px: 0,305) y la brecha crece con W; el control reparte la caida 16→128 en ≈40 % parametros / ≈60 % informacion. ⚠ 3/5 semillas de w128 y 1/5 de w064 no entrenaron (perdida 0,137): el orden no cambia, pero la clasificacion 'mixta' de w128 viene de ahi. Detalle en README.md",
+  "coste": {
+    "usd": 1.2023,
+    "alquileres": 13,
+    "trabajaron": 10,
+    "inicio_utc": "2026-10-02T01:49:00",
+    "fin_utc": "2026-10-02T06:24:49"
+  }
 }

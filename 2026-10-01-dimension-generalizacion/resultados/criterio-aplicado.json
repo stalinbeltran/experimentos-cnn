@@ -8,8 +8,8 @@
  },
  "clasificacion": {
   "w128": "mixta: cae train Y crece la brecha",
-  "w064": "(b) peor generalizacion — sin control: (b) o (c), sin cerrar",
-  "w032": "(b) peor generalizacion — sin control: (b) o (c), sin cerrar",
+  "w064": "(b) peor generalizacion — (b) o (c): lo separa el control, ver abajo",
+  "w032": "(b) peor generalizacion — (b) o (c): lo separa el control, ver abajo",
   "w016": "W*",
   "w008": "ninguna: dentro del umbral de W*"
  },

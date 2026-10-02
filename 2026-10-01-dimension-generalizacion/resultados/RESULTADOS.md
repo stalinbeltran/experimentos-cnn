@@ -1,4 +1,4 @@
-# Resultados de `dim-gen` — generado por `nn/informe.py` el 2026-10-02 06:25 UTC
+# Resultados de `dim-gen` — generado por `nn/informe.py` el 2026-10-02 06:29 UTC
 
 **Generado del disco (`nn/pesos/*/summary.json`); no se edita a mano.** El criterio aplicado es el de `instrucciones/02-criterio.md`, escrito antes de entrenar.
 
@@ -7,8 +7,8 @@ Piso (caja media de train sobre las 900): **0.2464**. δ = 0.01. Umbral entre do
 | brazo | W | n | parámetros | semillas | IoU val (media ± sd) | IoU train | brecha | ¿aprendió? | clasificación |
 |---|---:|---:|---:|---:|---|---|---|---|---|
 | `w128` | 128 | 32 | 205,348 | 5 (1,2,3,4,5) | 0.3049 ± 0.0474 | 0.5146 | +0.2097 ± 0.2570 | sí | mixta: cae train Y crece la brecha |
-| `w064` | 64 | 16 | 51,748 | 5 (1,2,3,4,5) | 0.3950 ± 0.0715 | 0.7397 | +0.3447 ± 0.1805 | sí | (b) peor generalizacion — sin control: (b) o (c), sin cerrar |
-| `w032` | 32 | 8 | 13,348 | 5 (1,2,3,4,5) | 0.5135 ± 0.0611 | 0.8503 | +0.3368 ± 0.0433 | sí | (b) peor generalizacion — sin control: (b) o (c), sin cerrar |
+| `w064` | 64 | 16 | 51,748 | 5 (1,2,3,4,5) | 0.3950 ± 0.0715 | 0.7397 | +0.3447 ± 0.1805 | sí | (b) peor generalizacion — (b) o (c): lo separa el control, ver abajo |
+| `w032` | 32 | 8 | 13,348 | 5 (1,2,3,4,5) | 0.5135 ± 0.0611 | 0.8503 | +0.3368 ± 0.0433 | sí | (b) peor generalizacion — (b) o (c): lo separa el control, ver abajo |
 | `w016` | 16 | 4 | 3,748 | 5 (1,2,3,4,5) | 0.6117 ± 0.0494 | 0.7233 | +0.1116 ± 0.0335 | sí | W* |
 | `w008` | 8 | 2 | 1,348 | 5 (1,2,3,4,5) | 0.5794 ± 0.0758 | 0.6691 | +0.0897 ± 0.0211 | sí | ninguna: dentro del umbral de W* |
 | `w128-de16` | 128 | 32 | 205,348 | 5 (1,2,3,4,5) | 0.4955 ± 0.0469 | 0.8172 | +0.3217 ± 0.0274 | — | control |
