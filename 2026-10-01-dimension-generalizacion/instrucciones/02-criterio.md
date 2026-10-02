@@ -12,10 +12,17 @@ algo, se cambia **antes de la primera corrida** de los brazos y se dice en el co
 - **+5 si entra el control `w128-de16`** (decisión 5): la imagen de `W = 16` **reescalada** a
   128 por repetición de píxeles (cada píxel de 16 → un bloque 8×8 del mismo valor), con la red
   **de `w128`**: mismos parámetros que `w128`, misma información que `w016`.
-- **1000 pasos** de lote 20 (200 épocas sobre las 100 imágenes de `train`), Adam con **un solo
-  `lr` para todos los brazos** (congelado en el ensayo de mecanismo, `REGLAS.md` § Procesos 3),
-  L1 sobre las cuatro coordenadas normalizadas, sin aumento, sin parada temprana y **sin
-  selección**: cuentan los pesos de la época final (`last.pt`).
+- **4000 pasos** de lote 20 (800 épocas sobre las 100 imágenes de `train`), Adam con **un solo
+  `lr = 1e-3` para todos los brazos** (congelado el 2026-10-02 en el ensayo de mecanismo,
+  `REGLAS.md` § Procesos 3), L1 sobre las cuatro coordenadas normalizadas, sin aumento, sin
+  parada temprana y **sin selección**: cuentan los pesos de la época final (`last.pt`).
+  ⚠ **Enmienda del 2026-10-02, antes de la primera corrida**: el plan decía 1000 pasos. El ensayo
+  —que mira **sólo** la pérdida de `train`, nunca las 900— los dejó cortos: a `W = 32` la pérdida
+  a las 200 épocas era 0,033 y seguía cayendo, y se aplana hacia las 800 (0,0077); a `W = 8` es
+  plana desde las 400; a `W = 16` aún baja un 7 % por cada 200 épocas a las 1000. Comparar redes
+  a medio entrenar mediría velocidad de convergencia, no generalización. 4000 pasos es la cifra
+  en la que el `W` barato más lento de aplanarse ya lo ha hecho. **Es la misma para todos los
+  brazos**, y la curva de `train` dirá si a `W = 128` bastaron.
 - La semilla `s` fija la inicialización y el orden de los lotes. El **orden de los lotes es el
   mismo para todos los brazos de una semilla** (generador propio sembrado con `s`); la
   inicialización no puede serlo, porque las formas son otras.
@@ -31,7 +38,7 @@ Por corrida `(brazo, s)`, con `last.pt`:
 | `brecha` | `IoU_train − IoU_val` |
 
 Por brazo: **media ± desviación** entre las 5 semillas, y `SE = sd / √5`. Se guarda también la
-curva (cada 10 épocas, `metrics.jsonl`) para poder decir si 1000 pasos bastaron: si a la época
+curva (cada 10 épocas, `metrics.jsonl`) para poder decir si 4000 pasos bastaron: si a la época
 200 la pérdida de `train` sigue bajando con pendiente clara, **se dice**; no se alarga a
 posteriori (ver riesgos). Y en `summary.json` va el IoU de `val` **desglosado por factor** del
 dato (`fuente`, `cuerpo`, `gris_nivel`, área de caja en cuartiles): el desglose no decide nada
@@ -136,9 +143,16 @@ nada es sobre tareas que necesiten el trazo (leer, separar palabras).
 - **Un solo `lr`.** Si en el ensayo no hay un `lr` con el que `W = 32` **y** `W = 128` bajen sin
   oscilar, el plan **para** y vuelve al dueño. No se da un `lr` por `W`: sería otro confound.
 - **Deriva entre máquinas.** Medida el 2026-10-01: 0,0012 de IoU entre el dev y una máquina de
-  Vast para el mismo run (`banco-k`, fase 1). Por eso **todos los brazos de una misma semilla
+  Vast para el mismo run (`banco-k`, fase 1). Por eso **los cinco `W` de una misma semilla
   corren en la misma máquina**: toda comparación entre `W` es misma máquina.
-- **1000 pasos pueden quedarse cortos** para los kernels grandes (más parámetros, mismo `lr`).
-  Se mira la curva; si se alarga, se alarga **para todos los brazos** y se repite todo. Nunca uno.
+  ⚠ **Enmienda del 2026-10-02, antes de la primera corrida**: el control `w128-de16` va en una
+  máquina **propia** por semilla (orden del dueño: terminar rápido aunque cueste el doble; el
+  control cuesta lo mismo que `w128`). La comparación `w128` contra `w128-de16` **cruza
+  máquinas**; la deriva medida (0,0012) es ocho veces menor que `δ = 0,01`, así que el umbral
+  del criterio la absorbe. Si el resultado del control cayera dentro de ±0,002 del umbral, se
+  dice que la deriva podría explicarlo.
+- **4000 pasos pueden quedarse cortos** para los kernels grandes (más parámetros, mismo `lr`):
+  el ensayo largo sólo se hizo a `W ≤ 32`. Se mira la curva de `train`; si se alarga, se alarga
+  **para todos los brazos** y se repite todo. Nunca uno.
 - **El techo es `W = 128`**: el dato publicado ya es /4 del render (584 → 146). Las
   reducciones /1 y /2 **no se pueden estudiar** con este dato; pedirían publicar uno nuevo.

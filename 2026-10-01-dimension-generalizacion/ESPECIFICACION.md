@@ -14,6 +14,16 @@ publicadas, y el coste por paso con pesos aleatorios.
 Revisado el 2026-10-01 con los agentes `arquitecto` (estructura: §6 y la carpeta) y
 `revisor` (RESERVAS, todas recogidas: §1, §2.4, §3.2 y el criterio).
 
+> **2026-10-02 — EJECUTADO.** El dueño decidió: *«Usa tu mejor criterio para las decisiones. Usa
+> Vast, contrata la mayor cantidad necesaria de servers para terminar ese estudio rápidamente,
+> aun si cuesta el doble. Guarda todo en el volumen. Procede con el estudio.»* Lo tomado, y lo
+> que cambió respecto de este plan: S1–S4 como estaban; `L = 4, f = 0,25`; `C = 8`; 5 semillas;
+> `W = 8` entra; el control entra; **diez** máquinas (el control en máquina propia por semilla);
+> **4000 pasos** en vez de 1000 (el ensayo de la pérdida de `train` los dejó cortos; enmienda
+> fechada en `02-criterio.md`); `lr = 1e-3`; **los pesos van al volumen** enteros. Revisado otra
+> vez con el `revisor` antes de alquilar (RESERVAS sin bloqueo, recogidas). Lo vigente está en
+> `REGLAS.md`; esto es historial.
+
 ## 0. Lo primero: cuatro SUPUESTOS que el dueño tiene que confirmar, y el plan en una tabla
 
 El encargo admite más de una lectura en cuatro sitios, y el experimento cambia con cada una.
@@ -103,7 +113,7 @@ Se ha elegido una; **si alguna no es la que el dueño quería, se cambia el plan
 |---:|---|---|---:|
 | 128 | 19,5 · 56,9 · 105,0 | 6,5 · 38,5 · 110,8 | 0 % |
 | 64 | 9,8 · 28,4 · 52,5 | 3,2 · 19,2 · 55,4 | 0 % |
-| 32 | 4,9 · 14,2 · 26,3 | 1,6 · 9,6 · 27,7 | 0 % |
+| 32 | 4,9 · 14,2 · 26,3 | 1,6 · 9,6 · 27,7 | 0,3 % |
 | 16 | 2,4 · 7,1 · 13,1 | 0,8 · 4,8 · 13,9 | **8,9 %** |
 | **8** | **1,2 · 3,6 · 6,6** | **0,4 · 2,4 · 6,9** | **40,5 %** (y 8,9 % < 1 px) |
 

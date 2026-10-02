@@ -6,18 +6,32 @@
   "estado": "abierto",
   "dataset": "parrafos1000-584px-r4-r20260908b",
   "usa_fv": false,
-  "gasta": "no",
+  "gasta": "alquila",
   "reporte": null,
-  "plan": "ESPECIFICACION.md de esta carpeta (lo escribio Claude el 2026-10-01; es historial). Lo VIGENTE manda en REGLAS.md y en instrucciones/02-criterio.md. SOLO PLAN: nada ejecutado, ningun script escrito, nada entrenado",
-  "brazos_previstos": ["w128", "w064", "w032", "w016", "w008"],
-  "semillas_previstas": [1, 2, 3, 4, 5],
-  "control_previsto": "w128-de16: la imagen de 16 reescalada a 128 (misma red y parametros que w128, informacion de w016). Separa parametros de informacion; sin el, una caida a W alto queda 'sin cerrar (confundido)' segun el criterio del propio ESTADO.md del repo central",
-  "gasta_previsto": "alquila (recomendado: 5 maquinas de Vast, una por semilla con sus cinco W; ≈2 h de reloj y ≈0,4-0,55 $ sin el control, ≈3,5 h y ≈0,8-1,05 $ con el; estimado a partir del paso MEDIDO en el dev) o entrena-local (dev: ≈8,5 h con C=8 o ≈4,5 h con C=4, compartiendo las 2 vCPU con el bot)",
-  "gasta_por_que": "'no' es lo honesto HOY: no hay codigo, asi que nada puede tardar ni costar. El freno casa por nombre de proceso (`entrenar_local.py`, cerrable.mjs), no por este campo, asi que cuando haya codigo lo vera igual; lo unico que este 'no' pierde es que comprobar.py vigile el nombre mientras tanto",
-  "pendiente": [
-    "Los 4 supuestos y las 6 decisiones del dueno (ESPECIFICACION.md §0 y §7) ANTES de escribir codigo",
-    "El commit que traiga nn/entrenar_local.py pone gasta en 'alquila' (o 'entrena-local') y entrada en nn/entrenar_local.py, EN EL MISMO COMMIT. Si alquila, el freno de Telegram es el `exp-vast` que ya existe (prefijo expc-dimgen-) y el descriptor va en nn/vast.json",
-    "Confirmar con el dueno si un experimento de este repo lleva reporte en el central aunque no mueva ESTADO.md: las dos reglas escritas se contradicen (ESPECIFICACION.md §6)"
+  "plan": "ESPECIFICACION.md de esta carpeta (lo escribio Claude el 2026-10-01; es historial). Lo VIGENTE manda en REGLAS.md y en instrucciones/02-criterio.md",
+  "brazos_previstos": [
+    "w128",
+    "w064",
+    "w032",
+    "w016",
+    "w008",
+    "w128-de16"
   ],
-  "linaje": "ninguno. Lee el mismo dataset que banco-k y NO hereda nada de el: otra red, otra cabeza, otra pregunta; y sus pesos no se importan nunca al banco (REGLAS.md § Que NO hereda)"
+  "semillas_previstas": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "control_previsto": "w128-de16: la imagen de 16 reescalada a 128 (misma red y parametros que w128, informacion de w016). Separa parametros de informacion; sin el, una caida a W alto queda 'sin cerrar (confundido)' segun el criterio del propio ESTADO.md del repo central. ENTRA (decision del 2026-10-02)",
+  "gasta_previsto": "alquila: 10 maquinas de Vast de >= 12 vCPU (prefijo expc-dimgen-, tope 6 h cada una). Estimado: 1-2 h de reloj y ≈1-2 $; peor caso absoluto 10 x 6 h x 0,25 $/h = 15 $. El freno de Telegram es `/use exp-vast` (apagar expc-dimgen-)",
+  "gasta_por_que": "Entrena 30 brazos; el caro (w128 y su control, kernels 32x32 a 4000 pasos) tarda ~6 h POR BRAZO en el dev de 2 vCPU (5,2 s por paso medidos), y la regla del repo dice que lo que entrena de verdad alquila. Va con el modo `trabajo` del lanzador (`nn/vast.sh`), cada brazo como proceso `nn/entrenar_local.py` (el nombre que casa el freno), y una unidad de cierre (`nn/cierre.sh`) que informa, commitea y copia TODO al volumen",
+  "pendiente": [
+    "Al terminar: el veredicto con el criterio (resultados/RESULTADOS.md lo genera el cierre), el README.md de la carpeta, y la fila + reporte en estudios-redes-neuronales (alquila: el central contesta «que se pago ya»)",
+    "Fusionar la rama tema-2 en main (experimentos-cnn y foveal-vision-data): lo que no esta en main no lo ve el server siguiente"
+  ],
+  "linaje": "ninguno. Lee el mismo dataset que banco-k y NO hereda nada de el: otra red, otra cabeza, otra pregunta; y sus pesos no se importan nunca al banco (REGLAS.md § Que NO hereda)",
+  "entrada": "nn/entrenar_local.py",
+  "decisiones_del_dueno": "2026-10-02: «Usa tu mejor criterio para las decisiones. Usa Vast, contrata la mayor cantidad necesaria de servers para terminar ese estudio rapidamente, aun si cuesta el doble. Guarda todo en el volumen. Procede con el estudio. Guarda los resultados.» Tomadas: S1-S4 como estaban; L=4 f=0,25; C=8; 5 semillas; W=8 entra; control w128-de16 entra; Vast con DIEZ maquinas (una por semilla para w128 + los 4 baratos, y una por semilla para el control); 4000 pasos (no 1000: el ensayo de la perdida de train los dejo cortos); lr 1e-3"
 }

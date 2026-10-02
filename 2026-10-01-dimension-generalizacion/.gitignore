@@ -1,0 +1,7 @@
+# Los pesos NO se commitean en este repo (REGLAS.md § Salidas: superan el tope de ≈5 MB por
+# experimento). Van al VOLUMEN (repo de datos, `experimentos-cnn-resultados/dim-gen/`), por
+# orden del dueño del 2026-10-02: «Guarda todo en el volumen».
+nn/pesos/**/*.pt
+# El ensayo de mecanismo es efímero: sólo sirve para congelar el lr.
+nn/ensayo/
+__pycache__/

@@ -1,11 +1,11 @@
 # Reglas de `dim-gen`
 
-**Escritas el 2026-10-01 al especificar el experimento.** Estado **`abierto` y SÓLO PLAN**: no
-hay código, nada entrenado, ningún resultado. Lo que se fija aquí es el **contrato** con el
-que se escribirá el código; los nombres de scripts y banderas son los **previstos**, y si al
-implementar cambian, se cambian **aquí en el mismo commit**. Las decisiones todavía abiertas
-van marcadas `⏳ abierta (decisión N)` con su valor por defecto; las toma el dueño
-(`ESPECIFICACION.md` §7).
+**Escritas el 2026-10-01 al especificar el experimento; actualizadas el 2026-10-02 al escribir
+el código y lanzarlo.** El dueño decidió ese día: *«Usa tu mejor criterio para las decisiones.
+Usa Vast, contrata la mayor cantidad necesaria de servers para terminar ese estudio rápidamente,
+aun si cuesta el doble. Guarda todo en el volumen. Procede con el estudio.»* Tomadas: S1–S4
+como estaban; `L = 4`, `f = 0,25`; `C = 8`; 5 semillas; `W = 8` entra; el control `w128-de16`
+entra; Vast con **diez** máquinas; **4000 pasos** (no 1000: § Procesos 3); `lr = 1e-3`.
 
 ⚠ **Estas reglas son de este experimento y de ninguno más.** No se copió de ningún
 experimento. Lee **el mismo dataset** que `banco-k`, y eso no le hereda ni una condición
@@ -54,9 +54,8 @@ resolución sobra o estorba?
      `μ, σ`: una `μ, σ` por `W` meterían una diferencia entre brazos que no es resolución;
   4. **etiqueta** = caja normalizada `((c/4) − 9) / 128 ∈ [0, 1]`, **idéntica para todo `W`**:
      el objetivo no cambia, cambian sólo los píxeles de entrada;
-  5. **el control `w128-de16`** (⏳ abierta, decisión 5; por defecto **sí** si corre en Vast):
-     la matriz de `W = 16` repetida 8×8 hasta 128 (`np.repeat` en los dos ejes), con la red de
-     `w128`.
+  5. **el control `w128-de16`** (entra): la matriz de `W = 16` repetida 8×8 hasta 128
+     (`np.repeat` en los dos ejes), con la red de `w128`.
 - **Huellas congeladas** *(calculadas el 2026-10-01 sobre los `.npz` publicados)*: `sha256` de
   la matriz **`int64` de sumas** `(1000, W, W)` en el orden `train, monitor, eval` tal como
   vienen, bytes little-endian (`astype('<i8').tobytes()`), 16 hex. `datos.py --comprobar` las
@@ -74,13 +73,13 @@ resolución sobra o estorba?
 
 ## Salidas
 
-- **Pesos: NO se commitean**, como en `banco-k`. Motivo medido: con `C = 8` los `last.pt` de
-  los cinco `W` suman ≈1,1 MB por semilla (275.540 parámetros × 4 B), o sea ≈5,5 MB las cinco
-  semillas y ≈6,6 MB con el control: por encima del tope del repo (≈5 MB por experimento). El
-  resultado aquí es **la curva**, no los pesos; lo que se querría leer después de los pesos (el
-  desglose por factor) va ya en `summary.json`. Se quedan en disco bajo `nn/pesos/` (ignorado
-  por git: `*.pt`), regenerables con la semilla en la misma máquina. ⏳ Si el dueño quiere
-  conservar alguno (p. ej. `w128`), se dice y se mide el tamaño antes.
+- **Pesos: NO se commitean en este repo, y SÍ van al volumen.** Con `C = 8` los `last.pt` de
+  los cinco `W` suman ≈1,1 MB por semilla (275.540 parámetros × 4 B), ≈6,6 MB con el control:
+  por encima del tope del repo público (≈5 MB por experimento), y por eso el `.gitignore` de la
+  carpeta los excluye. Por orden del dueño (2026-10-02: «guarda todo en el volumen») el cierre
+  (`nn/cierre.sh`) los copia **enteros**, con métricas, informe, libro y logs, al repo de datos:
+  `foveal-vision-data/experimentos-cnn-resultados/dim-gen/` (excepción escrita en su
+  `.gitignore`), commiteados y empujados al almacén.
 - **Por corrida**, en `nn/pesos/<brazo>-s<semilla>/`: `metrics.jsonl` (una línea por época,
   **según ocurre**: pérdida y IoU de `train`; cada 10 épocas y al final, IoU de las 900 y
   brecha) y `summary.json` (IoU_train, IoU_val, brecha finales; IoU_val **por factor**: `fuente`,
@@ -94,7 +93,7 @@ resolución sobra o estorba?
   `summary.json` (nunca transcrito a mano), con el criterio de `instrucciones/02-criterio.md`
   aplicado **tabla por tabla**: piso, umbral, `W` mínimo suficiente, «estorba», la clasificación
   (a)/(b)/mixta/ninguna de cada `W`, y el control. El veredicto se pega al `README.md` al cerrar.
-- **Si alquila:** el libro de Vast en `resultados/vast/` (un JSON por máquina, paso a paso, con
+- **El libro de Vast** en `resultados/vast/todo/` (un JSON por máquina, paso a paso, con
   coste), **commiteado y empujado al alquilar**.
 - **Qué se commitea:** métricas, resúmenes, figuras, informe y libro, siempre. Pesos, no.
   **Nunca** el dataset ni las matrices reducidas (`*.npz` está en el `.gitignore` del repo).
@@ -111,16 +110,24 @@ resolución sobra o estorba?
    en todos, que los parámetros coinciden con la tabla de `ESPECIFICACION.md` §3.2, y hace un
    forward. **`nn/probar.py`** fija las dos cosas con tests, y además que un acumulador `uint16`
    **hace caer** la comprobación de huellas (R14: lo que puede fallar en silencio, se prueba).
-3. **Ensayo de mecanismo** (`nn/entrenar_local.py --ensayo`): `W = 32`, semilla 1, 1000 pasos,
-   mirando **sólo** la pérdida de `train` (que baje sin oscilar) → fija `lr`. Después `W = 128`,
-   50 épocas, igual. **No se mira `val`.** El `lr` se congela aquí y se escribe en estas
-   reglas. Si no hay un `lr` que sirva para los dos, se para y se vuelve al dueño.
-4. **Entrenar los brazos**: `nn/vast.sh todo` (⏳ decisión 6; por defecto Vast: una máquina por
-   semilla con todos sus brazos) o `nn/lanzar.sh todo` (el dev, una unidad de systemd por
-   `desacoplar-persistente.sh`). En los dos casos **cada corrida es un proceso
-   `python -u nn/entrenar_local.py --brazo …`**: el freno casa ese nombre en la línea de
-   comando, y un script que sólo lo *importara* sería invisible para él. De `W` pequeño a
-   grande: lo barato primero, para que un fallo se vea en minutos y no en horas.
+3. **Ensayo de mecanismo** (`nn/entrenar_local.py --ensayo`), **hecho el 2026-10-02**, mirando
+   **sólo** la pérdida de `train`: con `lr = 1e-3` baja sin ninguna subida >20 % entre épocas
+   consecutivas en `W = 8, 16, 32` (5000 pasos), `W = 64` (250) y `W = 128` (50 pasos:
+   0,595 → 0,133). Con `3e-4` también baja (`W = 32`) pero más despacio. **`lr = 1e-3`,
+   congelado.** Y el mismo ensayo dijo que **1000 pasos eran pocos**: a `W = 32` la pérdida a
+   las 200 épocas (0,033) seguía cayendo y se aplana hacia las 800 (0,0077); a `W = 8` es plana
+   desde las 400; a `W = 16` aún baja un 7 % por cada 200 a las 1000. **4000 pasos (800
+   épocas)** para todos los brazos, fijados antes de la primera corrida y escritos en
+   `02-criterio.md` como enmienda fechada.
+4. **Entrenar los brazos**: `nn/vast.sh todo`, **diez** máquinas de Vast: `s1…s5` corren los
+   cinco `W` de su semilla, **de pequeño a grande** (lo barato primero: un fallo se ve en
+   minutos, y si `w128` agotara el tope de la máquina los otros cuatro ya estarían), en la misma
+   máquina (toda comparación entre `W` es misma máquina); `c1…c5` el control `w128-de16` de su
+   semilla (máquina propia: cuesta lo mismo que `w128`, y el dueño pidió terminar rápido).
+   **Cada corrida es un proceso `python -u nn/entrenar_local.py --brazo …`**: el freno casa ese
+   nombre en la línea de comando. `nn/lanzar.sh` (el dev) **no se escribió**: el dueño eligió
+   Vast. ⚠ `nn/vast.sh apagar` para también la unidad de cierre (mismo prefijo): tras un
+   apagado de emergencia, `sh nn/cierre.sh` a mano guarda lo que haya vuelto.
 5. **`nn/informe.py`**: tabla, figuras, criterio aplicado; `README.md` con el veredicto; reporte
    en `estudios-redes-neuronales` según lo que el dueño confirme (`ESPECIFICACION.md` §6).
 
@@ -128,14 +135,14 @@ resolución sobra o estorba?
   Resumen: IoU sobre las 900, IoU de `train` y brecha, por brazo, media ± sd de 5 semillas; una
   diferencia cuenta si supera `max(2·SE_dif, 0,01)`; cada caída se clasifica en «menos
   información» / «peor generalización» / «sin cerrar» por la descomposición y el control.
-- **Cuántos brazos y cuántas semillas:** 5 `W` × 5 semillas = **25**, +5 con el control.
+- **Cuántos brazos y cuántas semillas:** 5 `W` × 5 semillas = **25**, +5 del control = **30**.
 - **Qué se llama «ganar»:** **no se declara ganador.** Se describe la curva y se contestan las
   dos preguntas del criterio: cuál es el `W` mínimo suficiente, y si la resolución estorba — y
   de qué causa.
 
 ## Scripts
 
-**Previstos, no escritos.** Los nombres y las banderas son de aquí.
+**Escritos el 2026-10-02.** Los nombres y las banderas son de aquí.
 
 | script | qué hace | cómo se llama |
 |---|---|---|
@@ -144,13 +151,12 @@ resolución sobra o estorba?
 | `nn/probar.py` | los tests del dato y del modelo (huellas, suma conservada, `uint16` cae, mapa `L×L`, parámetros) | `python nn/probar.py` |
 | `nn/entrenar_local.py` | entrena **un** brazo; `metrics.jsonl` según ocurre; `summary.json` al final | `--brazo w064-s3 [--pasos N] [--hilos N]` · `--ensayo` · `--comprobar` |
 | `nn/informe.py` | tabla, figuras y criterio aplicado, del disco | `python nn/informe.py` |
-| `nn/lanzar.sh` | en el dev: los brazos en serie como unidad de systemd; guarda el modo al entrar; imprime la orden; el caso final se niega; se niega a lanzar dos veces | `todo [brazo…]` · `--estado` (disco, con `NRestarts`) · `SECO=1 …` (antes del guardia) |
-| `nn/probar_lanzador.sh` | el despacho del lanzador por modo, con el seco | `sh nn/probar_lanzador.sh` |
-| `nn/vast.sh` + `nn/vast.json` | en Vast: una máquina por semilla con todos sus brazos; libro commiteado al alquilar | `todo` · `--estado` · `apagar` · `VAST_SECO=1 …` |
+| `nn/vast.sh` + `nn/vast.json` | las diez máquinas de Vast (`s<N>`: los cinco `W` de la semilla; `c<N>`: su control), `--horas-max 6`; commitea el libro al alquilar y arranca el cierre | `todo [s1 c1 …]` · `--estado` · `apagar` · `VAST_SECO=1 …` (el seco va antes del guardia del `lr`) |
+| `nn/cierre.sh` | unidad `expc-dimgen-cierre`: espera a las diez, corre `informe.py`, commitea y empuja el repo público, copia **todo** al volumen y avisa; sale siempre con 0 | la arranca `vast.sh todo` |
 
 - ⚠ **`entrenar_local.py` se llama así por el FRENO** (`cerrable.mjs` → `TRABAJOS`): con otro
-  nombre, el veredicto «¿se puede apagar este server?» no lo ve. El commit que lo traiga pone
-  `gasta` en `alquila` o `entrena-local` y `entrada` en `nn/entrenar_local.py`.
+  nombre, el veredicto «¿se puede apagar este server?» no lo ve. `gasta` es `alquila` y
+  `entrada` es `nn/entrenar_local.py` desde el commit que trajo el código.
 - **Dependencias:** el `.venv` de la raíz de `experimentos-cnn` (torch 2.14.1+cpu y numpy 2.5.3,
   *los que hay hoy en el del dev*) y matplotlib para las figuras. En Vast, el mismo torch fijado
   por versión; la evaluación de las 900 va por lotes de 100 (la máquina del dev tiene 3,8 GB y

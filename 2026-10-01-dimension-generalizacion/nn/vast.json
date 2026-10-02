@@ -1,0 +1,140 @@
+{
+ "experimento": "dim-gen",
+ "descripcion": "Los 30 brazos de dim-gen (5 W + el control w128-de16, x 5 semillas) en DIEZ maquinas: s<N> corre los cinco W de la semilla N en serie, de pequeno a grande (lo barato primero); c<N> corre solo el control w128-de16 de esa semilla. Cada brazo con todos los hilos de su maquina.",
+ "maquina": {
+  "cpus": 12,
+  "max_cpus": 64,
+  "min_ram": 12,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.25
+ },
+ "envia": [
+  {
+   "origen": "../..",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "resultados-r20260908-descartado",
+    "muestras",
+    "resultados",
+    "pesos",
+    "ensayo"
+   ]
+  },
+  {
+   "origen": "$EXPCNN_DATOS/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+   "destino": "foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "s1",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nfallos=0\nfor b in w008 w016 w032 w064 w128; do\n  mkdir -p nn/pesos/$b-s1\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo $b-s1 --hilos $N > nn/pesos/$b-s1/log.txt 2>&1 || fallos=$((fallos + 1))\ndone\necho \"brazos con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/w128-s1",
+    "pesos/w064-s1",
+    "pesos/w032-s1",
+    "pesos/w016-s1",
+    "pesos/w008-s1"
+   ]
+  },
+  {
+   "id": "s2",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nfallos=0\nfor b in w008 w016 w032 w064 w128; do\n  mkdir -p nn/pesos/$b-s2\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo $b-s2 --hilos $N > nn/pesos/$b-s2/log.txt 2>&1 || fallos=$((fallos + 1))\ndone\necho \"brazos con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/w128-s2",
+    "pesos/w064-s2",
+    "pesos/w032-s2",
+    "pesos/w016-s2",
+    "pesos/w008-s2"
+   ]
+  },
+  {
+   "id": "s3",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nfallos=0\nfor b in w008 w016 w032 w064 w128; do\n  mkdir -p nn/pesos/$b-s3\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo $b-s3 --hilos $N > nn/pesos/$b-s3/log.txt 2>&1 || fallos=$((fallos + 1))\ndone\necho \"brazos con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/w128-s3",
+    "pesos/w064-s3",
+    "pesos/w032-s3",
+    "pesos/w016-s3",
+    "pesos/w008-s3"
+   ]
+  },
+  {
+   "id": "s4",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nfallos=0\nfor b in w008 w016 w032 w064 w128; do\n  mkdir -p nn/pesos/$b-s4\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo $b-s4 --hilos $N > nn/pesos/$b-s4/log.txt 2>&1 || fallos=$((fallos + 1))\ndone\necho \"brazos con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/w128-s4",
+    "pesos/w064-s4",
+    "pesos/w032-s4",
+    "pesos/w016-s4",
+    "pesos/w008-s4"
+   ]
+  },
+  {
+   "id": "s5",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nfallos=0\nfor b in w008 w016 w032 w064 w128; do\n  mkdir -p nn/pesos/$b-s5\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo $b-s5 --hilos $N > nn/pesos/$b-s5/log.txt 2>&1 || fallos=$((fallos + 1))\ndone\necho \"brazos con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/w128-s5",
+    "pesos/w064-s5",
+    "pesos/w032-s5",
+    "pesos/w016-s5",
+    "pesos/w008-s5"
+   ]
+  },
+  {
+   "id": "c1",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nmkdir -p nn/pesos/w128-de16-s1\n../.venv/bin/python -u nn/entrenar_local.py --brazo w128-de16-s1 --hilos $N > nn/pesos/w128-de16-s1/log.txt 2>&1\nrc=$?\necho \"brazos con fallo: $rc\"\nexit $rc",
+   "trae": [
+    "pesos/w128-de16-s1"
+   ]
+  },
+  {
+   "id": "c2",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nmkdir -p nn/pesos/w128-de16-s2\n../.venv/bin/python -u nn/entrenar_local.py --brazo w128-de16-s2 --hilos $N > nn/pesos/w128-de16-s2/log.txt 2>&1\nrc=$?\necho \"brazos con fallo: $rc\"\nexit $rc",
+   "trae": [
+    "pesos/w128-de16-s2"
+   ]
+  },
+  {
+   "id": "c3",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nmkdir -p nn/pesos/w128-de16-s3\n../.venv/bin/python -u nn/entrenar_local.py --brazo w128-de16-s3 --hilos $N > nn/pesos/w128-de16-s3/log.txt 2>&1\nrc=$?\necho \"brazos con fallo: $rc\"\nexit $rc",
+   "trae": [
+    "pesos/w128-de16-s3"
+   ]
+  },
+  {
+   "id": "c4",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nmkdir -p nn/pesos/w128-de16-s4\n../.venv/bin/python -u nn/entrenar_local.py --brazo w128-de16-s4 --hilos $N > nn/pesos/w128-de16-s4/log.txt 2>&1\nrc=$?\necho \"brazos con fallo: $rc\"\nexit $rc",
+   "trae": [
+    "pesos/w128-de16-s4"
+   ]
+  },
+  {
+   "id": "c5",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nN=$(nproc)\nmkdir -p nn/pesos/w128-de16-s5\n../.venv/bin/python -u nn/entrenar_local.py --brazo w128-de16-s5 --hilos $N > nn/pesos/w128-de16-s5/log.txt 2>&1\nrc=$?\necho \"brazos con fallo: $rc\"\nexit $rc",
+   "trae": [
+    "pesos/w128-de16-s5"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y por eso `pesos/...`. Asi el descriptor no nombra su carpeta (R16).",
+  "torch, numpy y pillow FIJADOS a las versiones del venv del dev del 2026-10-02: lo que difiera entre maquinas tiene que ser de la maquina, no de una version.",
+  "DIEZ maquinas y no cinco por orden del dueno (2026-10-02: «la mayor cantidad necesaria de servers para terminar rapidamente, aun si cuesta el doble»): el control w128-de16 cuesta lo mismo que w128 (4000 pasos de kernels 32x32), y en maquina propia los dos corren con todos los hilos. Los cinco W de una semilla SI siguen en la misma maquina; la comparacion w128 contra w128-de16 cruza maquinas, y la deriva medida entre maquinas (0,0012 de IoU, banco-k 2026-10-01) es 8 veces menor que el delta del criterio (0,01). Esta escrito en 02-criterio.md, antes de correr.",
+  "Cada brazo es un proceso `nn/entrenar_local.py` propio: es el nombre que casa el freno del coordinador.",
+  "Maquinas de >= 12 vCPU y hasta 0,25 $/h (medido el 2026-10-02: las de 12-28 vCPU estaban a 0,069-0,10 $/h). El lanzador elige las N mas baratas DISTINTAS que cumplan; si no hay de un tipo, hay de otros (es el encargo).",
+  "Se excluyen del payload los `pesos`, `resultados` y `ensayo` de TODOS los experimentos: la maquina no los necesita y los pesos de los vecinos pesan MB.",
+  "Dentro de s<N> los W van de pequeno a grande (revisor, 2026-10-02): si w128 agotara el tope de 6 h de la maquina, los otros cuatro ya habrian vuelto."
+ ]
+}
