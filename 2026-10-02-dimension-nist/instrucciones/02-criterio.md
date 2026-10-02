@@ -97,3 +97,9 @@ ahora es lo que permite leer (i) como resultado y no como «no salió».
 - **Los escritores**: las 1797 imágenes son el *test set* de UCI, de **13 personas**; train y val
   comparten escritores. Lo que se mide es generalizar a dígitos nuevos **de los mismos
   escritores**, no a escritores nuevos.
+
+## Enmienda del 2026-10-02, antes de que ningún brazo entrenara
+
+El primer lanzamiento se negó en los 30 brazos al arrancar: 4000 pasos no son épocas enteras de
+9 pasos (180 imágenes / lote 20). Se fija **3996 pasos = 444 épocas**, exactamente lo que corrió
+el ensayo de mecanismo. Ningún brazo había entrenado: nada se miró.

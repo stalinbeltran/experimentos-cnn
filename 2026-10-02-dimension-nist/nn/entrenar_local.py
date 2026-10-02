@@ -37,7 +37,7 @@ PESOS = AQUI / "pesos"
 ENSAYO = AQUI / "ensayo"
 
 LOTE = 20                   # 9 pasos por epoca sobre 180 imagenes
-PASOS_DEF = 4000            # como dim-gen: 444 epocas aqui
+PASOS_DEF = 3996            # 444 epocas x 9 pasos: lo mas cercano a los 4000 de dim-gen (4000 no es multiplo de 9). Lo mismo que corrio el ensayo.
 EVAL_CADA = 10
 # CONGELADO el 2026-10-02 tras el ensayo (solo perdida de train, 4000 pasos): con 3e-3 baja sin
 # ninguna subida >20 % en W=8 (0,0031 final, acc_train 1,0) y W=4 (0,486, acc_train 0,83); con 1e-3

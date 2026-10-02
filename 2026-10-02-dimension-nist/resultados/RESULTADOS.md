@@ -1,8 +1,8 @@
-# Resultados de `dim-nist` — generado por `nn/informe.py` el 2026-10-02 16:58 UTC
+# Resultados de `dim-nist` — generado por `nn/informe.py` el 2026-10-02 16:59 UTC
 
 **Generado del disco (`nn/pesos/*/summary.json`); no se edita a mano.** Criterio: `instrucciones/02-criterio.md`, escrito antes de entrenar.
 
-Piso (clase mayoritaria de train sobre las 1617): **0.1000**. δ = 0.01. Umbral entre dos brazos = max(2·SE_dif, δ).
+Piso (azar entre 10 clases): **0.1000**. δ = 0.01. Umbral entre dos brazos = max(2·SE_dif, δ).
 
 Descomposición (a)/(b) en **entropía cruzada** (la exactitud de train satura): δ_ce = 0.05 nats.
 

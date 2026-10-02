@@ -163,7 +163,7 @@ def md(ag, c, figs):
     f4 = lambda x: "—" if x is None or (isinstance(x, float) and math.isnan(x)) else f"{x:.4f}"
     L = [f"# Resultados de `dim-nist` — generado por `nn/informe.py` el {time.strftime('%Y-%m-%d %H:%M UTC', time.gmtime())}", "",
          "**Generado del disco (`nn/pesos/*/summary.json`); no se edita a mano.** Criterio: `instrucciones/02-criterio.md`, escrito antes de entrenar.", "",
-         f"Piso (clase mayoritaria de train sobre las 1617): **{c['piso']:.4f}**. δ = {DELTA}. Umbral entre dos brazos = max(2·SE_dif, δ).", "",
+         f"Piso (azar entre 10 clases): **{c['piso']:.4f}**. δ = {DELTA}. Umbral entre dos brazos = max(2·SE_dif, δ).", "",
          f"Descomposición (a)/(b) en **entropía cruzada** (la exactitud de train satura): δ_ce = {DELTA_CE} nats.", "",
          "| brazo | W | n | parámetros | semillas | exactitud val (media ± sd) | exactitud train | brecha | CE train | CE val | atascadas | ¿aprendió? | clasificación |",
          "|---|---:|---:|---:|---:|---|---|---|---|---|---|---|---|"]
