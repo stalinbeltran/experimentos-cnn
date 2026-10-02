@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/borpca-k09.npy",
+  "nombre": "borpca-k09",
+  "contrato": {
+    "k": 9,
+    "norma_original": 1.0,
+    "suma": -0.5312830805778503,
+    "suma_normalizada": -0.5312830805778503,
+    "sha256_16": "fd7b19126af8d360",
+    "min": -0.17042744159698486,
+    "max": 0.17138205468654633
+  },
+  "dataset": "borpca-k09",
+  "comparado_contra": {
+    "aleatorio": "aleatorio",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.8222192935921793,
+    "desv": 0.006549473394675589,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.86799035869666,
+    "desv": 0.007419341788678296,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.04577106510448068,
+    "desv": 0.004402247849129468,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": 0.014004608836545973,
+    "margen": 0.014760654419967717,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": -0.002420344393638099,
+    "margen": 0.010794989227173864,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "facilitacion",
+  "veredicto": "NO DECLARA"
+}

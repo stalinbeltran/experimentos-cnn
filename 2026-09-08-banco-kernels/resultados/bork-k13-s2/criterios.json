@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/bork-k13-s2.npy",
+  "nombre": "bork-k13-s2",
+  "contrato": {
+    "k": 13,
+    "norma_original": 10.811421394348145,
+    "suma": 13.183832168579102,
+    "suma_normalizada": 1.219435453414917,
+    "sha256_16": "a317963cede39734",
+    "min": -0.18440453708171844,
+    "max": 0.1938592940568924
+  },
+  "dataset": "bork-k13-s2",
+  "comparado_contra": {
+    "aleatorio": "aleatorio-k13",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.8436364506241405,
+    "desv": 0.013635179592438474,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.8768685502762251,
+    "desv": 0.013398881356462453,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.03323209965208447,
+    "desv": 0.00461922638578605,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": 0.03652805121595948,
+    "margen": 0.025022415622265072,
+    "cumple": true
+  },
+  "§2.2_generalizacion": {
+    "diferencia": 0.008772225045828641,
+    "margen": 0.00985262034003095,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "facilitacion",
+  "veredicto": "UTIL (sin efecto de generalizacion)"
+}

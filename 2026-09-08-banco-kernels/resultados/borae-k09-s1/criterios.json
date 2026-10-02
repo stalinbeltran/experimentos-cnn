@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/borae-k09-s1.npy",
+  "nombre": "borae-k09-s1",
+  "contrato": {
+    "k": 9,
+    "norma_original": 1.1360538005828857,
+    "suma": 3.478621006011963,
+    "suma_normalizada": 3.062021255493164,
+    "sha256_16": "bedca8503ac7b5df",
+    "min": -0.1019897386431694,
+    "max": 0.4717741310596466
+  },
+  "dataset": "borae-k09-s1",
+  "comparado_contra": {
+    "aleatorio": "aleatorio",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.807247203313849,
+    "desv": 0.004574810796541945,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.8366214616123944,
+    "desv": 0.006976493151820482,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.029374258298545584,
+    "desv": 0.007780860274596375,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": -0.0009674814417842681,
+    "margen": 0.012785991821834073,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": 0.013976462412296997,
+    "margen": 0.01417360165264077,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "transferencia",
+  "veredicto": "NO DECLARA"
+}

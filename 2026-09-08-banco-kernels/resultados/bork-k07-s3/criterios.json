@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/bork-k07-s3.npy",
+  "nombre": "bork-k07-s3",
+  "contrato": {
+    "k": 7,
+    "norma_original": 13.346292495727539,
+    "suma": 14.926663398742676,
+    "suma_normalizada": 1.118412733078003,
+    "sha256_16": "61f05276980db4d6",
+    "min": -0.2696602940559387,
+    "max": 0.3065687119960785
+  },
+  "dataset": "bork-k07-s3",
+  "comparado_contra": {
+    "aleatorio": "aleatorio-k7",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.8062571216253376,
+    "desv": 0.006724191966175755,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.8527911050653054,
+    "desv": 0.006635301639139009,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.04653398343996783,
+    "desv": 0.009100854240926439,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": 0.0012836230358990175,
+    "margen": 0.01520930820754571,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": -0.005221294431295105,
+    "margen": 0.015397094195126533,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "facilitacion",
+  "veredicto": "NO DECLARA"
+}

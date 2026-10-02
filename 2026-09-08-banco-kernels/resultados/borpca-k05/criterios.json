@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/borpca-k05.npy",
+  "nombre": "borpca-k05",
+  "contrato": {
+    "k": 5,
+    "norma_original": 1.0,
+    "suma": 0.9668010473251343,
+    "suma_normalizada": 0.9668010473251343,
+    "sha256_16": "4e5b708c64da57e1",
+    "min": -0.2515506148338318,
+    "max": 0.3257383406162262
+  },
+  "dataset": "borpca-k05",
+  "comparado_contra": {
+    "aleatorio": "aleatorio-k5",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.7931169732825631,
+    "desv": 0.0073701357597796245,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.843810208869647,
+    "desv": 0.008713422321041943,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.05069323558708368,
+    "desv": 0.004988651963633035,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": -0.0017183792600428127,
+    "margen": 0.014728377171819261,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": -0.008688910889170572,
+    "margen": 0.010222045917877934,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "sin efecto o perjudica",
+  "veredicto": "NO DECLARA"
+}

@@ -1,0 +1,46 @@
+{
+  "kernel": "kernels/borae-k15-s1.npy",
+  "nombre": "borae-k15-s1",
+  "contrato": {
+    "k": 15,
+    "norma_original": 1.5570509433746338,
+    "suma": 4.2786102294921875,
+    "suma_normalizada": 2.7478933334350586,
+    "sha256_16": "822e6b73903935f2",
+    "min": -0.07826371490955353,
+    "max": 0.5572995543479919
+  },
+  "dataset": "borae-k15-s1",
+  "comparado_contra": {
+    "aleatorio": "aleatorio-k15",
+    "identidad": "identidad"
+  },
+  "iou_eval": {
+    "media": 0.7587618433248876,
+    "desv": 0.012843104730273924,
+    "n": 10
+  },
+  "iou_train": {
+    "media": 0.8050091785120397,
+    "desv": 0.011663835776643783,
+    "n": 10
+  },
+  "brecha": {
+    "media": 0.04624733518715206,
+    "desv": 0.006596252460149306,
+    "n": 10
+  },
+  "§2.1_utilidad": {
+    "diferencia": -0.05061720767125977,
+    "margen": 0.024431449699099606,
+    "cumple": false
+  },
+  "§2.2_generalizacion": {
+    "diferencia": -0.004659616328091705,
+    "margen": 0.011720024732873846,
+    "cumple": false,
+    "cumple_ignorando_2_1": false
+  },
+  "§2.3_mecanismo": "sin efecto o perjudica",
+  "veredicto": "NO DECLARA"
+}

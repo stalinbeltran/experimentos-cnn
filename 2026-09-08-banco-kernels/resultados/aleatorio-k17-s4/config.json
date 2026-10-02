@@ -1,0 +1,26 @@
+{
+  "condicion": "aleatorio-k17",
+  "semilla": 4,
+  "kernel": "/root/trabajo/experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r4.npy",
+  "kernel_k": 17,
+  "kernel_norma_original": 17.567974090576172,
+  "kernel_sha256_16": "2ed67c1a8929dd7f",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/root/trabajo/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": -704.0685424804688,
+    "sigma": 219.72109985351562
+  },
+  "segundos": 32.8
+}

@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T20:35:20+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T20:35:26+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-02T20:36:28+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-02T20:36:32+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-02T20:37:56+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-02T20:37:59+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T21:19:07+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T21:19:08+00:00"
   }
  ],
  "id": "k17",
@@ -23,5 +51,93 @@
   "fiabilidad": 0.9916
  },
  "horas_max": 3.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53915724,
+ "intentos_clave": 1,
+ "payload_mb": 2.75,
+ "sha256": "306335e8a464f5b9",
+ "segundos_max": 10048,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s1-s9",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s2-s9",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/bork-k17-s3-s9",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/borpca-k17-s9",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/aleatorio-k17-s9",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r0.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r1.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r2.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r3.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r4.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r5.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r6.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r7.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r8.npy",
+  "experimentos-cnn/2026-09-08-banco-kernels/kernels/aleatorio-k17-r9.npy"
+ ],
+ "apartado": [
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s0",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s1",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s2",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s3",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s4",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s5",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s6",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s7",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s8",
+  "experimentos-cnn/2026-09-08-banco-kernels/resultados/identidad-s9"
+ ],
+ "minutos": 43.7,
+ "coste_usd": 0.0456
 }

@@ -1,9 +1,21 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T20:35:20+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T20:35:26+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-02T20:40:10+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T20:40:11+00:00"
   }
  ],
  "id": "k19",
@@ -23,5 +35,9 @@
   "fiabilidad": 0.9951
  },
  "horas_max": 3.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53915725,
+ "error": "RuntimeError: SSH no acepto la clave en ssh8.vast.ai:33450 tras 12 intentos (rc=255)",
+ "minutos": 4.7,
+ "coste_usd": 0.0051
 }

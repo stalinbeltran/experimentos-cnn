@@ -1,0 +1,26 @@
+{
+  "condicion": "bork-k09-s1",
+  "semilla": 7,
+  "kernel": "kernels/bork-k09-s1.npy",
+  "kernel_k": 9,
+  "kernel_norma_original": 14.706270217895508,
+  "kernel_sha256_16": "21de60e5ba400b14",
+  "dataset": "parrafos1000-584px-r4-r20260908b",
+  "dataset_origen": "publicado",
+  "dataset_ruta": "/root/trabajo/foveal-vision-data/experimentos-cnn/parrafos1000-584px-r4-r20260908b",
+  "especificacion": "v1.2",
+  "epocas": 200,
+  "lr": 0.0003,
+  "lote": 20,
+  "paradas": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "estandarizacion": {
+    "mu": 5585.3876953125,
+    "sigma": 460.26715087890625
+  },
+  "segundos": 5.3
+}
