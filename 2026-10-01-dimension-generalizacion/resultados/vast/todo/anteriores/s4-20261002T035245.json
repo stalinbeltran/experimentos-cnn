@@ -1,0 +1,43 @@
+{
+ "estado": "destruida",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T02:50:59+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T02:51:00+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-02T02:56:21+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T02:56:22+00:00"
+  }
+ ],
+ "id": "s4",
+ "etiqueta": "expc-dimgen-s4",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 48066766,
+ "precio_hora": 0.05555,
+ "maquina": {
+  "vcpu": 28.0,
+  "cpu": "Xeon E5-2680 v4",
+  "ram_gb": 15.6,
+  "ghz": 3.3,
+  "gpu": "RTX 3060",
+  "ubicacion": "Quebec, CA",
+  "host": 139822,
+  "fiabilidad": 0.9982
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25,
+ "iid": 53793907,
+ "error": "RuntimeError: sshd no contesto en ssh7.vast.ai:26454",
+ "minutos": 5.4,
+ "coste_usd": 0.005
+}

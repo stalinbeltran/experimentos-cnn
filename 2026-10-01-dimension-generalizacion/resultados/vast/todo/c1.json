@@ -1,5 +1,5 @@
 {
- "estado": "corriendo",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
@@ -24,6 +24,14 @@
   {
    "paso": "corriendo",
    "hora": "2026-10-02T01:52:00+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T03:21:08+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T03:21:08+00:00"
   }
  ],
  "id": "c1",
@@ -48,5 +56,12 @@
  "intentos_clave": 1,
  "payload_mb": 2.67,
  "sha256": "0ba72b9b279bf34b",
- "segundos_max": 20826
+ "segundos_max": 20826,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-01-dimension-generalizacion/nn/pesos/w128-de16-s1"
+ ],
+ "apartado": [],
+ "minutos": 92.1,
+ "coste_usd": 0.0853
 }
