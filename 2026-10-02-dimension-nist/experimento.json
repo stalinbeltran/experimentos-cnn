@@ -1,0 +1,22 @@
+{
+  "id": "dim-nist",
+  "titulo": "El gemelo de dim-gen sobre los digitos de NIST (8x8): reducir la imagen de 8 a 4 px, poco a poco, y medir que le hace a la generalizacion con el 10 % del dato para entrenar",
+  "pregunta": "Con los digitos manuscritos de 8x8 (NIST via UCI/scikit-learn), el 10 % para entrenar (180) y el 90 % para validar (1617), L = 2 capas sin padding con kernel n = ⌈W/2⌉ y cabeza constante, ¿como cambia la exactitud sobre las no vistas —y la brecha train-val— al reducir la imagen de 8 a 7, 6, 5 y 4 px? ¿Que resolucion generaliza mejor, y hay una a partir de la cual la resolucion sobra o estorba?",
+  "creado": "2026-10-02",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-8px-r20261002",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "PREPARADO el 2026-10-02 (codigo, dataset publicado, criterio antes de mirar, ensayo de mecanismo); NO LANZADO: espera la confirmacion del dueno de los supuestos de ESPECIFICACION.md §0. Se lanza con `nn/lanzar.sh todo` (una unidad de systemd en el dev; los 30 brazos son minutos)",
+  "brazos_previstos": ["w8", "w7", "w6", "w5", "w4", "w8-de4"],
+  "semillas_previstas": [1, 2, 3, 4, 5],
+  "control_previsto": "w8-de4: la imagen de 4 px repetida 2x2 hasta 8 (misma red y parametros que w8, informacion de w4). Separa parametros de informacion, como w128-de16 en dim-gen",
+  "gasta_por_que": "Entrena 30 brazos de redes de 394 a 1.258 parametros sobre imagenes de 8 px: segundos cada uno en el dev. No alquila. El freno lo ve porque cada brazo es un proceso `nn/entrenar_local.py`",
+  "linaje": "dim-gen (mismo diseno: fraccion fija del ancho, 10/90, criterio, control). Lo que cambia y por que, en REGLAS.md § Que NO hereda",
+  "pendiente": [
+    "Confirmar los supuestos S1-S4 de ESPECIFICACION.md §0 (NIST = digits 8x8 de scikit-learn; W ∈ {8,7,6,5,4}; L = 2 con GAP; exactitud como metrica) y lanzar",
+    "Fusionar la rama tema-2 en main (experimentos-cnn y foveal-vision-data)"
+  ]
+}

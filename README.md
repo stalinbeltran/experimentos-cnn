@@ -35,6 +35,7 @@ renombrar y re-ordenar sin romper nada.
 | [`2026-10-01-bordes-parrafo-r4/`](2026-10-01-bordes-parrafo-r4/) `bor-p4` | abierto | No contesta ninguna: produce el dato. Paginas limpias con 2-4 parrafos y la caja de tinta de cada uno, a la escala en que banco-k aplica el kernel (/4), con la separacion y el margen que exige un kernel de 19 px A ESA ESCALA |
 | [`2026-10-01-bordes-pca/`](2026-10-01-bordes-pca/) `bor-pca` | abierto | ¿Cual es la direccion de mayor varianza de los parches de borde de parrafo a la escala del banco, y sirve como kernel? |
 | [`2026-10-01-dimension-generalizacion/`](2026-10-01-dimension-generalizacion/) `dim-gen` | cerrado | Con el 10 % del dataset para entrenar y el 90 % para validar, L capas fijas sin padding y un kernel que siempre ve la misma FRACCION f del ancho de la imagen, ¿como cambia el IoU sobre las imagenes no vistas —y la brecha train-val— al reducir la imagen de 128 a 64, 32, 16 y 8 px? ¿Hay un W minimo suficiente, y hay un W a partir del cual la resolucion sobra o estorba? |
+| [`2026-10-02-dimension-nist/`](2026-10-02-dimension-nist/) `dim-nist` | abierto | Con los digitos manuscritos de 8x8 (NIST via UCI/scikit-learn), el 10 % para entrenar (180) y el 90 % para validar (1617), L = 2 capas sin padding con kernel n = ⌈W/2⌉ y cabeza constante, ¿como cambia la exactitud sobre las no vistas —y la brecha train-val— al reducir la imagen de 8 a 7, 6, 5 y 4 px? ¿Que resolucion generaliza mejor, y hay una a partir de la cual la resolucion sobra o estorba? |
 
 <!-- FIN INDICE -->
 
