@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k07",
+ "etiqueta": "expc-bancok-f3-k07",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 53837492,
+ "precio_hora": 0.06089,
+ "maquina": {
+  "vcpu": 5.6000000000000005,
+  "cpu": "Xeon E5-2690 v4",
+  "ram_gb": 25.2,
+  "ghz": 3.5,
+  "gpu": "RTX 3060",
+  "ubicacion": "Quebec, CA",
+  "host": 45315,
+  "fiabilidad": 0.954
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

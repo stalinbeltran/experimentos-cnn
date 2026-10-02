@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k17",
+ "etiqueta": "expc-bancok-f3-k17",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 50865915,
+ "precio_hora": 0.06267,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Core i3-3240",
+  "ram_gb": 15.6,
+  "ghz": 3.4,
+  "gpu": "GTX 1080 Ti",
+  "ubicacion": "Spain, ES",
+  "host": 150049,
+  "fiabilidad": 0.9916
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

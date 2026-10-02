@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k03",
+ "etiqueta": "expc-bancok-f3-k03",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 45958967,
+ "precio_hora": 0.04148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "AMD Ryzen 5 5500",
+  "ram_gb": 15.6,
+  "ghz": 4.2685718,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Missouri, US",
+  "host": 145557,
+  "fiabilidad": 0.9967
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

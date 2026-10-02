@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k11",
+ "etiqueta": "expc-bancok-f3-k11",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 43521342,
+ "precio_hora": 0.06222,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Xeon W-2123",
+  "ram_gb": 15.5,
+  "ghz": 3.9,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Romania, RO",
+  "host": 124623,
+  "fiabilidad": 0.9985
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

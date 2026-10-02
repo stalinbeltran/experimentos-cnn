@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k09",
+ "etiqueta": "expc-bancok-f3-k09",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 45600974,
+ "precio_hora": 0.06148,
+ "maquina": {
+  "vcpu": 6.0,
+  "cpu": "AMD Ryzen 5 5600X 6-Core Processor",
+  "ram_gb": 15.6,
+  "ghz": 3.7,
+  "gpu": "RTX 3060",
+  "ubicacion": "Poland, PL",
+  "host": 19685,
+  "fiabilidad": 0.9984
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}

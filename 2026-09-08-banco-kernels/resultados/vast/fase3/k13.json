@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T20:35:20+00:00"
+  }
+ ],
+ "id": "k13",
+ "etiqueta": "expc-bancok-f3-k13",
+ "experimento": "banco-k",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-09-08-banco-kernels/nn/vast-fase3.json",
+ "oferta": 52603086,
+ "precio_hora": 0.06222,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Xeon E3-1220 v3",
+  "ram_gb": 15.6,
+  "ghz": 3.5,
+  "gpu": "RTX 3060",
+  "ubicacion": "South Korea, KR",
+  "host": 137452,
+  "fiabilidad": 0.997
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12
+}
