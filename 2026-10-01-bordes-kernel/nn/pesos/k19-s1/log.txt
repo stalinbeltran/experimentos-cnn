@@ -1,0 +1,35 @@
+empiezo k19-s1 desde cero (370 parametros)
+/root/trabajo/experimentos-cnn/2026-10-01-bordes-kernel/nn/entrenar_local.py:158: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  "l1": l1.item(), "beta": float(red.log_beta.exp()), **met,
+  k19-s1 ep   1 val 0.8318 · izq 0.68px/94% · der 3.59px/71% · sup 0.75px/92% · inf 2.85px/61% · beta 5.5 · 4.28s
+  k19-s1 ep  10 val 0.5984 · izq 0.52px/98% · der 2.84px/82% · sup 0.48px/97% · inf 2.41px/67% · beta 12.9 · 4.17s
+  k19-s1 ep  20 val 0.5888 · izq 0.57px/98% · der 2.79px/83% · sup 0.58px/96% · inf 2.39px/66% · beta 15.5 · 4.03s
+  k19-s1 ep  30 val 0.5871 · izq 0.54px/99% · der 2.97px/81% · sup 0.49px/97% · inf 2.44px/67% · beta 16.8 · 4.01s
+  k19-s1 ep  40 val 0.5925 · izq 0.60px/98% · der 2.96px/82% · sup 0.50px/97% · inf 2.46px/65% · beta 17.6 · 4.04s
+  k19-s1 ep  50 val 0.5846 · izq 0.54px/99% · der 2.86px/83% · sup 0.55px/96% · inf 2.39px/65% · beta 19.5 · 3.88s
+  k19-s1 ep  60 val 0.5830 · izq 0.57px/98% · der 2.81px/84% · sup 0.54px/97% · inf 2.38px/67% · beta 21.3 · 3.84s
+  k19-s1 ep  70 val 0.5908 · izq 0.60px/98% · der 2.77px/85% · sup 0.61px/96% · inf 2.43px/65% · beta 22.9 · 3.84s
+  k19-s1 ep  80 val 0.5822 · izq 0.57px/99% · der 2.81px/83% · sup 0.52px/97% · inf 2.39px/67% · beta 25.4 · 3.91s
+  k19-s1 ep  90 val 0.5850 · izq 0.50px/99% · der 2.90px/82% · sup 0.51px/98% · inf 2.44px/66% · beta 26.6 · 3.86s
+  k19-s1 ep 100 val 0.5827 · izq 0.54px/98% · der 2.82px/83% · sup 0.54px/97% · inf 2.40px/67% · beta 27.7 · 3.99s
+  k19-s1 ep 110 val 0.5812 · izq 0.51px/98% · der 2.80px/84% · sup 0.53px/97% · inf 2.43px/65% · beta 29.3 · 4.06s
+  k19-s1 ep 120 val 0.5800 · izq 0.36px/99% · der 2.83px/84% · sup 0.53px/97% · inf 2.45px/65% · beta 30.0 · 4.1s
+  k19-s1 ep 130 val 0.5816 · izq 0.51px/98% · der 2.78px/84% · sup 0.61px/96% · inf 2.36px/68% · beta 27.4 · 4.09s
+  k19-s1 ep 140 val 0.5876 · izq 0.62px/98% · der 2.79px/84% · sup 0.61px/96% · inf 2.40px/66% · beta 27.1 · 4.02s
+  k19-s1 ep 150 val 0.5857 · izq 0.66px/98% · der 2.79px/84% · sup 0.54px/97% · inf 2.37px/67% · beta 25.9 · 3.99s
+  k19-s1 ep 160 val 0.5860 · izq 0.65px/98% · der 2.80px/84% · sup 0.53px/97% · inf 2.35px/67% · beta 25.5 · 4.09s
+  k19-s1 ep 170 val 0.5901 · izq 0.56px/98% · der 2.91px/83% · sup 0.56px/97% · inf 2.47px/64% · beta 30.3 · 4.16s
+  k19-s1 ep 180 val 0.5905 · izq 0.69px/98% · der 2.80px/84% · sup 0.55px/97% · inf 2.40px/66% · beta 30.4 · 4.3s
+  k19-s1 ep 190 val 0.5885 · izq 0.66px/98% · der 2.78px/84% · sup 0.61px/96% · inf 2.44px/66% · beta 31.4 · 4.2s
+  k19-s1 ep 200 val 0.5886 · izq 0.70px/98% · der 2.79px/83% · sup 0.56px/97% · inf 2.43px/65% · beta 36.7 · 4.25s
+  k19-s1 ep 210 val 0.5934 · izq 0.71px/98% · der 2.71px/85% · sup 0.70px/96% · inf 2.41px/67% · beta 34.5 · 4.27s
+  k19-s1 ep 220 val 0.5921 · izq 0.64px/98% · der 2.92px/82% · sup 0.59px/97% · inf 2.43px/66% · beta 31.3 · 4.19s
+  k19-s1 ep 230 val 0.5897 · izq 0.71px/98% · der 2.79px/83% · sup 0.59px/96% · inf 2.44px/66% · beta 32.5 · 4.17s
+  k19-s1 ep 240 val 0.5863 · izq 0.58px/98% · der 2.80px/84% · sup 0.54px/97% · inf 2.46px/65% · beta 34.3 · 4.26s
+  k19-s1 ep 250 val 0.5900 · izq 0.66px/98% · der 2.83px/83% · sup 0.56px/97% · inf 2.44px/65% · beta 30.8 · 4.26s
+  k19-s1 ep 260 val 0.5894 · izq 0.64px/98% · der 2.81px/84% · sup 0.60px/97% · inf 2.44px/66% · beta 30.4 · 4.26s
+  k19-s1 ep 270 val 0.5851 · izq 0.63px/98% · der 2.83px/83% · sup 0.53px/97% · inf 2.42px/67% · beta 34.7 · 4.27s
+  k19-s1 ep 280 val 0.5801 · izq 0.37px/99% · der 2.85px/84% · sup 0.52px/97% · inf 2.41px/67% · beta 28.8 · 4.24s
+  k19-s1 ep 290 val 0.5861 · izq 0.71px/98% · der 2.80px/84% · sup 0.56px/97% · inf 2.34px/67% · beta 32.8 · 4.3s
+  k19-s1 ep 300 val 0.5849 · izq 0.63px/98% · der 2.85px/83% · sup 0.53px/97% · inf 2.37px/67% · beta 30.4 · 4.11s

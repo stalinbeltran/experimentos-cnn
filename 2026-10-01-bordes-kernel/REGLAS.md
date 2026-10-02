@@ -41,8 +41,10 @@ Y por `k`: ¿cuáles aprende y cuáles no?
 - **Pesos:** `nn/pesos/kNN-sS/` → `best.pt` (mínima pérdida de `val`), `last.pt` (época 300),
   `metrics.jsonl` (una línea por época, sólo añadir). `best.pt` lleva `conv.weight` de forma
   `(1, 1, k, k)`: es lo que lee `banco-k/nn/importar_kernel.py --de bor-k`.
-  27 brazos × ~20 KB por `.pt` + ~60 KB de `metrics.jsonl` ≈ **2–3 MB** *(estimado)*, dentro
-  del tope del repo (≈5 MB por experimento).
+  **Medido el 2026-10-02: 4,2 MB los 27 brazos** (24 KB cada `.pt`, ~100 KB cada
+  `metrics.jsonl`) más 0,37 MB de `resultados/`: **4,6 MB**, dentro del tope del repo (≈5 MB por
+  experimento) pero cerca. Se había estimado 2–3 MB: el `metrics.jsonl` pesa el doble de lo
+  previsto, porque cada época lleva las métricas de los cuatro bordes.
 - **El libro de Vast:** `resultados/vast/fase2/` (un JSON por máquina, paso a paso, con coste)
   y lo que se trajo y no cabía en su sitio, en `resultados/vast/fase2/<k>/traido/`.
 - **Informe:** por borde, en `README.md`, contra el suelo trivial (§ Procesos).

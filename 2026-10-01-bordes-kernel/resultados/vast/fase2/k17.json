@@ -1,5 +1,5 @@
 {
- "estado": "corriendo",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
@@ -24,6 +24,14 @@
   {
    "paso": "corriendo",
    "hora": "2026-10-02T10:52:46+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T11:22:50+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T11:22:50+00:00"
   }
  ],
  "id": "k17",
@@ -48,5 +56,14 @@
  "intentos_clave": 1,
  "payload_mb": 3.79,
  "sha256": "3187a7d93f95afbd",
- "segundos_max": 10014
+ "segundos_max": 10014,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k17-s1",
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k17-s2",
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k17-s3"
+ ],
+ "apartado": [],
+ "minutos": 33.2,
+ "coste_usd": 0.0347
 }

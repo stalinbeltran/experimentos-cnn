@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T11:02:23+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T11:02:27+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-02T11:03:06+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-02T11:03:18+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-02T11:05:14+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-02T11:05:21+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-02T11:10:24+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T11:10:24+00:00"
   }
  ],
  "id": "k05",
@@ -23,5 +51,19 @@
   "fiabilidad": 0.995
  },
  "horas_max": 3.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53849055,
+ "intentos_clave": 1,
+ "payload_mb": 4.39,
+ "sha256": "8f2357717129d9d1",
+ "segundos_max": 10028,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k05-s1",
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k05-s2",
+  "experimentos-cnn/2026-10-01-bordes-kernel/nn/pesos/k05-s3"
+ ],
+ "apartado": [],
+ "minutos": 8.0,
+ "coste_usd": 0.0065
 }
