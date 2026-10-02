@@ -3,24 +3,24 @@
  "pasos": [
   {
    "paso": "pendiente",
-   "hora": "2026-10-02T10:55:58+00:00"
+   "hora": "2026-10-02T11:02:23+00:00"
   }
  ],
  "id": "k05",
  "etiqueta": "expc-bork-k05",
  "experimento": "bor-k",
  "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-kernel/nn/vast.json",
- "oferta": 48369192,
- "precio_hora": 0.05556,
+ "oferta": 48455480,
+ "precio_hora": 0.04889,
  "maquina": {
   "vcpu": 4.0,
-  "cpu": "Xeon E5-2687W v4",
-  "ram_gb": 10.4,
-  "ghz": 3.5,
+  "cpu": "Xeon E5-2660 v4",
+  "ram_gb": 9.0,
+  "ghz": 3.2,
   "gpu": "Titan Xp",
   "ubicacion": "South Korea, KR",
-  "host": 31459,
-  "fiabilidad": 0.9938
+  "host": 27747,
+  "fiabilidad": 0.995
  },
  "horas_max": 3.0,
  "tope_precio": 0.12
