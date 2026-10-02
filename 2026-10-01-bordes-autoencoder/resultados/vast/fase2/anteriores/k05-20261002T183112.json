@@ -1,0 +1,43 @@
+{
+ "estado": "destruida",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T18:25:31+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T18:25:50+00:00"
+  },
+  {
+   "paso": "fallo",
+   "hora": "2026-10-02T18:30:41+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-02T18:30:41+00:00"
+  }
+ ],
+ "id": "k05",
+ "etiqueta": "expc-borae-k05",
+ "experimento": "bor-ae",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-01-bordes-autoencoder/nn/vast.json",
+ "oferta": 53103417,
+ "precio_hora": 0.05141,
+ "maquina": {
+  "vcpu": 4.0,
+  "cpu": "Core i3-2120",
+  "ram_gb": 15.6,
+  "ghz": 3.3,
+  "gpu": "GTX 1660 S",
+  "ubicacion": "Oregon, US",
+  "host": 149453,
+  "fiabilidad": 0.9942
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.12,
+ "iid": 53899825,
+ "error": "RuntimeError: SSH no acepto la clave en ssh8.vast.ai:13650 tras 12 intentos (rc=255)",
+ "minutos": 4.8,
+ "coste_usd": 0.0042
+}

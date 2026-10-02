@@ -1,9 +1,13 @@
 {
- "estado": "pendiente",
+ "estado": "alquilada",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-02T18:25:31+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-02T18:25:52+00:00"
   }
  ],
  "id": "k19",
@@ -23,5 +27,6 @@
   "fiabilidad": 0.9983
  },
  "horas_max": 3.0,
- "tope_precio": 0.12
+ "tope_precio": 0.12,
+ "iid": 53899832
 }
