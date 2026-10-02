@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T01:48:58+00:00"
+  }
+ ],
+ "id": "s5",
+ "etiqueta": "expc-dimgen-s5",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 48453751,
+ "precio_hora": 0.05511,
+ "maquina": {
+  "vcpu": 18.0,
+  "cpu": "Xeon E5-2686 v4",
+  "ram_gb": 31.4,
+  "ghz": 3.0,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Nevada, US",
+  "host": 37055,
+  "fiabilidad": 0.9964
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25
+}

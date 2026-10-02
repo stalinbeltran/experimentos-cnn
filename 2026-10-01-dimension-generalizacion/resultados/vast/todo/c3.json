@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T01:48:58+00:00"
+  }
+ ],
+ "id": "c3",
+ "etiqueta": "expc-dimgen-c3",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 45640244,
+ "precio_hora": 0.05778,
+ "maquina": {
+  "vcpu": 14.0,
+  "cpu": "Xeon E5-2680 v4",
+  "ram_gb": 62.9,
+  "ghz": 3.3,
+  "gpu": "RTX 3060",
+  "ubicacion": "Wisconsin, US",
+  "host": 28438,
+  "fiabilidad": 0.9988
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25
+}

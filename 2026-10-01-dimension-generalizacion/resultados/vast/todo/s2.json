@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T01:48:58+00:00"
+  }
+ ],
+ "id": "s2",
+ "etiqueta": "expc-dimgen-s2",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 50850384,
+ "precio_hora": 0.05156,
+ "maquina": {
+  "vcpu": 12.0,
+  "cpu": "Xeon E5-2673 v3",
+  "ram_gb": 15.6,
+  "ghz": 3.1,
+  "gpu": "GTX 1070",
+  "ubicacion": "South Korea, KR",
+  "host": 148629,
+  "fiabilidad": 0.9885
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25
+}

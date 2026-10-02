@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-02T01:48:58+00:00"
+  }
+ ],
+ "id": "c1",
+ "etiqueta": "expc-dimgen-c1",
+ "experimento": "dim-gen",
+ "descriptor": "/home/deploy/ws/tema-2/experimentos-cnn/2026-10-01-dimension-generalizacion/nn/vast.json",
+ "oferta": 52856994,
+ "precio_hora": 0.05556,
+ "maquina": {
+  "vcpu": 12.0,
+  "cpu": "Core i7-5820K",
+  "ram_gb": 15.5,
+  "ghz": 3.6,
+  "gpu": "GTX TITAN X",
+  "ubicacion": "South Korea, KR",
+  "host": 140175,
+  "fiabilidad": 0.9864
+ },
+ "horas_max": 6.0,
+ "tope_precio": 0.25
+}
