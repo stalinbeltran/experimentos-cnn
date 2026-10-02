@@ -1,0 +1,15 @@
+{
+  "id": "ruido-nist",
+  "titulo": "Que tipo de RUIDO en el entrenamiento ayuda a generalizar a una CNN de digitos NIST 8x8 entrenada con el 10 % del dato: borrado, pixeles externos, rectas, curvas, recortes... con pesos iniciales identicos en todos los escenarios",
+  "pregunta": "Con 180 imagenes de entrenamiento y 1617 de validacion limpias, la misma CNN (3 capas 3x3 sin padding) y los mismos pesos iniciales y orden de lotes por semilla, ¿que tipo de ruido aplicado SOLO al entrenamiento sube la exactitud de validacion respecto de entrenar sin ruido, y cuanto?",
+  "creado": "2026-10-02",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-8px-r20261002",
+  "usa_fv": false,
+  "gasta": "no",
+  "reporte": null,
+  "plan": "SOLO PLAN (2026-10-02): ESPECIFICACION.md; criterio antes de mirar en instrucciones/02-criterio.md. Sin codigo todavia",
+  "gasta_por_que": "'no' hoy: no hay codigo. El commit que traiga nn/entrenar_local.py lo pasa a 'entrena-local' (dev; ~27 s por corrida medidos en dim-nist)",
+  "linaje": "dim-nist (mismo dataset y reparto); no hereda nada mas",
+  "pendiente": ["Confirmar los supuestos S1-S5 de ESPECIFICACION.md §0", "Escribir el codigo, ensayo de mecanismo, fase 1 (tipos)"]
+}
