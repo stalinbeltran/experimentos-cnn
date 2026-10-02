@@ -1,0 +1,5 @@
+# Los pesos NO se commitean aquí (regla del repo: ≈5 MB por experimento); son diminutos pero el
+# cierre los copia al VOLUMEN con todo lo demás, como en dim-gen (orden del dueño 2026-10-02).
+nn/pesos/**/*.pt
+nn/ensayo/
+__pycache__/

@@ -1,0 +1,12 @@
+empiezo w7-s1: W=7 n=4 1258 parametros, 444 epocas, lr 0.003, hilos 2
+  w7-s1 ep   1/444 perdida 2.3196 acc_train~0.100
+  w7-s1 ep  50/444 perdida 0.8145 acc_train~0.733 · acc_val 0.6778 brecha +0.0944
+  w7-s1 ep 100/444 perdida 0.5133 acc_train~0.867 · acc_val 0.7217 brecha +0.1561
+  w7-s1 ep 150/444 perdida 0.3587 acc_train~0.906 · acc_val 0.7452 brecha +0.1603
+  w7-s1 ep 200/444 perdida 0.2695 acc_train~0.933 · acc_val 0.7415 brecha +0.1918
+  w7-s1 ep 250/444 perdida 0.2140 acc_train~0.950 · acc_val 0.7384 brecha +0.2172
+  w7-s1 ep 300/444 perdida 0.1696 acc_train~0.961 · acc_val 0.7347 brecha +0.2264
+  w7-s1 ep 350/444 perdida 0.1345 acc_train~0.972 · acc_val 0.7347 brecha +0.2264
+  w7-s1 ep 400/444 perdida 0.1019 acc_train~0.978 · acc_val 0.7396 brecha +0.2381
+  w7-s1 ep 444/444 perdida 0.0864 acc_train~0.978 · acc_val 0.7335 brecha +0.2443
+listo w7-s1: acc_train 0.9778 acc_val 0.7335 brecha +0.2443 · ce_train 0.0835 ce_val 2.4783 en 20.9 s

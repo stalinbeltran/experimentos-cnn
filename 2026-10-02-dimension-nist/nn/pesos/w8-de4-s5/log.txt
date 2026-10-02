@@ -1,0 +1,12 @@
+empiezo w8-de4-s5: W=8 (control de4) n=4 1258 parametros, 444 epocas, lr 0.003, hilos 2
+  w8-de4-s5 ep   1/444 perdida 2.3186 acc_train~0.100
+  w8-de4-s5 ep  50/444 perdida 0.8892 acc_train~0.706 · acc_val 0.5931 brecha +0.1291
+  w8-de4-s5 ep 100/444 perdida 0.6340 acc_train~0.783 · acc_val 0.6630 brecha +0.1259
+  w8-de4-s5 ep 150/444 perdida 0.5216 acc_train~0.817 · acc_val 0.6883 brecha +0.1617
+  w8-de4-s5 ep 200/444 perdida 0.4439 acc_train~0.861 · acc_val 0.7001 brecha +0.1444
+  w8-de4-s5 ep 250/444 perdida 0.3909 acc_train~0.878 · acc_val 0.7130 brecha +0.1647
+  w8-de4-s5 ep 300/444 perdida 0.3728 acc_train~0.878 · acc_val 0.7174 brecha +0.1660
+  w8-de4-s5 ep 350/444 perdida 0.3235 acc_train~0.900 · acc_val 0.7341 brecha +0.1826
+  w8-de4-s5 ep 400/444 perdida 0.2558 acc_train~0.933 · acc_val 0.7415 brecha +0.1918
+  w8-de4-s5 ep 444/444 perdida 0.2372 acc_train~0.933 · acc_val 0.7366 brecha +0.1857
+listo w8-de4-s5: acc_train 0.9222 acc_val 0.7365 brecha +0.1857 · ce_train 0.2332 ce_val 1.1714 en 17.8 s

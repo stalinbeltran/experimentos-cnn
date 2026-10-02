@@ -1,0 +1,34 @@
+{
+ "aprendio": {
+  "w8": true,
+  "w7": true,
+  "w6": true,
+  "w5": true,
+  "w4": true
+ },
+ "clasificacion": {
+  "w8": "W*",
+  "w7": "(b) peor generalizacion — (b) o (c): lo separa el control, ver abajo",
+  "w6": "ninguna: dentro del umbral de W*",
+  "w5": "ninguna: dentro del umbral de W*",
+  "w4": "(a) menos informacion: train tambien cae, la brecha no crece"
+ },
+ "avisos": [],
+ "piso": 0.1,
+ "W_estrella": "w8",
+ "suficientes": [
+  "w8",
+  "w6",
+  "w5"
+ ],
+ "W_min_suficiente": "w5",
+ "estorba": false,
+ "brecha_crece": false,
+ "atascadas": {},
+ "control": {
+  "lectura": "≈ w4: los parametros NO explican w8 − w4; es INFORMACION",
+  "fraccion": 0.03064899464881957,
+  "brecha_ce_ctl_vs_w4": 0.39376400000000006,
+  "umbral_brecha_ce": 0.27610167431582155
+ }
+}

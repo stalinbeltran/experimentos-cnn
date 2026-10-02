@@ -1,0 +1,12 @@
+empiezo w5-s1: W=5 n=3 754 parametros, 444 epocas, lr 0.003, hilos 2
+  w5-s1 ep   1/444 perdida 2.3129 acc_train~0.161
+  w5-s1 ep  50/444 perdida 0.3065 acc_train~0.911 · acc_val 0.8250 brecha +0.1028
+  w5-s1 ep 100/444 perdida 0.0983 acc_train~0.983 · acc_val 0.8596 brecha +0.1404
+  w5-s1 ep 150/444 perdida 0.0375 acc_train~1.000 · acc_val 0.8677 brecha +0.1323
+  w5-s1 ep 200/444 perdida 0.0181 acc_train~1.000 · acc_val 0.8708 brecha +0.1293
+  w5-s1 ep 250/444 perdida 0.0098 acc_train~1.000 · acc_val 0.8708 brecha +0.1293
+  w5-s1 ep 300/444 perdida 0.0059 acc_train~1.000 · acc_val 0.8720 brecha +0.1280
+  w5-s1 ep 350/444 perdida 0.0037 acc_train~1.000 · acc_val 0.8720 brecha +0.1280
+  w5-s1 ep 400/444 perdida 0.0024 acc_train~1.000 · acc_val 0.8689 brecha +0.1311
+  w5-s1 ep 444/444 perdida 0.0017 acc_train~1.000 · acc_val 0.8738 brecha +0.1262
+listo w5-s1: acc_train 1.0000 acc_val 0.8738 brecha +0.1262 · ce_train 0.0017 ce_val 0.7976 en 18.2 s
