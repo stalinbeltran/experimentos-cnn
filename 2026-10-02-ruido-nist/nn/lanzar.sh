@@ -4,6 +4,7 @@
 #
 #   nn/lanzar.sh fase1                     limpio + los 9 tipos al nivel medio + oblicua@0.6-r2, × 3 semillas (33)
 #   nn/lanzar.sh fase2 <tipo> [tipo ...]   los 5 niveles de cada tipo × 3 semillas (el medio ya hecho se salta)
+#   nn/lanzar.sh fase3                     EN LÍNEA: el mejor nivel de cada tipo que ayudó (criterio-aplicado.json), con -linea, × 3
 #   nn/lanzar.sh corridas <id> [id ...]    corridas sueltas, p. ej. `horizontal@0.6-s2`
 #   nn/lanzar.sh --estado                  lee el DISCO: unidad, NRestarts, resúmenes presentes
 #   SECO=1 nn/lanzar.sh fase1              imprime la unidad y la orden SIN lanzar (va ANTES del guardia)
@@ -40,6 +41,14 @@ for t in sys.argv[1:]:
     for n in ruido.NIVELES[t]: print(ruido.escenario(t, n))" "$@"
 }
 
+escenarios_fase3() {
+    "$PY" -c "
+import json, sys; sys.path.insert(0, '$AQUI'); import ruido
+c = json.load(open('$EXP/resultados/criterio-aplicado.json'))['criterio']
+for tipo, pt in c.get('por_tipo', {}).items():
+    if pt['mejor_veredicto'] == 'ayuda': print(pt['mejor'] + ruido.SUFIJO_LINEA)"
+}
+
 con_semillas() { for e in $(cat); do for s in $SEMILLAS; do echo "$e-s$s"; done; done; }
 
 lanzar() {
@@ -69,6 +78,11 @@ case "$MODO" in
             case " $TIPOS " in *" $t "*) ;; *) echo "✗ tipo desconocido: $t (los tipos: $TIPOS)"; exit 2 ;; esac
         done
         lanzar $(escenarios_fase2 "$@" | con_semillas) ;;
+    fase3)
+        [ "$#" -eq 0 ] || { echo "✗ fase3 no lleva argumentos: sale de resultados/criterio-aplicado.json"; exit 2; }
+        IDS=$(escenarios_fase3 | con_semillas)
+        [ -n "$IDS" ] || { echo "✗ fase3: ningún tipo con un nivel que ayude en criterio-aplicado.json"; exit 2; }
+        lanzar $IDS ;;
     corridas)
         [ "$#" -gt 0 ] || { echo "✗ corridas necesita al menos un <escenario>-s<semilla>"; exit 2; }
         for id in "$@"; do
@@ -106,5 +120,5 @@ case "$MODO" in
         for id in $(escenarios_fase1 | con_semillas); do [ -f "$EXP/nn/pesos/$id/summary.json" ] || echo "  falta (fase 1): $id"; done
         [ -f "$EXP/resultados/RESULTADOS.md" ] && grep -E '^\- \*\*' "$EXP/resultados/RESULTADOS.md" | head -6
         exit 0 ;;
-    *) echo "uso: $0 fase1 | fase2 <tipo...> | corridas <id...> | --estado   (SECO=1 para ver sin lanzar)"; exit 2 ;;
+    *) echo "uso: $0 fase1 | fase2 <tipo...> | fase3 | corridas <id...> | --estado   (SECO=1 para ver sin lanzar)"; exit 2 ;;
 esac

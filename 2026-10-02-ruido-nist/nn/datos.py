@@ -83,10 +83,22 @@ def escenario(nombre: str) -> dict:
     """El dato de UN escenario: x_train (360, 1, 8, 8) = originales + copia; x_val limpio; huellas.
     `limpio`: la copia es la original (las 180 duplicadas)."""
     tipo, nivel, r = ruido.parsear(nombre)
+    linea = ruido.es_linea(nombre)
     d = limpio()
     orig = fraccion(d["cuentas_train"])
+    regenerar = None
     if tipo == ruido.LIMPIO:
         cop, s_ruido = orig.copy(), None
+    elif linea:
+        # un generador que vive toda la corrida: la época 1 es la copia fija (misma semilla, primer
+        # sorteo) y cada llamada a `regenerar` saca la realización siguiente, idéntica entre semillas de pesos
+        s_ruido = ruido.semilla(tipo, nivel, r)
+        rng = np.random.default_rng(s_ruido)
+        cuentas = d["cuentas_train"]
+        cop = ruido.aplicar(tipo, nivel, cuentas, rng)[:, None]
+
+        def regenerar() -> np.ndarray:
+            return ruido.aplicar(tipo, nivel, cuentas, rng)[:, None]
     else:
         c, s_ruido = ruido.copia(tipo, nivel, d["cuentas_train"], r)
         cop = c[:, None]
@@ -96,6 +108,7 @@ def escenario(nombre: str) -> dict:
     assert x_train.shape == (2 * N_TRAIN, 1, 8, 8) and x_val.shape == (N_VAL, 1, 8, 8)
     assert x_train.dtype == np.float32 and float(x_train.min()) >= 0 and float(x_train.max()) <= 1
     return {"escenario": nombre, "tipo": tipo, "nivel": nivel, "realizacion": r, "semilla_ruido": s_ruido,
+            "linea": linea, "regenerar": regenerar,
             "dataset": DATASET,
             "x_train": x_train, "y_train": y_train,
             "x_train_limpio": orig, "y_train_limpio": d["y_train"],

@@ -38,7 +38,10 @@ def main() -> int:
     prueba("parsear('oblicua@0.6-r2') y el nombre canónico ida y vuelta",
            ruido.parsear("oblicua@0.6-r2") == ("oblicua", 0.6, 2) and ruido.escenario("oblicua", 0.6, 2) == "oblicua@0.6-r2"
            and ruido.escenario("limpio", None) == "limpio" and ruido.parsear("limpio") == ("limpio", None, 1))
-    for malo in ("horizontal", "horizontal@0.7", "limpio@0.6", "limpio-r2", "nada@0.6", "oblicua@0.6-r0", "Horizontal@0.6"):
+    prueba("-linea: parsear, es_linea, fijo_de y el nombre canónico",
+           ruido.parsear("recorte@0.6-linea") == ("recorte", 0.6, 1) and ruido.es_linea("recorte@0.6-linea") and not ruido.es_linea("recorte@0.6")
+           and ruido.fijo_de("recorte@0.6-linea") == "recorte@0.6" and ruido.escenario("recorte", 0.6, 1, linea=True) == "recorte@0.6-linea")
+    for malo in ("horizontal", "horizontal@0.7", "limpio-linea", "recorte@0.6-linea-r2", "limpio@0.6", "limpio-r2", "nada@0.6", "oblicua@0.6-r0", "Horizontal@0.6"):
         try:
             ruido.parsear(malo); bien = False
         except ValueError:
@@ -102,6 +105,13 @@ def main() -> int:
            all(datos.escenario(ruido.escenario(t, ruido.NIVELES[t][4]))["huella_x_val"] == datos.HUELLA_X_VAL for t in ruido.TIPOS[:3]))
     e2 = datos.escenario("curva@0.6-r2")
     prueba("la realización 2 es OTRA copia del mismo escenario", e2["huella_copia"] != e["huella_copia"] and e2["semilla_ruido"] == e["semilla_ruido"] + 5000)
+    el = datos.escenario("recorte@0.6-linea")
+    c1, c2, c3 = el["regenerar"](), el["regenerar"](), datos.escenario("recorte@0.6-linea")["regenerar"]()
+    prueba("en línea: época 1 == copia fija; cada regenerar da otra copia; determinista entre llamadas",
+           el["huella_copia"] == e["huella_copia"] if False else el["huella_copia"] == datos.escenario("recorte@0.6")["huella_copia"]
+           and not np.array_equal(c1, el["x_train"][180:]) and not np.array_equal(c1, c2) and np.array_equal(c1, c3)
+           and c1.shape == (180, 1, 8, 8) and c1.dtype == np.float32)
+    prueba("escenario fijo no trae regenerar", e["regenerar"] is None and not e["linea"])
     prueba("piso = 1/10", datos.piso() == 0.1)
 
     print("modelo")

@@ -57,6 +57,9 @@ INDICE_MEDIO = 2
 LIMPIO = "limpio"
 SEMILLA_BASE = 1000
 SALTO_REALIZACION = 5000   # la segunda copia de un escenario: semilla + 5000·(r − 1)
+# Fase 3: `<tipo>@<nivel>-linea` = la MISMA semilla de ruido, pero una realización NUEVA por época
+# (la de la época 1 es exactamente la copia fija; las siguientes salen del mismo generador).
+SUFIJO_LINEA = "-linea"
 # Tamaño del dibujo (a 32 px): rectas de 1–2 px, 1–2 trazos; recorte de 8–16 px de lado.
 GROSOR = (1, 2)
 TRAZOS = (1, 2)
@@ -68,15 +71,29 @@ def nombre_nivel(nivel: float) -> str:
     return f"{nivel:g}"
 
 
-def escenario(tipo: str, nivel: float, realizacion: int = 1) -> str:
-    """El nombre canónico: `horizontal@0.6`, `oblicua@0.6-r2`, `limpio`."""
+def escenario(tipo: str, nivel: float, realizacion: int = 1, linea: bool = False) -> str:
+    """El nombre canónico: `horizontal@0.6`, `oblicua@0.6-r2`, `recorte@0.6-linea`, `limpio`."""
     if tipo == LIMPIO:
         return LIMPIO
-    return f"{tipo}@{nombre_nivel(nivel)}" + (f"-r{realizacion}" if realizacion != 1 else "")
+    return f"{tipo}@{nombre_nivel(nivel)}" + (f"-r{realizacion}" if realizacion != 1 else "") + (SUFIJO_LINEA if linea else "")
+
+
+def es_linea(nombre: str) -> bool:
+    return nombre.endswith(SUFIJO_LINEA)
+
+
+def fijo_de(nombre: str) -> str:
+    """El gemelo de copia fija de un escenario en línea: 'recorte@0.6-linea' -> 'recorte@0.6'."""
+    return nombre[:-len(SUFIJO_LINEA)] if es_linea(nombre) else nombre
 
 
 def parsear(nombre: str) -> tuple[str, float | None, int]:
-    """'oblicua@0.6-r2' -> ('oblicua', 0.6, 2). Se niega con un tipo o nivel que no esté en la tabla."""
+    """'oblicua@0.6-r2' -> ('oblicua', 0.6, 2). Acepta el sufijo -linea (se pregunta aparte con es_linea).
+    Se niega con un tipo o nivel que no esté en la tabla."""
+    if es_linea(nombre):
+        if fijo_de(nombre) == LIMPIO:
+            raise ValueError("'limpio' no tiene versión en línea")
+        nombre = fijo_de(nombre)
     m = _ESC.match(nombre)
     if not m:
         raise ValueError(f"escenario '{nombre}': la forma es <tipo>@<nivel>[-r<n>] o 'limpio'")

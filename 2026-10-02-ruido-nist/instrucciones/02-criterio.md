@@ -65,3 +65,24 @@ que algún ruido **regularice** (suba la CE de train y la exactitud de val) y qu
 `recorte` son los candidatos naturales a ayudar, `sal-pimienta` y `externos` a perjudicar. Es una
 expectativa, no un criterio: lo que decide es la regla de arriba, y **«ninguno ayuda» es un
 resultado**.
+
+## Fase 3 — ruido EN LÍNEA: enmienda del 2026-10-03, escrita antes de lanzarla
+
+Lo pendiente de S2 («una realización nueva por época, para más variedad»), sobre lo que la fase 2
+dejó: **el mejor nivel de cada tipo cuyo mejor nivel fue «ayuda»** (`recorte@0.6`, `curva@0.8`,
+`gaussiano@0.2`, `vertical@1`, `oblicua@1`), con el sufijo `-linea`, × 3 semillas = 15 corridas.
+
+- **Qué es «en línea»**: la misma semilla de ruido que la copia fija; la copia de la **época 1 es
+  exactamente la fija** (mismo generador, primer sorteo) y cada época siguiente saca otra del
+  mismo generador — idéntica entre las tres semillas de pesos, como en las fases 1 y 2. Todo lo
+  demás (pesos iniciales, orden de lotes, pasos, `lr`) igual. Tiene test: 1 época en línea ==
+  1 época fija bit a bit; nivel 0 en línea == `limpio` bit a bit.
+- **Dos medidas, pareadas por semilla**: Δ contra `limpio` (el mismo veredicto de siempre) y
+  **Δ contra su copia fija**, con umbral `max(2·SE, δ)`: «en línea mejor», «peor» o
+  «indistinguible de la fija».
+- **Lo que se espera, escrito antes**: para `recorte`, `curva` y `gaussiano` —los que quitan o
+  perturban más— la variedad debería sumar (en línea > fija); para `vertical@1` y `oblicua@1`,
+  cuyo efecto roza δ, lo más probable es «indistinguible». Si en línea sale **peor** en todos,
+  la lectura es que 222 copias distintas sin repetir ninguna no dejan ajustar la copia, y eso es
+  un resultado.
+- **No decide** ganador entre tipos (eso ya lo hizo la fase 2) ni combina ruidos.
