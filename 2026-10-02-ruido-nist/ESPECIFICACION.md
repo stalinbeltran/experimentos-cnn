@@ -116,6 +116,13 @@ corridas. `nn/lanzar.sh fase3` las saca de `criterio-aplicado.json`. Se compara 
 **contra su copia fija**, pareado. ~45 s por corrida (los trazos cuestan ~90 ms por copia de 180,
 medido).
 
+**Fase 4 — grosor y número de trazos, decidida el 2026-10-03 tras la fase 3**: el eje que α = 1
+deja abierto. Dos variantes del dibujo, misma semilla, en línea: `-grueso` (3–4 px a 32, antes
+1–2) y `-doble` (3–4 trazos, antes 1–2), sobre los trazos con «ayuda» en línea (`vertical@1`,
+`oblicua@1`, `curva@0.8`), × 3 = 18 corridas. `nn/lanzar.sh fase4`. Se compara contra `limpio` y
+contra su base en línea. Sólo valen para rectas y curvas (`TIPOS_TRAZO`); `parsear` se niega con
+el resto.
+
 *(Lo que el plan llamaba fase 3 —subir a 5 semillas los tipos dudosos— no se hizo: pediría
 `init-s4.pt` e `init-s5.pt` con `--inicializar` y ampliar `SEMILLAS` en `nn/modelo.py`.)*
 

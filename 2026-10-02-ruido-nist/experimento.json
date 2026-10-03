@@ -9,7 +9,7 @@
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
   "reporte": "estudios-redes-neuronales/reportes/estudios/2026/10-octubre/2026-10-03-ruido-nist-ruido-de-entrenamiento.md",
-  "plan": "Corrido el 2026-10-03 en el dev: fase 1 (33 corridas), fase 2 (84) y fase 3 en linea (15), 0 $, 0 fallos. README.md con el veredicto; reporte #28 en el central",
+  "plan": "Corrido el 2026-10-03 en el dev: fase 1 (33 corridas), fase 2 (84), fase 3 en linea (15) y fase 4 grosor/trazos (18); 150 corridas, 0 $, 0 fallos. README.md con el veredicto; reporte #28 en el central",
   "gasta_por_que": "Entrena en el dev: 33 corridas de 1.338 parametros sobre 360 imagenes de 8 px, ~25 s cada una (18-20 s medidos en el ensayo sin evaluaciones). No alquila. El freno lo ve porque cada corrida es un proceso nn/entrenar_local.py",
   "linaje": "dim-nist (mismo dataset y reparto); no hereda nada mas",
   "escenarios_previstos_fase1": [
@@ -31,10 +31,9 @@
     3
   ],
   "pendiente": [
-    "Fusionar la rama tema-2 en main (experimentos-cnn, estudios-redes-neuronales)",
-    "Posible continuacion, no decidida: combinar gaussiano en linea con recorte; y el grosor/numero de trazos para vertical y oblicua (alfa=1 deja ese eje abierto)"
+    "Nada dentro de este experimento. Si se quiere seguir: combinar gaussiano en linea con recorte, que el criterio dejo fuera («seria otro estudio») y va en un experimento NUEVO"
   ],
   "decisiones_del_dueno": "2026-10-02: S2 = copia ruidosa fija (anadida a las 180 originales); S1, S3-S5 como se propusieron; semillas: pesos 1,2,3 · lotes 101-103 · ruido 1000+10t+i",
   "cerrado": "2026-10-03",
-  "resultado": "Ningun ruido perjudica a ningun nivel. Con copia fija, 5 de 9 tipos tienen un nivel que ayuda: recorte@0.6 el mejor (+0,029 sobre 0,870), curva@0.8 +0,021, gaussiano@0.2 +0,017, vertical@1 +0,014, oblicua@1 +0,012. Con ruido EN LINEA (una copia nueva por epoca) los cinco ayudan mas o igual: gaussiano@0.2-linea es el mejor de todo el estudio (0,912, +0,042 sobre limpio y +0,025 sobre su copia fija), vertical@1-linea gana a su fija (+0,011); recorte, curva y oblicua indistinguibles de la suya. Casi todos bajan la CE de val (hasta -0,68 en linea) sin que el train se mueva (saturado a 1,0). Efectos de 1-4 puntos con 3 semillas; 43 comparaciones sin correccion"
+  "resultado": "Ningun ruido perjudica a ningun nivel. Con copia fija, 5 de 9 tipos tienen un nivel que ayuda: recorte@0.6 el mejor (+0,029 sobre 0,870), curva@0.8 +0,021, gaussiano@0.2 +0,017, vertical@1 +0,014, oblicua@1 +0,012. Con ruido EN LINEA (una copia nueva por epoca) los cinco ayudan mas o igual: gaussiano@0.2-linea es el mejor de todo el estudio (0,912, +0,042 sobre limpio y +0,025 sobre su copia fija), vertical@1-linea gana a su fija (+0,011); recorte, curva y oblicua indistinguibles de la suya. Casi todos bajan la CE de val (hasta -0,68 en linea) sin que el train se mueva (saturado a 1,0). Grosor y numero de trazos (fase 4, en linea): ninguna variante se distingue de su base, ni mejor ni peor; el eje de los trazos queda acotado por el ruido del instrumento. Efectos de 1-4 puntos con 3 semillas; 49 comparaciones sin correccion"
 }

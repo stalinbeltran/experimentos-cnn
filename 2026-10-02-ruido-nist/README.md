@@ -1,11 +1,13 @@
 # `ruido-nist` — ¿qué ruido de entrenamiento ayuda a generalizar en dígitos de 8×8?
 
-**Corrido el 2026-10-03 en el dev (0 $), CERRADO en sus tres fases.** Fase 1 (00:59 → 01:18 UTC,
+**Corrido el 2026-10-03 en el dev (0 $), CERRADO en sus cuatro fases.** Fase 1 (00:59 → 01:18 UTC,
 33 corridas): `limpio` + 9 tipos a su nivel medio + `oblicua@0.6-r2`, × 3 semillas. Fase 2
 (03:56 → 04:29 UTC, 84 corridas): los 5 niveles de los 7 tipos que pasaron, × 3 semillas. Fase 3
 (05:17 → 05:28 UTC, 15 corridas): el mejor nivel de los 5 tipos que ayudaron, con **ruido en
-línea** (una copia nueva por época), × 3. **132 corridas** en total, una unidad de systemd por
-fase (`expc-ruidonist`, `Result=success`, `NRestarts=0`, 0 fallos). 180 imágenes para entrenar (+180 copias), 1617 limpias para validar,
+línea** (una copia nueva por época), × 3. Fase 4 (06:03 → 06:17 UTC, 18 corridas): grosor
+(`-grueso`) y número de trazos (`-doble`) de los 3 trazos que ayudaban en línea, × 3. **150
+corridas** en total, una unidad de systemd por fase (`expc-ruidonist`, `Result=success`,
+`NRestarts=0`, 0 fallos). 180 imágenes para entrenar (+180 copias), 1617 limpias para validar,
 pesos iniciales idénticos por semilla. Criterio escrito antes
 ([`instrucciones/02-criterio.md`](instrucciones/02-criterio.md)), aplicado tal cual por
 `nn/informe.py` ([`resultados/RESULTADOS.md`](resultados/RESULTADOS.md)).
@@ -27,6 +29,12 @@ pesos iniciales idénticos por semilla. Criterio escrito antes
 > copia fija)**; `vertical@1-linea` también gana a su fija (+0,011); `recorte`, `curva` y
 > `oblicua` quedan indistinguibles de la suya. La CE de val baja otros 0,16–0,39 nats respecto de
 > la copia fija en los cinco.
+>
+> **Grosor y número de trazos (fase 4) no se distinguen de su base**: ninguna de las seis
+> variantes es mejor ni peor que el mismo trazo en línea sin variante. Dos quedan entre los
+> mejores absolutos del estudio —`curva@0.8-grueso-linea` 0,910 (+0,039) y `oblicua@1-doble-linea`
+> 0,904 (+0,034)— pero con 3 semillas el Δ contra su base (+0,017, +0,015) no llega al umbral. El
+> eje de los trazos **se acota por el lado del ruido**: a partir de α = 1, más tinta no se distingue.
 
 ## Fase 1 — tipos, al nivel medio
 
@@ -75,6 +83,23 @@ ni en `curva`: una copia fija de un cutout o de un arco ya da lo que da; el gaus
 cambia entero cada época y eso es lo que la red aprovecha. En línea **ninguno empeora**, así que
 la lectura «222 copias sin repetir no dejan ajustar» no ocurre.
 
+## Fase 4 — grosor (`-grueso`, 3–4 px) y número de trazos (`-doble`, 3–4), en línea, contra su base
+
+| escenario | acc val | Δ vs `limpio` ± SE | **Δ vs base** ± SE | umbral | Δ CE val vs base | lectura |
+|---|---|---|---|---|---|---|
+| `curva@0.8-grueso-linea` | 0,910 ± 0,019 | +0,039\* ± 0,008 | +0,017 ± 0,012 | 0,023 | −0,14 | indistinguible |
+| `curva@0.8-doble-linea` | 0,880 ± 0,048 | +0,009 ± 0,010 | −0,014 ± 0,011 | 0,021 | +0,02 | indistinguible |
+| `oblicua@1-doble-linea` | 0,904 ± 0,016 | +0,034\* ± 0,010 | +0,015 ± 0,009 | 0,019 | −0,13 | indistinguible |
+| `oblicua@1-grueso-linea` | 0,899 ± 0,044 | +0,029\* ± 0,007 | +0,010 ± 0,013 | 0,026 | −0,20 | indistinguible |
+| `vertical@1-doble-linea` | 0,899 ± 0,019 | +0,029\* ± 0,007 | +0,004 ± 0,012 | 0,025 | −0,08 | indistinguible |
+| `vertical@1-grueso-linea` | 0,895 ± 0,013 | +0,025 ± 0,021 | +0,000 ± 0,026 | 0,052 | −0,09 | indistinguible |
+
+Lo esperado antes de mirar era que las variantes sumaran en `vertical` y `oblicua` y no en
+`curva`. Salió **nada distinguible en ninguno**, y en la dirección contraria a la esperada en
+`curva` (`-grueso` es la que más sube en absoluto, `-doble` la única que baja). Con 3 semillas el
+SE de estas comparaciones (0,009–0,026) es del tamaño de los efectos: el eje queda **acotado por
+el ruido del instrumento**, no por una caída.
+
 De 38 escenarios con copia fija, 7 dan «ayuda» y 0 «perjudica»; el peor Δ de todo el estudio es −0,010
 (`horizontal@0.6`). Exactitud de train (180 limpias) = 1,000 y CE de train ≈ 0,001 en **todos**:
 el mecanismo (regularización contra facilitación) **no se pudo leer** ni en CE.
@@ -102,15 +127,15 @@ sus semillas); el ruido, para mirarlo: [`resultados/muestras-ruido.png`](resulta
 ## Lo que NO dice
 
 - Nada sobre **combinar** ruidos (p. ej. gaussiano en línea + recorte), que con lo medido es la
-  continuación natural; ni sobre el **grosor o número de trazos**, que es el eje que α = 1 deja
-  abierto para `vertical` y `oblicua`.
+  continuación natural. El criterio lo dejó fuera desde el día 2 («sería otro estudio»): va en un
+  experimento nuevo, no aquí.
 - Nada sobre otras redes ni otros datos; con 13 escritores compartidos entre train y val, es
   generalizar a dígitos nuevos de los mismos escritores.
 
 ## Coste, reloj y dónde está
 
-- **0 $**, 19 + 33 + 11 min de reloj (20–24 s por corrida fija; 24–43 s en línea, porque los trazos
-  cuestan ~90 ms por copia de 180 y hay 222; 2 hilos), tres unidades de systemd, 0 fallos.
+- **0 $**, 19 + 33 + 11 + 14 min de reloj (20–24 s por corrida fija; 24–43 s en línea, porque los trazos
+  cuestan ~90 ms por copia de 180 y hay 222; 2 hilos), cuatro unidades de systemd, 0 fallos.
 - Métricas, resúmenes, logs, informe y figuras: aquí. **Pesos (`last.pt`), `init/` y todo lo
   demás**: en el almacén, `foveal-vision-data/experimentos-cnn-resultados/ruido-nist/`.
 - Los avisos a Telegram de los dos cierres **no salieron** (`Falta BOT_TOKEN`: las unidades se
@@ -125,5 +150,6 @@ python nn/probar.py && python nn/entrenar_local.py --comprobar && sh nn/probar_l
 nn/lanzar.sh fase1                 # 33 corridas; las que ya tienen summary.json se saltan
 nn/lanzar.sh fase2 <tipos>         # los de resultados/criterio-aplicado.json → fase2
 nn/lanzar.sh fase3                 # en línea: el mejor nivel de cada tipo con «ayuda»
+nn/lanzar.sh fase4                 # grosor / número de trazos de los trazos con «ayuda» en línea
 nn/lanzar.sh --estado
 ```
