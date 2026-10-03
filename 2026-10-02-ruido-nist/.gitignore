@@ -1,0 +1,6 @@
+# Los pesos de las corridas NO se commitean aquí (regla del repo: ≈5 MB por experimento); el cierre
+# de nn/lanzar.sh los copia al ALMACÉN con todo lo demás. Los pesos INICIALES (nn/init/*.pt, 9 KB
+# cada uno) SÍ se commitean: son el contrato «pesos idénticos en todos los escenarios».
+nn/pesos/**/*.pt
+nn/ensayo/
+__pycache__/

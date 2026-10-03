@@ -1,0 +1,26 @@
+{
+  "id": "ruido-nist",
+  "titulo": "Que tipo de RUIDO en el entrenamiento ayuda a generalizar a una CNN de digitos NIST 8x8 entrenada con el 10 % del dato: borrado, pixeles externos, rectas, curvas, recortes... con pesos iniciales identicos en todos los escenarios",
+  "pregunta": "Con 180 imagenes de entrenamiento y 1617 de validacion limpias, la misma CNN (3 capas 3x3 sin padding) y los mismos pesos iniciales y orden de lotes por semilla, ¿que tipo de ruido aplicado SOLO al entrenamiento sube la exactitud de validacion respecto de entrenar sin ruido, y cuanto?",
+  "creado": "2026-10-02",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-8px-r20261002",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "PREPARADO y NO lanzado (2026-10-02): codigo con pruebas en nn/, pesos iniciales compartidos en nn/init/, lr congelado (3e-3) en un ensayo de solo train; ESPECIFICACION.md; criterio antes de mirar en instrucciones/02-criterio.md. Ninguna corrida del estudio ha entrenado. Se lanza con nn/lanzar.sh fase1 cuando el dueno lo diga",
+  "gasta_por_que": "Entrena en el dev: 33 corridas de 1.338 parametros sobre 360 imagenes de 8 px, ~25 s cada una (18-20 s medidos en el ensayo sin evaluaciones). No alquila. El freno lo ve porque cada corrida es un proceso nn/entrenar_local.py",
+  "linaje": "dim-nist (mismo dataset y reparto); no hereda nada mas",
+  "escenarios_previstos_fase1": [
+    "limpio", "borrado@0.2", "externos@0.05", "horizontal@0.6", "vertical@0.6", "oblicua@0.6",
+    "curva@0.6", "recorte@0.6", "gaussiano@0.1", "sal-pimienta@0.1", "oblicua@0.6-r2"
+  ],
+  "semillas_previstas": [1, 2, 3],
+  "pendiente": [
+    "Que el dueno diga 'lanza': nn/lanzar.sh fase1 (33 corridas, ~14 min, 0 $)",
+    "Fase 2 (intensidades) con los tipos que deje criterio-aplicado.json -> fase2",
+    "Despues: ruido en linea (una realizacion por epoca) para mas variedad — pedido del dueno 2026-10-02; obligatorio si la fase 1 dice que la realizacion pesa"
+  ],
+  "decisiones_del_dueno": "2026-10-02: S2 = copia ruidosa fija (anadida a las 180 originales); S1, S3-S5 como se propusieron; semillas: pesos 1,2,3 · lotes 101-103 · ruido 1000+10t+i"
+}
