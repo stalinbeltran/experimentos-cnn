@@ -32,3 +32,36 @@ se dice: con 180 imágenes y esta red, ningún ruido de esta lista mejora la gen
 - Ganador global entre fases: la fase 2 decide la intensidad dentro de cada tipo; no se combinan
   ruidos (sería otro estudio).
 - Nada sobre otros datos ni otras redes.
+
+## Enmiendas del 2026-10-02, al implementar y ANTES de que ninguna corrida entrenara
+
+Lo único corrido hasta aquí es el ensayo de mecanismo (sólo pérdida de train) y pruebas de 2
+épocas en directorios temporales. Nada de val se ha mirado.
+
+1. **El mecanismo se lee en entropía cruzada de train, no en exactitud.** El ensayo dio exactitud
+   de train **1,000** con el `lr` congelado: saturada, «baja la exactitud de train» no puede salir
+   nunca. Con las 180 de train limpias: `Δce_train > umbral_ce` (ajusta **peor** el train) →
+   **regularización**; `Δce_train < −umbral_ce` → **facilitación**; si no, «train sin cambio
+   distinguible». `umbral_ce = max(2·SE, δ_ce)` con **`δ_ce = 0,05` nats**. La exactitud de train
+   se reporta igual.
+2. **Los niveles son cinco por tipo y el medio es el índice 2** (`nn/ruido.py`); el de
+   `sal-pimienta`, que no existía, es **0,1**. Los medios del resto no cambian.
+3. **El tipo repetido con otra copia es `oblicua@0.6-r2`.** Su regla: `Δ_r = acc_val(r2, s) −
+   acc_val(r1, s)` pareado por semilla; si `|media(Δ_r)| > max(2·SE, δ)`, **la realización pesa**
+   y la fase 2 no se lanza con copia fija: se pasa al ruido en línea (lo pendiente de S2). Si no,
+   una copia fija sirve para esta fase. Se reporta además la amplitud de las medias entre tipos,
+   para leer el uno contra el otro.
+4. **Integridad antes de comparar**: el informe comprueba que las tres semillas de un escenario
+   comparten la copia (huella), que los escenarios de una semilla comparten los pesos iniciales y
+   que la val es la congelada. Lo que no case se avisa en voz alta, no se promedia en silencio.
+5. **Una corrida con `summary.json` en disco no se repite** (el lanzador la salta): la fase 2
+   reutiliza el nivel medio de la fase 1 en vez de volver a pagarlo.
+
+## Lo que se espera, escrito antes
+
+Con 180 imágenes y una red de 1.338 parámetros que ajusta el train a CE 0,0004, lo más plausible es
+que algún ruido **regularice** (suba la CE de train y la exactitud de val) y que los de trazo a
+α = 0,6 salgan **indistinguibles** por tenues (una recta de 1 px es ¼ de bloque); `borrado` y
+`recorte` son los candidatos naturales a ayudar, `sal-pimienta` y `externos` a perjudicar. Es una
+expectativa, no un criterio: lo que decide es la regla de arriba, y **«ninguno ayuda» es un
+resultado**.
