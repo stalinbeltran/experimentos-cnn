@@ -29,6 +29,19 @@ from expcnn import exigir_dataset, exigir_datos, SUBDIR_DATASETS  # noqa: E402
 import features as F                                               # noqa: E402
 
 DATASET = "feat-ind-sinteticas-8px-r20261003"
+# ⚠ El primero publicado (sin la «b») NO se usa: rectas y esquinas cortas con 12 px salían manchas
+# cuadradas, o sea ejemplos mal etiquetados. Se conserva publicado con su aviso, que es la regla; su receta
+# ya no se puede re-derivar desde este código (cambiaron los topes de grosor).
+DATASET_GRUESO_DESCARTADO = "feat-ind-sinteticas-grueso-8px-r20261003"
+# ⚠ El «b» tampoco se usa: acotaba el grosor por el largo y casi ninguna recta llegaba a engordar
+# (recta-V 1,20 celdas de ancho medio, 0 % ≥ 2,5; un «1» manuscrito mide 2,9). El «c» sortea primero el
+# grosor y alarga el trazo para que siga siendo un trazo.
+# ⚠ El «c» tampoco: alargaba la recta hasta 26 px, que con 12 px de grosor NO CABE en el lienzo; el sorteo
+# se repetía hasta salir una fina (recta-V 1,27 celdas). El «d» acota el largo para que quepa.
+DATASET_GRUESO = "feat-ind-sinteticas-grueso-8px-r20261003d"
+PERFIL_DE = {DATASET: "fino", DATASET_GRUESO: "grueso"}
+# el grueso usa OTRAS semillas: si no, sus primeras imágenes repetirían las del fino con otro grosor
+SALTO_SEMILLA = {DATASET: 0, DATASET_GRUESO: 1000}
 DIGITOS = "uci-optdigits-8px-r20261002"
 N_TRAIN, N_VAL = 2000, 400
 N_TRAIN_VACIO, N_VAL_VACIO = 1000, 200
@@ -41,16 +54,17 @@ def huella(a: np.ndarray) -> str:
     return hashlib.sha256(np.ascontiguousarray(a).tobytes()).hexdigest()[:16]
 
 
-def semilla(familia: str, particion: str) -> int:
-    return SEMILLA_BASE + 10 * F.FAMILIAS.index(familia) + (0 if particion == "train" else 1)
+def semilla(familia: str, particion: str, nombre: str = DATASET) -> int:
+    return SEMILLA_BASE + SALTO_SEMILLA[nombre] + 10 * F.FAMILIAS.index(familia) + (0 if particion == "train" else 1)
 
 
-def generar() -> dict:
+def generar(nombre: str = DATASET) -> dict:
+    F.usar_perfil(PERFIL_DE[nombre])
     filas = {k: [] for k in CAMPOS}
     for fam in F.FAMILIAS:
         for part, n in (("train", N_TRAIN_VACIO if fam == F.VACIO else N_TRAIN),
                         ("val", N_VAL_VACIO if fam == F.VACIO else N_VAL)):
-            rng = np.random.default_rng(semilla(fam, part))
+            rng = np.random.default_rng(semilla(fam, part, nombre))
             for _ in range(n):
                 s = F.muestra(rng, fam)
                 filas["imagenes"].append(s["imagen"]); filas["mascara8"].append(s["mascara8"])
@@ -67,14 +81,15 @@ def generar() -> dict:
             "largo": np.array(filas["largo"], np.float32), "particion": np.array(filas["particion"])}
 
 
-def manifiesto(d: dict) -> dict:
+def manifiesto(d: dict, nombre: str = DATASET) -> dict:
     por = {f: {"train": int(((d["principal"] == i) & (d["particion"] == "train")).sum()),
                "val": int(((d["principal"] == i) & (d["particion"] == "val")).sum())} for i, f in enumerate(F.FAMILIAS)}
-    return {"nombre": DATASET, "experimento": "feat-ind", "generado": time.strftime("%Y-%m-%d"),
+    return {"nombre": nombre, "experimento": "feat-ind", "perfil": PERFIL_DE[nombre],
+            "grosores_px": list(F.PERFILES[PERFIL_DE[nombre]]), "generado": time.strftime("%Y-%m-%d"),
             "origen": "SINTÉTICO: cada feature dibujada como máscara de 32x32 (PIL) y reducida a 8x8 contando bits por "
                       "bloque 4x4 (0..16), como NIST. Especificación: ESPECIFICACION.md del experimento",
             "familias": list(F.FAMILIAS), "lado": F.LADO, "valor_max": F.BITS, "n": int(len(d["imagenes"])),
-            "por_familia": por, "semillas": {f: {"train": semilla(f, "train"), "val": semilla(f, "val")} for f in F.FAMILIAS},
+            "por_familia": por, "semillas": {f: {"train": semilla(f, "train", nombre), "val": semilla(f, "val", nombre)} for f in F.FAMILIAS},
             "secundaria_p": F.P_SECUNDARIA, "ruido": {"p_on": F.P_ON, "p_off": F.P_OFF},
             "campos": {"imagenes": "(N,8,8) uint8 0..16, CON ruido y con la secundaria", "mascara8": "(N,8,8) uint8: la principal sola y limpia",
                        "principal": "índice en familias", "secundaria": "índice o -1", "ancla": "(fila, col) del 8x8; -1 en vacio",
@@ -82,17 +97,17 @@ def manifiesto(d: dict) -> dict:
             "huellas": {k: huella(d[k]) for k in CAMPOS}}
 
 
-def publicar(d: dict) -> Path:
-    destino = exigir_datos() / SUBDIR_DATASETS / DATASET
+def publicar(d: dict, nombre: str = DATASET) -> Path:
+    destino = exigir_datos() / SUBDIR_DATASETS / nombre
     if (destino / "manifiesto.json").exists():
-        raise SystemExit(f"✗ {DATASET} ya está publicado: un dataset no se reescribe nunca. Dato nuevo = nombre nuevo.")
+        raise SystemExit(f"✗ {nombre} ya está publicado: un dataset no se reescribe nunca. Dato nuevo = nombre nuevo.")
     destino.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(destino / "datos.npz", **d)
-    man = manifiesto(d)
+    man = manifiesto(d, nombre)
     (destino / "manifiesto.json").write_text(json.dumps(man, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     filas = "\n".join(f"| `{f}` | {v['train']} | {v['val']} |" for f, v in man["por_familia"].items())
     (destino / "README.md").write_text(
-        f"# `{DATASET}`\n\nFeatures **sintéticas** de 8×8 para `feat-ind` de `experimentos-cnn`: 13 familias (arcos por "
+        f"# `{nombre}`\n\nPerfil de grosor `{PERFIL_DE[nombre]}` ({', '.join(map(str, F.PERFILES[PERFIL_DE[nombre]]))} px de 32). Features **sintéticas** de 8×8 para `feat-ind` de `experimentos-cnn`: 13 familias (arcos por "
         f"dirección del centro, rectas, lazo, esquinas) y `vacio`, dibujadas a 32×32 y reducidas contando bits por bloque "
         f"4×4 (0..16), como los dígitos de `{DIGITOS}`. La mitad lleva una segunda feature de otra familia; todas llevan "
         f"ruido leve. La especificación (parámetros, anclas, porqués) está en `ESPECIFICACION.md` del experimento.\n\n"
@@ -102,17 +117,17 @@ def publicar(d: dict) -> Path:
     return destino
 
 
-def cargar() -> dict:
-    raiz = exigir_dataset(DATASET)
+def cargar(nombre: str = DATASET) -> dict:
+    raiz = exigir_dataset(nombre)
     man = json.loads((raiz / "manifiesto.json").read_text(encoding="utf-8"))
     d = dict(np.load(raiz / "datos.npz"))
     for k in CAMPOS:
         h = huella(d[k])
         if h != man["huellas"][k]:
-            raise RuntimeError(f"{DATASET}/datos.npz: '{k}' da {h} y el manifiesto dice {man['huellas'][k]}: no es el dato publicado. Me niego.")
+            raise RuntimeError(f"{nombre}/datos.npz: '{k}' da {h} y el manifiesto dice {man['huellas'][k]}: no es el dato publicado. Me niego.")
     if list(man["familias"]) != list(F.FAMILIAS):
         raise RuntimeError(f"el dataset publicado tiene las familias {man['familias']} y el código {F.FAMILIAS}: no casan. Me niego.")
-    d["manifiesto"] = man
+    d["manifiesto"] = man; d["nombre"] = nombre
     return d
 
 
@@ -152,19 +167,20 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--generar", action="store_true"); p.add_argument("--publicar", action="store_true")
     p.add_argument("--comprobar", action="store_true"); p.add_argument("--rederivar", action="store_true")
+    p.add_argument("--dataset", default=DATASET, choices=list(PERFIL_DE), help="cuál (por defecto el fino original)")
     a = p.parse_args()
     if a.generar:
-        t0 = time.time(); d = generar()
+        t0 = time.time(); d = generar(a.dataset)
         print(f"generadas {len(d['imagenes'])} imágenes en {time.time() - t0:.0f} s; huella imagenes {huella(d['imagenes'])}")
         if a.publicar:
-            print(f"→ publicado en {publicar(d)}")
+            print(f"→ publicado en {publicar(d, a.dataset)}")
         return 0
     if a.comprobar:
-        d = cargar()
-        print(f"{DATASET}: {len(d['imagenes'])} imágenes, huellas ok; familias {F.FAMILIAS}")
+        d = cargar(a.dataset)
+        print(f"{a.dataset}: {len(d['imagenes'])} imágenes, huellas ok; familias {F.FAMILIAS}")
         return 0
     if a.rederivar:
-        d = cargar(); g = generar()
+        d = cargar(a.dataset); g = generar(a.dataset)
         malos = [k for k in CAMPOS if huella(d[k]) != huella(g[k])]
         print("la receta vuelve a dar el publicado, bit a bit" if not malos else f"✗ difieren: {malos}")
         return 0 if not malos else 1

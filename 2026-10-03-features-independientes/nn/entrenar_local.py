@@ -44,6 +44,7 @@ LR_REENTRENO = 1e-3
 EPOCAS_REENTRENO = 40
 TOP_CONTRA = 3
 PESOS_C3 = AQUI / "pesos-c3"
+PESOS_C4 = AQUI / "pesos-c4"
 REENTRENAR = ("arco-E", "arco-W", "arco-N", "arco-S", "esquina-NE", "esquina-NW", "esquina-SE", "esquina-SW")
 UMBRALES = tuple(round(u, 2) for u in np.arange(0.1, 0.95, 0.05))
 
@@ -94,7 +95,7 @@ def evaluar(red, c: dict, umbral: float = modelo.UMBRAL) -> dict:
         if m.any():
             por_radio[nombre] = {"n": int(m.sum()), "recall": round(float(hp_np[m].mean()), 4)}
     por_grosor = {str(g): {"n": int((c["grosor_pos"] == g).sum()), "recall": round(float(hp_np[c["grosor_pos"] == g].mean()), 4)}
-                  for g in F.GROSORES if (c["grosor_pos"] == g).any()}
+                  for g in sorted(set(int(v) for v in c["grosor_pos"]))}
     fam_neg = c["familia_neg"]; hn_np = hn.numpy()
     fp_por_familia = {F.FAMILIAS[i]: {"n": int((fam_neg == i).sum()), "fp": int(hn_np[fam_neg == i].sum()),
                                       "tasa": round(float(hn_np[fam_neg == i].mean()), 4)}
@@ -179,7 +180,7 @@ def entrenar(d: dict, feature: str, semilla: int, epocas: int, desde: Path | Non
               "contra": contra or "todas las demás + vacio", "enfatizar": enfatizar, "frac_enfasis": frac_enfasis if enfatizar else None, "desde": str(desde) if desde else None, "huella_desde": huella_desde,
               "huella_init": huella_init, "n_train_pos": len(xp), "n_train_neg": len(xn), "n_val_pos": len(va["x_pos"]),
               "n_val_neg": len(va["x_neg"]), "canales": list(red.canales), "parametros": red.n_parametros(), "sigma": modelo.SIGMA,
-              "peso_objetivo": peso_objetivo, "peso_presencia": peso_presencia, "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral", "dataset": datos.DATASET,
+              "peso_objetivo": peso_objetivo, "peso_presencia": peso_presencia, "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral", "dataset": d.get("nombre", datos.DATASET),
               "negativos_excluidos_por_contener": list(F.contenedoras(feature)) if not contra else [],
               "huella_imagenes": d["manifiesto"]["huellas"]["imagenes"]}
     print(f"empiezo {feature}: {len(xp)} pos / {len(xn)} neg, {epocas} épocas, init {huella_init}"
@@ -237,6 +238,14 @@ def reentrenar_todos(d: dict, semilla: int, destino: Path = PESOS_C3) -> int:
     for f in REENTRENAR:
         entrenar(d, f, semilla, EPOCAS_REENTRENO, PESOS / f / "last.pt", None, destino, lr=LR_REENTRENO,
                  canales=modelo.CANALES, enfatizar=contra_casos(f))
+    return 0
+
+
+def reentrenar_grueso(semilla: int, destino: Path = PESOS_C4) -> int:
+    """Corrida 4: los 13, desde nn/pesos/<f>/last.pt (corrida 2), sobre el dataset de trazos GRUESOS."""
+    d = datos.cargar(datos.DATASET_GRUESO)
+    for f in F.CON_TRAZO:
+        entrenar(d, f, semilla, EPOCAS_REENTRENO, PESOS / f / "last.pt", None, destino, lr=LR_REENTRENO, canales=modelo.CANALES)
     return 0
 
 
@@ -304,6 +313,8 @@ def main() -> int:
     p.add_argument("--desde", type=Path, help="pesos de partida (re-entrenar)")
     p.add_argument("--enfatizar", help="familias negativas a REFORZAR (la mitad de cada lote), sin quitar las demás")
     p.add_argument("--lr", type=float, default=LR)
+    p.add_argument("--reentrenar-grueso", action="store_true",
+                   help="corrida 4: los 13 desde nn/pesos/<f>/last.pt sobre el dataset grueso → nn/pesos-c4/")
     p.add_argument("--reentrenar-todos", action="store_true",
                    help=f"corrida 3: {len(REENTRENAR)} detectores desde nn/pesos/<f>/last.pt, enfatizando sus {TOP_CONTRA} familias con más FP → nn/pesos-c3/")
     p.add_argument("--contra", help="familias negativas, separadas por comas (por defecto todas las demás + vacio)")
@@ -329,6 +340,8 @@ def main() -> int:
     for lista in (enf or []):
         if lista not in F.FAMILIAS:
             p.error(f"familia desconocida en --enfatizar: {lista}")
+    if a.reentrenar_grueso:
+        return reentrenar_grueso(a.semilla)
     d = datos.cargar()
     if a.reentrenar_todos:
         return reentrenar_todos(d, a.semilla)

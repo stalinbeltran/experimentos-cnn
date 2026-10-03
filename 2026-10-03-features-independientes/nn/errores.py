@@ -104,18 +104,18 @@ def main() -> int:
     print(f"detectores 'raros' por dígito: {n_raros_fallo:.2f} en los fallos vs {n_raros_ok:.2f} en los aciertos")
     print("pares:", ", ".join(f"{k} ×{v}" for k, v in pares))
     print("culpables:", ", ".join(f"{k} ×{v}" for k, v in culp))
-    rejilla(dig["x"], mapas, fallos, RES / f"errores{suf}.png")
+    rejilla(dig["x"], mapas, fallos, RES / f"errores{suf}.png", suf)
     return 0
 
 
-def rejilla(x, mapas, fallos, destino: Path) -> None:
+def rejilla(x, mapas, fallos, destino: Path, suf: str = "") -> None:
     """Por fallo: el dígito, el mapa del culpable, y el mapa medio de ese detector en la clase REAL (train)
     y en la PREDICHA. Ordenados por par real→pred."""
     from PIL import Image                                         # noqa: PLC0415
     esc, sep = 5, 2; t = 8 * esc
     fs = sorted(fallos, key=lambda f: (f["real"], f["pred"]))
     # mapa medio de train por clase (de nuevo, sin depender de main)
-    m = dict(np.load(RES / "mapas-digitos.npz")); tr, y = m["train"], m["y"]
+    m = dict(np.load(RES / f"mapas-digitos{suf}.npz")); tr, y = m["train"], m["y"]
     medio = np.stack([m["sigma"][tr & (y == c)].mean(0) for c in range(10)])
     cols = 4; filas = len(fs); por_fila = 3
     bloques = [fs[k::por_fila] for k in range(por_fila)]

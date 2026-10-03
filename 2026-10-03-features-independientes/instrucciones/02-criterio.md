@@ -139,3 +139,28 @@ crudos**, mismos 180 de train y mismos hiperparámetros. Un dígito que falla ta
 Lo que se espera: pocos fallos (≈66 de 1617), concentrados en 3↔8↔9 y 1↔7; **mayoría de reconocimiento**
 con arcos o esquinas de culpables (son los detectores con peor precisión), y un tercio o más de los
 fallos marcados como difíciles en sí.
+
+## Corrida 4 — trazos GRUESOS (escrito el 2026-10-03, ANTES de lanzarla)
+
+**Por qué.** La atribución del error mostró que un tercio de los fallos es 1↔8 y que la causa medible es el
+ancho: un «1» manuscrito tiene ~2,9 celdas con tinta por fila y la recta sintética ~1,1.
+
+**Qué se hace.** Dataset nuevo `feat-ind-sinteticas-grueso-8px-r20261003d` (perfil `grueso`, grosores
+2–12 px de 32; otras semillas que el fino). Los **13** detectores se re-entrenan desde su `last.pt` de la
+corrida 2, 40 épocas, `lr` 1e-3, **sólo sobre el grueso** (que también trae grosores 2–4, así que no deja
+de ver trazos finos). Pesos a `nn/pesos-c4/`. Después: mapas, compositores, atribución y la rejilla de
+fallos, todos con sufijo `-c4`.
+
+⚠ **Lo que el dato nuevo cubre y lo que no** (medido sobre 400 muestras por familia antes de publicar):
+recta-V 1,74 celdas de ancho medio por fila, 21 % ≥ 2,5; esquinas 58 % ≥ 2,5; **arcos sólo 8 %**, porque su
+grosor está acotado por el radio (un arco más grueso que su radio deja de ser un arco). O sea que esto
+ataca sobre todo el lado «1 grueso» del par, no el «8 estrecho».
+
+⚠ **Tres versiones descartadas antes de entrenar nada**, publicadas con su aviso: la sin letra (manchas
+cuadradas), la `b` (casi no engordaba) y la `c` (los gruesos no cabían en el lienzo). La medida que las
+descartó es la misma que la de arriba.
+
+**Qué se espera:** el par 1↔8 baja de 22 a ≤ 11 fallos; los fallos de reconocimiento bajan más que los de
+composición; el compositor posicional sube de 0,959. **Qué lo refutaría:** 1↔8 no baja, o el posicional baja
+(los detectores pierden precisión en trazos finos sin ganar en gruesos). En sintético se reporta §A sobre el
+val **grueso** (otro val: no comparable con la corrida 2) — lo que decide es el dígito.

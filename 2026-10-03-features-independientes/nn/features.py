@@ -23,6 +23,28 @@ LADO32 = LADO * BLOQUE
 BITS = BLOQUE * BLOQUE
 MARGEN = 1.5                     # ningún punto del trazo a menos de esto del borde (px de 32)
 GROSORES = (2, 3, 4)
+# Perfil «grueso» (2026-10-03, tras la atribución del error): el «1» manuscrito mide ~3 celdas de ancho y la
+# recta sintética ~1,1. Se cubre hasta 12 px de 32 (3 celdas). El perfil por defecto NO cambia: el dataset
+# publicado se re-deriva bit a bit con él (mismas llamadas a rng en el mismo orden).
+GROSORES_GRUESO = (2, 3, 4, 6, 8, 10, 12)
+PERFILES = {"fino": GROSORES, "grueso": GROSORES_GRUESO}
+_perfil = "fino"
+
+
+def usar_perfil(nombre: str) -> None:
+    global _perfil
+    if nombre not in PERFILES:
+        raise ValueError(f"perfil '{nombre}' desconocido: {list(PERFILES)}")
+    _perfil = nombre
+
+
+def _grosor(rng, tope: float | None = None) -> int:
+    """Una sola llamada a rng en los dos perfiles. En `grueso`, `tope` deja fuera los grosores que
+    destruirían la forma (un lazo sin hueco, un arco más grueso que su radio)."""
+    if _perfil == "fino":
+        return int(rng.choice(GROSORES))
+    opciones = [g for g in GROSORES_GRUESO if tope is None or g <= tope] or [GROSORES_GRUESO[0]]
+    return int(rng.choice(opciones))
 P_SECUNDARIA = 0.5
 P_ON, P_OFF = (0.0, 0.02), (0.0, 0.10)
 
@@ -79,6 +101,24 @@ def _u(grados: float) -> np.ndarray:
     return np.array([math.cos(a), math.sin(a)])
 
 
+def _centro(rng, w: int) -> np.ndarray:
+    """Fino: en todo el lienzo (como siempre: misma llamada a rng). Grueso: sólo donde un trazo de ese grosor
+    puede caber; si no, los gruesos casi nunca caben y el sorteo acaba eligiendo uno fino (el fallo del «c»)."""
+    if _perfil == "fino":
+        return rng.uniform(0, LADO32, size=2)
+    m = MARGEN + w / 2
+    return rng.uniform(m, LADO32 - 1 - m, size=2)
+
+
+def _dentro_recta(pts: np.ndarray, w: int, ang: float) -> bool:
+    """Exacto para un segmento de extremos PLANOS (así los dibuja PIL): la tinta sólo se extiende w/2 en
+    PERPENDICULAR. El isotrópico de abajo exigía también w/2 a lo largo, y con trazos gruesos dejaba un
+    hueco de 0 px para el centro (medido 2026-10-03: el «c» y el primer «d» casi no tenían rectas gruesas)."""
+    n = _u(ang + 90.0) * (w / 2)
+    esquinas = np.concatenate([pts + n, pts - n])
+    return bool((esquinas >= 0.5).all() and (esquinas <= LADO32 - 1.5).all())
+
+
 def _dentro(pts: np.ndarray, w: int) -> bool:
     m = MARGEN + w / 2
     return bool((pts >= m).all() and (pts <= LADO32 - 1 - m).all())
@@ -92,9 +132,9 @@ def _arco(rng, familia: str) -> dict | None:
     r = float(rng.uniform(*ARCO_RADIO))
     ap = float(rng.uniform(*ARCO_APERTURA))
     theta = DIR[familia[-1]] + float(rng.uniform(-ARCO_JITTER, ARCO_JITTER))
-    w = int(rng.choice(GROSORES))
+    w = _grosor(rng, max(4.0, r))
     for _ in range(60):
-        c = rng.uniform(0, LADO32, size=2)
+        c = _centro(rng, w)
         a = np.radians(theta + 180.0 + np.linspace(-ap / 2, ap / 2, 64))
         pts = c + r * np.stack([np.cos(a), np.sin(a)], 1)
         if _dentro(pts, w):
@@ -106,11 +146,15 @@ def _arco(rng, familia: str) -> dict | None:
 def _recta(rng, familia: str) -> dict | None:
     L = float(rng.uniform(*RECTA_LARGO))
     ang = RECTA_ANGULO[familia] + float(rng.uniform(-RECTA_JITTER, RECTA_JITTER))
-    w = int(rng.choice(GROSORES))
-    for _ in range(60):
-        c = rng.uniform(0, LADO32, size=2)
+    if _perfil == "fino":
+        w = _grosor(rng)
+    else:   # grueso: el grosor primero, y la recta se ALARGA para no ser una mancha (largo ≥ 2,5·grosor)
+        w = _grosor(rng)
+        L = min(max(L, 2.5 * w), LADO32 - 2.0)
+    for _ in range(60 if _perfil == "fino" else 400):
+        c = _centro(rng, w) if _perfil == "fino" else rng.uniform(0, LADO32 - 1, size=2)
         pts = np.stack([c - L / 2 * _u(ang), c + L / 2 * _u(ang)])
-        if _dentro(pts, w):
+        if (_dentro(pts, w) if _perfil == "fino" else _dentro_recta(pts, w, ang)):
             return {"pts": [pts], "cerrado": False, "ancla": c, "grosor": w,
                     "radio": -1.0, "angulo": ang, "apertura": -1.0, "largo": L}
     return None
@@ -121,13 +165,13 @@ def _lazo(rng, familia: str) -> dict | None:
     razon = float(rng.uniform(*LAZO_RAZON))
     b_ = float(np.clip(a_ * razon, 3.5, 12.0))
     rot = float(rng.uniform(0, 180))
-    w = int(rng.choice(GROSORES))
+    w = _grosor(rng, max(2.0, 0.6 * min(a_, b_)))     # deja hueco: el lazo sigue siendo un lazo
     t = np.linspace(0, 2 * math.pi, 72, endpoint=False)
     base = np.stack([a_ * np.cos(t), b_ * np.sin(t)], 1)
     R = np.array([[math.cos(math.radians(rot)), -math.sin(math.radians(rot))],
                   [math.sin(math.radians(rot)), math.cos(math.radians(rot))]])
     for _ in range(60):
-        c = rng.uniform(0, LADO32, size=2)
+        c = _centro(rng, w)
         pts = c + base @ R.T
         if _dentro(pts, w):
             return {"pts": [pts], "cerrado": True, "ancla": c, "grosor": w,
@@ -142,9 +186,12 @@ def _esquina(rng, familia: str) -> dict | None:
     # bisectriz nominal de los dos brazos; cada brazo a ±entre/2 de ella
     bis = math.degrees(math.atan2(*(_u(DIR[d1]) + _u(DIR[d2]))[::-1])) + rot
     L1, L2 = (float(rng.uniform(*ESQ_BRAZO)) for _ in range(2))
-    w = int(rng.choice(GROSORES))
+    w = _grosor(rng)
+    if _perfil != "fino":   # ídem: los brazos se alargan para seguir siendo brazos (≥ 2·grosor)
+        tope_brazo = (LADO32 - 2 * MARGEN - w - 1.0) / 1.5
+        L1, L2 = (min(max(v, 2.0 * w), tope_brazo) for v in (L1, L2))
     for _ in range(60):
-        v = rng.uniform(0, LADO32, size=2)
+        v = _centro(rng, w)
         p1 = v + L1 * _u(bis - entre / 2)
         p2 = v + L2 * _u(bis + entre / 2)
         pts = np.stack([p1, v, p2])
