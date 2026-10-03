@@ -1,0 +1,8 @@
+empiezo vertical@0.6-s3: copia 613c456c402a3c6e (semilla de ruido 1032), init 8d4cd1e1cda989a8, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  vertical@0.6-s3 ep   1/222 perdida 2.3218 acc~0.108
+  vertical@0.6-s3 ep  50/222 perdida 0.1489 acc~0.961 · acc_val 0.8423 brecha +0.1188
+  vertical@0.6-s3 ep 100/222 perdida 0.0253 acc~1.000 · acc_val 0.8528 brecha +0.1416
+  vertical@0.6-s3 ep 150/222 perdida 0.0052 acc~1.000 · acc_val 0.8472 brecha +0.1527
+  vertical@0.6-s3 ep 200/222 perdida 0.0023 acc~1.000 · acc_val 0.8516 brecha +0.1484
+  vertical@0.6-s3 ep 222/222 perdida 0.0023 acc~1.000 · acc_val 0.8485 brecha +0.1515
+listo vertical@0.6-s3: acc_train 1.0000 acc_val 0.8485 brecha +0.1515 · ce_train 0.0014 ce_val 1.3418 en 21.2 s
