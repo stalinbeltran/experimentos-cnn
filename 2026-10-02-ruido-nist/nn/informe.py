@@ -238,7 +238,7 @@ def md(por, dl, c, figs) -> str:
         for tipo, pt in c["por_tipo"].items():
             celdas = " · ".join(f"{n['nivel']:g}: {s4(n['delta'])}{'*' if n['veredicto'] == 'ayuda' else ('†' if n['veredicto'] == 'perjudica' else '')}" for n in pt["niveles"])
             L.append(f"| `{tipo}` | {celdas} | `{pt['mejor']}` ({s4(pt['mejor_delta'])}, **{pt['mejor_veredicto']}**) | {pt['forma']}; amplitud {f4(pt['amplitud'])} |")
-        L += ["", "\* ayuda · † perjudica (por el umbral de cada escenario). «Mejor» es la mayor media; si no es «ayuda», no se distingue de `limpio`."]
+        L += ["", "\\* ayuda · † perjudica (por el umbral de cada escenario). «Mejor» es la mayor media; si no es «ayuda», no se distingue de `limpio`."]
         ganan = [(tipo, pt) for tipo, pt in c["por_tipo"].items() if pt["mejor_veredicto"] == "ayuda"]
         L += ["", f"- **Tipos con algún nivel que ayuda**: {', '.join(f'`{pt["mejor"]}` ({s4(pt["mejor_delta"])})' for _, pt in ganan) if ganan else '**ninguno**'}."]
     for esc, r in c["realizacion"].items():
