@@ -1,0 +1,8 @@
+empiezo vertical@1-doble-linea-s3: EN LÍNEA (una copia nueva por época), época 1 = a62c5dc9a62055e0 (semilla de ruido 1034), init 8d4cd1e1cda989a8, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  vertical@1-doble-linea-s3 ep   1/222 perdida 2.3224 acc~0.103
+  vertical@1-doble-linea-s3 ep  50/222 perdida 0.3287 acc~0.889 · acc_val 0.8058 brecha +0.1053
+  vertical@1-doble-linea-s3 ep 100/222 perdida 0.1022 acc~0.964 · acc_val 0.8843 brecha +0.0990
+  vertical@1-doble-linea-s3 ep 150/222 perdida 0.0734 acc~0.986 · acc_val 0.8553 brecha +0.1336
+  vertical@1-doble-linea-s3 ep 200/222 perdida 0.0589 acc~0.981 · acc_val 0.8874 brecha +0.1125
+  vertical@1-doble-linea-s3 ep 222/222 perdida 0.0682 acc~0.981 · acc_val 0.8776 brecha +0.1225
+listo vertical@1-doble-linea-s3: acc_train 1.0000 acc_val 0.8776 brecha +0.1224 · ce_train 0.0138 ce_val 0.6114 en 31.8 s

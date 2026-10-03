@@ -1,0 +1,8 @@
+empiezo borrado@0.1-s3: copia 9ffd75fbcf49fcec (semilla de ruido 1001), init 8d4cd1e1cda989a8, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  borrado@0.1-s3 ep   1/222 perdida 2.3222 acc~0.108
+  borrado@0.1-s3 ep  50/222 perdida 0.1486 acc~0.964 · acc_val 0.8151 brecha +0.1349
+  borrado@0.1-s3 ep 100/222 perdida 0.0322 acc~0.994 · acc_val 0.8423 brecha +0.1521
+  borrado@0.1-s3 ep 150/222 perdida 0.0047 acc~1.000 · acc_val 0.8516 brecha +0.1484
+  borrado@0.1-s3 ep 200/222 perdida 0.0016 acc~1.000 · acc_val 0.8503 brecha +0.1497
+  borrado@0.1-s3 ep 222/222 perdida 0.0013 acc~1.000 · acc_val 0.8497 brecha +0.1503
+listo borrado@0.1-s3: acc_train 1.0000 acc_val 0.8497 brecha +0.1503 · ce_train 0.0008 ce_val 1.5546 en 22.3 s

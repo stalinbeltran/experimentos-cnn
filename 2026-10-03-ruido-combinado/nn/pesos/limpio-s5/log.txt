@@ -1,0 +1,8 @@
+empiezo limpio-s5: copia dc7573f9099d5072 (semilla de ruido None), init 06e2b1e3f83ac00d, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  limpio-s5 ep   1/222 perdida 2.3140 acc~0.125
+  limpio-s5 ep  50/222 perdida 0.1748 acc~0.950 · acc_val 0.7990 brecha +0.1288
+  limpio-s5 ep 100/222 perdida 0.0180 acc~1.000 · acc_val 0.8472 brecha +0.1527
+  limpio-s5 ep 150/222 perdida 0.0031 acc~1.000 · acc_val 0.8540 brecha +0.1459
+  limpio-s5 ep 200/222 perdida 0.0011 acc~1.000 · acc_val 0.8528 brecha +0.1472
+  limpio-s5 ep 222/222 perdida 0.0008 acc~1.000 · acc_val 0.8547 brecha +0.1453
+listo limpio-s5: acc_train 1.0000 acc_val 0.8547 brecha +0.1453 · ce_train 0.0008 ce_val 1.1053 en 23.0 s

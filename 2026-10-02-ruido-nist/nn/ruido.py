@@ -57,6 +57,13 @@ INDICE_MEDIO = 2
 LIMPIO = "limpio"
 SEMILLA_BASE = 1000
 SALTO_REALIZACION = 5000   # la segunda copia de un escenario: semilla + 5000·(r − 1)
+# Fase 3: `<tipo>@<nivel>-linea` = la MISMA semilla de ruido, pero una realización NUEVA por época
+# (la de la época 1 es exactamente la copia fija; las siguientes salen del mismo generador).
+SUFIJO_LINEA = "-linea"
+# Fase 4: variantes del DIBUJO de los trazos (sólo rectas y curvas). El plan fijaba 1–2 px de grosor y
+# 1–2 trazos; `-grueso` sube el grosor a 3–4 px y `-doble` el número de trazos a 3–4. Misma semilla.
+VARIANTES = {"grueso": {"grosor": (3, 4), "trazos": (1, 2)}, "doble": {"grosor": (1, 2), "trazos": (3, 4)}}
+TIPOS_TRAZO = ("horizontal", "vertical", "oblicua", "curva")
 # Tamaño del dibujo (a 32 px): rectas de 1–2 px, 1–2 trazos; recorte de 8–16 px de lado.
 GROSOR = (1, 2)
 TRAZOS = (1, 2)
@@ -68,15 +75,52 @@ def nombre_nivel(nivel: float) -> str:
     return f"{nivel:g}"
 
 
-def escenario(tipo: str, nivel: float, realizacion: int = 1) -> str:
-    """El nombre canónico: `horizontal@0.6`, `oblicua@0.6-r2`, `limpio`."""
+def escenario(tipo: str, nivel: float, realizacion: int = 1, linea: bool = False, variante: str | None = None) -> str:
+    """El nombre canónico: `horizontal@0.6`, `oblicua@0.6-r2`, `recorte@0.6-linea`, `vertical@1-grueso-linea`, `limpio`."""
     if tipo == LIMPIO:
         return LIMPIO
-    return f"{tipo}@{nombre_nivel(nivel)}" + (f"-r{realizacion}" if realizacion != 1 else "")
+    return (f"{tipo}@{nombre_nivel(nivel)}" + (f"-r{realizacion}" if realizacion != 1 else "")
+            + (f"-{variante}" if variante else "") + (SUFIJO_LINEA if linea else ""))
+
+
+def es_linea(nombre: str) -> bool:
+    return nombre.endswith(SUFIJO_LINEA)
+
+
+def fijo_de(nombre: str) -> str:
+    """El gemelo de copia fija de un escenario en línea: 'recorte@0.6-linea' -> 'recorte@0.6'."""
+    return nombre[:-len(SUFIJO_LINEA)] if es_linea(nombre) else nombre
+
+
+def variante_de(nombre: str) -> str | None:
+    """'vertical@1-grueso-linea' -> 'grueso'; sin variante -> None."""
+    base = fijo_de(nombre)
+    for v in VARIANTES:
+        if base.endswith("-" + v):
+            return v
+    return None
+
+
+def base_de(nombre: str) -> str:
+    """El escenario SIN variante de dibujo, conservando -linea: 'vertical@1-grueso-linea' -> 'vertical@1-linea'."""
+    v = variante_de(nombre)
+    if v is None:
+        return nombre
+    return fijo_de(nombre)[:-len("-" + v)] + (SUFIJO_LINEA if es_linea(nombre) else "")
 
 
 def parsear(nombre: str) -> tuple[str, float | None, int]:
-    """'oblicua@0.6-r2' -> ('oblicua', 0.6, 2). Se niega con un tipo o nivel que no esté en la tabla."""
+    """'oblicua@0.6-r2' -> ('oblicua', 0.6, 2). Acepta el sufijo -linea (se pregunta aparte con es_linea).
+    Se niega con un tipo o nivel que no esté en la tabla."""
+    if es_linea(nombre):
+        if fijo_de(nombre) == LIMPIO:
+            raise ValueError("'limpio' no tiene versión en línea")
+        nombre = fijo_de(nombre)
+    v = variante_de(nombre)
+    if v is not None:
+        nombre = nombre[:-len("-" + v)]
+        if nombre.split("@")[0] not in TIPOS_TRAZO:
+            raise ValueError(f"la variante '{v}' sólo vale para los trazos {TIPOS_TRAZO}")
     m = _ESC.match(nombre)
     if not m:
         raise ValueError(f"escenario '{nombre}': la forma es <tipo>@<nivel>[-r<n>] o 'limpio'")
@@ -127,34 +171,34 @@ def cobertura(mascara32: np.ndarray) -> np.ndarray:
     return m.reshape(-1, LADO, BLOQUE, LADO, BLOQUE).mean(axis=(2, 4))
 
 
-def _recta_h(d, rng):
-    y = int(rng.integers(2, LADO32 - 2)); w = int(rng.integers(GROSOR[0], GROSOR[1] + 1))
+def _recta_h(d, rng, grosor=GROSOR):
+    y = int(rng.integers(2, LADO32 - 2)); w = int(rng.integers(grosor[0], grosor[1] + 1))
     d.line([(0, y), (LADO32 - 1, y)], fill=1, width=w)
 
 
-def _recta_v(d, rng):
-    x = int(rng.integers(2, LADO32 - 2)); w = int(rng.integers(GROSOR[0], GROSOR[1] + 1))
+def _recta_v(d, rng, grosor=GROSOR):
+    x = int(rng.integers(2, LADO32 - 2)); w = int(rng.integers(grosor[0], grosor[1] + 1))
     d.line([(x, 0), (x, LADO32 - 1)], fill=1, width=w)
 
 
-def _recta_oblicua(d, rng):
+def _recta_oblicua(d, rng, grosor=GROSOR):
     # ángulo uniforme en (15°, 75°) ∪ (105°, 165°): ni casi horizontal ni casi vertical
     ang = math.radians(float(rng.uniform(15, 75)) + 90.0 * int(rng.integers(0, 2)))
     cx, cy = (float(v) for v in rng.uniform(6, LADO32 - 6, size=2))
-    w = int(rng.integers(GROSOR[0], GROSOR[1] + 1))
+    w = int(rng.integers(grosor[0], grosor[1] + 1))
     dx, dy = 40 * math.cos(ang), 40 * math.sin(ang)
     d.line([(cx - dx, cy - dy), (cx + dx, cy + dy)], fill=1, width=w)
 
 
-def _curva(d, rng):
+def _curva(d, rng, grosor=GROSOR):
     p = rng.uniform(2, LADO32 - 2, size=(3, 2))          # Bézier cuadrático con 3 puntos
-    w = int(rng.integers(GROSOR[0], GROSOR[1] + 1))
+    w = int(rng.integers(grosor[0], grosor[1] + 1))
     t = np.linspace(0, 1, 48)[:, None]
     pts = (1 - t) ** 2 * p[0] + 2 * (1 - t) * t * p[1] + t ** 2 * p[2]
     d.line([(float(a), float(b)) for a, b in pts], fill=1, width=w, joint="curve")
 
 
-def _recorte(d, rng):
+def _recorte(d, rng, grosor=None):
     lado = int(rng.integers(LADO_RECORTE[0], LADO_RECORTE[1] + 1))
     x0, y0 = (int(v) for v in rng.integers(0, LADO32 - lado + 1, size=2))
     d.rectangle([x0, y0, x0 + lado - 1, y0 + lado - 1], fill=1)
@@ -164,15 +208,19 @@ _TRAZO = {"horizontal": (_recta_h, 1.0), "vertical": (_recta_v, 1.0), "oblicua":
           "curva": (_curva, 1.0), "recorte": (_recorte, 0.0)}      # (cómo se dibuja, v)
 
 
-def mascaras(tipo: str, n: int, rng: np.random.Generator) -> np.ndarray:
+def mascaras(tipo: str, n: int, rng: np.random.Generator, variante: str | None = None) -> np.ndarray:
     """(n, 32, 32) uint8 0/1: la máscara de cada imagen, con sus parámetros sacados de rng en orden."""
     dibujar, _ = _TRAZO[tipo]
+    if variante is not None and tipo not in TIPOS_TRAZO:
+        raise ValueError(f"la variante '{variante}' sólo vale para los trazos {TIPOS_TRAZO}")
+    grosor = VARIANTES[variante]["grosor"] if variante else GROSOR
+    n_trazos = VARIANTES[variante]["trazos"] if variante else TRAZOS
     out = np.zeros((n, LADO32, LADO32), np.uint8)
     for k in range(n):
         im, d = _lienzo()
-        trazos = 1 if tipo == "recorte" else int(rng.integers(TRAZOS[0], TRAZOS[1] + 1))
+        trazos = 1 if tipo == "recorte" else int(rng.integers(n_trazos[0], n_trazos[1] + 1))
         for _ in range(trazos):
-            dibujar(d, rng)
+            dibujar(d, rng, grosor)
         out[k] = np.asarray(im, dtype=np.uint8)
     return out
 
@@ -184,11 +232,13 @@ def componer(x: np.ndarray, c: np.ndarray, alfa: float, v: float) -> np.ndarray:
     return (x + alfa * c * (v - x)).astype(np.float32)
 
 
-def aplicar(tipo: str, nivel: float, cuentas: np.ndarray, rng: np.random.Generator) -> np.ndarray:
+def aplicar(tipo: str, nivel: float, cuentas: np.ndarray, rng: np.random.Generator, variante: str | None = None) -> np.ndarray:
     """(N, 8, 8) uint8 cuentas 0..16 -> (N, 8, 8) float32 en [0, 1], CON el ruido del tipo al nivel.
     Determinista dado rng. nivel = 0 devuelve exactamente cuentas/16 en los nueve tipos."""
     if tipo not in TIPOS:
         raise ValueError(f"tipo '{tipo}' desconocido: {TIPOS}")
+    if variante is not None and (variante not in VARIANTES or tipo not in TIPOS_TRAZO):
+        raise ValueError(f"variante '{variante}' no vale para {tipo}: {list(VARIANTES)} sólo en {TIPOS_TRAZO}")
     if not 0.0 <= nivel <= 1.0:
         raise ValueError(f"{tipo}: nivel {nivel} fuera de [0, 1]")
     if cuentas.dtype != np.uint8 or cuentas.ndim != 3 or cuentas.max() > BITS:
@@ -211,14 +261,14 @@ def aplicar(tipo: str, nivel: float, cuentas: np.ndarray, rng: np.random.Generat
             out[i].reshape(-1)[idx] = val
         return out
     dibujar, v = _TRAZO[tipo]
-    c = cobertura(mascaras(tipo, len(cuentas), rng))
+    c = cobertura(mascaras(tipo, len(cuentas), rng, variante))
     return componer(x, c, nivel, v)
 
 
-def copia(tipo: str, nivel: float, cuentas: np.ndarray, realizacion: int = 1) -> tuple[np.ndarray, int]:
+def copia(tipo: str, nivel: float, cuentas: np.ndarray, realizacion: int = 1, variante: str | None = None) -> tuple[np.ndarray, int]:
     """La copia ruidosa FIJA de un escenario: generador propio con su semilla. Devuelve (x', semilla)."""
     s = semilla(tipo, nivel, realizacion)
-    return aplicar(tipo, nivel, cuentas, np.random.default_rng(s)), s
+    return aplicar(tipo, nivel, cuentas, np.random.default_rng(s), variante), s
 
 
 def tabla() -> list[dict]:

@@ -1,0 +1,8 @@
+empiezo oblicua@1-grueso-linea-s2: EN LÍNEA (una copia nueva por época), época 1 = 2dc58e33d8486eaa (semilla de ruido 1044), init 61b2a6d73700e035, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  oblicua@1-grueso-linea-s2 ep   1/222 perdida 2.3171 acc~0.114
+  oblicua@1-grueso-linea-s2 ep  50/222 perdida 0.4511 acc~0.875 · acc_val 0.8949 brecha +0.0718
+  oblicua@1-grueso-linea-s2 ep 100/222 perdida 0.1922 acc~0.933 · acc_val 0.9270 brecha +0.0674
+  oblicua@1-grueso-linea-s2 ep 150/222 perdida 0.1443 acc~0.953 · acc_val 0.9270 brecha +0.0730
+  oblicua@1-grueso-linea-s2 ep 200/222 perdida 0.1020 acc~0.969 · acc_val 0.9301 brecha +0.0699
+  oblicua@1-grueso-linea-s2 ep 222/222 perdida 0.1372 acc~0.958 · acc_val 0.9326 brecha +0.0674
+listo oblicua@1-grueso-linea-s2: acc_train 1.0000 acc_val 0.9326 brecha +0.0674 · ce_train 0.0092 ce_val 0.2369 en 33.7 s

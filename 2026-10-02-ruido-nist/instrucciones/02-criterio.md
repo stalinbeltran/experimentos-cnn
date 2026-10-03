@@ -65,3 +65,42 @@ que algún ruido **regularice** (suba la CE de train y la exactitud de val) y qu
 `recorte` son los candidatos naturales a ayudar, `sal-pimienta` y `externos` a perjudicar. Es una
 expectativa, no un criterio: lo que decide es la regla de arriba, y **«ninguno ayuda» es un
 resultado**.
+
+## Fase 3 — ruido EN LÍNEA: enmienda del 2026-10-03, escrita antes de lanzarla
+
+Lo pendiente de S2 («una realización nueva por época, para más variedad»), sobre lo que la fase 2
+dejó: **el mejor nivel de cada tipo cuyo mejor nivel fue «ayuda»** (`recorte@0.6`, `curva@0.8`,
+`gaussiano@0.2`, `vertical@1`, `oblicua@1`), con el sufijo `-linea`, × 3 semillas = 15 corridas.
+
+- **Qué es «en línea»**: la misma semilla de ruido que la copia fija; la copia de la **época 1 es
+  exactamente la fija** (mismo generador, primer sorteo) y cada época siguiente saca otra del
+  mismo generador — idéntica entre las tres semillas de pesos, como en las fases 1 y 2. Todo lo
+  demás (pesos iniciales, orden de lotes, pasos, `lr`) igual. Tiene test: 1 época en línea ==
+  1 época fija bit a bit; nivel 0 en línea == `limpio` bit a bit.
+- **Dos medidas, pareadas por semilla**: Δ contra `limpio` (el mismo veredicto de siempre) y
+  **Δ contra su copia fija**, con umbral `max(2·SE, δ)`: «en línea mejor», «peor» o
+  «indistinguible de la fija».
+- **Lo que se espera, escrito antes**: para `recorte`, `curva` y `gaussiano` —los que quitan o
+  perturban más— la variedad debería sumar (en línea > fija); para `vertical@1` y `oblicua@1`,
+  cuyo efecto roza δ, lo más probable es «indistinguible». Si en línea sale **peor** en todos,
+  la lectura es que 222 copias distintas sin repetir ninguna no dejan ajustar la copia, y eso es
+  un resultado.
+- **No decide** ganador entre tipos (eso ya lo hizo la fase 2) ni combina ruidos.
+
+## Fase 4 — grosor y número de trazos: enmienda del 2026-10-03, escrita antes de lanzarla
+
+El eje que la fase 2 dejó abierto: los trazos suben hasta α = 1, que es el tope de opacidad, así
+que «más» sólo puede ser **más grueso** o **más trazos**. Dos variantes del dibujo, con la misma
+semilla y en línea (la fase 3 enseñó que en línea nunca es peor): **`-grueso`** = 3–4 px de grosor
+a 32 (el plan: 1–2) con 1–2 trazos; **`-doble`** = 3–4 trazos (el plan: 1–2) de 1–2 px. Sobre los
+trazos cuya versión en línea dio «ayuda» en la fase 3 (`vertical@1`, `oblicua@1`, `curva@0.8`),
+× 3 semillas = 18 corridas. Sólo valen para rectas y curvas: `parsear` se niega con el resto.
+
+- **Medida**: Δ contra `limpio` (el veredicto de siempre) y **Δ contra su base** (el mismo
+  escenario en línea sin variante), pareado, umbral `max(2·SE, δ)`: «mejor», «peor» o
+  «indistinguible de su base».
+- **Lo que se espera, escrito antes**: que `-grueso` y `-doble` sumen algo en `vertical` y
+  `oblicua` (siguen la tendencia «más ruido, mejor» de la fase 2) y que en `curva`, que ya tenía
+  pico interior en α, no sumen o resten. Si una variante sale **peor** que su base, el eje está
+  acotado por ese lado y se dice.
+- **No decide** nada sobre combinar tipos ni sobre `recorte`/`gaussiano`, que no tienen trazos.

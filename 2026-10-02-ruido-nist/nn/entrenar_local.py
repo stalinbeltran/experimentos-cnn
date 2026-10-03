@@ -100,10 +100,13 @@ def _guardar(destino: Path, red, config: dict, epoca: int) -> None:
 
 
 def _bucle(red, opt, xtr, ytr, rng, epocas, registro, nombre, xva=None, yva=None, xli=None, yli=None,
-           guardar_en=None, config=None) -> dict:
+           guardar_en=None, config=None, regenerar=None) -> dict:
     paso, ultimo = 0, {}
     for ep in range(1, epocas + 1):
         t0 = time.time()
+        if regenerar is not None and ep > 1:
+            # ruido EN LÍNEA: la copia (índices 180–359) es nueva en cada época; la época 1 es la fija
+            xtr[datos.N_TRAIN:] = torch.from_numpy(regenerar())
         red.train()
         perm = rng.permutation(len(xtr))
         suma, n, ok = 0.0, 0, 0
@@ -159,7 +162,7 @@ def entrenar(escenario: str, semilla: int, pasos: int, lr, raiz: Path = PESOS) -
     dir_b.mkdir(parents=True, exist_ok=True)
     registro = dir_b / "metrics.jsonl"
     registro.write_text("", encoding="utf-8")
-    config = {"id": nombre, "escenario": escenario, "tipo": d["tipo"], "nivel": d["nivel"],
+    config = {"id": nombre, "escenario": escenario, "tipo": d["tipo"], "nivel": d["nivel"], "linea": d["linea"], "variante": d["variante"],
               "indice_nivel": None if d["tipo"] == ruido.LIMPIO else ruido.indice_nivel(d["tipo"], d["nivel"]),
               "realizacion": d["realizacion"], "semilla": semilla, "semilla_lotes": SEMILLA_LOTES + semilla,
               "semilla_ruido": d["semilla_ruido"], "pasos": pasos, "epocas": epocas, "lote": LOTE, "lr": lr,
@@ -167,11 +170,11 @@ def entrenar(escenario: str, semilla: int, pasos: int, lr, raiz: Path = PESOS) -
               "dataset": d["dataset"], "huella_init": huella_init, "huella_copia": d["huella_copia"],
               "huella_x_val": d["huella_x_val"], "huella_x_train_limpio": d["huella_x_train_limpio"],
               "tinta_media_original": round(d["tinta_media_original"], 5), "tinta_media_copia": round(d["tinta_media_copia"], 5)}
-    print(f"empiezo {nombre}: copia {d['huella_copia']} (semilla de ruido {d['semilla_ruido']}), init {huella_init}, "
+    print(f"empiezo {nombre}: {'EN LÍNEA (una copia nueva por época), época 1 = ' if d['linea'] else 'copia '}{d['huella_copia']} (semilla de ruido {d['semilla_ruido']}), init {huella_init}, "
           f"{red.n_parametros()} parámetros, {epocas} épocas, lr {lr}, hilos {torch.get_num_threads()}", flush=True)
     t0 = time.time()
     _bucle(red, opt, t["x_train"], t["y_train"], rng, epocas, registro, nombre, t["x_val"], t["y_val"],
-           t["x_train_limpio"], t["y_train_limpio"], dir_b / "last.pt", config)
+           t["x_train_limpio"], t["y_train_limpio"], dir_b / "last.pt", config, d["regenerar"])
     acc_li, _, ce_li = evaluar(red, t["x_train_limpio"], t["y_train_limpio"])
     acc_360, _, ce_360 = evaluar(red, t["x_train"], t["y_train"])
     acc_va, ac_va, ce_va = evaluar(red, t["x_val"], t["y_val"])
@@ -222,10 +225,10 @@ def comprobar() -> int:
         ok &= bool(bien)
         print(f"  [{'ok' if bien else 'FALLA':>5}] {que}" + (f"  {det}" if det else ""))
 
-    def corta(x, y, semilla, epocas=2):
+    def corta(x, y, semilla, epocas=2, regenerar=None):
         red = modelo.cargar_inicial(semilla)
         opt = torch.optim.Adam(red.parameters(), lr=1e-3)
-        _bucle(red, opt, torch.from_numpy(x), torch.from_numpy(y), np.random.default_rng(SEMILLA_LOTES + semilla), epocas, None, "corta")
+        _bucle(red, opt, torch.from_numpy(x), torch.from_numpy(y), np.random.default_rng(SEMILLA_LOTES + semilla), epocas, None, "corta", regenerar=regenerar)
         return red
 
     l = datos.escenario("limpio")
@@ -242,6 +245,20 @@ def comprobar() -> int:
     e = datos.escenario("horizontal@0.6")
     red_h = corta(e["x_train"], e["y_train"], 1)
     prueba("horizontal@0.6: pesos finales DISTINTOS de limpio (el ruido llega a la red)", modelo.huella_pesos(red_h) != modelo.huella_pesos(red_a))
+    el = datos.escenario("horizontal@0.6-linea")
+    prueba("en línea: la época 1 es la copia fija (misma huella) y trae `regenerar`", el["huella_copia"] == e["huella_copia"] and el["regenerar"] is not None and el["linea"])
+    red_l = corta(el["x_train"], el["y_train"], 1, regenerar=el["regenerar"])
+    prueba("en línea 2 épocas: pesos DISTINTOS de la copia fija (la época 2 ya es otra copia)", modelo.huella_pesos(red_l) != modelo.huella_pesos(red_h))
+    el1 = datos.escenario("horizontal@0.6-linea")
+    red_l1 = corta(el1["x_train"], el1["y_train"], 1, epocas=1, regenerar=el1["regenerar"])
+    red_h1 = corta(e["x_train"], e["y_train"], 1, epocas=1)
+    prueba("en línea 1 época == copia fija 1 época, bit a bit", modelo.huella_pesos(red_l1) == modelo.huella_pesos(red_h1))
+    cuentas = datos.limpio()["cuentas_train"]
+    rng0 = np.random.default_rng(7)
+    def regen0():
+        return ruido.aplicar("recorte", 0.0, cuentas, rng0)[:, None]
+    red_l0 = corta(l["x_train"], l["y_train"], 1, regenerar=regen0)
+    prueba("en línea con nivel 0 == limpio bit a bit (regenerar no cambia nada)", modelo.huella_pesos(red_l0) == modelo.huella_pesos(red_a))
     red_2 = corta(l["x_train"], l["y_train"], 2)
     prueba("otra semilla: otros pesos", modelo.huella_pesos(red_2) != modelo.huella_pesos(red_a))
     prueba("val del escenario con ruido == val congelada", e["huella_x_val"] == datos.HUELLA_X_VAL)
@@ -257,7 +274,9 @@ def comprobar() -> int:
     except ValueError:
         bien = False
     prueba("parsear_ident('oblicua@0.6-r2-s3')", bien)
-    for malo in ("limpio", "limpio-s9", "horizontal@0.7-s1", "inventado@0.6-s1", "horizontal-s1"):
+    prueba("parsear_ident('vertical@1-grueso-linea-s2')", parsear_ident("vertical@1-grueso-linea-s2") == ("vertical@1-grueso-linea", 2))
+    prueba("parsear_ident('recorte@0.6-linea-s2')", parsear_ident("recorte@0.6-linea-s2") == ("recorte@0.6-linea", 2))
+    for malo in ("limpio", "limpio-s9", "horizontal@0.7-s1", "inventado@0.6-s1", "horizontal-s1", "limpio-linea-s1", "recorte@0.6-grueso-s1"):
         try:
             parsear_ident(malo); bien = False
         except ValueError:

@@ -1,0 +1,8 @@
+empiezo oblicua@0.2-s2: copia 9c30432c869ddcff (semilla de ruido 1040), init 61b2a6d73700e035, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  oblicua@0.2-s2 ep   1/222 perdida 2.3137 acc~0.103
+  oblicua@0.2-s2 ep  50/222 perdida 0.1269 acc~0.961 · acc_val 0.8850 brecha +0.1039
+  oblicua@0.2-s2 ep 100/222 perdida 0.0054 acc~1.000 · acc_val 0.8986 brecha +0.1014
+  oblicua@0.2-s2 ep 150/222 perdida 0.0015 acc~1.000 · acc_val 0.8998 brecha +0.1002
+  oblicua@0.2-s2 ep 200/222 perdida 0.0006 acc~1.000 · acc_val 0.8973 brecha +0.1027
+  oblicua@0.2-s2 ep 222/222 perdida 0.0004 acc~1.000 · acc_val 0.8986 brecha +0.1014
+listo oblicua@0.2-s2: acc_train 1.0000 acc_val 0.8986 brecha +0.1014 · ce_train 0.0004 ce_val 0.6376 en 31.2 s

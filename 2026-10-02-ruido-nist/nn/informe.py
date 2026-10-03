@@ -90,7 +90,7 @@ def deltas(por) -> dict[str, dict]:
             out[esc] = {"n": 0, "semillas": sorted(sems), "sin_base": sorted(sems)}; continue
         d = {k: _stats([sems[s][k] - base[s][k] for s in comunes]) for k in ("acc_val", "ce_val", "acc_train", "ce_train")}
         tipo, nivel, r = ruido.parsear(esc)
-        d.update({"tipo": tipo, "nivel": nivel, "realizacion": r, "semillas": comunes, "n": len(comunes),
+        d.update({"tipo": tipo, "nivel": nivel, "realizacion": r, "linea": ruido.es_linea(esc), "variante": ruido.variante_de(esc), "semillas": comunes, "n": len(comunes),
                   "sin_base": sorted(set(sems) - set(base)),
                   "acc_val_abs": _stats([sems[s]["acc_val"] for s in comunes]),
                   "ce_val_abs": _stats([sems[s]["ce_val"] for s in comunes]),
@@ -129,6 +129,57 @@ def criterio(por, dl) -> dict:
         if d and d["n"] and (d["veredicto"] == "ayuda" or (d["veredicto"] == "indistinguible" and d["acc_val"]["media"] > 0)):
             c["fase2"].append(tipo)
     c["veredictos"] = {esc: d["veredicto"] for esc, d in dl.items() if d["n"]}
+    # fase 2: dentro de cada tipo con 2+ niveles (realización 1), el mejor nivel y la forma de la curva
+    c["por_tipo"] = {}
+    for tipo in ruido.TIPOS:
+        niveles = sorted(((d["nivel"], esc) for esc, d in dl.items() if d["n"] and d.get("tipo") == tipo and d.get("realizacion") == 1 and not d.get("linea") and not d.get("variante")))
+        if len(niveles) < 2:
+            continue
+        medias = [dl[esc]["acc_val"]["media"] for _, esc in niveles]
+        mejor = max(niveles, key=lambda ne: dl[ne[1]]["acc_val"]["media"])
+        k = medias.index(max(medias))
+        if k == 0:
+            forma = "cae con la intensidad: el mejor es el más suave"
+        elif k == len(medias) - 1:
+            forma = "sube con la intensidad: el mejor es el más fuerte (el eje no está acotado por arriba)"
+        else:
+            forma = "pico interior"
+        c["por_tipo"][tipo] = {"niveles": [{"nivel": n, "escenario": esc, "delta": dl[esc]["acc_val"]["media"], "se": dl[esc]["acc_val"]["se"],
+                                           "veredicto": dl[esc]["veredicto"]} for n, esc in niveles],
+                               "mejor": mejor[1], "mejor_nivel": mejor[0], "mejor_delta": dl[mejor[1]]["acc_val"]["media"],
+                               "mejor_veredicto": dl[mejor[1]]["veredicto"], "forma": forma,
+                               "amplitud": max(medias) - min(medias)}
+    # fase 3: en línea contra su copia fija, pareado por semilla
+    c["en_linea"] = {}
+    for esc, sems in por.items():
+        if not ruido.es_linea(esc):
+            continue
+        fijo = por.get(ruido.fijo_de(esc), {})
+        comunes = sorted(set(sems) & set(fijo))
+        if not comunes:
+            c["avisos"].append(f"`{esc}`: no está su copia fija `{ruido.fijo_de(esc)}` en las mismas semillas"); continue
+        st = _stats([sems[s]["acc_val"] - fijo[s]["acc_val"] for s in comunes])
+        stce = _stats([sems[s]["ce_val"] - fijo[s]["ce_val"] for s in comunes])
+        u = _umbral(st, DELTA)
+        c["en_linea"][esc] = {"contra": ruido.fijo_de(esc), "delta_acc_val": st, "delta_ce_val": stce, "umbral": u,
+                              "veredicto_vs_limpio": dl.get(esc, {}).get("veredicto"),
+                              "lectura": ("en línea MEJOR que la copia fija" if st["media"] > u else
+                                          ("en línea PEOR que la copia fija" if st["media"] < -u else "indistinguible de la copia fija"))}
+    # fase 4: variante de dibujo (grueso / doble) contra su base, pareado por semilla
+    c["variantes"] = {}
+    for esc, sems in por.items():
+        if ruido.variante_de(esc) is None:
+            continue
+        base = por.get(ruido.base_de(esc), {})
+        comunes = sorted(set(sems) & set(base))
+        if not comunes:
+            c["avisos"].append(f"`{esc}`: no está su base `{ruido.base_de(esc)}` en las mismas semillas"); continue
+        st = _stats([sems[s]["acc_val"] - base[s]["acc_val"] for s in comunes])
+        stce = _stats([sems[s]["ce_val"] - base[s]["ce_val"] for s in comunes])
+        u = _umbral(st, DELTA)
+        c["variantes"][esc] = {"contra": ruido.base_de(esc), "variante": ruido.variante_de(esc), "delta_acc_val": st, "delta_ce_val": stce, "umbral": u,
+                               "veredicto_vs_limpio": dl.get(esc, {}).get("veredicto"),
+                               "lectura": ("MEJOR que su base" if st["media"] > u else ("PEOR que su base" if st["media"] < -u else "indistinguible de su base"))}
     # la realización: un escenario con -r2 contra su -r1, pareado por semilla
     for esc, sems in por.items():
         tipo, nivel, r = ruido.parsear(esc)
@@ -140,7 +191,7 @@ def criterio(por, dl) -> dict:
             c["avisos"].append(f"`{esc}`: no está su realización 1 en las mismas semillas"); continue
         st = _stats([sems[s]["acc_val"] - uno[s]["acc_val"] for s in comunes])
         u = _umbral(st, DELTA)
-        medias = [d["acc_val"]["media"] for d in dl.values() if d["n"] and d.get("realizacion") == 1]
+        medias = [d["acc_val"]["media"] for d in dl.values() if d["n"] and d.get("realizacion") == 1 and not d.get("linea") and not d.get("variante")]
         amplitud = (max(medias) - min(medias)) if medias else float("nan")
         c["realizacion"][esc] = {"contra": ruido.escenario(tipo, nivel, 1), "delta_acc_val": st, "umbral": u,
                                  "amplitud_entre_tipos": amplitud,
@@ -159,7 +210,11 @@ def figura(dl) -> list[str]:
     filas = [(esc, d) for esc, d in dl.items() if d["n"]]
     if not filas:
         return []
-    filas.sort(key=lambda t: t[1]["acc_val"]["media"])
+    varios = len({(d.get("tipo"), d.get("nivel")) for _, d in filas}) > len({d.get("tipo") for _, d in filas})
+    if varios:   # fase 2: agrupado por tipo (orden de la tabla) y nivel, de arriba abajo
+        filas.sort(key=lambda t: (-ruido.TIPOS.index(t[1]["tipo"]), -(t[1]["nivel"] or 0), -(t[1].get("realizacion") or 0)))
+    else:        # fase 1: ordenado por Δ
+        filas.sort(key=lambda t: t[1]["acc_val"]["media"])
     RES.mkdir(parents=True, exist_ok=True)
     fig, axs = plt.subplots(1, 2, figsize=(10, 0.42 * len(filas) + 1.6), sharey=True)
     ys = np.arange(len(filas))
@@ -177,7 +232,7 @@ def figura(dl) -> list[str]:
     fig.legend(h, l, fontsize=7, loc="lower center", ncol=2, frameon=False)
     axs[0].set_yticks(ys); axs[0].set_yticklabels([esc for esc, _ in filas], fontsize=8)
     fig.suptitle("ruido-nist: Δ pareado por semilla contra `limpio` (los puntos tenues son las semillas)", fontsize=10)
-    fig.tight_layout(rect=(0, 0.06, 1, 1)); fig.savefig(RES / FIGURA, dpi=130); plt.close(fig)
+    fig.tight_layout(rect=(0, 0.06 if len(filas) < 15 else 0.025, 1, 1 - 1.2 / fig.get_figheight())); fig.savefig(RES / FIGURA, dpi=130); plt.close(fig)
     return [FIGURA]
 
 
@@ -208,6 +263,37 @@ def md(por, dl, c, figs) -> str:
     L.append(f"- **Ayudan** (media Δ > umbral): {', '.join(f'`{e}` ({s4(dl[e]['acc_val']['media'])})' for e in ayudan) if ayudan else '**ninguno**'}.")
     L.append(f"- **Perjudican**: {', '.join(f'`{e}` ({s4(dl[e]['acc_val']['media'])})' for e in perj) if perj else 'ninguno'}.")
     L.append(f"- **Pasan a la fase 2** (ayuda, o indistinguible con media > 0, al nivel medio): {', '.join(f'`{t}`' for t in c['fase2']) if c['fase2'] else '**ninguno** — con 180 imágenes y esta red, ningún ruido de la lista mejora la generalización'}.")
+    if c.get("por_tipo"):
+        L += ["", "## Fase 2: la intensidad dentro de cada tipo (Δ exactitud de val, pareado)", "",
+              "| tipo | niveles → Δ | mejor | forma |", "|---|---|---|---|"]
+        for tipo, pt in c["por_tipo"].items():
+            celdas = " · ".join(f"{n['nivel']:g}: {s4(n['delta'])}{'*' if n['veredicto'] == 'ayuda' else ('†' if n['veredicto'] == 'perjudica' else '')}" for n in pt["niveles"])
+            L.append(f"| `{tipo}` | {celdas} | `{pt['mejor']}` ({s4(pt['mejor_delta'])}, **{pt['mejor_veredicto']}**) | {pt['forma']}; amplitud {f4(pt['amplitud'])} |")
+        L += ["", "\\* ayuda · † perjudica (por el umbral de cada escenario). «Mejor» es la mayor media; si no es «ayuda», no se distingue de `limpio`."]
+        ganan = [(tipo, pt) for tipo, pt in c["por_tipo"].items() if pt["mejor_veredicto"] == "ayuda"]
+        L += ["", f"- **Tipos con algún nivel que ayuda**: {', '.join(f'`{pt["mejor"]}` ({s4(pt["mejor_delta"])})' for _, pt in ganan) if ganan else '**ninguno**'}."]
+    if c.get("en_linea"):
+        L += ["", "## Fase 3: ruido EN LÍNEA (una copia nueva por época) contra la copia fija, pareado", "",
+              "| escenario | Δ acc val vs `limpio` | veredicto vs `limpio` | **Δ acc val vs copia fija** ± SE | umbral | Δ CE val vs fija | lectura |",
+              "|---|---|---|---|---|---|---|"]
+        for esc, r in c["en_linea"].items():
+            d = dl.get(esc, {})
+            L.append(f"| `{esc}` | {s4(d['acc_val']['media']) if d.get('n') else '—'} | {r['veredicto_vs_limpio'] or '—'} | **{s4(r['delta_acc_val']['media'])}** ± {f4(r['delta_acc_val']['se'])} "
+                     f"| {f4(r['umbral'])} | {s4(r['delta_ce_val']['media'])} | {r['lectura']} |")
+        mejores = [e for e, r in c["en_linea"].items() if r["lectura"].startswith("en línea MEJOR")]
+        peores = [e for e, r in c["en_linea"].items() if r["lectura"].startswith("en línea PEOR")]
+        L += ["", f"- **En línea mejor que fija**: {', '.join(f'`{e}`' for e in mejores) if mejores else '**ninguno**'} · **peor**: {', '.join(f'`{e}`' for e in peores) if peores else 'ninguno'}."]
+    if c.get("variantes"):
+        L += ["", "## Fase 4: grosor (`-grueso`, 3–4 px) y número de trazos (`-doble`, 3–4) contra su base, pareado", "",
+              "| escenario | Δ acc val vs `limpio` | veredicto vs `limpio` | **Δ acc val vs base** ± SE | umbral | Δ CE val vs base | lectura |",
+              "|---|---|---|---|---|---|---|"]
+        for esc, r in c["variantes"].items():
+            d = dl.get(esc, {})
+            L.append(f"| `{esc}` (vs `{r['contra']}`) | {s4(d['acc_val']['media']) if d.get('n') else '—'} | {r['veredicto_vs_limpio'] or '—'} | **{s4(r['delta_acc_val']['media'])}** ± {f4(r['delta_acc_val']['se'])} "
+                     f"| {f4(r['umbral'])} | {s4(r['delta_ce_val']['media'])} | {r['lectura']} |")
+        mej = [e for e, r in c["variantes"].items() if r["lectura"].startswith("MEJOR")]
+        peo = [e for e, r in c["variantes"].items() if r["lectura"].startswith("PEOR")]
+        L += ["", f"- **Variantes mejores que su base**: {', '.join(f'`{e}`' for e in mej) if mej else '**ninguna**'} · **peores**: {', '.join(f'`{e}`' for e in peo) if peo else 'ninguna'}."]
     for esc, r in c["realizacion"].items():
         L.append(f"- **La realización** (`{esc}` contra `{r['contra']}`): Δ = {s4(r['delta_acc_val']['media'])} ± {f4(r['delta_acc_val']['se'])} (umbral {f4(r['umbral'])}; "
                  f"amplitud de las medias entre tipos {f4(r['amplitud_entre_tipos'])}) → {r['lectura']}.")

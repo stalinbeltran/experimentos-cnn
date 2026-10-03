@@ -1,0 +1,8 @@
+empiezo gaussiano@0.2-linea-s2: EN LÍNEA (una copia nueva por época), época 1 = bf01fc1489596ebb (semilla de ruido 1073), init 61b2a6d73700e035, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  gaussiano@0.2-linea-s2 ep   1/222 perdida 2.3156 acc~0.119
+  gaussiano@0.2-linea-s2 ep  50/222 perdida 0.1446 acc~0.944 · acc_val 0.9041 brecha +0.0792
+  gaussiano@0.2-linea-s2 ep 100/222 perdida 0.0955 acc~0.972 · acc_val 0.9122 brecha +0.0767
+  gaussiano@0.2-linea-s2 ep 150/222 perdida 0.0743 acc~0.978 · acc_val 0.9140 brecha +0.0860
+  gaussiano@0.2-linea-s2 ep 200/222 perdida 0.0446 acc~0.992 · acc_val 0.9307 brecha +0.0693
+  gaussiano@0.2-linea-s2 ep 222/222 perdida 0.0393 acc~0.986 · acc_val 0.9276 brecha +0.0724
+listo gaussiano@0.2-linea-s2: acc_train 1.0000 acc_val 0.9276 brecha +0.0724 · ce_train 0.0084 ce_val 0.2920 en 26.3 s

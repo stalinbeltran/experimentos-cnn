@@ -1,0 +1,8 @@
+empiezo sal-pimienta@0.05-s1: copia 5fa92f76366268e9 (semilla de ruido 1081), init 57841ba309809d65, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  sal-pimienta@0.05-s1 ep   1/222 perdida 2.3084 acc~0.111
+  sal-pimienta@0.05-s1 ep  50/222 perdida 0.1426 acc~0.947 · acc_val 0.8448 brecha +0.1275
+  sal-pimienta@0.05-s1 ep 100/222 perdida 0.0198 acc~1.000 · acc_val 0.8769 brecha +0.1231
+  sal-pimienta@0.05-s1 ep 150/222 perdida 0.0044 acc~1.000 · acc_val 0.8806 brecha +0.1194
+  sal-pimienta@0.05-s1 ep 200/222 perdida 0.0015 acc~1.000 · acc_val 0.8831 brecha +0.1169
+  sal-pimienta@0.05-s1 ep 222/222 perdida 0.0010 acc~1.000 · acc_val 0.8837 brecha +0.1163
+listo sal-pimienta@0.05-s1: acc_train 1.0000 acc_val 0.8837 brecha +0.1163 · ce_train 0.0006 ce_val 0.9589 en 21.2 s

@@ -10,6 +10,12 @@ SECO=1 sh "$AQUI/lanzar.sh" fase2 inventado >/dev/null 2>&1; caso "fase2 con un 
 SECO=1 sh "$AQUI/lanzar.sh" fase2 >/dev/null 2>&1; caso "fase2 sin tipos se niega (exit 2)" "$?" 2
 s=$(SECO=1 sh "$AQUI/lanzar.sh" corridas gaussiano@0.3-s2 2>&1); caso "corridas gaussiano@0.3-s2 (seco) es 1 corrida" "$(echo "$s" | grep -o '(1 corridas)')" "(1 corridas)"
 SECO=1 sh "$AQUI/lanzar.sh" corridas gaussiano@0.33-s2 >/dev/null 2>&1; caso "corridas con un nivel fuera de tabla se niega (exit 2)" "$?" 2
+s=$(SECO=1 sh "$AQUI/lanzar.sh" fase3 2>&1); caso "fase3 (seco) son 15 corridas en línea" "$(echo "$s" | grep -o '(15 corridas)')" "(15 corridas)"
+caso "fase3 (seco) lleva recorte@0.6-linea-s3" "$(echo "$s" | grep -c 'recorte@0.6-linea-s3')" 1
+SECO=1 sh "$AQUI/lanzar.sh" fase3 extra >/dev/null 2>&1; caso "fase3 con argumentos se niega (exit 2)" "$?" 2
+s=$(SECO=1 sh "$AQUI/lanzar.sh" fase4 2>&1); caso "fase4 (seco) son 18 corridas (3 trazos con ayuda en línea × 2 variantes × 3)" "$(echo "$s" | grep -o "(18 corridas)")" "(18 corridas)"
+caso "fase4 (seco) lleva oblicua@1-doble-linea-s2" "$(echo "$s" | grep -c 'oblicua@1-doble-linea-s2')" 1
+SECO=1 sh "$AQUI/lanzar.sh" fase4 extra >/dev/null 2>&1; caso "fase4 con argumentos se niega (exit 2)" "$?" 2
 SECO=1 sh "$AQUI/lanzar.sh" fase1 extra >/dev/null 2>&1; caso "fase1 con argumentos se niega (exit 2)" "$?" 2
 sh "$AQUI/lanzar.sh" inventado >/dev/null 2>&1; caso "modo desconocido se niega (exit 2)" "$?" 2
 sh "$AQUI/lanzar.sh" >/dev/null 2>&1; caso "sin modo se niega (exit 2)" "$?" 2

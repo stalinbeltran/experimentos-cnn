@@ -1,0 +1,8 @@
+empiezo curva@0.8-linea-s2: EN LÍNEA (una copia nueva por época), época 1 = 233ce76d7995a6e6 (semilla de ruido 1053), init 61b2a6d73700e035, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  curva@0.8-linea-s2 ep   1/222 perdida 2.3147 acc~0.122
+  curva@0.8-linea-s2 ep  50/222 perdida 0.1240 acc~0.969 · acc_val 0.8949 brecha +0.0940
+  curva@0.8-linea-s2 ep 100/222 perdida 0.0889 acc~0.972 · acc_val 0.8899 brecha +0.1101
+  curva@0.8-linea-s2 ep 150/222 perdida 0.0256 acc~0.989 · acc_val 0.9122 brecha +0.0878
+  curva@0.8-linea-s2 ep 200/222 perdida 0.0107 acc~0.997 · acc_val 0.9215 brecha +0.0785
+  curva@0.8-linea-s2 ep 222/222 perdida 0.0413 acc~0.986 · acc_val 0.9054 brecha +0.0946
+listo curva@0.8-linea-s2: acc_train 1.0000 acc_val 0.9054 brecha +0.0946 · ce_train 0.0037 ce_val 0.3917 en 42.7 s
