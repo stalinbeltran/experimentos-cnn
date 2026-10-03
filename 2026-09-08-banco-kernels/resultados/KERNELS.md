@@ -6,6 +6,9 @@ Generado por `python nn/evaluar_kernel.py --informe` leyendo los `resultados/*/c
 
 | kernel | `k` | IoU `eval` | IoU `train` | brecha | §2.1 | §2.2 | mecanismo | veredicto |
 |---|---|---|---|---|---|---|---|---|
+| **bork-k19-s3** | 19 | 0.8565 ± 0.0087 | 0.8887 ± 0.0086 | **+0.0322 ± 0.0063** | ✅ | +0.0111 / 0.0126 | facilitacion | **UTIL (sin efecto de generalizacion)** |
+| **bork-k19-s2** | 19 | 0.8563 ± 0.0078 | 0.8890 ± 0.0086 | **+0.0327 ± 0.0056** | ✅ | +0.0107 / 0.0120 | facilitacion | **UTIL (sin efecto de generalizacion)** |
+| **bork-k19-s1** | 19 | 0.8556 ± 0.0086 | 0.8863 ± 0.0133 | **+0.0307 ± 0.0070** | ✅ | +0.0126 / 0.0133 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **bork-k17-s3** | 17 | 0.8531 ± 0.0105 | 0.8870 ± 0.0089 | **+0.0339 ± 0.0048** | ✅ | +0.0077 / 0.0109 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **bork-k17-s2** | 17 | 0.8517 ± 0.0087 | 0.8821 ± 0.0084 | **+0.0304 ± 0.0049** | ✅ | ✅ | facilitacion | **UTIL Y GENERALIZA** |
 | **bork-k17-s1** | 17 | 0.8515 ± 0.0095 | 0.8829 ± 0.0076 | **+0.0314 ± 0.0055** | ✅ | +0.0102 / 0.0116 | facilitacion | **UTIL (sin efecto de generalizacion)** |
@@ -15,6 +18,7 @@ Generado por `python nn/evaluar_kernel.py --informe` leyendo los `resultados/*/c
 | **borpca-k15** | 15 | 0.8475 ± 0.0118 | 0.8802 ± 0.0123 | **+0.0327 ± 0.0074** | ✅ | +0.0089 / 0.0125 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **borpca-k17** | 17 | 0.8463 ± 0.0077 | 0.8798 ± 0.0116 | **+0.0335 ± 0.0057** | ✅ | +0.0080 / 0.0118 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **bork-k13-s3** | 13 | 0.8454 ± 0.0133 | 0.8781 ± 0.0113 | **+0.0327 ± 0.0048** | ✅ | +0.0093 / 0.0100 | facilitacion | **UTIL (sin efecto de generalizacion)** |
+| **borpca-k19** | 19 | 0.8439 ± 0.0082 | 0.8763 ± 0.0085 | **+0.0325 ± 0.0037** | ✅ | ✅ | facilitacion | **UTIL Y GENERALIZA** |
 | **bork-k13-s2** | 13 | 0.8436 ± 0.0136 | 0.8769 ± 0.0134 | **+0.0332 ± 0.0046** | ✅ | +0.0088 / 0.0099 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **bork-k13-s1** | 13 | 0.8434 ± 0.0135 | 0.8763 ± 0.0132 | **+0.0329 ± 0.0051** | ✅ | +0.0091 / 0.0103 | facilitacion | **UTIL (sin efecto de generalizacion)** |
 | **borpca-k13** | 13 | 0.8360 ± 0.0105 | 0.8755 ± 0.0093 | **+0.0395 ± 0.0059** | ✅ | +0.0025 / 0.0111 | facilitacion | **UTIL (sin efecto de generalizacion)** |
