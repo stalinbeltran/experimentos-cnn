@@ -1,20 +1,27 @@
 # `ruido-nist` — ¿qué ruido de entrenamiento ayuda a generalizar en dígitos de 8×8?
 
-**Fase 1 corrida el 2026-10-03 00:59 → 01:18 UTC en el dev (0 $, unidad `expc-ruidonist`,
-`Result=success`, `NRestarts=0`), 33 corridas: `limpio` + 9 tipos a su nivel medio +
-`oblicua@0.6-r2`, × 3 semillas.** 180 imágenes para entrenar (+180 copias), 1617 limpias para
-validar, pesos iniciales idénticos por semilla. Criterio escrito antes
+**Corrido el 2026-10-03 en el dev (0 $), CERRADO en sus dos fases.** Fase 1 (00:59 → 01:18 UTC,
+33 corridas): `limpio` + 9 tipos a su nivel medio + `oblicua@0.6-r2`, × 3 semillas. Fase 2
+(03:56 → 04:29 UTC, 84 corridas): los 5 niveles de los 7 tipos que pasaron, × 3 semillas. **117
+corridas** en total, una unidad de systemd por fase (`expc-ruidonist`, `Result=success`,
+`NRestarts=0`, 0 fallos). 180 imágenes para entrenar (+180 copias), 1617 limpias para validar,
+pesos iniciales idénticos por semilla. Criterio escrito antes
 ([`instrucciones/02-criterio.md`](instrucciones/02-criterio.md)), aplicado tal cual por
-`nn/informe.py` ([`resultados/RESULTADOS.md`](resultados/RESULTADOS.md)). **Estado: abierto;
-la fase 2 (intensidades) no se ha lanzado.**
+`nn/informe.py` ([`resultados/RESULTADOS.md`](resultados/RESULTADOS.md)).
 
-> **Veredicto de la fase 1:** de los nueve ruidos a intensidad media, **sólo `recorte` (cutout de
-> ¼–½ del lado, α = 0,6) ayuda**: +0,029 de exactitud de val sobre `limpio` (0,870 → 0,899),
-> pareado por semilla, con umbral 0,021. **Ninguno perjudica.** Los otros ocho quedan
-> **indistinguibles** (|Δ| ≤ 0,010 todos). Y un hallazgo que el criterio no pedía: **casi todos
-> los ruidos bajan la entropía cruzada de val** (`recorte` −0,39, `sal-pimienta` −0,19,
-> `gaussiano` −0,14, `vertical` −0,12, `oblicua` −0,11 nats) sin mover la exactitud: la red
-> acierta igual pero **se equivoca con menos seguridad**.
+> **Veredicto.** Contra `limpio` (exactitud de val 0,870 ± 0,032), **ningún ruido perjudica a
+> ningún nivel**, y **cinco de nueve tipos tienen un nivel que ayuda**: **`recorte@0.6`** (cutout
+> de ¼–½ del lado, α = 0,6) es el mejor con **+0,029** (0,899), seguido de `curva@0.8` (+0,021),
+> `gaussiano@0.2` (+0,017), `vertical@1` (+0,014) y `oblicua@1` (+0,012). `borrado@0.4` (+0,019) y
+> `sal-pimienta@0.2` (+0,018) son del mismo tamaño pero no se distinguen con 3 semillas.
+> `externos` y `horizontal` no pasaron de la fase 1. **La forma general es «más ruido, mejor»**
+> dentro del rango probado — los trazos suben hasta α = 1 (el eje no está acotado), `recorte` y
+> `curva` tienen pico interior — y **`gaussiano` es el único con sobredosis** (σ = 0,3 vuelve a
+> 0,000). Y lo que no pedía el criterio: casi todos bajan la **entropía cruzada de val** (hasta
+> −0,39 nats con `recorte@0.6`) aunque la exactitud no se mueva: la red se equivoca con menos
+> seguridad.
+
+## Fase 1 — tipos, al nivel medio
 
 | escenario | acc val (media ± sd) | **Δ acc val** ± SE | umbral | Δ CE val | veredicto |
 |---|---|---|---|---|---|
@@ -30,43 +37,60 @@ la fase 2 (intensidades) no se ha lanzado.**
 | `horizontal@0.6` | 0,860 ± 0,044 | −0,010 ± 0,007 | 0,014 | +0,003 | indistinguible |
 | `oblicua@0.6-r2` (2ª copia) | 0,865 ± 0,063 | −0,005 ± 0,018 | 0,037 | −0,060 | indistinguible |
 
-Exactitud de train (180 limpias) = 1,000 y CE de train ≈ 0,001 en **todos** los escenarios: el
-mecanismo no se pudo leer ni en CE (ningún `Δce_train` llega a 0,05). Figura:
-[`resultados/delta-por-tipo.png`](resultados/delta-por-tipo.png); el ruido, para mirarlo:
-[`resultados/muestras-ruido.png`](resultados/muestras-ruido.png).
+Sólo `recorte` supera el umbral. Pasan a la fase 2, por la regla escrita (ayuda o indistinguible
+con media > 0), siete tipos; quedan fuera `externos` y `horizontal`.
 
-## Lo que se lee, con el criterio
+## Fase 2 — la intensidad dentro de cada tipo (Δ exactitud de val, pareado; \* = ayuda)
 
-- **`recorte` es el único que supera el umbral**, y lo hace con margen (+0,029 contra 0,021) y en
-  las tres semillas (+0,009, +0,034, +0,044). Es el ruido que **quita** más información por imagen
-  (un cuadrado de ¼–½ del lado): obliga a reconocer el dígito por partes. Y es el que más baja la
-  CE de val.
-- **`vertical` y `borrado` rozan el umbral** (+0,010 y +0,008 contra 0,010 y 0,011): con 3 semillas
-  no se distinguen; con 5 podrían. `horizontal` apunta al otro lado (−0,010).
-- **La realización**: `oblicua@0.6-r2` contra `oblicua@0.6` da Δ = −0,011 ± 0,022. El criterio dice
-  «no se distingue», pero ⚠ **el SE de esa comparación (0,022) es del tamaño de la amplitud entre
-  tipos (0,039)**: la prueba de la realización está tan corta de poder como el resto. Una copia fija
-  sirve para `recorte` (su efecto es 3× ese ruido); para los que rozan el umbral, no se sabe.
-- **Pasan a la fase 2** por la regla escrita (ayuda, o indistinguible con media > 0): `borrado`,
-  `vertical`, `oblicua`, `curva`, `recorte`, `gaussiano`, `sal-pimienta` — 7 tipos, 84 corridas
-  nuevas (~30 min, 0 $). ⚠ La regla es permisiva a propósito (no descartar por falta de poder); el
-  que de verdad tiene señal es `recorte`.
+| tipo | nivel más suave → más fuerte | mejor | forma |
+|---|---|---|---|
+| `borrado` (p) | −0,003 · +0,010 · +0,008 · +0,009 · **+0,019** | `@0.4` (indist.) | sube; no acotado |
+| `vertical` (α) | +0,003 · +0,005 · +0,010 · +0,007 · **+0,014\*** | `@1` | sube; no acotado |
+| `oblicua` (α) | +0,004 · +0,001 · +0,006 · +0,006 · **+0,012\*** | `@1` | sube; no acotado |
+| `curva` (α) | +0,005 · +0,004 · +0,003 · **+0,021\*** · +0,012\* | `@0.8` | pico interior |
+| `recorte` (α) | +0,012\* · +0,011 · **+0,029\*** · +0,007 · +0,023 | `@0.6` | pico interior |
+| `gaussiano` (σ) | −0,005 · +0,006 · +0,003 · **+0,017\*** · −0,000 | `@0.2` | pico, y cae a 0 en σ = 0,3 |
+| `sal-pimienta` (p) | +0,001 · +0,011 · +0,007 · **+0,018** · +0,017 | `@0.2` (indist.) | pico interior |
+
+De 38 escenarios, 7 dan «ayuda» y 0 «perjudica»; el peor Δ de todo el estudio es −0,010
+(`horizontal@0.6`). Exactitud de train (180 limpias) = 1,000 y CE de train ≈ 0,001 en **todos**:
+el mecanismo (regularización contra facilitación) **no se pudo leer** ni en CE.
+
+Figuras: [`resultados/delta-por-tipo.png`](resultados/delta-por-tipo.png) (los 38 escenarios con
+sus semillas); el ruido, para mirarlo: [`resultados/muestras-ruido.png`](resultados/muestras-ruido.png).
+
+## Lo que se lee, y con qué cautela
+
+- **`recorte` es el ruido que mejor colabora**, y lo es con margen (+0,029 contra umbral 0,021, las
+  tres semillas positivas) y en la lectura de CE (−0,39, la mayor). Quita un cuadrado entero del
+  dígito: obliga a reconocerlo por partes.
+- **Los efectos son pequeños**: entre 1 y 3 puntos sobre 0,870, con 3 semillas. ⚠ Son **38
+  comparaciones** a 2·SE sin corrección (el criterio no la fijó): con umbral `max(2·SE, 0,01)`,
+  los «ayuda» de `vertical@1` y `oblicua@1` entran porque su SE es diminuto (0,002–0,004) y el
+  umbral cae a δ; cabría esperar 1–2 falsos positivos por azar entre 38. **Los que no dependen de
+  eso** son `recorte@0.6`, `curva@0.8` y `gaussiano@0.2` (Δ ≥ 0,017, 1,5–2× su umbral).
+- **La realización** (`oblicua@0.6` con dos copias): Δ −0,011 ± 0,022, «no se distingue», pero ese
+  SE es del tamaño de la amplitud entre tipos en la fase 1 (0,039): la prueba está tan corta de
+  poder como el resto. Para `recorte@0.6` no importa (su efecto la triplica).
+- **El eje de los trazos no está acotado**: `vertical` y `oblicua` suben hasta α = 1, que es el
+  máximo de opacidad; lo siguiente sería **grosor** (hoy 1–2 px a 32) o **más trazos**, no más α.
+  `borrado` sube hasta p = 0,4, también el borde.
 
 ## Lo que NO dice
 
-- Nada sobre combinar ruidos, ni sobre otras intensidades (eso es la fase 2), ni sobre ruido en
-  línea (una realización por época; pendiente de S2).
-- Con 3 semillas, un efecto por debajo de ~0,01 no se puede declarar; se dijo antes de mirar.
-- 13 escritores compartidos entre train y val (ver `dim-nist`).
+- Nada sobre **combinar** ruidos, ni sobre ruido **en línea** (una realización nueva por época;
+  pendiente de S2). Con lo medido, en línea es lo natural para `recorte`, `curva` y `gaussiano`.
+- Nada sobre otras redes ni otros datos; con 13 escritores compartidos entre train y val, es
+  generalizar a dígitos nuevos de los mismos escritores.
 
 ## Coste, reloj y dónde está
 
-- **0 $**, 19 min de reloj (20–22 s por corrida, 2 hilos). `NRestarts=0`.
-- Métricas, resúmenes, logs, informe y figuras: aquí (rama `tema-2`, `4b17d5f`). **Pesos (`last.pt`),
-  `init/` y todo lo demás**: en el almacén, `foveal-vision-data/experimentos-cnn-resultados/ruido-nist/`
-  (`b888e6c5`).
-- El aviso a Telegram del cierre **no salió** (`Falta BOT_TOKEN`): la unidad se lanzó desde una
-  sesión de Claude Code, no desde el bot. El `|| true` hizo su trabajo: el cierre terminó entero.
+- **0 $**, 19 + 33 min de reloj (20–24 s por corrida, 2 hilos), dos unidades de systemd, 0 fallos.
+- Métricas, resúmenes, logs, informe y figuras: aquí. **Pesos (`last.pt`), `init/` y todo lo
+  demás**: en el almacén, `foveal-vision-data/experimentos-cnn-resultados/ruido-nist/`.
+- Los avisos a Telegram de los dos cierres **no salieron** (`Falta BOT_TOKEN`: las unidades se
+  lanzaron desde una sesión de Claude Code, no desde el bot). El `|| true` hizo su trabajo.
+- Reporte #26 en `estudios-redes-neuronales`.
 
 ## Cómo se repite
 
@@ -74,6 +98,6 @@ mecanismo no se pudo leer ni en CE (ningún `Δce_train` llega a 0,05). Figura:
 cd 2026-10-02-ruido-nist
 python nn/probar.py && python nn/entrenar_local.py --comprobar && sh nn/probar_lanzador.sh
 nn/lanzar.sh fase1                 # 33 corridas; las que ya tienen summary.json se saltan
-nn/lanzar.sh fase2 recorte …       # los tipos de resultados/criterio-aplicado.json → fase2
+nn/lanzar.sh fase2 <tipos>         # los de resultados/criterio-aplicado.json → fase2
 nn/lanzar.sh --estado
 ```

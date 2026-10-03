@@ -1,4 +1,4 @@
-# Resultados de `ruido-nist` — generado por `nn/informe.py` el 2026-10-03 04:40 UTC
+# Resultados de `ruido-nist` — generado por `nn/informe.py` el 2026-10-03 04:42 UTC
 
 **Generado del disco (`nn/pesos/*/summary.json`); no se edita a mano.** Criterio: `instrucciones/02-criterio.md`, escrito antes de entrenar.
 
