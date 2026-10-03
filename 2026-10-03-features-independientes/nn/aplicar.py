@@ -32,11 +32,12 @@ MAPAS = RES / "mapas-digitos.npz"
 
 
 @torch.no_grad()
-def mapas(dig: dict, pesos: Path = PESOS) -> dict:
+def mapas(dig: dict, pesos=(PESOS,)) -> dict:
     x = torch.from_numpy(dig["x"])
     out, huellas, umbrales = np.zeros((len(x), len(F.CON_TRAZO), modelo.LADO, modelo.LADO), np.float32), {}, np.zeros(len(F.CON_TRAZO), np.float32)
     for j, f in enumerate(F.CON_TRAZO):
-        red, est = modelo.cargar(pesos / f / "best.pt")
+        ruta = [q / f / "best.pt" for q in pesos if (q / f / "best.pt").is_file()][-1]
+        red, est = modelo.cargar(ruta)
         out[:, j] = torch.sigmoid(red(x))[:, 0].numpy()
         huellas[f] = modelo.huella_pesos(red); umbrales[j] = est.get("umbral", modelo.UMBRAL)
     return {"sigma": out, "y": dig["y"], "train": dig["train"], "huellas": huellas, "umbrales": umbrales}
@@ -72,19 +73,24 @@ def rejilla(dig: dict, m: dict, destino: Path, n: int = 2, semilla: int = 3) -> 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--n", type=int, default=2)
+    p.add_argument("--pesos", type=Path, action="append",
+                   help="carpeta(s) de pesos; la última que tenga un detector manda (p. ej. --pesos nn/pesos --pesos nn/pesos-c3)")
+    p.add_argument("--sufijo", default="", help="sufijo de los ficheros de resultados (p. ej. -c3)")
     a = p.parse_args()
-    faltan = [f for f in F.CON_TRAZO if not (PESOS / f / "best.pt").is_file()]
+    pesos = [q.resolve() for q in (a.pesos or [PESOS])]
+    faltan = [f for f in F.CON_TRAZO if not any((q / f / "best.pt").is_file() for q in pesos)]
     if faltan:
         raise SystemExit(f"✗ faltan detectores entrenados: {faltan}. Primero nn/lanzar.sh todas.")
     dig = datos.digitos(); t0 = time.time()
-    m = mapas(dig)
+    m = mapas(dig, pesos)
+    mapas_f = RES / f"mapas-digitos{a.sufijo}.npz"
     RES.mkdir(parents=True, exist_ok=True)
-    np.savez_compressed(MAPAS, sigma=m["sigma"], y=m["y"], train=m["train"], umbrales=m["umbrales"])
+    np.savez_compressed(mapas_f, sigma=m["sigma"], y=m["y"], train=m["train"], umbrales=m["umbrales"])
     firma = resumen(m)
-    (RES / "firma-por-clase.json").write_text(json.dumps({"umbrales": {f: float(u) for f, u in zip(F.CON_TRAZO, m["umbrales"])}, "huellas_best": m["huellas"],
+    (RES / f"firma-por-clase{a.sufijo}.json").write_text(json.dumps({"umbrales": {f: float(u) for f, u in zip(F.CON_TRAZO, m["umbrales"])}, "huellas_best": m["huellas"], "pesos": [str(q) for q in pesos],
                                                           "columnas": list(F.CON_TRAZO), "firma": firma}, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    png = rejilla(dig, m, RES / "mapas-digitos.png", a.n)
-    print(f"mapas de {len(m['y'])} dígitos × {len(F.CON_TRAZO)} detectores en {time.time() - t0:.1f} s → {MAPAS.name}, {png.name}, firma-por-clase.json")
+    png = rejilla(dig, m, RES / f"mapas-digitos{a.sufijo}.png", a.n)
+    print(f"mapas de {len(m['y'])} dígitos × {len(F.CON_TRAZO)} detectores en {time.time() - t0:.1f} s → {mapas_f.name}, {png.name}, firma-por-clase{a.sufijo}.json")
     print(f"{'clase':<6}" + "".join(f"{f[:6]:>7}" for f in F.CON_TRAZO))
     for c, fila in firma.items():
         print(f"{c:<6}" + "".join(f"{fila[f]:>7.2f}" for f in F.CON_TRAZO))

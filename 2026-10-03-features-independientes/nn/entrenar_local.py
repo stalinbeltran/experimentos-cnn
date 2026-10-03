@@ -39,6 +39,12 @@ LOTE_POS = LOTE_NEG = 32
 EPOCAS_DEF = 80          # corrida 1: 40; ENMIENDA corrida 2: el best de arco-E caía en la 65-70
 EVAL_CADA = 5
 LR = 2e-3
+FRAC_ENFASIS = 0.5
+LR_REENTRENO = 1e-3
+EPOCAS_REENTRENO = 40
+TOP_CONTRA = 3
+PESOS_C3 = AQUI / "pesos-c3"
+REENTRENAR = ("arco-E", "arco-W", "arco-N", "arco-S", "esquina-NE", "esquina-NW", "esquina-SE", "esquina-SW")
 UMBRALES = tuple(round(u, 2) for u in np.arange(0.1, 0.95, 0.05))
 
 
@@ -145,7 +151,8 @@ def _mejor(a: dict | None, b: dict) -> bool:
 
 def entrenar(d: dict, feature: str, semilla: int, epocas: int, desde: Path | None, contra: list[str] | None,
              raiz: Path = PESOS, registro_on: bool = True, lr: float = LR, canales=modelo.CANALES,
-             peso_objetivo: float = modelo.PESO_OBJETIVO, lote_neg: int = LOTE_NEG, peso_presencia: float = PESO_PRESENCIA) -> dict:
+             peso_objetivo: float = modelo.PESO_OBJETIVO, lote_neg: int = LOTE_NEG, peso_presencia: float = PESO_PRESENCIA,
+             enfatizar: list[str] | None = None, frac_enfasis: float = FRAC_ENFASIS) -> dict:
     tr, va = datos.conjunto(d, feature, "train", contra), datos.conjunto(d, feature, "val", contra)
     torch.manual_seed(semilla)
     red = modelo.Detector(canales)
@@ -158,12 +165,18 @@ def entrenar(d: dict, feature: str, semilla: int, epocas: int, desde: Path | Non
     xp, xn = torch.from_numpy(tr["x_pos"]), torch.from_numpy(tr["x_neg"])
     tp_obj = modelo.objetivo(torch.from_numpy(tr["ancla_pos"]))
     tn_obj = torch.zeros(lote_neg, 1, modelo.LADO, modelo.LADO)
+    # --enfatizar: una fracción de las negativas de cada lote sale de los contra-casos; el resto, de TODAS
+    # (a diferencia de --contra, no quita ningún negativo: re-entrenar no puede olvidar lo que ya sabía)
+    idx_enf = np.flatnonzero(np.isin(tr["familia_neg"], [F.FAMILIAS.index(e) for e in enfatizar])) if enfatizar else np.array([], int)
+    if enfatizar and len(idx_enf) == 0:
+        raise SystemExit(f"✗ --enfatizar {enfatizar}: ninguna negativa de train es de esas familias")
+    n_enf = int(round(frac_enfasis * lote_neg)) if len(idx_enf) else 0
     dir_b = raiz / feature; dir_b.mkdir(parents=True, exist_ok=True)
     registro = dir_b / "metrics.jsonl"
     if registro_on:
         registro.write_text("", encoding="utf-8")
     config = {"feature": feature, "semilla": semilla, "epocas": epocas, "lote": [LOTE_POS, lote_neg], "lr": lr,
-              "contra": contra or "todas las demás + vacio", "desde": str(desde) if desde else None, "huella_desde": huella_desde,
+              "contra": contra or "todas las demás + vacio", "enfatizar": enfatizar, "frac_enfasis": frac_enfasis if enfatizar else None, "desde": str(desde) if desde else None, "huella_desde": huella_desde,
               "huella_init": huella_init, "n_train_pos": len(xp), "n_train_neg": len(xn), "n_val_pos": len(va["x_pos"]),
               "n_val_neg": len(va["x_neg"]), "canales": list(red.canales), "parametros": red.n_parametros(), "sigma": modelo.SIGMA,
               "peso_objetivo": peso_objetivo, "peso_presencia": peso_presencia, "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral", "dataset": datos.DATASET,
@@ -178,7 +191,11 @@ def entrenar(d: dict, feature: str, semilla: int, epocas: int, desde: Path | Non
         perm = rng.permutation(len(xp)); suma, n = 0.0, 0
         for i in range(0, len(perm), LOTE_POS):
             ip = torch.from_numpy(perm[i:i + LOTE_POS])
-            in_ = torch.from_numpy(rng.integers(0, len(xn), size=lote_neg))
+            if n_enf:
+                in_ = torch.from_numpy(np.concatenate([rng.choice(idx_enf, size=n_enf),
+                                                       rng.integers(0, len(xn), size=lote_neg - n_enf)]))
+            else:
+                in_ = torch.from_numpy(rng.integers(0, len(xn), size=lote_neg))
             x = torch.cat([xp[ip], xn[in_]]); obj = torch.cat([tp_obj[ip], tn_obj[:len(in_)]])
             opt.zero_grad(); l = perdida(red(x), obj, peso_objetivo, peso_presencia); l.backward(); opt.step()
             suma += l.item() * len(x); n += len(x); pasos += 1
@@ -207,6 +224,20 @@ def entrenar(d: dict, feature: str, semilla: int, epocas: int, desde: Path | Non
     print(f"listo {feature}: best ep {mejor['epoca']} umbral {mejor['umbral']:.2f} F1 {mejor['f1']:.4f} P {mejor['precision']:.4f} R {mejor['recall']:.4f} "
           f"pos≤1 {mejor['pos_ok']:.4f} → {resumen['veredicto']} · {resumen['segundos']} s", flush=True)
     return resumen
+
+
+def contra_casos(feature: str, origen: Path = PESOS, n: int = TOP_CONTRA) -> list[str]:
+    """Las n familias con MÁS FALSOS POSITIVOS (en número) del best.pt de `origen` — leídas de su summary.json,
+    o sea del val de la corrida anterior. Es la regla declarada en 02-criterio.md (corrida 3)."""
+    fp = json.loads((origen / feature / "summary.json").read_text(encoding="utf-8"))["best"]["fp_por_familia"]
+    return [k for k, _ in sorted(fp.items(), key=lambda kv: (-kv[1]["fp"], kv[0]))[:n]]
+
+
+def reentrenar_todos(d: dict, semilla: int, destino: Path = PESOS_C3) -> int:
+    for f in REENTRENAR:
+        entrenar(d, f, semilla, EPOCAS_REENTRENO, PESOS / f / "last.pt", None, destino, lr=LR_REENTRENO,
+                 canales=modelo.CANALES, enfatizar=contra_casos(f))
+    return 0
 
 
 def veredicto(m: dict) -> str:
@@ -255,6 +286,9 @@ def comprobar() -> int:
         prueba("best.pt carga y trae config, val y umbral", est["config"]["feature"] == "recta-V" and "f1" in est["val"] and 0 < est["umbral"] < 1)
         r4 = entrenar(d, "recta-V", 1, 1, None, ["lazo"], Path(tmp) / "d", registro_on=False)
         prueba("--contra queda en config", r4["contra"] == ["lazo"])
+        r5 = entrenar(d, "recta-V", 1, 1, None, None, Path(tmp) / "e", registro_on=False, enfatizar=["lazo"])
+        prueba("--enfatizar: no quita negativos y queda en config", r5["n_train_neg"] == r1["n_train_neg"] and r5["enfatizar"] == ["lazo"]
+               and r5["huella_final"] != r1["huella_final"])
     for m, v in (({"f1": 0.95, "pos_ok": 0.95}, "aprendió"), ({"f1": 0.95, "pos_ok": 0.5}, "a medias"), ({"f1": 0.5, "pos_ok": 1}, "no aprendió")):
         prueba(f"veredicto {m} = {v}", veredicto(m) == v)
     print("el mecanismo funciona." if ok else "✗ algo no funciona")
@@ -268,6 +302,10 @@ def main() -> int:
     p.add_argument("--semilla", type=int, default=1)
     p.add_argument("--epocas", type=int, default=EPOCAS_DEF)
     p.add_argument("--desde", type=Path, help="pesos de partida (re-entrenar)")
+    p.add_argument("--enfatizar", help="familias negativas a REFORZAR (la mitad de cada lote), sin quitar las demás")
+    p.add_argument("--lr", type=float, default=LR)
+    p.add_argument("--reentrenar-todos", action="store_true",
+                   help=f"corrida 3: {len(REENTRENAR)} detectores desde nn/pesos/<f>/last.pt, enfatizando sus {TOP_CONTRA} familias con más FP → nn/pesos-c3/")
     p.add_argument("--contra", help="familias negativas, separadas por comas (por defecto todas las demás + vacio)")
     p.add_argument("--hilos", type=int)
     p.add_argument("--salida", type=Path, default=PESOS)
@@ -287,7 +325,13 @@ def main() -> int:
         if malas:
             p.error(f"familias desconocidas en --contra: {malas}; las de aquí son {F.FAMILIAS}")
     canales = tuple(int(c) for c in a.canales.split(",")) if a.canales else modelo.CANALES
+    enf = a.enfatizar.split(",") if a.enfatizar else None
+    for lista in (enf or []):
+        if lista not in F.FAMILIAS:
+            p.error(f"familia desconocida en --enfatizar: {lista}")
     d = datos.cargar()
+    if a.reentrenar_todos:
+        return reentrenar_todos(d, a.semilla)
     if a.todas:
         if a.desde:
             p.error("--todas no admite --desde: cada detector parte de sus propios pesos")
@@ -296,7 +340,8 @@ def main() -> int:
         return 0
     if not a.feature:
         p.error("hace falta --feature <familia>, o --todas, o --comprobar")
-    entrenar(d, a.feature, a.semilla, a.epocas, a.desde, contra, a.salida, canales=canales, peso_objetivo=a.peso_objetivo, lote_neg=a.lote_neg, peso_presencia=a.peso_presencia)
+    entrenar(d, a.feature, a.semilla, a.epocas, a.desde, contra, a.salida, lr=a.lr, canales=canales, peso_objetivo=a.peso_objetivo,
+             lote_neg=a.lote_neg, peso_presencia=a.peso_presencia, enfatizar=enf)
     return 0
 
 

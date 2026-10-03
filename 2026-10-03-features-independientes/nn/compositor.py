@@ -53,7 +53,8 @@ def logistica(xtr, ytr, xva, yva, semilla: int) -> dict:
 
 
 def main() -> int:
-    f = RES / "mapas-digitos.npz"
+    sufijo = sys.argv[sys.argv.index("--sufijo") + 1] if "--sufijo" in sys.argv else ""
+    f = RES / f"mapas-digitos{sufijo}.npz"
     if not f.is_file():
         raise SystemExit("✗ no está resultados/mapas-digitos.npz: primero nn/aplicar.py")
     m = dict(np.load(f)); e = entradas(m); tr = m["train"]; y = m["y"]
@@ -71,8 +72,8 @@ def main() -> int:
               f"6→9 {c1['6_como_9']} 9→6 {c1['9_como_6']} · 2→5 {c1['2_como_5']} 5→2 {c1['5_como_2']}")
     salida["delta_posicional_menos_presencia"] = round(salida["posicional"]["acc_val_media"] - salida["presencia"]["acc_val_media"], 4)
     salida["segundos"] = round(time.time() - t0, 1)
-    (RES / "compositores.json").write_text(json.dumps(salida, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Δ posicional − presencia = {salida['delta_posicional_menos_presencia']:+.4f} → resultados/compositores.json")
+    (RES / f"compositores{sufijo}.json").write_text(json.dumps(salida, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Δ posicional − presencia = {salida['delta_posicional_menos_presencia']:+.4f} → resultados/compositores{sufijo}.json")
     return 0
 
 

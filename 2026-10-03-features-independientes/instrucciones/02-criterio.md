@@ -90,3 +90,29 @@ subiendo). Con 80 épocas, 0,64; con 80 épocas **y canales 16/32/32** (14.081 p
 con posición 0,93. La corrida 2 va con eso: presencia ×1, 80 épocas, 16/32/32. Todo lo ensayado está
 en `resultados/corrida-1-2026-10-03.json` y arriba; ninguna de estas elecciones miró el val de otro
 detector que no fueran `arco-E` y `recta-V`, y los 11 restantes se ven por primera vez en la corrida 2.
+
+## Corrida 3 — re-entrenar con contra-casos (escrito el 2026-10-03, ANTES de lanzarla)
+
+**Qué se hace.** Los 8 detectores que no llegaron a «aprendió» o se quedaron cerca (los 4 arcos y las
+4 esquinas) se re-entrenan **desde su `last.pt` de la corrida 2**, 40 épocas más, `lr` 1e-3 (la mitad:
+es un ajuste, no un entrenamiento desde cero). Las rectas y el lazo no se tocan.
+
+**Cuáles son sus contra-casos — regla mecánica, no elección:** las **3 familias con más falsos
+positivos** (en número) en el `summary.json` de la corrida 2 (`entrenar_local.contra_casos`). Ninguna
+concentraba ≥ 50 % de los FP (la mayor, 13 %), así que **no** se restringen los negativos a ellas
+(`--contra`, que haría olvidar el resto): se **enfatizan** (`--enfatizar`), la mitad de las negativas
+de cada lote sale de esas tres familias y la otra mitad de todas, como antes.
+
+**Qué se reporta:** el mismo §A, sobre el mismo val, para los 8; y los compositores (§B) con la
+mezcla «corrida 2 para rectas y lazo + corrida 3 para los 8» (`resultados/compositores-c3.json`),
+al lado de los de la corrida 2. Los pesos de la corrida 2 **no se pisan** (`nn/pesos/`); los nuevos
+van a `nn/pesos-c3/`.
+
+**Qué se espera:** precisión de arcos y esquinas de ~0,62 a ≥ 0,75, recall casi igual, y el F1 de al
+menos la mitad de los 8 por encima de 0,80. Sobre dígitos, un efecto **pequeño** en el compositor
+posicional (ya está en 0,959) y uno mayor en el de presencia, que es el que depende de que el
+«está / no está» sea limpio. Si los 8 mejoran en val y los compositores **no** se mueven, eso dice que
+el cuello de botella en dígitos no era la precisión sintética.
+
+**Lo que no se decide aquí:** adoptar `pesos-c3` como los oficiales. Se decide mirando §A y §B juntos,
+y se escribe.
