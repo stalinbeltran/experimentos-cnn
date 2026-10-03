@@ -183,3 +183,42 @@ más; el posicional ya llega a 1,000 en train con 832.
 **Qué se espera:** posicional ≥ 0,965 (al menos ~10 dígitos mejor que el mejor de los dos), con 1↔8 y 4→1
 **los dos** por debajo de 5. **Qué lo refuta:** posicional ≤ 0,959 — entonces combinar no suma y el límite
 está en otro sitio (el compositor lineal o los 180 dígitos de train).
+
+## Corrida 6 — el grupo `dig`: 13 detectores obtenidos de los DÍGITOS sin etiquetas (escrito el 2026-10-03, ANTES de mirar)
+
+**Encargo del dueño:** un «obtenedor» de features a partir de los dígitos mismos, sin usar las etiquetas,
+con pocos dígitos, del orden de 13 detectores (como los grupos anteriores), con nombres propios por detector
+y por grupo, y la contribución de cada uno como dato curioso.
+
+**Método (k-means esférico de parches, sin etiquetas).** Se eligen **20 dígitos al azar** de la partición
+de train (semilla fija; la etiqueta no se lee). De cada uno se sacan los parches **5×5** centrados en cada
+celda (relleno con ceros), se descartan los casi vacíos (norma < 1,0) y se normalizan a norma 1. k-means
+esférico con **K = 13**, inicialización k-means++ (semilla 1), 200 iteraciones. Cada centro es un **kernel**.
+
+**Cada kernel es un detector independiente**: su mapa 8×8 es, en cada celda, la similitud coseno entre el
+kernel y el parche 5×5 de esa celda, con la norma del parche suavizada (`p·k / (|k|·(|p| + 0,5))`, para que
+un parche casi vacío no dé similitud alta) y recortada a [0, 1]. No compite con los otros kernels (no hay
+«gana el más parecido»): cada mapa sale sólo de su kernel. Mismo formato que los detectores anteriores, así
+que el compositor no cambia.
+
+**Nombres.** Grupo **`dig`** (los otros dos grupos pasan a llamarse, como ya hace el npz combinado, `fino` y
+`grueso`). Cada detector: `dig:NN`, numerado por **tamaño de su grupo de parches** (01 = el patrón más
+frecuente), y un **alias descriptivo automático** sacado del propio kernel: orientación dominante del trazo
+(tensor de estructura: `H`, `V`, `/`, `\`, o `~` si no tiene una) y hacia dónde está la tinta dentro del
+kernel (`c`entro, `N`, `S`, `E`, `W`, `NE`…). P. ej. `dig:03 V-W` = trazo vertical en el lado izquierdo del
+parche. El alias es sólo para leer; la identidad es `dig:NN`.
+
+**Qué se mide (compositores, mismos de siempre, 3 semillas, 180/1617):**
+1. `dig` solo (13 mapas) — ¿cuánto dan 13 kernels sacados de 20 dígitos?
+2. `fino + grueso + dig` (39 mapas) contra `fino + grueso` (26, el 0,972 de la corrida 5).
+3. **Contribución** (dato curioso, no decide nada): para cada uno de los 39, quitar su mapa y re-entrenar el
+   compositor posicional (semilla 1); contribución = acierto con los 39 − acierto sin él. Y lo mismo dentro
+   de `dig` solo.
+
+**Riesgo escrito antes:** los 20 dígitos salen de los 180 de train del compositor, así que los kernels han
+«visto» parte de ese train (sin etiquetas). No toca val. Y un kernel 5×5 en un dígito de 8×8 abarca más de la
+mitad del dígito: es una feature compleja por construcción, como se pidió.
+
+**Qué se espera:** `dig` solo entre 0,85 y 0,93 (kernels sacados del propio dato, pero sin etiquetas y con 20
+dígitos); los 39 juntos ≥ 0,975; contribuciones individuales pequeñas (|Δ| < 0,005 casi todas), porque con
+39 detectores hay mucha redundancia.

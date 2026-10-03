@@ -163,11 +163,50 @@ aprovecha**. Lo que una confunde, la otra lo separa: el lineal aprende a qué ve
 Los fallos de composición casi desaparecen (15 → 4), y de los 45 que quedan, 32 los falla también un lineal
 sobre los píxeles: son, sobre todo, dígitos difíciles en sí. Rejilla en `resultados/fallos-c24.png`.
 
+## Corrida 6 (2026-10-03): el grupo `dig` — 13 detectores obtenidos de los dígitos SIN etiquetas
+
+**Obtenedor** (`nn/obtenedor.py`): 20 dígitos al azar de train (la etiqueta no se lee) → 1.196 parches 5×5
+con tinta → k-means esférico, K = 13 → 13 kernels. Cada kernel es un detector independiente: su mapa 8×8 es
+la similitud coseno (suavizada) entre el kernel y el parche de cada celda. Kernels en `nn/pesos-dig/`
+(`kernels.pt`, `kernels.json` con qué dígitos se usaron), imagen en `resultados/kernels-dig.png`.
+
+**Nombres.** Grupo `dig`; los anteriores son `fino` y `grueso`. Cada detector `dig:NN` (01 = el patrón más
+frecuente entre los parches) más un alias automático orientación-posición de la tinta (`V-E`, `/-SE`, `~-N`…).
+⚠ El alias es aproximado: `dig:06` dice `V-c` y a la vista es más un lazo; la identidad es el número.
+
+| sobre dígitos (3 semillas) | `dig` solo (13) | fino + grueso (26) | **fino + grueso + dig (39)** |
+|---|---:|---:|---:|
+| compositor posicional | 0,888 ± 0,002 | **0,972** | 0,964 ± 0,001 |
+| compositor de presencia | 0,524 ± 0,037 | 0,829 | 0,842 ± 0,003 |
+| fallos (posicional, semilla 1) | — | 45 | 59 |
+
+Contra el criterio: `dig` solo entre 0,85 y 0,93 ✅ (0,888 — 13 kernels de 20 dígitos sin etiquetas dan casi
+lo mismo que los 13 sintéticos finos, 0,959, menos 7 puntos); los 39 juntos ≥ 0,975 ❌ (**0,964: añadir `dig`
+EMPEORA** al mejor, −0,008, 13 dígitos).
+
+**Contribución** (dato curioso; quitar un detector y re-entrenar, semilla 1, `resultados/contribucion-*.json`):
+- Con los 39, **sólo 6 detectores ayudan** al quitarlos: el que más, `grueso:recta-V` (+7 dígitos); luego
+  `fino:arco-E` y `grueso:arco-W` (+3 cada uno). Quitar casi cualquier otro **mejora** el acierto (hasta 7
+  dígitos al quitar `fino:lazo`), y **ningún `dig` ayuda** (−2 a −6 dígitos cada uno).
+- Dentro de `dig` solo, igual: quitar cualquiera menos `dig:13` mejora (hasta 7 dígitos, `dig:08`).
+- ⚠ Con una sola semilla el ruido es de ±2–3 dígitos, así que casi todas estas cifras son ruido; sólo los
+  extremos (±7) dicen algo.
+
+**Lectura** (sin medir aún): con 180 dígitos de train y 2.496 entradas, el compositor lineal ya está
+**sobreajustado** (train 1,000) y cada mapa añadido le da más con qué memorizar. Los mapas `dig` son densos
+—un kernel 5×5 normalizado se parece «algo» a casi cualquier parche— y por eso el análisis del error marca
+15 detectores «raros» por fallo frente a 4 por acierto. O sea: los kernels obtenidos **sí llevan información**
+(0,888 solos), pero lo que sobra ahora no son detectores, sino capacidad del compositor frente a 180 dígitos.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
 - Comprobar si el techo de ~0,70–0,77 de arcos y esquinas es **ambigüedad del dato a 8×8** (radio chico).
 - ~~Dataset con trazos gruesos y re-entreno~~: hecho en la corrida 4 (arriba) — 1↔8 arreglado, 4→1 nuevo.
 - ~~Fino y grueso a la vez~~: hecho en la corrida 5 (arriba) — 0,972, el mejor.
+- ~~Obtener features de los dígitos sin etiquetas~~: hecho en la corrida 6 (grupo `dig`), no mejora al combinar.
+- **Compositor con más regularización** (L2 elegido sobre train por validación cruzada, o mapas reducidos a 4×4)
+  antes de seguir añadiendo detectores: es lo que diría si el banco grande ayuda o no.
+- Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).

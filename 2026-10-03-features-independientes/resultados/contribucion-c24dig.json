@@ -1,0 +1,242 @@
+{
+ "sufijo": "-c24dig",
+ "acc_todos": 0.9635,
+ "n_val": 1617,
+ "segundos": 26.7,
+ "detectores": [
+  {
+   "detector": "grueso:recta-V",
+   "acc_sin": 0.9592,
+   "contribucion": 0.0043,
+   "digitos": 7
+  },
+  {
+   "detector": "fino:arco-E",
+   "acc_sin": 0.9617,
+   "contribucion": 0.0018,
+   "digitos": 3
+  },
+  {
+   "detector": "grueso:arco-W",
+   "acc_sin": 0.9617,
+   "contribucion": 0.0018,
+   "digitos": 3
+  },
+  {
+   "detector": "fino:recta-V",
+   "acc_sin": 0.9629,
+   "contribucion": 0.0006,
+   "digitos": 1
+  },
+  {
+   "detector": "grueso:arco-E",
+   "acc_sin": 0.9629,
+   "contribucion": 0.0006,
+   "digitos": 1
+  },
+  {
+   "detector": "grueso:esquina-SE",
+   "acc_sin": 0.9629,
+   "contribucion": 0.0006,
+   "digitos": 1
+  },
+  {
+   "detector": "grueso:esquina-SW",
+   "acc_sin": 0.9635,
+   "contribucion": 0.0,
+   "digitos": 0
+  },
+  {
+   "detector": "fino:esquina-SE",
+   "acc_sin": 0.9641,
+   "contribucion": -0.0006,
+   "digitos": -1
+  },
+  {
+   "detector": "grueso:recta-H",
+   "acc_sin": 0.9641,
+   "contribucion": -0.0006,
+   "digitos": -1
+  },
+  {
+   "detector": "fino:arco-W",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "fino:esquina-NE",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "grueso:recta-B",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "grueso:esquina-NE",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "grueso:esquina-NW",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "dig:10",
+   "acc_sin": 0.9647,
+   "contribucion": -0.0012,
+   "digitos": -2
+  },
+  {
+   "detector": "fino:arco-N",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "fino:arco-S",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "fino:recta-S",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "fino:esquina-NW",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "grueso:arco-N",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "grueso:lazo",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:01",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:03",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:04",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:05",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:06",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:07",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:08",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:09",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "dig:12",
+   "acc_sin": 0.9654,
+   "contribucion": -0.0019,
+   "digitos": -3
+  },
+  {
+   "detector": "fino:recta-H",
+   "acc_sin": 0.966,
+   "contribucion": -0.0025,
+   "digitos": -4
+  },
+  {
+   "detector": "fino:recta-B",
+   "acc_sin": 0.966,
+   "contribucion": -0.0025,
+   "digitos": -4
+  },
+  {
+   "detector": "fino:esquina-SW",
+   "acc_sin": 0.966,
+   "contribucion": -0.0025,
+   "digitos": -4
+  },
+  {
+   "detector": "grueso:recta-S",
+   "acc_sin": 0.966,
+   "contribucion": -0.0025,
+   "digitos": -4
+  },
+  {
+   "detector": "grueso:arco-S",
+   "acc_sin": 0.9666,
+   "contribucion": -0.0031,
+   "digitos": -5
+  },
+  {
+   "detector": "dig:02",
+   "acc_sin": 0.9666,
+   "contribucion": -0.0031,
+   "digitos": -5
+  },
+  {
+   "detector": "dig:13",
+   "acc_sin": 0.9666,
+   "contribucion": -0.0031,
+   "digitos": -5
+  },
+  {
+   "detector": "dig:11",
+   "acc_sin": 0.9672,
+   "contribucion": -0.0037,
+   "digitos": -6
+  },
+  {
+   "detector": "fino:lazo",
+   "acc_sin": 0.9678,
+   "contribucion": -0.0043,
+   "digitos": -7
+  }
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "grupo": "dig",
+ "metodo": "k-means esférico de parches 5x5, sin etiquetas",
+ "k": 13,
+ "n_digitos": 20,
+ "indices_digitos": [
+  40,
+  65,
+  201,
+  434,
+  553,
+  566,
+  574,
+  684,
+  716,
+  854,
+  891,
+  1041,
+  1097,
+  1158,
+  1379,
+  1422,
+  1450,
+  1565,
+  1700,
+  1703
+ ],
+ "semilla_digitos": 20261003,
+ "semilla_kmeans": 1,
+ "n_parches": 1196,
+ "norma_min": 1.0,
+ "suave": 0.5,
+ "detectores": [
+  {
+   "nombre": "dig:01",
+   "alias": "V-E",
+   "parches": 129
+  },
+  {
+   "nombre": "dig:02",
+   "alias": "V-W",
+   "parches": 111
+  },
+  {
+   "nombre": "dig:03",
+   "alias": "V-SW",
+   "parches": 110
+  },
+  {
+   "nombre": "dig:04",
+   "alias": "V-NW",
+   "parches": 110
+  },
+  {
+   "nombre": "dig:05",
+   "alias": "V-E",
+   "parches": 105
+  },
+  {
+   "nombre": "dig:06",
+   "alias": "V-c",
+   "parches": 99
+  },
+  {
+   "nombre": "dig:07",
+   "alias": "~-SW",
+   "parches": 97
+  },
+  {
+   "nombre": "dig:08",
+   "alias": "/-SE",
+   "parches": 97
+  },
+  {
+   "nombre": "dig:09",
+   "alias": "V-c",
+   "parches": 91
+  },
+  {
+   "nombre": "dig:10",
+   "alias": "V-SE",
+   "parches": 74
+  },
+  {
+   "nombre": "dig:11",
+   "alias": "V-NE",
+   "parches": 58
+  },
+  {
+   "nombre": "dig:12",
+   "alias": "~-N",
+   "parches": 58
+  },
+  {
+   "nombre": "dig:13",
+   "alias": "\\-NE",
+   "parches": 57
+  }
+ ]
+}
