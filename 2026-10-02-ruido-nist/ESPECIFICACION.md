@@ -109,8 +109,15 @@ con media > 0» (`resultados/criterio-aplicado.json` → `fase2`): los 5 niveles
 medio ya está hecho y se salta). `nn/lanzar.sh fase2 <tipo> [tipo…]`; con 3 tipos, 36 corridas
 nuevas, ~15 min.
 
-**Fase 3 (opcional, si la fase 1 no separa)**: subir a 5 semillas los tipos dudosos (pide crear
-`init-s4.pt` e `init-s5.pt` con `--inicializar`, y ampliar `SEMILLAS` en `nn/modelo.py`).
+**Fase 3 — ruido EN LÍNEA (lo pendiente de S2), decidida el 2026-10-03 tras la fase 2**: el mejor
+nivel de cada tipo cuyo mejor nivel fue «ayuda», con el sufijo `-linea` (una copia **nueva por
+época**, del mismo generador que la fija: la época 1 **es** la copia fija), × 3 semillas = 15
+corridas. `nn/lanzar.sh fase3` las saca de `criterio-aplicado.json`. Se compara contra `limpio` y
+**contra su copia fija**, pareado. ~45 s por corrida (los trazos cuestan ~90 ms por copia de 180,
+medido).
+
+*(Lo que el plan llamaba fase 3 —subir a 5 semillas los tipos dudosos— no se hizo: pediría
+`init-s4.pt` e `init-s5.pt` con `--inicializar` y ampliar `SEMILLAS` en `nn/modelo.py`.)*
 
 ## 4. Qué sale y dónde
 

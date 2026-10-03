@@ -23,8 +23,12 @@ exactitud de validación, y cuánto?
   reducen a cobertura por bloque 4×4 y se componen `x' = x + α·c·(v − x)`; `borrado`/`externos`
   por Binomial a nivel de bit; `gaussiano` y `sal-pimienta` directamente a 8×8. Los nueve tipos,
   sus cinco niveles y su `t` están en `nn/ruido.py` (`TIPOS`, `NIVELES`) y en `ESPECIFICACION.md` §2.
-- **Nombres**: escenario = `<tipo>@<nivel>[-r<realización>]` o `limpio`; corrida =
-  `<escenario>-s<semilla>` (p. ej. `oblicua@0.6-r2-s3`). Un nivel que no esté en la tabla **se niega**.
+- **Nombres**: escenario = `<tipo>@<nivel>[-r<realización>][-linea]` o `limpio`; corrida =
+  `<escenario>-s<semilla>` (p. ej. `oblicua@0.6-r2-s3`, `recorte@0.6-linea-s1`). Un nivel que no
+  esté en la tabla **se niega**. **`-linea`** = ruido en línea: la copia se regenera **cada época**
+  del mismo generador (misma semilla de ruido; la época 1 es la copia fija), idéntica entre
+  semillas de pesos; `datos.escenario` devuelve `regenerar` y el bucle lo llama al empezar cada
+  época > 1.
 
 ## Salidas
 
@@ -58,10 +62,13 @@ exactitud de validación, y cuánto?
    padre PID 1; cada corrida es un proceso `nn/entrenar_local.py`). Al terminar la unidad corre
    `informe.py`, la rejilla, commitea, copia todo al almacén y avisa. `--estado` lee el disco.
 4. **Fase 2**: `nn/lanzar.sh fase2 <tipos de criterio-aplicado.json → fase2>`.
+4 bis. **Fase 3** (en línea): `nn/lanzar.sh fase3` — el mejor nivel de cada tipo con «ayuda» en
+   `criterio-aplicado.json → por_tipo`, con `-linea`, × 3. El informe añade «en línea contra fija».
 5. `README.md` con el veredicto; reporte en `estudios-redes-neuronales` (estudio con reloj, 0 $).
 
 - **Qué se mide y con qué umbral:** `instrucciones/02-criterio.md`, escrito antes.
-- **Corridas:** fase 1 = 11 escenarios × 3 = 33; fase 2 = 4 niveles nuevos × 3 por tipo.
+- **Corridas:** fase 1 = 11 escenarios × 3 = 33; fase 2 = 4 niveles nuevos × 3 por tipo (84);
+  fase 3 = 5 escenarios en línea × 3 = 15.
 - **Qué se llama «ganar»:** no hay ganador global; cada tipo queda en ayuda / perjudica /
   indistinguible, con su mecanismo, y los que pasan van a la fase 2.
 
@@ -75,8 +82,8 @@ exactitud de validación, y cuánto?
 | `nn/probar.py` | las pruebas sin entrenar | `python nn/probar.py` |
 | `nn/entrenar_local.py` | una corrida; `metrics.jsonl` según ocurre; `summary.json` al final | `--escenario <esc> --semilla <s> [--pasos N] [--hilos N] [--salida dir]` · `--ensayo --lr … [--escenario …]` · `--comprobar` · `--inicializar` |
 | `nn/informe.py` | Δ pareado por escenario, veredictos, fase 2, realización, figura; del disco | `python nn/informe.py` |
-| `nn/lanzar.sh` | la fase como unidad; imprime la orden; se niega a lanzar dos veces; salta lo hecho; cierre | `fase1` · `fase2 <tipo…>` · `corridas <id…>` · `--estado` · `SECO=1 …` |
-| `nn/probar_lanzador.sh` | el despacho del lanzador, con el seco (11 casos) | `sh nn/probar_lanzador.sh` |
+| `nn/lanzar.sh` | la fase como unidad; imprime la orden; se niega a lanzar dos veces; salta lo hecho; cierre | `fase1` · `fase2 <tipo…>` · `fase3` · `corridas <id…>` · `--estado` · `SECO=1 …` |
+| `nn/probar_lanzador.sh` | el despacho del lanzador, con el seco (14 casos) | `sh nn/probar_lanzador.sh` |
 
 - ⚠ **`entrenar_local.py` se llama así por el freno** (`cerrable.mjs` → `TRABAJOS`).
 - **Dependencias:** el `.venv` de la raíz del repo (torch 2.14.1+cpu, numpy 2.5.3, matplotlib 3.11,
