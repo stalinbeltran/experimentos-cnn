@@ -1,6 +1,13 @@
 {
  "criterio": {
-  "avisos": [],
+  "avisos": [
+   "`curva@0.8-doble-linea`: no está su copia fija `curva@0.8-doble` en las mismas semillas",
+   "`curva@0.8-grueso-linea`: no está su copia fija `curva@0.8-grueso` en las mismas semillas",
+   "`oblicua@1-doble-linea`: no está su copia fija `oblicua@1-doble` en las mismas semillas",
+   "`oblicua@1-grueso-linea`: no está su copia fija `oblicua@1-grueso` en las mismas semillas",
+   "`vertical@1-doble-linea`: no está su copia fija `vertical@1-doble` en las mismas semillas",
+   "`vertical@1-grueso-linea`: no está su copia fija `vertical@1-grueso` en las mismas semillas"
+  ],
   "base": {
    "acc_val": {
     "media": 0.8703366666666668,
@@ -90,6 +97,8 @@
    "curva@0.2": "indistinguible",
    "curva@0.4": "indistinguible",
    "curva@0.6": "indistinguible",
+   "curva@0.8-doble-linea": "indistinguible",
+   "curva@0.8-grueso-linea": "ayuda",
    "curva@0.8-linea": "ayuda",
    "curva@0.8": "ayuda",
    "curva@1": "ayuda",
@@ -106,6 +115,8 @@
    "oblicua@0.6-r2": "indistinguible",
    "oblicua@0.6": "indistinguible",
    "oblicua@0.8": "indistinguible",
+   "oblicua@1-doble-linea": "ayuda",
+   "oblicua@1-grueso-linea": "ayuda",
    "oblicua@1-linea": "ayuda",
    "oblicua@1": "ayuda",
    "recorte@0.2": "ayuda",
@@ -123,6 +134,8 @@
    "vertical@0.4": "indistinguible",
    "vertical@0.6": "indistinguible",
    "vertical@0.8": "indistinguible",
+   "vertical@1-doble-linea": "ayuda",
+   "vertical@1-grueso-linea": "indistinguible",
    "vertical@1-linea": "ayuda",
    "vertical@1": "ayuda"
   },
@@ -585,7 +598,182 @@
     "lectura": "en línea MEJOR que la copia fija"
    }
   },
-  "variantes": {}
+  "variantes": {
+   "curva@0.8-doble-linea": {
+    "contra": "curva@0.8-linea",
+    "variante": "doble",
+    "delta_acc_val": {
+     "media": -0.0136033333333333,
+     "sd": 0.01831048151560555,
+     "se": 0.010571561432026533,
+     "n": 3,
+     "valores": [
+      -0.01175,
+      0.00371,
+      -0.03277
+     ]
+    },
+    "delta_ce_val": {
+     "media": 0.020190000000000003,
+     "sd": 0.05641309511097577,
+     "se": 0.03257011564814182,
+     "n": 3,
+     "valores": [
+      0.06975,
+      -0.0412,
+      0.03202
+     ]
+    },
+    "umbral": 0.021143122864053066,
+    "veredicto_vs_limpio": "indistinguible",
+    "lectura": "indistinguible de su base"
+   },
+   "curva@0.8-grueso-linea": {
+    "contra": "curva@0.8-linea",
+    "variante": "grueso",
+    "delta_acc_val": {
+     "media": 0.016493333333333398,
+     "sd": 0.019990213438913912,
+     "se": 0.011541355110115023,
+     "n": 3,
+     "valores": [
+      -0.00557,
+      0.02165,
+      0.0334
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.13631666666666667,
+     "sd": 0.10798811801922165,
+     "se": 0.0623469690076787,
+     "n": 3,
+     "valores": [
+      -0.03388,
+      -0.12596,
+      -0.24911
+     ]
+    },
+    "umbral": 0.023082710220230045,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de su base"
+   },
+   "oblicua@1-doble-linea": {
+    "contra": "oblicua@1-linea",
+    "variante": "doble",
+    "delta_acc_val": {
+     "media": 0.015260000000000015,
+     "sd": 0.016078920983697887,
+     "se": 0.009283169358216698,
+     "n": 3,
+     "valores": [
+      -0.00061,
+      0.01485,
+      0.03154
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.13205666666666666,
+     "sd": 0.14787789230758375,
+     "se": 0.08537734093097797,
+     "n": 3,
+     "valores": [
+      -0.0172,
+      -0.08006,
+      -0.29891
+     ]
+    },
+    "umbral": 0.018566338716433397,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de su base"
+   },
+   "oblicua@1-grueso-linea": {
+    "contra": "oblicua@1-linea",
+    "variante": "grueso",
+    "delta_acc_val": {
+     "media": 0.01030666666666665,
+     "sd": 0.022845818727577596,
+     "se": 0.013190039592224319,
+     "n": 3,
+     "valores": [
+      0.0,
+      0.03649,
+      -0.00557
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.19589333333333334,
+     "sd": 0.101940265515317,
+     "se": 0.058855239736530195,
+     "n": 3,
+     "valores": [
+      -0.10074,
+      -0.18346,
+      -0.30348
+     ]
+    },
+    "umbral": 0.026380079184448638,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de su base"
+   },
+   "vertical@1-doble-linea": {
+    "contra": "vertical@1-linea",
+    "variante": "doble",
+    "delta_acc_val": {
+     "media": 0.003709999999999991,
+     "sd": 0.021397672770654325,
+     "se": 0.0123539521341688,
+     "n": 3,
+     "valores": [
+      -0.01299,
+      -0.00371,
+      0.02783
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.07875,
+     "sd": 0.16775597127971334,
+     "se": 0.09685395517650963,
+     "n": 3,
+     "valores": [
+      -0.00917,
+      0.04302,
+      -0.2701
+     ]
+    },
+    "umbral": 0.0247079042683376,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de su base"
+   },
+   "vertical@1-grueso-linea": {
+    "contra": "vertical@1-linea",
+    "variante": "grueso",
+    "delta_acc_val": {
+     "media": 0.0,
+     "sd": 0.04477658874903267,
+     "se": 0.02585177556764718,
+     "n": 3,
+     "valores": [
+      -0.03773,
+      -0.01175,
+      0.04948
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.08549,
+     "sd": 0.28484274889840533,
+     "se": 0.1644540377532073,
+     "n": 3,
+     "valores": [
+      0.07407,
+      0.08381,
+      -0.41435
+     ]
+    },
+    "umbral": 0.05170355113529436,
+    "veredicto_vs_limpio": "indistinguible",
+    "lectura": "indistinguible de su base"
+   }
+  }
  },
  "deltas": {
   "borrado@0.05": {
@@ -1345,6 +1533,196 @@
    },
    "umbral": 0.010740169665533431,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.8-doble-linea": {
+   "acc_val": {
+    "media": 0.009276666666666636,
+    "sd": 0.017532775973397176,
+    "se": 0.010122552927882262,
+    "n": 3,
+    "valores": [
+     0.02288,
+     0.01546,
+     -0.01051
+    ]
+   },
+   "ce_val": {
+    "media": -0.5472533333333334,
+    "sd": 0.30174418177213186,
+    "se": 0.1742120845725437,
+    "n": 3,
+    "valores": [
+     -0.50354,
+     -0.26975,
+     -0.86847
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.013203333333333333,
+    "sd": 0.011548689680363454,
+    "se": 0.006667639095745294,
+    "n": 3,
+    "valores": [
+     0.00774,
+     0.0054,
+     0.02647
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "doble",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8796133333333334,
+    "sd": 0.04840372953950278,
+    "se": 0.027945906279413773,
+    "n": 3,
+    "valores": [
+     0.906,
+     0.90909,
+     0.82375
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.48999,
+    "sd": 0.17840859256212968,
+    "se": 0.10300424894148784,
+    "n": 3,
+    "valores": [
+     0.42846,
+     0.35049,
+     0.69102
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.020245105855764525,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.8-grueso-linea": {
+   "acc_val": {
+    "media": 0.03937333333333334,
+    "sd": 0.014270617832922805,
+    "se": 0.008239145047340257,
+    "n": 3,
+    "valores": [
+     0.02906,
+     0.0334,
+     0.05566
+    ]
+   },
+   "ce_val": {
+    "media": -0.7037599999999999,
+    "sd": 0.40625022843070496,
+    "se": 0.2345486787428145,
+    "n": 3,
+    "valores": [
+     -0.60717,
+     -0.35451,
+     -1.1496
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.008806666666666666,
+    "sd": 0.003441458024345689,
+    "se": 0.0019869267167607813,
+    "n": 3,
+    "valores": [
+     0.00905,
+     0.00525,
+     0.01212
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "grueso",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.90971,
+    "sd": 0.018677893350161293,
+    "se": 0.010783686753610744,
+    "n": 3,
+    "valores": [
+     0.91218,
+     0.92703,
+     0.88992
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.3334833333333333,
+    "sd": 0.07246852098210181,
+    "se": 0.041839720096790524,
+    "n": 3,
+    "valores": [
+     0.32483,
+     0.26573,
+     0.40989
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.016478290094680513,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -2865,6 +3243,196 @@
    },
    "umbral": 0.024365938885620168,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@1-doble-linea": {
+   "acc_val": {
+    "media": 0.03381000000000001,
+    "sd": 0.017373862552696823,
+    "se": 0.01003080422166307,
+    "n": 3,
+    "valores": [
+     0.03216,
+     0.01732,
+     0.05195
+    ]
+   },
+   "ce_val": {
+    "media": -0.6407166666666666,
+    "sd": 0.41369984884373995,
+    "se": 0.23884971909364075,
+    "n": 3,
+    "valores": [
+     -0.54999,
+     -0.27991,
+     -1.09225
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00422,
+    "sd": 0.0016401524319403973,
+    "se": 0.0009469424480928077,
+    "n": 3,
+    "valores": [
+     0.00233,
+     0.00527,
+     0.00506
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "doble",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.9041466666666667,
+    "sd": 0.015683756990381242,
+    "se": 0.009055021320301285,
+    "n": 3,
+    "valores": [
+     0.91528,
+     0.91095,
+     0.88621
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.39652666666666664,
+    "sd": 0.06468838561390546,
+    "se": 0.03734785684763063,
+    "n": 3,
+    "valores": [
+     0.38201,
+     0.34033,
+     0.46724
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.02006160844332614,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@1-grueso-linea": {
+   "acc_val": {
+    "media": 0.02885666666666664,
+    "sd": 0.012527139870430666,
+    "se": 0.007232547576369239,
+    "n": 3,
+    "valores": [
+     0.03277,
+     0.03896,
+     0.01484
+    ]
+   },
+   "ce_val": {
+    "media": -0.7045533333333335,
+    "sd": 0.3620184600725954,
+    "se": 0.20901145537452676,
+    "n": 3,
+    "valores": [
+     -0.63353,
+     -0.38331,
+     -1.09682
+    ]
+   },
+   "acc_train": {
+    "media": -0.0018533333333333364,
+    "sd": 0.0032100674966943246,
+    "se": 0.0018533333333333366,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     -0.00556
+    ]
+   },
+   "ce_train": {
+    "media": 0.040466666666666665,
+    "sd": 0.04162962566890715,
+    "se": 0.0240348755862069,
+    "n": 3,
+    "valores": [
+     0.02498,
+     0.0088,
+     0.08762
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "grueso",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8991933333333333,
+    "sd": 0.04417837744115707,
+    "se": 0.025506398108012925,
+    "n": 3,
+    "valores": [
+     0.91589,
+     0.93259,
+     0.8491
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.33269,
+    "sd": 0.11669572914207273,
+    "se": 0.06737431063345535,
+    "n": 3,
+    "valores": [
+     0.29847,
+     0.23693,
+     0.46267
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9981466666666666,
+    "sd": 0.0032100674966943246,
+    "se": 0.0018533333333333366,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     0.99444
+    ]
+   },
+   "umbral": 0.014465095152738479,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -4479,6 +5047,196 @@
     ]
    },
    "umbral": 0.013797605267259662,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@1-doble-linea": {
+   "acc_val": {
+    "media": 0.02865333333333331,
+    "sd": 0.01270943088156724,
+    "se": 0.007337793340719789,
+    "n": 3,
+    "valores": [
+     0.02226,
+     0.02041,
+     0.04329
+    ]
+   },
+   "ce_val": {
+    "media": -0.5484833333333334,
+    "sd": 0.38276267481735116,
+    "se": 0.22098813334153888,
+    "n": 3,
+    "valores": [
+     -0.51212,
+     -0.1852,
+     -0.94813
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.007253333333333334,
+    "sd": 0.005047794898104849,
+    "se": 0.0029143457432348543,
+    "n": 3,
+    "valores": [
+     0.00257,
+     0.00659,
+     0.0126
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "doble",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8989900000000001,
+    "sd": 0.01906578348770378,
+    "se": 0.011007635228936899,
+    "n": 3,
+    "valores": [
+     0.90538,
+     0.91404,
+     0.87755
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.4887599999999999,
+    "sd": 0.10644494539432112,
+    "se": 0.061456017877286315,
+    "n": 3,
+    "valores": [
+     0.41988,
+     0.43504,
+     0.61136
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.014675586681439578,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@1-grueso-linea": {
+   "acc_val": {
+    "media": 0.024943333333333317,
+    "sd": 0.0354250001176194,
+    "se": 0.020452633353950086,
+    "n": 3,
+    "valores": [
+     -0.00248,
+     0.01237,
+     0.06494
+    ]
+   },
+   "ce_val": {
+    "media": -0.5552233333333333,
+    "sd": 0.48645016048238,
+    "se": 0.28085213110183876,
+    "n": 3,
+    "valores": [
+     -0.42888,
+     -0.14441,
+     -1.09238
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.01035,
+    "sd": 0.006005206074732158,
+    "se": 0.0034671073437857873,
+    "n": 3,
+    "valores": [
+     0.0171,
+     0.0056,
+     0.00835
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "variante": "grueso",
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.89528,
+    "sd": 0.013126583713975263,
+    "se": 0.007578636640803776,
+    "n": 3,
+    "valores": [
+     0.88064,
+     0.906,
+     0.8992
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.48202000000000006,
+    "sd": 0.018786087937620224,
+    "se": 0.010846152927805018,
+    "n": 3,
+    "valores": [
+     0.50312,
+     0.47583,
+     0.46711
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.04090526670790017,
    "veredicto": "indistinguible",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"

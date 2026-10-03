@@ -1,0 +1,8 @@
+empiezo vertical@1-grueso-linea-s1: EN LÍNEA (una copia nueva por época), época 1 = f24bd5fd0a032bc0 (semilla de ruido 1034), init 57841ba309809d65, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  vertical@1-grueso-linea-s1 ep   1/222 perdida 2.3118 acc~0.111
+  vertical@1-grueso-linea-s1 ep  50/222 perdida 0.4761 acc~0.839 · acc_val 0.8040 brecha +0.0738
+  vertical@1-grueso-linea-s1 ep 100/222 perdida 0.1518 acc~0.956 · acc_val 0.8794 brecha +0.1206
+  vertical@1-grueso-linea-s1 ep 150/222 perdida 0.0886 acc~0.981 · acc_val 0.8837 brecha +0.1163
+  vertical@1-grueso-linea-s1 ep 200/222 perdida 0.0749 acc~0.981 · acc_val 0.8813 brecha +0.1187
+  vertical@1-grueso-linea-s1 ep 222/222 perdida 0.0655 acc~0.972 · acc_val 0.8806 brecha +0.1194
+listo vertical@1-grueso-linea-s1: acc_train 1.0000 acc_val 0.8806 brecha +0.1194 · ce_train 0.0175 ce_val 0.5031 en 29.6 s

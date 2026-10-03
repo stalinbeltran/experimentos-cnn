@@ -1,4 +1,4 @@
-# Resultados de `ruido-nist` — generado por `nn/informe.py` el 2026-10-03 06:02 UTC
+# Resultados de `ruido-nist` — generado por `nn/informe.py` el 2026-10-03 06:17 UTC
 
 **Generado del disco (`nn/pesos/*/summary.json`); no se edita a mano.** Criterio: `instrucciones/02-criterio.md`, escrito antes de entrenar.
 
@@ -19,6 +19,8 @@
 | `vertical@0.4` | vertical | 0.4 | 3 | 0.8753 ± 0.0270 | **+0.0049** ± 0.0031 | 0.0100 | -0.0780 | +0.0000 | +0.0001 | **indistinguible** | train limpio sin cambio distinguible |
 | `vertical@0.6` | vertical | 0.6 | 3 | 0.8798 ± 0.0301 | **+0.0095** ± 0.0051 | 0.0101 | -0.1202 | +0.0000 | +0.0001 | **indistinguible** | train limpio sin cambio distinguible |
 | `vertical@0.8` | vertical | 0.8 | 3 | 0.8771 ± 0.0257 | **+0.0068** ± 0.0069 | 0.0138 | -0.0987 | -0.0037 | +0.0124 | **indistinguible** | train limpio sin cambio distinguible |
+| `vertical@1-doble-linea` | vertical | 1 | 3 | 0.8990 ± 0.0191 | **+0.0287** ± 0.0073 | 0.0147 | -0.5485 | +0.0000 | +0.0073 | **ayuda** | train limpio sin cambio distinguible |
+| `vertical@1-grueso-linea` | vertical | 1 | 3 | 0.8953 ± 0.0131 | **+0.0249** ± 0.0205 | 0.0409 | -0.5552 | +0.0000 | +0.0103 | **indistinguible** | train limpio sin cambio distinguible |
 | `vertical@1-linea` | vertical | 1 | 3 | 0.8953 ± 0.0395 | **+0.0249** ± 0.0057 | 0.0115 | -0.4697 | +0.0000 | +0.0028 | **ayuda** | train limpio sin cambio distinguible |
 | `vertical@1` | vertical | 1 | 3 | 0.8846 ± 0.0308 | **+0.0142** ± 0.0020 | 0.0100 | -0.2215 | +0.0000 | +0.0002 | **ayuda** | train limpio sin cambio distinguible |
 | `oblicua@0.2` | oblicua | 0.2 | 3 | 0.8743 ± 0.0289 | **+0.0039** ± 0.0027 | 0.0100 | +0.0074 | +0.0000 | -0.0003 | **indistinguible** | train limpio sin cambio distinguible |
@@ -26,11 +28,15 @@
 | `oblicua@0.6` | oblicua | 0.6 | 3 | 0.8765 ± 0.0272 | **+0.0062** ± 0.0043 | 0.0100 | -0.1093 | +0.0000 | +0.0001 | **indistinguible** | train limpio sin cambio distinguible |
 | `oblicua@0.6-r2` | oblicua | 0.6 | 3 | 0.8654 ± 0.0630 | **-0.0049** ± 0.0182 | 0.0365 | -0.0601 | +0.0000 | +0.0005 | **indistinguible** | train limpio sin cambio distinguible |
 | `oblicua@0.8` | oblicua | 0.8 | 3 | 0.8765 ± 0.0154 | **+0.0062** ± 0.0122 | 0.0244 | -0.1166 | +0.0000 | +0.0004 | **indistinguible** | train limpio sin cambio distinguible |
+| `oblicua@1-doble-linea` | oblicua | 1 | 3 | 0.9041 ± 0.0157 | **+0.0338** ± 0.0100 | 0.0201 | -0.6407 | +0.0000 | +0.0042 | **ayuda** | train limpio sin cambio distinguible |
+| `oblicua@1-grueso-linea` | oblicua | 1 | 3 | 0.8992 ± 0.0442 | **+0.0289** ± 0.0072 | 0.0145 | -0.7046 | -0.0019 | +0.0405 | **ayuda** | train limpio sin cambio distinguible |
 | `oblicua@1-linea` | oblicua | 1 | 3 | 0.8889 ± 0.0312 | **+0.0185** ± 0.0088 | 0.0176 | -0.5087 | -0.0019 | +0.0051 | **ayuda** | train limpio sin cambio distinguible |
 | `oblicua@1` | oblicua | 1 | 3 | 0.8819 ± 0.0257 | **+0.0115** ± 0.0035 | 0.0100 | -0.2429 | -0.0056 | +0.0136 | **ayuda** | train limpio sin cambio distinguible |
 | `curva@0.2` | curva | 0.2 | 3 | 0.8753 ± 0.0242 | **+0.0049** ± 0.0047 | 0.0100 | -0.0642 | +0.0000 | -0.0002 | **indistinguible** | train limpio sin cambio distinguible |
 | `curva@0.4` | curva | 0.4 | 3 | 0.8738 ± 0.0321 | **+0.0035** ± 0.0004 | 0.0100 | -0.0301 | +0.0000 | -0.0001 | **indistinguible** | train limpio sin cambio distinguible |
 | `curva@0.6` | curva | 0.6 | 3 | 0.8730 ± 0.0408 | **+0.0027** ± 0.0054 | 0.0107 | -0.0622 | +0.0000 | +0.0000 | **indistinguible** | train limpio sin cambio distinguible |
+| `curva@0.8-doble-linea` | curva | 0.8 | 3 | 0.8796 ± 0.0484 | **+0.0093** ± 0.0101 | 0.0202 | -0.5473 | +0.0000 | +0.0132 | **indistinguible** | train limpio sin cambio distinguible |
+| `curva@0.8-grueso-linea` | curva | 0.8 | 3 | 0.9097 ± 0.0187 | **+0.0394** ± 0.0082 | 0.0165 | -0.7038 | +0.0000 | +0.0088 | **ayuda** | train limpio sin cambio distinguible |
 | `curva@0.8-linea` | curva | 0.8 | 3 | 0.8932 ± 0.0324 | **+0.0229** ± 0.0066 | 0.0132 | -0.5674 | +0.0000 | +0.0081 | **ayuda** | train limpio sin cambio distinguible |
 | `curva@0.8` | curva | 0.8 | 3 | 0.8912 ± 0.0183 | **+0.0208** ± 0.0086 | 0.0171 | -0.3116 | +0.0000 | -0.0000 | **ayuda** | train limpio sin cambio distinguible |
 | `curva@1` | curva | 1 | 3 | 0.8823 ± 0.0379 | **+0.0120** ± 0.0039 | 0.0100 | -0.2037 | +0.0000 | +0.0016 | **ayuda** | train limpio sin cambio distinguible |
@@ -54,7 +60,7 @@
 
 ## Lo que dice el criterio
 
-- **Ayudan** (media Δ > umbral): `curva@0.8-linea` (+0.0229), `curva@0.8` (+0.0208), `curva@1` (+0.0120), `gaussiano@0.2-linea` (+0.0418), `gaussiano@0.2` (+0.0165), `oblicua@1-linea` (+0.0185), `oblicua@1` (+0.0115), `recorte@0.2` (+0.0118), `recorte@0.6-linea` (+0.0291), `recorte@0.6` (+0.0289), `vertical@1-linea` (+0.0249), `vertical@1` (+0.0142).
+- **Ayudan** (media Δ > umbral): `curva@0.8-grueso-linea` (+0.0394), `curva@0.8-linea` (+0.0229), `curva@0.8` (+0.0208), `curva@1` (+0.0120), `gaussiano@0.2-linea` (+0.0418), `gaussiano@0.2` (+0.0165), `oblicua@1-doble-linea` (+0.0338), `oblicua@1-grueso-linea` (+0.0289), `oblicua@1-linea` (+0.0185), `oblicua@1` (+0.0115), `recorte@0.2` (+0.0118), `recorte@0.6-linea` (+0.0291), `recorte@0.6` (+0.0289), `vertical@1-doble-linea` (+0.0287), `vertical@1-linea` (+0.0249), `vertical@1` (+0.0142).
 - **Perjudican**: ninguno.
 - **Pasan a la fase 2** (ayuda, o indistinguible con media > 0, al nivel medio): `borrado`, `vertical`, `oblicua`, `curva`, `recorte`, `gaussiano`, `sal-pimienta`.
 
@@ -85,7 +91,29 @@
 | `vertical@1-linea` | +0.0249 | ayuda | **+0.0107** ± 0.0052 | 0.0104 | -0.2483 | en línea MEJOR que la copia fija |
 
 - **En línea mejor que fija**: `gaussiano@0.2-linea`, `vertical@1-linea` · **peor**: ninguno.
+
+## Fase 4: grosor (`-grueso`, 3–4 px) y número de trazos (`-doble`, 3–4) contra su base, pareado
+
+| escenario | Δ acc val vs `limpio` | veredicto vs `limpio` | **Δ acc val vs base** ± SE | umbral | Δ CE val vs base | lectura |
+|---|---|---|---|---|---|---|
+| `curva@0.8-doble-linea` (vs `curva@0.8-linea`) | +0.0093 | indistinguible | **-0.0136** ± 0.0106 | 0.0211 | +0.0202 | indistinguible de su base |
+| `curva@0.8-grueso-linea` (vs `curva@0.8-linea`) | +0.0394 | ayuda | **+0.0165** ± 0.0115 | 0.0231 | -0.1363 | indistinguible de su base |
+| `oblicua@1-doble-linea` (vs `oblicua@1-linea`) | +0.0338 | ayuda | **+0.0153** ± 0.0093 | 0.0186 | -0.1321 | indistinguible de su base |
+| `oblicua@1-grueso-linea` (vs `oblicua@1-linea`) | +0.0289 | ayuda | **+0.0103** ± 0.0132 | 0.0264 | -0.1959 | indistinguible de su base |
+| `vertical@1-doble-linea` (vs `vertical@1-linea`) | +0.0287 | ayuda | **+0.0037** ± 0.0124 | 0.0247 | -0.0788 | indistinguible de su base |
+| `vertical@1-grueso-linea` (vs `vertical@1-linea`) | +0.0249 | indistinguible | **+0.0000** ± 0.0259 | 0.0517 | -0.0855 | indistinguible de su base |
+
+- **Variantes mejores que su base**: **ninguna** · **peores**: ninguna.
 - **La realización** (`oblicua@0.6-r2` contra `oblicua@0.6`): Δ = -0.0111 ± 0.0218 (umbral 0.0437; amplitud de las medias entre tipos 0.0392) → la realización no se distingue (|Δ| dentro del umbral): una copia fija sirve para esta fase.
+
+## Avisos
+
+- ⚠ `curva@0.8-doble-linea`: no está su copia fija `curva@0.8-doble` en las mismas semillas
+- ⚠ `curva@0.8-grueso-linea`: no está su copia fija `curva@0.8-grueso` en las mismas semillas
+- ⚠ `oblicua@1-doble-linea`: no está su copia fija `oblicua@1-doble` en las mismas semillas
+- ⚠ `oblicua@1-grueso-linea`: no está su copia fija `oblicua@1-grueso` en las mismas semillas
+- ⚠ `vertical@1-doble-linea`: no está su copia fija `vertical@1-doble` en las mismas semillas
+- ⚠ `vertical@1-grueso-linea`: no está su copia fija `vertical@1-grueso` en las mismas semillas
 
 ## Figuras
 
@@ -107,6 +135,8 @@
 - `vertical@0.4`: 0 +0.013 · 1 +0.002 · 2 +0.006 · 3 -0.004 · 4 +0.002 · 5 +0.024 · 6 +0.014 · 7 +0.002 · 8 -0.021 · 9 +0.010
 - `vertical@0.6`: 0 +0.006 · 1 +0.016 · 2 +0.004 · 3 -0.004 · 4 +0.029 · 5 +0.024 · 6 +0.022 · 7 -0.002 · 8 -0.002 · 9 -0.000
 - `vertical@0.8`: 0 +0.004 · 1 -0.022 · 2 +0.019 · 3 -0.008 · 4 +0.008 · 5 +0.051 · 6 +0.025 · 7 -0.012 · 8 +0.028 · 9 -0.023
+- `vertical@1-doble-linea`: 0 +0.033 · 1 -0.045 · 2 +0.061 · 3 +0.008 · 4 +0.106 · 5 +0.059 · 6 +0.035 · 7 +0.037 · 8 +0.002 · 9 -0.010
+- `vertical@1-grueso-linea`: 0 +0.031 · 1 -0.010 · 2 +0.040 · 3 -0.004 · 4 +0.135 · 5 +0.037 · 6 +0.031 · 7 +0.021 · 8 -0.047 · 9 +0.014
 - `vertical@1-linea`: 0 +0.023 · 1 +0.061 · 2 -0.000 · 3 +0.010 · 4 +0.102 · 5 +0.055 · 6 +0.049 · 7 +0.010 · 8 -0.038 · 9 -0.027
 - `vertical@1`: 0 +0.025 · 1 +0.000 · 2 +0.025 · 3 +0.002 · 4 +0.031 · 5 +0.053 · 6 +0.033 · 7 +0.021 · 8 -0.009 · 9 -0.039
 - `oblicua@0.2`: 0 +0.029 · 1 -0.008 · 2 -0.015 · 3 +0.000 · 4 -0.020 · 5 +0.022 · 6 +0.018 · 7 +0.002 · 8 +0.002 · 9 +0.008
@@ -114,11 +144,15 @@
 - `oblicua@0.6`: 0 +0.008 · 1 +0.012 · 2 +0.006 · 3 +0.012 · 4 +0.006 · 5 +0.035 · 6 +0.012 · 7 -0.002 · 8 -0.034 · 9 +0.004
 - `oblicua@0.6-r2`: 0 +0.029 · 1 +0.037 · 2 +0.029 · 3 +0.002 · 4 -0.045 · 5 -0.016 · 6 +0.014 · 7 -0.006 · 8 -0.081 · 9 -0.014
 - `oblicua@0.8`: 0 +0.017 · 1 +0.006 · 2 +0.021 · 3 -0.014 · 4 +0.025 · 5 +0.039 · 6 +0.027 · 7 -0.025 · 8 -0.006 · 9 -0.027
+- `oblicua@1-doble-linea`: 0 +0.046 · 1 +0.087 · 2 +0.044 · 3 +0.006 · 4 +0.096 · 5 +0.057 · 6 +0.047 · 7 +0.019 · 8 -0.051 · 9 -0.016
+- `oblicua@1-grueso-linea`: 0 +0.027 · 1 +0.051 · 2 +0.040 · 3 +0.028 · 4 +0.129 · 5 +0.057 · 6 +0.055 · 7 +0.039 · 8 -0.115 · 9 -0.029
 - `oblicua@1-linea`: 0 +0.040 · 1 -0.006 · 2 +0.044 · 3 +0.028 · 4 +0.014 · 5 +0.045 · 6 +0.051 · 7 -0.012 · 8 -0.015 · 9 -0.004
 - `oblicua@1`: 0 +0.027 · 1 -0.016 · 2 +0.048 · 3 +0.010 · 4 +0.045 · 5 +0.022 · 6 +0.004 · 7 +0.014 · 8 -0.047 · 9 +0.006
 - `curva@0.2`: 0 +0.013 · 1 -0.008 · 2 -0.006 · 3 -0.010 · 4 +0.008 · 5 +0.010 · 6 +0.010 · 7 -0.012 · 8 +0.024 · 9 +0.023
 - `curva@0.4`: 0 +0.021 · 1 -0.033 · 2 -0.002 · 3 -0.012 · 4 +0.012 · 5 +0.026 · 6 +0.020 · 7 -0.004 · 8 +0.011 · 9 -0.004
 - `curva@0.6`: 0 +0.046 · 1 +0.037 · 2 +0.031 · 3 +0.000 · 4 -0.039 · 5 +0.016 · 6 +0.039 · 7 -0.012 · 8 -0.047 · 9 -0.045
+- `curva@0.8-doble-linea`: 0 +0.023 · 1 -0.073 · 2 +0.055 · 3 +0.022 · 4 +0.074 · 5 +0.014 · 6 +0.051 · 7 -0.023 · 8 -0.047 · 9 -0.004
+- `curva@0.8-grueso-linea`: 0 +0.040 · 1 +0.037 · 2 +0.059 · 3 +0.061 · 4 +0.141 · 5 +0.059 · 6 +0.053 · 7 +0.039 · 8 -0.013 · 9 -0.084
 - `curva@0.8-linea`: 0 +0.017 · 1 +0.012 · 2 +0.010 · 3 +0.067 · 4 +0.098 · 5 +0.045 · 6 +0.051 · 7 +0.014 · 8 -0.060 · 9 -0.031
 - `curva@0.8`: 0 +0.035 · 1 +0.012 · 2 +0.019 · 3 +0.030 · 4 +0.031 · 5 +0.047 · 6 +0.039 · 7 +0.017 · 8 +0.006 · 9 -0.029
 - `curva@1`: 0 +0.044 · 1 +0.008 · 2 +0.010 · 3 +0.022 · 4 -0.002 · 5 +0.028 · 6 +0.029 · 7 +0.006 · 8 -0.028 · 9 +0.000
