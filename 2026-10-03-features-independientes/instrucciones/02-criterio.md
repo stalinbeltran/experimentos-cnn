@@ -116,3 +116,26 @@ el cuello de botella en dígitos no era la precisión sintética.
 
 **Lo que no se decide aquí:** adoptar `pesos-c3` como los oficiales. Se decide mirando §A y §B juntos,
 y se escribe.
+
+## Atribución del error sobre dígitos (escrito el 2026-10-03, ANTES de mirar ningún fallo)
+
+Sobre los detectores de la **corrida 2** (los oficiales) y el compositor **posicional** con semilla 1.
+Como el compositor es **lineal**, su error se descompone exactamente: para un dígito de clase real `t`
+predicho como `p`, `logit_p − logit_t = Σ_j (W_p,j − W_t,j) · mapa_j + (b_p − b_t)`. El término de cada
+detector `j` dice **cuánto empujó hacia la clase equivocada**. Se llama **culpable** al detector de
+mayor empuje.
+
+Después se pregunta si el mapa culpable es **raro para su clase real**: su distancia euclídea al mapa
+medio de ese detector en los dígitos de **train** de clase `t`, comparada con la misma distancia en los
+dígitos de **val** de clase `t` bien clasificados. Si cae por encima del percentil 90 de esos aciertos:
+
+- **fallo de reconocimiento** — el detector vio algo que no suele ver en esa clase (o no vio lo que suele);
+- si no: **fallo de composición** — los mapas son los normales de la clase y aun así el lineal los sumó mal.
+
+Y un control que **no** es una comparación de arquitecturas: una regresión logística sobre los **64 píxeles
+crudos**, mismos 180 de train y mismos hiperparámetros. Un dígito que falla también ahí se marca como
+**difícil en sí** (mal escrito o ambiguo a 8×8), sin decir nada de los detectores.
+
+Lo que se espera: pocos fallos (≈66 de 1617), concentrados en 3↔8↔9 y 1↔7; **mayoría de reconocimiento**
+con arcos o esquinas de culpables (son los detectores con peor precisión), y un tercio o más de los
+fallos marcados como difíciles en sí.

@@ -69,9 +69,56 @@ mismo patrón de cuentas** — el recall del tramo `chico` era el más bajo de l
 es así, ningún re-entreno lo arregla: el techo es del dato, no del detector. Se comprueba midiendo F1
 por tramo de radio en los FP, o subiendo el radio mínimo.
 
+## Atribución del error (2026-10-03): en qué fallan los dígitos mal clasificados
+
+Detectores de la corrida 2 + compositor posicional (semilla 1, acc 0,9598 = la de `compositores.json`).
+Método escrito antes de mirar en `02-criterio.md` § «Atribución del error»; script `nn/errores.py`;
+detalle por fallo en `resultados/errores.json`, rejilla en `resultados/errores.png` (por fallo: dígito ·
+mapa del detector culpable · su mapa medio en la clase real · en la predicha).
+
+**65 fallos de 1617.**
+
+| | |
+|---|---|
+| fallos de **reconocimiento** (el mapa culpable es raro para la clase real: > p90 de los aciertos) | **50** (77 %) |
+| fallos de **composición** (mapas normales, el lineal los sumó mal) | 15 (23 %) |
+| **difíciles en sí** (un lineal sobre los 64 píxeles crudos también falla) | 44 (68 %) |
+| detectores «raros» por dígito | 3,18 en los fallos · 1,32 en los aciertos |
+
+Control con píxeles crudos: 0,905 (154 fallos). No es una comparación de arquitecturas: sirve para
+marcar qué dígitos son difíciles con cualquier lectura lineal.
+
+**Un tercio de los fallos es un solo par: 1↔8** (1→8 ×12, 8→1 ×10). Lo siguiente, 2–3 por par.
+Culpables: `arco-E` ×16, `recta-V` ×12, `arco-W` ×9, `esquina-NE` ×8, `lazo` ×7.
+
+**Y la causa del 1↔8 es el GROSOR del trazo.** Medido como celdas con tinta (> 0,25) por fila:
+
+| | ancho medio por fila |
+|---|---:|
+| recta-V **sintética** (todas / sólo grosor 4 px) | 1,12 / 1,29 |
+| «1» bien clasificados | 2,87 |
+| «1» clasificados como 8 | **3,41** (los más gruesos) |
+| «8» clasificados como 1 | **3,05** (los más estrechos) |
+| «8» bien clasificados | 3,36 |
+
+Un «1» manuscrito, tras la reducción /4 de NIST, mide **casi 3 celdas de ancho**: 2–3 veces más que
+cualquier trazo con el que se entrenaron los detectores. En los «1» más gruesos, `lazo` y `arco-E`
+ven los bordes del bloque como curvas; en los «8» más estrechos, los lazos se aplastan en 2 columnas y
+lo que queda parece una recta vertical con esquinas. A ese ancho, un «1» gordo y un «8» flaco son
+**el mismo bloque de tinta**. Es el riesgo que el criterio señaló antes de correr nada (*«lo que más
+probablemente salga mal: la transferencia de grosor»*), ahora medido.
+
+Contra lo esperado: el 1↔8 no estaba en la lista (se esperaba 3↔8↔9 y 1↔7), y **los arcos y esquinas
+sí son los culpables principales**, como se esperaba — pero no por su precisión sintética (la corrida 3
+la subió y los dígitos empeoraron), sino porque **ven mal trazos gruesos**.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
 - Comprobar si el techo de ~0,70–0,77 de arcos y esquinas es **ambigüedad del dato a 8×8** (radio chico).
-- Atribución del error y curva por tamaño de train (§7 de la especificación): no hechas.
+- **Lo que sale del análisis del error:** un dataset sintético nuevo (nombre nuevo) con grosores que
+  cubran el manuscrito —hasta 8–12 px de 32, o sea 2–3 celdas—, y re-entrenar desde los pesos actuales.
+  La predicción: el 1↔8 cae a la mitad o menos, y los fallos de reconocimiento bajan más que los de
+  composición.
+- Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).
