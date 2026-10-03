@@ -90,12 +90,14 @@
    "curva@0.2": "indistinguible",
    "curva@0.4": "indistinguible",
    "curva@0.6": "indistinguible",
+   "curva@0.8-linea": "ayuda",
    "curva@0.8": "ayuda",
    "curva@1": "ayuda",
    "externos@0.05": "indistinguible",
    "gaussiano@0.02": "indistinguible",
    "gaussiano@0.05": "indistinguible",
    "gaussiano@0.1": "indistinguible",
+   "gaussiano@0.2-linea": "ayuda",
    "gaussiano@0.2": "ayuda",
    "gaussiano@0.3": "indistinguible",
    "horizontal@0.6": "indistinguible",
@@ -104,9 +106,11 @@
    "oblicua@0.6-r2": "indistinguible",
    "oblicua@0.6": "indistinguible",
    "oblicua@0.8": "indistinguible",
+   "oblicua@1-linea": "ayuda",
    "oblicua@1": "ayuda",
    "recorte@0.2": "ayuda",
    "recorte@0.4": "indistinguible",
+   "recorte@0.6-linea": "ayuda",
    "recorte@0.6": "ayuda",
    "recorte@0.8": "indistinguible",
    "recorte@1": "indistinguible",
@@ -119,6 +123,7 @@
    "vertical@0.4": "indistinguible",
    "vertical@0.6": "indistinguible",
    "vertical@0.8": "indistinguible",
+   "vertical@1-linea": "ayuda",
    "vertical@1": "ayuda"
   },
   "por_tipo": {
@@ -437,6 +442,148 @@
     "forma": "pico interior",
     "amplitud": 0.016696666666666693
    }
+  },
+  "en_linea": {
+   "curva@0.8-linea": {
+    "contra": "curva@0.8",
+    "delta_acc_val": {
+     "media": 0.0020599999999999508,
+     "sd": 0.020593758763275866,
+     "se": 0.011889812165603537,
+     "n": 3,
+     "valores": [
+      0.02474,
+      -0.00309,
+      -0.01547
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.25586000000000003,
+     "sd": 0.11749573056073147,
+     "se": 0.06783619166787005,
+     "n": 3,
+     "valores": [
+      -0.25808,
+      -0.13727,
+      -0.37223
+     ]
+    },
+    "umbral": 0.023779624331207075,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de la copia fija"
+   },
+   "gaussiano@0.2-linea": {
+    "contra": "gaussiano@0.2",
+    "delta_acc_val": {
+     "media": 0.025353333333333377,
+     "sd": 0.009721159052979943,
+     "se": 0.005612513796073138,
+     "n": 3,
+     "valores": [
+      0.02968,
+      0.01422,
+      0.03216
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.39098000000000005,
+     "sd": 0.17361689203530864,
+     "se": 0.10023775935245165,
+     "n": 3,
+     "valores": [
+      -0.3542,
+      -0.2387,
+      -0.58004
+     ]
+    },
+    "umbral": 0.011225027592146277,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "en línea MEJOR que la copia fija"
+   },
+   "oblicua@1-linea": {
+    "contra": "oblicua@1",
+    "delta_acc_val": {
+     "media": 0.0070066666666667166,
+     "sd": 0.01579204335522585,
+     "se": 0.009117540482193886,
+     "n": 3,
+     "valores": [
+      0.02473,
+      -0.00557,
+      0.00186
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.2657966666666667,
+     "sd": 0.15170771118612703,
+     "se": 0.08758848789145245,
+     "n": 3,
+     "valores": [
+      -0.43866,
+      -0.15479,
+      -0.20394
+     ]
+    },
+    "umbral": 0.018235080964387772,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de la copia fija"
+   },
+   "recorte@0.6-linea": {
+    "contra": "recorte@0.6",
+    "delta_acc_val": {
+     "media": 0.00020666666666668831,
+     "sd": 0.0123906994690911,
+     "se": 0.0071537736739275,
+     "n": 3,
+     "valores": [
+      0.01299,
+      -0.01175,
+      -0.00062
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.16038333333333338,
+     "sd": 0.06453648296377279,
+     "se": 0.03726015581168592,
+     "n": 3,
+     "valores": [
+      -0.15631,
+      -0.09798,
+      -0.22686
+     ]
+    },
+    "umbral": 0.014307547347855,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "indistinguible de la copia fija"
+   },
+   "vertical@1-linea": {
+    "contra": "vertical@1",
+    "delta_acc_val": {
+     "media": 0.010723333333333343,
+     "sd": 0.009013613777688329,
+     "se": 0.005204012340919676,
+     "n": 3,
+     "valores": [
+      0.01794,
+      0.01361,
+      0.00062
+     ]
+    },
+    "delta_ce_val": {
+     "media": -0.2482766666666667,
+     "sd": 0.06856169290014165,
+     "se": 0.03958411185199324,
+     "n": 3,
+     "valores": [
+      -0.21591,
+      -0.20189,
+      -0.32703
+     ]
+    },
+    "umbral": 0.010408024681839352,
+    "veredicto_vs_limpio": "ayuda",
+    "lectura": "en línea MEJOR que la copia fija"
+   }
   }
  },
  "deltas": {
@@ -488,6 +635,7 @@
    "tipo": "borrado",
    "nivel": 0.05,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -581,6 +729,7 @@
    "tipo": "borrado",
    "nivel": 0.1,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -674,6 +823,7 @@
    "tipo": "borrado",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -767,6 +917,7 @@
    "tipo": "borrado",
    "nivel": 0.3,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -860,6 +1011,7 @@
    "tipo": "borrado",
    "nivel": 0.4,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -953,6 +1105,7 @@
    "tipo": "curva",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1046,6 +1199,7 @@
    "tipo": "curva",
    "nivel": 0.4,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1139,6 +1293,7 @@
    "tipo": "curva",
    "nivel": 0.6,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1181,6 +1336,100 @@
    },
    "umbral": 0.010740169665533431,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.8-linea": {
+   "acc_val": {
+    "media": 0.02287999999999994,
+    "sd": 0.011452593592719516,
+    "se": 0.006612157993675996,
+    "n": 3,
+    "valores": [
+     0.03463,
+     0.01175,
+     0.02226
+    ]
+   },
+   "ce_val": {
+    "media": -0.5674433333333334,
+    "sd": 0.3360081524804619,
+    "se": 0.19399439728450352,
+    "n": 3,
+    "valores": [
+     -0.57329,
+     -0.22855,
+     -0.90049
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.008113333333333334,
+    "sd": 0.00478034866231882,
+    "se": 0.002759935587010038,
+    "n": 3,
+    "valores": [
+     0.00818,
+     0.0033,
+     0.01286
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "linea": true,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8932166666666665,
+    "sd": 0.03237650742951336,
+    "se": 0.018692585279849457,
+    "n": 3,
+    "valores": [
+     0.91775,
+     0.90538,
+     0.85652
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.4698,
+    "sd": 0.16467968939732675,
+    "se": 0.09507786300361055,
+    "n": 3,
+    "valores": [
+     0.35871,
+     0.39169,
+     0.659
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.013224315987351992,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -1232,6 +1481,7 @@
    "tipo": "curva",
    "nivel": 0.8,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1325,6 +1575,7 @@
    "tipo": "curva",
    "nivel": 1.0,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1418,6 +1669,7 @@
    "tipo": "externos",
    "nivel": 0.05,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1511,6 +1763,7 @@
    "tipo": "gaussiano",
    "nivel": 0.02,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1604,6 +1857,7 @@
    "tipo": "gaussiano",
    "nivel": 0.05,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1697,6 +1951,7 @@
    "tipo": "gaussiano",
    "nivel": 0.1,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1739,6 +1994,100 @@
    },
    "umbral": 0.020377644613644632,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.2-linea": {
+   "acc_val": {
+    "media": 0.041843333333333343,
+    "sd": 0.011000746944336719,
+    "se": 0.006351284209599758,
+    "n": 3,
+    "valores": [
+     0.0371,
+     0.03401,
+     0.05442
+    ]
+   },
+   "ce_val": {
+    "media": -0.6780233333333334,
+    "sd": 0.4015581968200044,
+    "se": 0.23183973302933025,
+    "n": 3,
+    "valores": [
+     -0.58925,
+     -0.32828,
+     -1.11654
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.010966666666666666,
+    "sd": 0.0032880439980835616,
+    "se": 0.0018983530874008777,
+    "n": 3,
+    "valores": [
+     0.01032,
+     0.00805,
+     0.01453
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "linea": true,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.9121800000000001,
+    "sd": 0.02068699108135352,
+    "se": 0.011943639869542843,
+    "n": 3,
+    "valores": [
+     0.92022,
+     0.92764,
+     0.88868
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.35922000000000004,
+    "sd": 0.07683059742055896,
+    "se": 0.044358166102759486,
+    "n": 3,
+    "valores": [
+     0.34275,
+     0.29196,
+     0.44295
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.012702568419199516,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -1790,6 +2139,7 @@
    "tipo": "gaussiano",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1883,6 +2233,7 @@
    "tipo": "gaussiano",
    "nivel": 0.3,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -1976,6 +2327,7 @@
    "tipo": "horizontal",
    "nivel": 0.6,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2069,6 +2421,7 @@
    "tipo": "oblicua",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2162,6 +2515,7 @@
    "tipo": "oblicua",
    "nivel": 0.4,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2255,6 +2609,7 @@
    "tipo": "oblicua",
    "nivel": 0.6,
    "realizacion": 2,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2348,6 +2703,7 @@
    "tipo": "oblicua",
    "nivel": 0.6,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2441,6 +2797,7 @@
    "tipo": "oblicua",
    "nivel": 0.8,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2483,6 +2840,100 @@
    },
    "umbral": 0.024365938885620168,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@1-linea": {
+   "acc_val": {
+    "media": 0.018549999999999994,
+    "sd": 0.015235393004448558,
+    "se": 0.008796158252328117,
+    "n": 3,
+    "valores": [
+     0.03277,
+     0.00247,
+     0.02041
+    ]
+   },
+   "ce_val": {
+    "media": -0.50866,
+    "sd": 0.2974798946147454,
+    "se": 0.17175009723432477,
+    "n": 3,
+    "valores": [
+     -0.53279,
+     -0.19985,
+     -0.79334
+    ]
+   },
+   "acc_train": {
+    "media": -0.0018533333333333364,
+    "sd": 0.0032100674966943246,
+    "se": 0.0018533333333333366,
+    "n": 3,
+    "valores": [
+     -0.00556,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0051400000000000005,
+    "sd": 0.0006803675477269624,
+    "se": 0.0003928103868280473,
+    "n": 3,
+    "valores": [
+     0.00539,
+     0.00437,
+     0.00566
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8888866666666667,
+    "sd": 0.031240938419537456,
+    "se": 0.018036964206256473,
+    "n": 3,
+    "valores": [
+     0.91589,
+     0.8961,
+     0.85467
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.5285833333333333,
+    "sd": 0.2060111378866039,
+    "se": 0.11894058591489189,
+    "n": 3,
+    "valores": [
+     0.39921,
+     0.42039,
+     0.76615
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9981466666666666,
+    "sd": 0.0032100674966943246,
+    "se": 0.0018533333333333366,
+    "n": 3,
+    "valores": [
+     0.99444,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.017592316504656234,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -2534,6 +2985,7 @@
    "tipo": "oblicua",
    "nivel": 1.0,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2627,6 +3079,7 @@
    "tipo": "recorte",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2720,6 +3173,7 @@
    "tipo": "recorte",
    "nivel": 0.4,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2762,6 +3216,100 @@
    },
    "umbral": 0.02055591507193107,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@0.6-linea": {
+   "acc_val": {
+    "media": 0.029066666666666647,
+    "sd": 0.012854704715913698,
+    "se": 0.007421667228085926,
+    "n": 3,
+    "valores": [
+     0.02164,
+     0.02165,
+     0.04391
+    ]
+   },
+   "ce_val": {
+    "media": -0.54688,
+    "sd": 0.3236856217072362,
+    "se": 0.1868799808254842,
+    "n": 3,
+    "valores": [
+     -0.48679,
+     -0.25745,
+     -0.8964
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.004223333333333333,
+    "sd": 0.0034251617966649882,
+    "se": 0.0019775180853225534,
+    "n": 3,
+    "valores": [
+     0.00809,
+     0.00157,
+     0.00301
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "linea": true,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8994033333333333,
+    "sd": 0.019126119139368892,
+    "se": 0.011042470033667484,
+    "n": 3,
+    "valores": [
+     0.90476,
+     0.91528,
+     0.87817
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.4903633333333333,
+    "sd": 0.1551584355854793,
+    "se": 0.08958076455231768,
+    "n": 3,
+    "valores": [
+     0.44521,
+     0.36279,
+     0.66309
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.014843334456171852,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -2813,6 +3361,7 @@
    "tipo": "recorte",
    "nivel": 0.6,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2906,6 +3455,7 @@
    "tipo": "recorte",
    "nivel": 0.8,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -2999,6 +3549,7 @@
    "tipo": "recorte",
    "nivel": 1.0,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3092,6 +3643,7 @@
    "tipo": "sal-pimienta",
    "nivel": 0.02,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3185,6 +3737,7 @@
    "tipo": "sal-pimienta",
    "nivel": 0.05,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3278,6 +3831,7 @@
    "tipo": "sal-pimienta",
    "nivel": 0.1,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3371,6 +3925,7 @@
    "tipo": "sal-pimienta",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3464,6 +4019,7 @@
    "tipo": "sal-pimienta",
    "nivel": 0.3,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3557,6 +4113,7 @@
    "tipo": "vertical",
    "nivel": 0.2,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3650,6 +4207,7 @@
    "tipo": "vertical",
    "nivel": 0.4,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3743,6 +4301,7 @@
    "tipo": "vertical",
    "nivel": 0.6,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3836,6 +4395,7 @@
    "tipo": "vertical",
    "nivel": 0.8,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
@@ -3878,6 +4438,100 @@
    },
    "umbral": 0.013797605267259662,
    "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@1-linea": {
+   "acc_val": {
+    "media": 0.024943333333333317,
+    "sd": 0.009920656900293102,
+    "se": 0.005727693931922141,
+    "n": 3,
+    "valores": [
+     0.03525,
+     0.02412,
+     0.01546
+    ]
+   },
+   "ce_val": {
+    "media": -0.4697333333333334,
+    "sd": 0.2267372250719615,
+    "se": 0.13090679793060575,
+    "n": 3,
+    "valores": [
+     -0.50295,
+     -0.22822,
+     -0.67803
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.002843333333333333,
+    "sd": 0.00243444723363094,
+    "se": 0.001405528765664763,
+    "n": 3,
+    "valores": [
+     0.00113,
+     0.00177,
+     0.00563
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "linea": true,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.89528,
+    "sd": 0.03945733518624893,
+    "se": 0.022780703091286113,
+    "n": 3,
+    "valores": [
+     0.91837,
+     0.91775,
+     0.84972
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.56751,
+    "sd": 0.27251836103279353,
+    "se": 0.15733854910139897,
+    "n": 3,
+    "valores": [
+     0.42905,
+     0.39202,
+     0.88146
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.011455387863844282,
+   "veredicto": "ayuda",
    "umbral_ce_train": 0.05,
    "mecanismo": "train limpio sin cambio distinguible"
   },
@@ -3929,6 +4583,7 @@
    "tipo": "vertical",
    "nivel": 1.0,
    "realizacion": 1,
+   "linea": false,
    "semillas": [
     1,
     2,
