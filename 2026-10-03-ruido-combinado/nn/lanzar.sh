@@ -19,7 +19,7 @@ UNIDAD=expc-ruidocomb
 PY="$REPO/.venv/bin/python"
 MODO="${1:-}"
 [ "$#" -gt 0 ] && shift
-SEMILLAS="1 2 3"
+SEMILLAS="1 2 3 4 5"
 ESCENARIOS="limpio gaussiano@0.2-linea recorte@0.6-linea recorte@0.6+gaussiano@0.2-linea recorte@0.6~gaussiano@0.2-linea"
 
 con_semillas() { for e in $(cat); do for s in $SEMILLAS; do echo "$e-s$s"; done; done; }
@@ -71,7 +71,7 @@ case "$MODO" in
         exit 0 ;;
     --estado)
         echo "unidad $UNIDAD: $(systemctl is-active "$UNIDAD" 2>/dev/null || echo inactiva) · NRestarts=$(systemctl show "$UNIDAD" -p NRestarts --value 2>/dev/null || echo '?') · Result=$(systemctl show "$UNIDAD" -p Result --value 2>/dev/null || echo '?')"
-        echo "resúmenes en disco: $(ls "$EXP"/nn/pesos/*/summary.json 2>/dev/null | wc -l) de 15"
+        echo "resúmenes en disco: $(ls "$EXP"/nn/pesos/*/summary.json 2>/dev/null | wc -l) de 25"
         [ -f "$EXP/resultados/RESULTADOS.md" ] && grep -E '^\- \*\*' "$EXP/resultados/RESULTADOS.md" | head -5
         exit 0 ;;
     *) echo "uso: $0 todo | corridas <id...> | --estado   (SECO=1 para ver sin lanzar)"; exit 2 ;;

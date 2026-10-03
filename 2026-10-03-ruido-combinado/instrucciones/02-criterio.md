@@ -45,3 +45,17 @@ como `gaussiano@0.3` en `ruido-nist`, y es un resultado.
 
 Nada sobre otras parejas, ni sobre tres ruidos, ni sobre otras redes o datos. 13 escritores
 compartidos entre train y val.
+
+## Extensión a 5 semillas — enmienda del 2026-10-03, escrita DESPUÉS de ver las 3 primeras y ANTES de correr las dos nuevas
+
+Con 3 semillas el veredicto fue «indistinguible» (secuencial +0,007 ± 0,009 contra el mejor simple,
+umbral 0,018). El propio criterio decía que lo decidirían 5 semillas. Se añaden las semillas **4 y
+5** (pesos iniciales nuevos `init-s4.pt`, `init-s5.pt`, con `torch.manual_seed`; orden de lotes
+104 y 105; las copias de ruido son las mismas de siempre, idénticas entre semillas) a **los cinco
+escenarios**, para que la tabla sea uniforme: 10 corridas nuevas.
+
+- **La regla no cambia**: Δ pareado contra el mejor simple, umbral `max(2·SE, 0,01)`, ahora con
+  `SE = sd/√5`. El veredicto final es el de las 5; el de las 3 queda en el README como lo que fue.
+- ⚠ **Es una extensión decidida tras mirar**: lo que protege es que la regla es la misma y que
+  no se eligen las semillas (son las dos siguientes). Si con 5 la secuencial sigue sin llegar al
+  umbral, se cierra como indistinguible y **no se amplía más**.

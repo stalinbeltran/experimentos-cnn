@@ -31,7 +31,7 @@ K = 3               # kernel 3×3, sin padding: cada capa quita 2 px
 C = 8
 CLASES = 10
 LADO = 8
-SEMILLAS = (1, 2, 3)
+SEMILLAS = (1, 2, 3, 4, 5)   # 4 y 5 añadidas el 2026-10-03 (extensión a 5 semillas, 02-criterio.md)
 
 
 def mapas(lado: int = LADO) -> list[int]:
