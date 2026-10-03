@@ -112,13 +112,41 @@ Contra lo esperado: el 1↔8 no estaba en la lista (se esperaba 3↔8↔9 y 1↔
 sí son los culpables principales**, como se esperaba — pero no por su precisión sintética (la corrida 3
 la subió y los dígitos empeoraron), sino porque **ven mal trazos gruesos**.
 
+## Corrida 4 (2026-10-03): trazos gruesos — arregla el 1↔8 y abre un 4→1; empate neto
+
+Los 13 desde `nn/pesos/` (corrida 2), 40 épocas a `lr` 1e-3 sobre `feat-ind-sinteticas-grueso-8px-r20261003d`.
+Unidad `feat-ind-grueso`, `Result=success`, `NRestarts=0`. Pesos en `nn/pesos-c4/`. Criterio escrito antes.
+
+| sobre dígitos | corrida 2 (fino) | corrida 4 (grueso) |
+|---|---:|---:|
+| compositor de presencia | 0,718 ± 0,005 | **0,769 ± 0,001** |
+| compositor posicional | 0,959 ± 0,001 | 0,957 ± 0,000 |
+| fallos (posicional, semilla 1) | 65 | 70 |
+| par 1↔8 | 22 | **3** |
+| par 4→1 | 1 | **16** |
+| de reconocimiento / composición | 50 / 15 | 58 / 12 |
+
+De los 65 fallos de antes, **40 se arreglan** (21 de ellos 1↔8) y aparecen **45 nuevos** (14 son 4→1). Los
+16 «4→1» tienen todos el mismo culpable, `recta-V`: los «4» de este dataset son compactos —un triángulo
+relleno con un palo debajo— y el detector, ahora que sabe que una recta vertical puede medir 3 celdas,
+**ve el cuerpo macizo del 4 como una barra gruesa**. Rejilla en `resultados/fallos-c4.png`.
+
+Contra el criterio: el 1↔8 baja a ≤ 11 ✅ (a 3); el posicional **no** sube ❌ (−0,002, dentro del ruido de
+un par de dígitos). La hipótesis del grosor queda **confirmada como causa del 1↔8**, pero arreglarlo así
+desplaza el error en vez de quitarlo: un detector de recta gruesa no distingue «trazo grueso» de «zona
+rellena». El de presencia sí gana +0,05, porque el «está / no está» de la recta vertical ahora se parece
+más al dígito real.
+
+**No se adopta** como oficial (el posicional, que es el bueno, no mejora). Se conserva.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
 - Comprobar si el techo de ~0,70–0,77 de arcos y esquinas es **ambigüedad del dato a 8×8** (radio chico).
-- **Lo que sale del análisis del error:** un dataset sintético nuevo (nombre nuevo) con grosores que
-  cubran el manuscrito —hasta 8–12 px de 32, o sea 2–3 celdas—, y re-entrenar desde los pesos actuales.
-  La predicción: el 1↔8 cae a la mitad o menos, y los fallos de reconocimiento bajan más que los de
-  composición.
+- ~~Dataset con trazos gruesos y re-entreno~~: hecho en la corrida 4 (arriba) — 1↔8 arreglado, 4→1 nuevo.
+- **Fino y grueso a la vez**: dar al compositor los 13 mapas de la corrida 2 **y** los 13 de la 4 (26
+  detectores, dos escalas de grosor). Los dos conjuntos fallan en dígitos distintos (sólo 25 fallos en
+  común), así que un lineal que vea los dos podría quedarse con lo bueno de cada uno. No requiere
+  entrenar detectores; criterio antes de mirar.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).

@@ -1,0 +1,381 @@
+{
+ "feature": "esquina-SE",
+ "semilla": 1,
+ "epocas": 40,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.001,
+ "contra": "todas las demás + vacio",
+ "enfatizar": null,
+ "frac_enfasis": null,
+ "desde": "/home/deploy/src/experimentos-cnn/2026-10-03-features-independientes/nn/pesos/esquina-SE/last.pt",
+ "huella_desde": "44f76c95e33600c0",
+ "huella_init": "44f76c95e33600c0",
+ "n_train_pos": 2000,
+ "n_train_neg": 23964,
+ "n_val_pos": 400,
+ "n_val_neg": 4820,
+ "canales": [
+  16,
+  32,
+  32
+ ],
+ "parametros": 14081,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral",
+ "dataset": "feat-ind-sinteticas-grueso-8px-r20261003d",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "ab22979499342f11",
+ "segundos": 39.6,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4820,
+  "tp": 341,
+  "fp": 143,
+  "fn": 59,
+  "precision": 0.7045,
+  "recall": 0.8525,
+  "f1": 0.7715,
+  "pos_ok": 0.9971,
+  "pos_exacta": 0.7273,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 63,
+    "recall": 0.746
+   },
+   "3": {
+    "n": 46,
+    "recall": 0.7174
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.7368
+   },
+   "6": {
+    "n": 64,
+    "recall": 0.8906
+   },
+   "8": {
+    "n": 58,
+    "recall": 0.931
+   },
+   "10": {
+    "n": 58,
+    "recall": 0.9655
+   },
+   "12": {
+    "n": 54,
+    "recall": 0.963
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 388,
+    "fp": 19,
+    "tasa": 0.049
+   },
+   "arco-W": {
+    "n": 383,
+    "fp": 4,
+    "tasa": 0.0104
+   },
+   "arco-N": {
+    "n": 386,
+    "fp": 7,
+    "tasa": 0.0181
+   },
+   "arco-S": {
+    "n": 386,
+    "fp": 9,
+    "tasa": 0.0233
+   },
+   "recta-V": {
+    "n": 383,
+    "fp": 10,
+    "tasa": 0.0261
+   },
+   "recta-H": {
+    "n": 386,
+    "fp": 18,
+    "tasa": 0.0466
+   },
+   "recta-S": {
+    "n": 378,
+    "fp": 10,
+    "tasa": 0.0265
+   },
+   "recta-B": {
+    "n": 382,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "lazo": {
+    "n": 381,
+    "fp": 11,
+    "tasa": 0.0289
+   },
+   "esquina-NE": {
+    "n": 389,
+    "fp": 28,
+    "tasa": 0.072
+   },
+   "esquina-NW": {
+    "n": 391,
+    "fp": 12,
+    "tasa": 0.0307
+   },
+   "esquina-SW": {
+    "n": 387,
+    "fp": 14,
+    "tasa": 0.0362
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7536,
+  "recall_sola": 0.9585,
+  "conf_pos_media": 0.83,
+  "conf_neg_media": 0.0711,
+  "umbral": 0.6
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4820,
+  "tp": 341,
+  "fp": 143,
+  "fn": 59,
+  "precision": 0.7045,
+  "recall": 0.8525,
+  "f1": 0.7715,
+  "pos_ok": 0.9971,
+  "pos_exacta": 0.7273,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 63,
+    "recall": 0.746
+   },
+   "3": {
+    "n": 46,
+    "recall": 0.7174
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.7368
+   },
+   "6": {
+    "n": 64,
+    "recall": 0.8906
+   },
+   "8": {
+    "n": 58,
+    "recall": 0.931
+   },
+   "10": {
+    "n": 58,
+    "recall": 0.9655
+   },
+   "12": {
+    "n": 54,
+    "recall": 0.963
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 388,
+    "fp": 19,
+    "tasa": 0.049
+   },
+   "arco-W": {
+    "n": 383,
+    "fp": 4,
+    "tasa": 0.0104
+   },
+   "arco-N": {
+    "n": 386,
+    "fp": 7,
+    "tasa": 0.0181
+   },
+   "arco-S": {
+    "n": 386,
+    "fp": 9,
+    "tasa": 0.0233
+   },
+   "recta-V": {
+    "n": 383,
+    "fp": 10,
+    "tasa": 0.0261
+   },
+   "recta-H": {
+    "n": 386,
+    "fp": 18,
+    "tasa": 0.0466
+   },
+   "recta-S": {
+    "n": 378,
+    "fp": 10,
+    "tasa": 0.0265
+   },
+   "recta-B": {
+    "n": 382,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "lazo": {
+    "n": 381,
+    "fp": 11,
+    "tasa": 0.0289
+   },
+   "esquina-NE": {
+    "n": 389,
+    "fp": 28,
+    "tasa": 0.072
+   },
+   "esquina-NW": {
+    "n": 391,
+    "fp": 12,
+    "tasa": 0.0307
+   },
+   "esquina-SW": {
+    "n": 387,
+    "fp": 14,
+    "tasa": 0.0362
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7536,
+  "recall_sola": 0.9585,
+  "conf_pos_media": 0.83,
+  "conf_neg_media": 0.0711,
+  "umbral": 0.6,
+  "epoca": 40
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.3198,
+   "recall": 0.9625,
+   "f1": 0.48
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.3842,
+   "recall": 0.95,
+   "f1": 0.5472
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.43,
+   "recall": 0.9375,
+   "f1": 0.5896
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.471,
+   "recall": 0.9325,
+   "f1": 0.6258
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.5027,
+   "recall": 0.92,
+   "f1": 0.6502
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.5483,
+   "recall": 0.9075,
+   "f1": 0.6836
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.5931,
+   "recall": 0.9,
+   "f1": 0.715
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.6228,
+   "recall": 0.8875,
+   "f1": 0.732
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.6536,
+   "recall": 0.8775,
+   "f1": 0.7492
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.6791,
+   "recall": 0.8625,
+   "f1": 0.7599
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.7045,
+   "recall": 0.8525,
+   "f1": 0.7715
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.7349,
+   "recall": 0.8525,
+   "f1": 0.7894
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.7593,
+   "recall": 0.82,
+   "f1": 0.7885
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.7875,
+   "recall": 0.7875,
+   "f1": 0.7875
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.8021,
+   "recall": 0.75,
+   "f1": 0.7752
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.8563,
+   "recall": 0.7,
+   "f1": 0.7703
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.8966,
+   "recall": 0.65,
+   "f1": 0.7536
+  }
+ ],
+ "huella_final": "4b690c0e24f7f6d5",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-03T22:25:55+00:00"
+}

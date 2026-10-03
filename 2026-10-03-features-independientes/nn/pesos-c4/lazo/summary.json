@@ -1,0 +1,375 @@
+{
+ "feature": "lazo",
+ "semilla": 1,
+ "epocas": 40,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.001,
+ "contra": "todas las demás + vacio",
+ "enfatizar": null,
+ "frac_enfasis": null,
+ "desde": "/home/deploy/src/experimentos-cnn/2026-10-03-features-independientes/nn/pesos/lazo/last.pt",
+ "huella_desde": "0d534531fe5aa32d",
+ "huella_init": "0d534531fe5aa32d",
+ "n_train_pos": 2000,
+ "n_train_neg": 24017,
+ "n_val_pos": 400,
+ "n_val_neg": 4791,
+ "canales": [
+  16,
+  32,
+  32
+ ],
+ "parametros": 14081,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral",
+ "dataset": "feat-ind-sinteticas-grueso-8px-r20261003d",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "ab22979499342f11",
+ "segundos": 37.7,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4791,
+  "tp": 370,
+  "fp": 93,
+  "fn": 30,
+  "precision": 0.7991,
+  "recall": 0.925,
+  "f1": 0.8575,
+  "pos_ok": 0.9973,
+  "pos_exacta": 0.7973,
+  "recall_por_radio": {
+   "chico": {
+    "n": 175,
+    "recall": 0.8629
+   },
+   "medio": {
+    "n": 185,
+    "recall": 0.973
+   },
+   "grande": {
+    "n": 40,
+    "recall": 0.975
+   }
+  },
+  "recall_por_grosor": {
+   "2": {
+    "n": 219,
+    "recall": 0.8904
+   },
+   "3": {
+    "n": 124,
+    "recall": 0.9758
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.9474
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 386,
+    "fp": 14,
+    "tasa": 0.0363
+   },
+   "arco-W": {
+    "n": 376,
+    "fp": 15,
+    "tasa": 0.0399
+   },
+   "arco-N": {
+    "n": 372,
+    "fp": 8,
+    "tasa": 0.0215
+   },
+   "arco-S": {
+    "n": 384,
+    "fp": 6,
+    "tasa": 0.0156
+   },
+   "recta-V": {
+    "n": 387,
+    "fp": 7,
+    "tasa": 0.0181
+   },
+   "recta-H": {
+    "n": 387,
+    "fp": 4,
+    "tasa": 0.0103
+   },
+   "recta-S": {
+    "n": 386,
+    "fp": 4,
+    "tasa": 0.0104
+   },
+   "recta-B": {
+    "n": 383,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "esquina-NE": {
+    "n": 378,
+    "fp": 6,
+    "tasa": 0.0159
+   },
+   "esquina-NW": {
+    "n": 385,
+    "fp": 7,
+    "tasa": 0.0182
+   },
+   "esquina-SE": {
+    "n": 382,
+    "fp": 14,
+    "tasa": 0.0366
+   },
+   "esquina-SW": {
+    "n": 385,
+    "fp": 8,
+    "tasa": 0.0208
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.8593,
+  "recall_sola": 0.99,
+  "conf_pos_media": 0.9183,
+  "conf_neg_media": 0.0596,
+  "umbral": 0.6
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4791,
+  "tp": 369,
+  "fp": 86,
+  "fn": 31,
+  "precision": 0.811,
+  "recall": 0.9225,
+  "f1": 0.8632,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.7995,
+  "recall_por_radio": {
+   "chico": {
+    "n": 175,
+    "recall": 0.8629
+   },
+   "medio": {
+    "n": 185,
+    "recall": 0.9676
+   },
+   "grande": {
+    "n": 40,
+    "recall": 0.975
+   }
+  },
+  "recall_por_grosor": {
+   "2": {
+    "n": 219,
+    "recall": 0.8858
+   },
+   "3": {
+    "n": 124,
+    "recall": 0.9758
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.9474
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 386,
+    "fp": 16,
+    "tasa": 0.0415
+   },
+   "arco-W": {
+    "n": 376,
+    "fp": 14,
+    "tasa": 0.0372
+   },
+   "arco-N": {
+    "n": 372,
+    "fp": 6,
+    "tasa": 0.0161
+   },
+   "arco-S": {
+    "n": 384,
+    "fp": 8,
+    "tasa": 0.0208
+   },
+   "recta-V": {
+    "n": 387,
+    "fp": 4,
+    "tasa": 0.0103
+   },
+   "recta-H": {
+    "n": 387,
+    "fp": 5,
+    "tasa": 0.0129
+   },
+   "recta-S": {
+    "n": 386,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "recta-B": {
+    "n": 383,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "esquina-NE": {
+    "n": 378,
+    "fp": 3,
+    "tasa": 0.0079
+   },
+   "esquina-NW": {
+    "n": 385,
+    "fp": 8,
+    "tasa": 0.0208
+   },
+   "esquina-SE": {
+    "n": 382,
+    "fp": 14,
+    "tasa": 0.0366
+   },
+   "esquina-SW": {
+    "n": 385,
+    "fp": 6,
+    "tasa": 0.0156
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.8492,
+  "recall_sola": 0.995,
+  "conf_pos_media": 0.9361,
+  "conf_neg_media": 0.083,
+  "umbral": 0.75,
+  "epoca": 30
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.2699,
+   "recall": 0.9925,
+   "f1": 0.4244
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.3333,
+   "recall": 0.985,
+   "f1": 0.4981
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.3954,
+   "recall": 0.9825,
+   "f1": 0.5638
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.4695,
+   "recall": 0.9825,
+   "f1": 0.6354
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.527,
+   "recall": 0.9775,
+   "f1": 0.6848
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.5867,
+   "recall": 0.9725,
+   "f1": 0.7319
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.6196,
+   "recall": 0.965,
+   "f1": 0.7546
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.6621,
+   "recall": 0.96,
+   "f1": 0.7837
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.6828,
+   "recall": 0.9525,
+   "f1": 0.7954
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.702,
+   "recall": 0.9425,
+   "f1": 0.8047
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.7301,
+   "recall": 0.94,
+   "f1": 0.8219
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.7633,
+   "recall": 0.935,
+   "f1": 0.8404
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.7894,
+   "recall": 0.9275,
+   "f1": 0.8529
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.811,
+   "recall": 0.9225,
+   "f1": 0.8632
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.8372,
+   "recall": 0.9125,
+   "f1": 0.8732
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.8654,
+   "recall": 0.9,
+   "f1": 0.8824
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.8895,
+   "recall": 0.865,
+   "f1": 0.8771
+  }
+ ],
+ "huella_final": "41f8432d13da2649",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-03T22:23:51+00:00"
+}

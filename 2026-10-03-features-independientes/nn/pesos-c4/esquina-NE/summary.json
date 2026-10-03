@@ -1,0 +1,381 @@
+{
+ "feature": "esquina-NE",
+ "semilla": 1,
+ "epocas": 40,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.001,
+ "contra": "todas las demás + vacio",
+ "enfatizar": null,
+ "frac_enfasis": null,
+ "desde": "/home/deploy/src/experimentos-cnn/2026-10-03-features-independientes/nn/pesos/esquina-NE/last.pt",
+ "huella_desde": "4328704cfab09c13",
+ "huella_init": "4328704cfab09c13",
+ "n_train_pos": 2000,
+ "n_train_neg": 23983,
+ "n_val_pos": 400,
+ "n_val_neg": 4799,
+ "canales": [
+  16,
+  32,
+  32
+ ],
+ "parametros": 14081,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral",
+ "dataset": "feat-ind-sinteticas-grueso-8px-r20261003d",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "ab22979499342f11",
+ "segundos": 40.1,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4799,
+  "tp": 333,
+  "fp": 198,
+  "fn": 67,
+  "precision": 0.6271,
+  "recall": 0.8325,
+  "f1": 0.7154,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.7027,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 57,
+    "recall": 0.7193
+   },
+   "3": {
+    "n": 55,
+    "recall": 0.6909
+   },
+   "4": {
+    "n": 60,
+    "recall": 0.6833
+   },
+   "6": {
+    "n": 61,
+    "recall": 0.8689
+   },
+   "8": {
+    "n": 62,
+    "recall": 0.9677
+   },
+   "10": {
+    "n": 55,
+    "recall": 0.9636
+   },
+   "12": {
+    "n": 50,
+    "recall": 0.94
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 391,
+    "fp": 44,
+    "tasa": 0.1125
+   },
+   "arco-W": {
+    "n": 381,
+    "fp": 3,
+    "tasa": 0.0079
+   },
+   "arco-N": {
+    "n": 383,
+    "fp": 25,
+    "tasa": 0.0653
+   },
+   "arco-S": {
+    "n": 380,
+    "fp": 5,
+    "tasa": 0.0132
+   },
+   "recta-V": {
+    "n": 376,
+    "fp": 14,
+    "tasa": 0.0372
+   },
+   "recta-H": {
+    "n": 378,
+    "fp": 12,
+    "tasa": 0.0317
+   },
+   "recta-S": {
+    "n": 381,
+    "fp": 7,
+    "tasa": 0.0184
+   },
+   "recta-B": {
+    "n": 386,
+    "fp": 12,
+    "tasa": 0.0311
+   },
+   "lazo": {
+    "n": 388,
+    "fp": 16,
+    "tasa": 0.0412
+   },
+   "esquina-NW": {
+    "n": 381,
+    "fp": 22,
+    "tasa": 0.0577
+   },
+   "esquina-SE": {
+    "n": 388,
+    "fp": 22,
+    "tasa": 0.0567
+   },
+   "esquina-SW": {
+    "n": 386,
+    "fp": 16,
+    "tasa": 0.0415
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7089,
+  "recall_sola": 0.9733,
+  "conf_pos_media": 0.87,
+  "conf_neg_media": 0.1223,
+  "umbral": 0.75
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4799,
+  "tp": 333,
+  "fp": 198,
+  "fn": 67,
+  "precision": 0.6271,
+  "recall": 0.8325,
+  "f1": 0.7154,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.7027,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 57,
+    "recall": 0.7193
+   },
+   "3": {
+    "n": 55,
+    "recall": 0.6909
+   },
+   "4": {
+    "n": 60,
+    "recall": 0.6833
+   },
+   "6": {
+    "n": 61,
+    "recall": 0.8689
+   },
+   "8": {
+    "n": 62,
+    "recall": 0.9677
+   },
+   "10": {
+    "n": 55,
+    "recall": 0.9636
+   },
+   "12": {
+    "n": 50,
+    "recall": 0.94
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 391,
+    "fp": 44,
+    "tasa": 0.1125
+   },
+   "arco-W": {
+    "n": 381,
+    "fp": 3,
+    "tasa": 0.0079
+   },
+   "arco-N": {
+    "n": 383,
+    "fp": 25,
+    "tasa": 0.0653
+   },
+   "arco-S": {
+    "n": 380,
+    "fp": 5,
+    "tasa": 0.0132
+   },
+   "recta-V": {
+    "n": 376,
+    "fp": 14,
+    "tasa": 0.0372
+   },
+   "recta-H": {
+    "n": 378,
+    "fp": 12,
+    "tasa": 0.0317
+   },
+   "recta-S": {
+    "n": 381,
+    "fp": 7,
+    "tasa": 0.0184
+   },
+   "recta-B": {
+    "n": 386,
+    "fp": 12,
+    "tasa": 0.0311
+   },
+   "lazo": {
+    "n": 388,
+    "fp": 16,
+    "tasa": 0.0412
+   },
+   "esquina-NW": {
+    "n": 381,
+    "fp": 22,
+    "tasa": 0.0577
+   },
+   "esquina-SE": {
+    "n": 388,
+    "fp": 22,
+    "tasa": 0.0567
+   },
+   "esquina-SW": {
+    "n": 386,
+    "fp": 16,
+    "tasa": 0.0415
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7089,
+  "recall_sola": 0.9733,
+  "conf_pos_media": 0.87,
+  "conf_neg_media": 0.1223,
+  "umbral": 0.75,
+  "epoca": 40
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.2259,
+   "recall": 0.98,
+   "f1": 0.3672
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.2683,
+   "recall": 0.9725,
+   "f1": 0.4205
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.2983,
+   "recall": 0.965,
+   "f1": 0.4557
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.329,
+   "recall": 0.9575,
+   "f1": 0.4898
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.3532,
+   "recall": 0.9475,
+   "f1": 0.5146
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.3823,
+   "recall": 0.9375,
+   "f1": 0.5431
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.4196,
+   "recall": 0.9325,
+   "f1": 0.5787
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.4486,
+   "recall": 0.9275,
+   "f1": 0.6047
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.4759,
+   "recall": 0.915,
+   "f1": 0.6262
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.5049,
+   "recall": 0.9,
+   "f1": 0.6469
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.5328,
+   "recall": 0.8925,
+   "f1": 0.6673
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.5618,
+   "recall": 0.875,
+   "f1": 0.6843
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.592,
+   "recall": 0.8525,
+   "f1": 0.6988
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.6271,
+   "recall": 0.8325,
+   "f1": 0.7154
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.6757,
+   "recall": 0.8075,
+   "f1": 0.7358
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.7411,
+   "recall": 0.78,
+   "f1": 0.76
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.8123,
+   "recall": 0.725,
+   "f1": 0.7662
+  }
+ ],
+ "huella_final": "c40f0104a9dba93b",
+ "veredicto": "no aprendió",
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-03T22:24:32+00:00"
+}

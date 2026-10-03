@@ -1,0 +1,373 @@
+{
+ "feature": "recta-S",
+ "semilla": 1,
+ "epocas": 40,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.001,
+ "contra": "todas las demás + vacio",
+ "enfatizar": null,
+ "frac_enfasis": null,
+ "desde": "/home/deploy/src/experimentos-cnn/2026-10-03-features-independientes/nn/pesos/recta-S/last.pt",
+ "huella_desde": "de6f57a0bc536c37",
+ "huella_init": "de6f57a0bc536c37",
+ "n_train_pos": 2000,
+ "n_train_neg": 24013,
+ "n_val_pos": 400,
+ "n_val_neg": 4775,
+ "canales": [
+  16,
+  32,
+  32
+ ],
+ "parametros": 14081,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral",
+ "dataset": "feat-ind-sinteticas-grueso-8px-r20261003d",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "ab22979499342f11",
+ "segundos": 37.6,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4775,
+  "tp": 357,
+  "fp": 108,
+  "fn": 43,
+  "precision": 0.7677,
+  "recall": 0.8925,
+  "f1": 0.8254,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.6779,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 70,
+    "recall": 0.8429
+   },
+   "3": {
+    "n": 61,
+    "recall": 0.8525
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.7895
+   },
+   "6": {
+    "n": 63,
+    "recall": 0.9206
+   },
+   "8": {
+    "n": 73,
+    "recall": 0.9178
+   },
+   "10": {
+    "n": 76,
+    "recall": 1.0
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 384,
+    "fp": 12,
+    "tasa": 0.0312
+   },
+   "arco-W": {
+    "n": 386,
+    "fp": 15,
+    "tasa": 0.0389
+   },
+   "arco-N": {
+    "n": 378,
+    "fp": 15,
+    "tasa": 0.0397
+   },
+   "arco-S": {
+    "n": 385,
+    "fp": 10,
+    "tasa": 0.026
+   },
+   "recta-V": {
+    "n": 381,
+    "fp": 6,
+    "tasa": 0.0157
+   },
+   "recta-H": {
+    "n": 383,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "recta-B": {
+    "n": 384,
+    "fp": 8,
+    "tasa": 0.0208
+   },
+   "lazo": {
+    "n": 381,
+    "fp": 9,
+    "tasa": 0.0236
+   },
+   "esquina-NE": {
+    "n": 373,
+    "fp": 6,
+    "tasa": 0.0161
+   },
+   "esquina-NW": {
+    "n": 379,
+    "fp": 10,
+    "tasa": 0.0264
+   },
+   "esquina-SE": {
+    "n": 379,
+    "fp": 7,
+    "tasa": 0.0185
+   },
+   "esquina-SW": {
+    "n": 382,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7972,
+  "recall_sola": 1.0,
+  "conf_pos_media": 0.8817,
+  "conf_neg_media": 0.075,
+  "umbral": 0.65
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4775,
+  "tp": 353,
+  "fp": 97,
+  "fn": 47,
+  "precision": 0.7844,
+  "recall": 0.8825,
+  "f1": 0.8306,
+  "pos_ok": 0.9972,
+  "pos_exacta": 0.6799,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 70,
+    "recall": 0.8143
+   },
+   "3": {
+    "n": 61,
+    "recall": 0.8525
+   },
+   "4": {
+    "n": 57,
+    "recall": 0.7719
+   },
+   "6": {
+    "n": 63,
+    "recall": 0.9048
+   },
+   "8": {
+    "n": 73,
+    "recall": 0.9178
+   },
+   "10": {
+    "n": 76,
+    "recall": 1.0
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 384,
+    "fp": 10,
+    "tasa": 0.026
+   },
+   "arco-W": {
+    "n": 386,
+    "fp": 14,
+    "tasa": 0.0363
+   },
+   "arco-N": {
+    "n": 378,
+    "fp": 10,
+    "tasa": 0.0265
+   },
+   "arco-S": {
+    "n": 385,
+    "fp": 11,
+    "tasa": 0.0286
+   },
+   "recta-V": {
+    "n": 381,
+    "fp": 6,
+    "tasa": 0.0157
+   },
+   "recta-H": {
+    "n": 383,
+    "fp": 4,
+    "tasa": 0.0104
+   },
+   "recta-B": {
+    "n": 384,
+    "fp": 7,
+    "tasa": 0.0182
+   },
+   "lazo": {
+    "n": 381,
+    "fp": 8,
+    "tasa": 0.021
+   },
+   "esquina-NE": {
+    "n": 373,
+    "fp": 5,
+    "tasa": 0.0134
+   },
+   "esquina-NW": {
+    "n": 379,
+    "fp": 12,
+    "tasa": 0.0317
+   },
+   "esquina-SE": {
+    "n": 379,
+    "fp": 5,
+    "tasa": 0.0132
+   },
+   "esquina-SW": {
+    "n": 382,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7783,
+  "recall_sola": 1.0,
+  "conf_pos_media": 0.8831,
+  "conf_neg_media": 0.0816,
+  "umbral": 0.7,
+  "epoca": 25
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.2847,
+   "recall": 0.97,
+   "f1": 0.4402
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.342,
+   "recall": 0.9575,
+   "f1": 0.5039
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.3985,
+   "recall": 0.9475,
+   "f1": 0.5611
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.4496,
+   "recall": 0.9475,
+   "f1": 0.6098
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.4921,
+   "recall": 0.9325,
+   "f1": 0.6442
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.5477,
+   "recall": 0.9325,
+   "f1": 0.6901
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.588,
+   "recall": 0.9275,
+   "f1": 0.7197
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.6163,
+   "recall": 0.9275,
+   "f1": 0.7405
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.6445,
+   "recall": 0.92,
+   "f1": 0.758
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.6765,
+   "recall": 0.915,
+   "f1": 0.7779
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.709,
+   "recall": 0.9075,
+   "f1": 0.7961
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.7453,
+   "recall": 0.8925,
+   "f1": 0.8123
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.7844,
+   "recall": 0.8825,
+   "f1": 0.8306
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.8061,
+   "recall": 0.8625,
+   "f1": 0.8333
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.8444,
+   "recall": 0.855,
+   "f1": 0.8497
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.891,
+   "recall": 0.8375,
+   "f1": 0.8634
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.922,
+   "recall": 0.7975,
+   "f1": 0.8552
+  }
+ ],
+ "huella_final": "54c8ab4e93e66528",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-03T22:22:34+00:00"
+}
