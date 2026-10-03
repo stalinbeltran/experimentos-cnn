@@ -32,7 +32,7 @@ EPOCAS, LR, L2, SEMILLAS = 300, 1e-2, 1e-3, (1, 2, 3)
 
 def entradas(m: dict) -> dict:
     s = m["sigma"]
-    return {"presencia": s.reshape(len(s), len(F.CON_TRAZO), -1).max(2), "posicional": s.reshape(len(s), -1)}
+    return {"presencia": s.reshape(len(s), s.shape[1], -1).max(2), "posicional": s.reshape(len(s), -1)}
 
 
 def logistica(xtr, ytr, xva, yva, semilla: int) -> dict:

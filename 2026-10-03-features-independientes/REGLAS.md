@@ -72,6 +72,7 @@ sobre dígitos reales.
 | `nn/lanzar.sh` | lo lanza como unidad de systemd; imprime la orden; modo seco; se niega a lanzar dos veces | `todas` · `una <f> [args]` · `--estado` · `SECO=1 …` |
 | `nn/aplicar.py` | los 13 sobre los dígitos → mapas, firma por clase, rejilla | `python nn/aplicar.py [--n k]` |
 | `nn/compositor.py` | los dos compositores lineales | `python nn/compositor.py [--sufijo -c3]` |
+| `nn/combinar.py` | junta los mapas fino (c2) y grueso (c4) en un solo npz de 26 mapas con nombres | `python nn/combinar.py` → luego `compositor.py --sufijo -c24`, `errores.py --sufijo -c24` |
 | `nn/errores.py` | atribución del error del compositor posicional (culpable, reconocimiento/composición, difíciles en sí) | `python nn/errores.py [--sufijo -c3]` |
 
 - ⚠ `gasta` es `entrena-local`: el que entrena **se llama `entrenar_local.py`** (contrato con el freno).

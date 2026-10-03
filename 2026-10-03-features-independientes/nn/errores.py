@@ -21,7 +21,7 @@ import compositor as C                          # noqa: E402
 import features as F                            # noqa: E402
 
 RES = Path(__file__).resolve().parent.parent / "resultados"
-J = len(F.CON_TRAZO)
+J = len(F.CON_TRAZO)      # se recalcula al cargar: el npz combinado trae 26 mapas y sus nombres
 PCT = 90
 
 
@@ -39,7 +39,10 @@ def ajustar(xtr, ytr, semilla: int = 1) -> torch.nn.Linear:
 def main() -> int:
     suf = sys.argv[sys.argv.index("--sufijo") + 1] if "--sufijo" in sys.argv else ""
     m = dict(np.load(RES / f"mapas-digitos{suf}.npz")); tr, y = m["train"], m["y"]
-    mapas = m["sigma"].astype(np.float32)                       # (N, 13, 8, 8)
+    mapas = m["sigma"].astype(np.float32)                       # (N, J, 8, 8)
+    global J, NOMBRES
+    J = mapas.shape[1]
+    NOMBRES = [str(n) for n in m["nombres"]] if "nombres" in m else list(F.CON_TRAZO)
     X = mapas.reshape(len(y), -1)
     W = ajustar(X[tr], y[tr])
     with torch.no_grad():
@@ -73,13 +76,13 @@ def main() -> int:
         j = int(orden[0])
         raro = bool(dist[i, j] > corte[t, j])
         fallos.append({"i": int(i), "real": t, "pred": p, "margen": round(float(empuje.sum() + sesgo), 3),
-                       "culpable": F.CON_TRAZO[j], "empuje_culpable": round(float(empuje[j]), 3),
-                       "segundo": F.CON_TRAZO[int(orden[1])], "empuje_segundo": round(float(empuje[orden[1]]), 3),
+                       "culpable": NOMBRES[j], "empuje_culpable": round(float(empuje[j]), 3),
+                       "segundo": NOMBRES[int(orden[1])], "empuje_segundo": round(float(empuje[orden[1]]), 3),
                        "fraccion_culpable": round(float(empuje[j] / max(1e-9, empuje[empuje > 0].sum())), 3),
                        "tipo": "reconocimiento" if raro else "composicion",
                        "distancia": round(float(dist[i, j]), 3), "corte_p90": round(float(corte[t, j]), 3),
                        "dificil_en_si": bool(pred_px[i] != t), "pred_pixeles": int(pred_px[i]),
-                       "detectores_raros": [F.CON_TRAZO[k] for k in range(J) if dist[i, k] > corte[t, k]]})
+                       "detectores_raros": [NOMBRES[k] for k in range(J) if dist[i, k] > corte[t, k]]})
 
     n = len(fallos)
     pares = Counter(f"{f['real']}→{f['pred']}" for f in fallos).most_common()
@@ -125,7 +128,7 @@ def rejilla(x, mapas, fallos, destino: Path, suf: str = "") -> None:
     for b, bloque in enumerate(bloques):
         x0 = sep + b * (cols * (t + sep) + 3 * sep)
         for r, f in enumerate(bloque):
-            j = F.CON_TRAZO.index(f["culpable"])
+            j = NOMBRES.index(f["culpable"])
             tiles = [1 - x[f["i"], 0], 1 - mapas[f["i"], j], 1 - medio[f["real"], j], 1 - medio[f["pred"], j]]
             for k, tt in enumerate(tiles):
                 im.paste(Image.fromarray((np.clip(tt, 0, 1) * 255).astype(np.uint8)).resize((t, t), Image.NEAREST),

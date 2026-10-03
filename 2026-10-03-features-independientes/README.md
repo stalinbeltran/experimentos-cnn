@@ -139,14 +139,35 @@ más al dígito real.
 
 **No se adopta** como oficial (el posicional, que es el bueno, no mejora). Se conserva.
 
+## Corrida 5 (2026-10-03): fino + grueso en el MISMO compositor — el mejor resultado
+
+Sin entrenar detectores: los 13 mapas de la corrida 2 y los 13 de la 4, juntos (26 mapas por dígito,
+`nn/combinar.py`), a los mismos dos compositores lineales. Criterio escrito antes (`02-criterio.md`
+§ «Corrida 5»).
+
+| sobre dígitos (3 semillas) | fino (c2) | grueso (c4) | **fino + grueso (c24)** |
+|---|---:|---:|---:|
+| compositor posicional | 0,959 | 0,957 | **0,972 ± 0,000** |
+| compositor de presencia | 0,718 | 0,769 | **0,829 ± 0,003** |
+| fallos (posicional, semilla 1) | 65 | 70 | **45** |
+| 1↔8 | 22 | 3 | **4** |
+| 4→1 | 1 | 16 | **6** |
+| reconocimiento / composición | 50 / 15 | 58 / 12 | 41 / 4 |
+| difíciles en sí (fallan también con píxeles) | 44 | 37 | 32 (71 %) |
+
+Contra el criterio: posicional ≥ 0,965 ✅ (0,972: 21 dígitos mejor que el mejor solo); 1↔8 < 5 ✅ (4);
+4→1 < 5 ❌ (6). El riesgo de sobreajuste por doblar las entradas no se materializó.
+
+Lo que dice: **las dos versiones de los detectores llevan información distinta y el compositor la
+aprovecha**. Lo que una confunde, la otra lo separa: el lineal aprende a qué versión creer en cada caso.
+Los fallos de composición casi desaparecen (15 → 4), y de los 45 que quedan, 32 los falla también un lineal
+sobre los píxeles: son, sobre todo, dígitos difíciles en sí. Rejilla en `resultados/fallos-c24.png`.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
 - Comprobar si el techo de ~0,70–0,77 de arcos y esquinas es **ambigüedad del dato a 8×8** (radio chico).
 - ~~Dataset con trazos gruesos y re-entreno~~: hecho en la corrida 4 (arriba) — 1↔8 arreglado, 4→1 nuevo.
-- **Fino y grueso a la vez**: dar al compositor los 13 mapas de la corrida 2 **y** los 13 de la 4 (26
-  detectores, dos escalas de grosor). Los dos conjuntos fallan en dígitos distintos (sólo 25 fallos en
-  común), así que un lineal que vea los dos podría quedarse con lo bueno de cada uno. No requiere
-  entrenar detectores; criterio antes de mirar.
+- ~~Fino y grueso a la vez~~: hecho en la corrida 5 (arriba) — 0,972, el mejor.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).

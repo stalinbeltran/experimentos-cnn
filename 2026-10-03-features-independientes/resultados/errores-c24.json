@@ -1,0 +1,1267 @@
+{
+ "sufijo": "-c24",
+ "acc_val": 0.9722,
+ "n_val": 1617,
+ "n_fallos": 45,
+ "control_pixeles": {
+  "acc_val": 0.9048,
+  "fallos": 154
+ },
+ "pares": [
+  [
+   "4→1",
+   6
+  ],
+  [
+   "9→8",
+   4
+  ],
+  [
+   "8→1",
+   3
+  ],
+  [
+   "8→9",
+   3
+  ],
+  [
+   "3→8",
+   3
+  ],
+  [
+   "5→9",
+   2
+  ],
+  [
+   "2→7",
+   2
+  ],
+  [
+   "6→8",
+   2
+  ],
+  [
+   "3→9",
+   2
+  ],
+  [
+   "9→1",
+   2
+  ],
+  [
+   "6→0",
+   2
+  ],
+  [
+   "9→5",
+   2
+  ],
+  [
+   "2→8",
+   1
+  ],
+  [
+   "8→2",
+   1
+  ],
+  [
+   "7→1",
+   1
+  ],
+  [
+   "7→4",
+   1
+  ],
+  [
+   "1→8",
+   1
+  ],
+  [
+   "8→6",
+   1
+  ],
+  [
+   "0→3",
+   1
+  ],
+  [
+   "3→7",
+   1
+  ],
+  [
+   "1→9",
+   1
+  ],
+  [
+   "9→4",
+   1
+  ],
+  [
+   "2→3",
+   1
+  ],
+  [
+   "3→5",
+   1
+  ]
+ ],
+ "culpables": [
+  [
+   "grueso:recta-V",
+   9
+  ],
+  [
+   "fino:arco-W",
+   8
+  ],
+  [
+   "fino:arco-E",
+   5
+  ],
+  [
+   "fino:esquina-SW",
+   5
+  ],
+  [
+   "grueso:arco-W",
+   4
+  ],
+  [
+   "grueso:esquina-NE",
+   3
+  ],
+  [
+   "fino:recta-V",
+   3
+  ],
+  [
+   "fino:lazo",
+   2
+  ],
+  [
+   "fino:arco-S",
+   2
+  ],
+  [
+   "grueso:arco-E",
+   1
+  ],
+  [
+   "fino:esquina-SE",
+   1
+  ],
+  [
+   "fino:recta-S",
+   1
+  ],
+  [
+   "grueso:recta-S",
+   1
+  ]
+ ],
+ "tipos": {
+  "reconocimiento": 41,
+  "composicion": 4
+ },
+ "dificiles_en_si": 32,
+ "dificiles_entre_reconocimiento": 31,
+ "detectores_raros_media_fallos": 6.33,
+ "detectores_raros_media_aciertos": 2.66,
+ "fallos": [
+  {
+   "i": 2,
+   "real": 2,
+   "pred": 8,
+   "margen": 0.111,
+   "culpable": "fino:arco-E",
+   "empuje_culpable": 1.553,
+   "segundo": "fino:lazo",
+   "empuje_segundo": 0.438,
+   "fraccion_culpable": 0.545,
+   "tipo": "reconocimiento",
+   "distancia": 1.384,
+   "corte_p90": 1.065,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:lazo",
+    "fino:esquina-NW",
+    "grueso:arco-E"
+   ]
+  },
+  {
+   "i": 5,
+   "real": 5,
+   "pred": 9,
+   "margen": 3.527,
+   "culpable": "fino:lazo",
+   "empuje_culpable": 1.447,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.833,
+   "fraccion_culpable": 0.286,
+   "tipo": "reconocimiento",
+   "distancia": 1.222,
+   "corte_p90": 0.501,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:lazo",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:esquina-NE",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 54,
+   "real": 2,
+   "pred": 7,
+   "margen": 1.016,
+   "culpable": "fino:arco-S",
+   "empuje_culpable": 0.731,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.414,
+   "fraccion_culpable": 0.314,
+   "tipo": "reconocimiento",
+   "distancia": 1.242,
+   "corte_p90": 0.907,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-S",
+    "fino:recta-B",
+    "grueso:arco-E",
+    "grueso:arco-N",
+    "grueso:arco-S",
+    "grueso:recta-B"
+   ]
+  },
+  {
+   "i": 77,
+   "real": 2,
+   "pred": 7,
+   "margen": 2.198,
+   "culpable": "fino:arco-S",
+   "empuje_culpable": 0.737,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.652,
+   "fraccion_culpable": 0.222,
+   "tipo": "reconocimiento",
+   "distancia": 1.282,
+   "corte_p90": 0.907,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:arco-S",
+    "fino:lazo",
+    "fino:esquina-NE",
+    "fino:esquina-NW",
+    "fino:esquina-SE",
+    "grueso:arco-W",
+    "grueso:recta-B"
+   ]
+  },
+  {
+   "i": 123,
+   "real": 8,
+   "pred": 2,
+   "margen": 0.141,
+   "culpable": "grueso:esquina-NE",
+   "empuje_culpable": 1.256,
+   "segundo": "fino:esquina-NE",
+   "empuje_segundo": 0.899,
+   "fraccion_culpable": 0.368,
+   "tipo": "reconocimiento",
+   "distancia": 1.223,
+   "corte_p90": 0.542,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:esquina-NE",
+    "grueso:esquina-NE",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 134,
+   "real": 4,
+   "pred": 1,
+   "margen": 0.47,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 1.388,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.843,
+   "fraccion_culpable": 0.492,
+   "tipo": "reconocimiento",
+   "distancia": 1.657,
+   "corte_p90": 1.347,
+   "dificil_en_si": false,
+   "pred_pixeles": 4,
+   "detectores_raros": [
+    "fino:arco-S",
+    "grueso:recta-V",
+    "grueso:recta-H"
+   ]
+  },
+  {
+   "i": 171,
+   "real": 4,
+   "pred": 1,
+   "margen": 0.277,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 1.623,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 1.16,
+   "fraccion_culpable": 0.471,
+   "tipo": "reconocimiento",
+   "distancia": 1.72,
+   "corte_p90": 1.347,
+   "dificil_en_si": false,
+   "pred_pixeles": 4,
+   "detectores_raros": [
+    "fino:arco-S",
+    "fino:esquina-NE",
+    "grueso:recta-V"
+   ]
+  },
+  {
+   "i": 238,
+   "real": 4,
+   "pred": 1,
+   "margen": 0.814,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.378,
+   "segundo": "grueso:recta-V",
+   "empuje_segundo": 1.213,
+   "fraccion_culpable": 0.353,
+   "tipo": "reconocimiento",
+   "distancia": 1.103,
+   "corte_p90": 1.051,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-S",
+    "fino:esquina-NE",
+    "fino:esquina-NW",
+    "grueso:recta-V",
+    "grueso:recta-H"
+   ]
+  },
+  {
+   "i": 247,
+   "real": 4,
+   "pred": 1,
+   "margen": 0.237,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 0.982,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.527,
+   "fraccion_culpable": 0.357,
+   "tipo": "reconocimiento",
+   "distancia": 1.55,
+   "corte_p90": 1.347,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:recta-B",
+    "fino:esquina-SW",
+    "grueso:arco-S",
+    "grueso:recta-V",
+    "grueso:recta-H",
+    "grueso:recta-B"
+   ]
+  },
+  {
+   "i": 250,
+   "real": 4,
+   "pred": 1,
+   "margen": 0.523,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 1.559,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 1.259,
+   "fraccion_culpable": 0.468,
+   "tipo": "reconocimiento",
+   "distancia": 1.729,
+   "corte_p90": 1.347,
+   "dificil_en_si": false,
+   "pred_pixeles": 4,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:arco-S",
+    "grueso:recta-V"
+   ]
+  },
+  {
+   "i": 402,
+   "real": 6,
+   "pred": 8,
+   "margen": 0.968,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.488,
+   "segundo": "grueso:arco-W",
+   "empuje_segundo": 0.517,
+   "fraccion_culpable": 0.426,
+   "tipo": "reconocimiento",
+   "distancia": 1.914,
+   "corte_p90": 1.016,
+   "dificil_en_si": false,
+   "pred_pixeles": 6,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:arco-S",
+    "fino:esquina-SE",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:arco-S",
+    "grueso:esquina-SE"
+   ]
+  },
+  {
+   "i": 420,
+   "real": 6,
+   "pred": 8,
+   "margen": 1.208,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.215,
+   "segundo": "fino:arco-S",
+   "empuje_segundo": 0.562,
+   "fraccion_culpable": 0.456,
+   "tipo": "reconocimiento",
+   "distancia": 1.578,
+   "corte_p90": 1.016,
+   "dificil_en_si": false,
+   "pred_pixeles": 6,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:arco-S",
+    "fino:recta-S",
+    "fino:lazo",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:arco-S"
+   ]
+  },
+  {
+   "i": 421,
+   "real": 5,
+   "pred": 9,
+   "margen": 1.833,
+   "culpable": "fino:esquina-SW",
+   "empuje_culpable": 1.492,
+   "segundo": "fino:lazo",
+   "empuje_segundo": 0.876,
+   "fraccion_culpable": 0.327,
+   "tipo": "reconocimiento",
+   "distancia": 1.349,
+   "corte_p90": 0.951,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:lazo",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 446,
+   "real": 3,
+   "pred": 9,
+   "margen": 1.335,
+   "culpable": "grueso:arco-E",
+   "empuje_culpable": 1.405,
+   "segundo": "fino:arco-E",
+   "empuje_segundo": 1.278,
+   "fraccion_culpable": 0.266,
+   "tipo": "reconocimiento",
+   "distancia": 1.465,
+   "corte_p90": 0.722,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-N",
+    "fino:arco-S",
+    "fino:lazo",
+    "fino:esquina-NE",
+    "grueso:arco-E",
+    "grueso:lazo",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 449,
+   "real": 3,
+   "pred": 9,
+   "margen": 2.757,
+   "culpable": "fino:arco-E",
+   "empuje_culpable": 1.569,
+   "segundo": "grueso:arco-E",
+   "empuje_segundo": 1.311,
+   "fraccion_culpable": 0.274,
+   "tipo": "reconocimiento",
+   "distancia": 1.43,
+   "corte_p90": 0.846,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:lazo",
+    "fino:esquina-NE",
+    "grueso:arco-E",
+    "grueso:lazo",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 480,
+   "real": 7,
+   "pred": 1,
+   "margen": 0.271,
+   "culpable": "fino:recta-V",
+   "empuje_culpable": 2.913,
+   "segundo": "grueso:recta-V",
+   "empuje_segundo": 1.432,
+   "fraccion_culpable": 0.554,
+   "tipo": "reconocimiento",
+   "distancia": 2.421,
+   "corte_p90": 0.923,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:recta-V",
+    "grueso:recta-V"
+   ]
+  },
+  {
+   "i": 496,
+   "real": 4,
+   "pred": 1,
+   "margen": 1.426,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.096,
+   "segundo": "grueso:recta-V",
+   "empuje_segundo": 0.869,
+   "fraccion_culpable": 0.314,
+   "tipo": "reconocimiento",
+   "distancia": 1.228,
+   "corte_p90": 1.051,
+   "dificil_en_si": false,
+   "pred_pixeles": 4,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:recta-V",
+    "fino:esquina-SW",
+    "grueso:arco-S",
+    "grueso:recta-V",
+    "grueso:recta-H"
+   ]
+  },
+  {
+   "i": 673,
+   "real": 7,
+   "pred": 4,
+   "margen": 0.324,
+   "culpable": "fino:recta-V",
+   "empuje_culpable": 0.955,
+   "segundo": "fino:esquina-NE",
+   "empuje_segundo": 0.299,
+   "fraccion_culpable": 0.383,
+   "tipo": "reconocimiento",
+   "distancia": 1.265,
+   "corte_p90": 0.923,
+   "dificil_en_si": false,
+   "pred_pixeles": 7,
+   "detectores_raros": [
+    "fino:arco-S",
+    "fino:recta-V",
+    "fino:esquina-NE",
+    "grueso:arco-N"
+   ]
+  },
+  {
+   "i": 683,
+   "real": 9,
+   "pred": 1,
+   "margen": 1.014,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 1.581,
+   "segundo": "fino:recta-V",
+   "empuje_segundo": 0.708,
+   "fraccion_culpable": 0.382,
+   "tipo": "reconocimiento",
+   "distancia": 1.908,
+   "corte_p90": 0.99,
+   "dificil_en_si": false,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-S",
+    "fino:recta-V",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:recta-V",
+    "grueso:recta-S",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 738,
+   "real": 9,
+   "pred": 1,
+   "margen": 0.358,
+   "culpable": "fino:esquina-SE",
+   "empuje_culpable": 1.079,
+   "segundo": "grueso:recta-S",
+   "empuje_segundo": 0.844,
+   "fraccion_culpable": 0.371,
+   "tipo": "reconocimiento",
+   "distancia": 1.399,
+   "corte_p90": 0.703,
+   "dificil_en_si": false,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-S",
+    "fino:recta-V",
+    "fino:recta-S",
+    "fino:esquina-SE",
+    "grueso:recta-V",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 784,
+   "real": 8,
+   "pred": 1,
+   "margen": 0.415,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 1.991,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.91,
+   "fraccion_culpable": 0.498,
+   "tipo": "reconocimiento",
+   "distancia": 1.369,
+   "corte_p90": 0.812,
+   "dificil_en_si": true,
+   "pred_pixeles": 6,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:recta-V",
+    "fino:recta-B",
+    "fino:esquina-SW",
+    "grueso:recta-V",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 792,
+   "real": 6,
+   "pred": 0,
+   "margen": 0.554,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.509,
+   "segundo": "grueso:arco-W",
+   "empuje_segundo": 0.629,
+   "fraccion_culpable": 0.449,
+   "tipo": "reconocimiento",
+   "distancia": 1.318,
+   "corte_p90": 1.016,
+   "dificil_en_si": true,
+   "pred_pixeles": 0,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:recta-V",
+    "fino:lazo",
+    "fino:esquina-SE",
+    "fino:esquina-SW",
+    "grueso:arco-E",
+    "grueso:arco-W",
+    "grueso:recta-V",
+    "grueso:lazo",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 818,
+   "real": 1,
+   "pred": 8,
+   "margen": 0.146,
+   "culpable": "fino:lazo",
+   "empuje_culpable": 1.748,
+   "segundo": "fino:arco-E",
+   "empuje_segundo": 1.281,
+   "fraccion_culpable": 0.305,
+   "tipo": "reconocimiento",
+   "distancia": 1.613,
+   "corte_p90": 0.587,
+   "dificil_en_si": true,
+   "pred_pixeles": 8,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-N",
+    "fino:lazo",
+    "fino:esquina-SE",
+    "grueso:lazo",
+    "grueso:esquina-SE",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 843,
+   "real": 6,
+   "pred": 0,
+   "margen": 0.525,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.337,
+   "segundo": "grueso:arco-W",
+   "empuje_segundo": 1.06,
+   "fraccion_culpable": 0.424,
+   "tipo": "reconocimiento",
+   "distancia": 1.162,
+   "corte_p90": 1.016,
+   "dificil_en_si": true,
+   "pred_pixeles": 0,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:arco-W",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 872,
+   "real": 8,
+   "pred": 6,
+   "margen": 0.084,
+   "culpable": "grueso:esquina-NE",
+   "empuje_culpable": 0.794,
+   "segundo": "grueso:arco-E",
+   "empuje_segundo": 0.697,
+   "fraccion_culpable": 0.303,
+   "tipo": "reconocimiento",
+   "distancia": 1.07,
+   "corte_p90": 0.542,
+   "dificil_en_si": true,
+   "pred_pixeles": 6,
+   "detectores_raros": [
+    "fino:arco-E",
+    "grueso:arco-E",
+    "grueso:recta-V",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 890,
+   "real": 8,
+   "pred": 1,
+   "margen": 2.667,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 2.97,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.765,
+   "fraccion_culpable": 0.503,
+   "tipo": "reconocimiento",
+   "distancia": 1.584,
+   "corte_p90": 0.812,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-S",
+    "fino:esquina-SW",
+    "grueso:recta-V",
+    "grueso:recta-H"
+   ]
+  },
+  {
+   "i": 898,
+   "real": 8,
+   "pred": 9,
+   "margen": 1.323,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 0.908,
+   "segundo": "fino:esquina-SW",
+   "empuje_segundo": 0.769,
+   "fraccion_culpable": 0.251,
+   "tipo": "reconocimiento",
+   "distancia": 0.881,
+   "corte_p90": 0.812,
+   "dificil_en_si": true,
+   "pred_pixeles": 1,
+   "detectores_raros": [
+    "fino:esquina-SW",
+    "grueso:recta-V",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 905,
+   "real": 8,
+   "pred": 1,
+   "margen": 0.631,
+   "culpable": "grueso:recta-V",
+   "empuje_culpable": 2.304,
+   "segundo": "fino:arco-W",
+   "empuje_segundo": 0.638,
+   "fraccion_culpable": 0.625,
+   "tipo": "reconocimiento",
+   "distancia": 1.307,
+   "corte_p90": 0.812,
+   "dificil_en_si": true,
+   "pred_pixeles": 6,
+   "detectores_raros": [
+    "fino:recta-V",
+    "fino:recta-B",
+    "fino:esquina-NE",
+    "grueso:recta-V",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 1025,
+   "real": 0,
+   "pred": 3,
+   "margen": 0.79,
+   "culpable": "fino:esquina-SW",
+   "empuje_culpable": 0.861,
+   "segundo": "fino:arco-S",
+   "empuje_segundo": 0.79,
+   "fraccion_culpable": 0.221,
+   "tipo": "composicion",
+   "distancia": 0.671,
+   "corte_p90": 0.8,
+   "dificil_en_si": false,
+   "pred_pixeles": 0,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:esquina-NE",
+    "fino:esquina-NW",
+    "grueso:arco-E",
+    "grueso:arco-W",
+    "grueso:arco-S",
+    "grueso:recta-S",
+    "grueso:lazo",
+    "grueso:esquina-NE",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 1068,
+   "real": 9,
+   "pred": 8,
+   "margen": 0.762,
+   "culpable": "grueso:arco-W",
+   "empuje_culpable": 0.936,
+   "segundo": "fino:arco-E",
+   "empuje_segundo": 0.728,
+   "fraccion_culpable": 0.406,
+   "tipo": "composicion",
+   "distancia": 0.818,
+   "corte_p90": 1.138,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "grueso:arco-E",
+    "grueso:recta-B",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 1100,
+   "real": 9,
+   "pred": 8,
+   "margen": 1.425,
+   "culpable": "grueso:arco-W",
+   "empuje_culpable": 1.338,
+   "segundo": "grueso:recta-B",
+   "empuje_segundo": 0.653,
+   "fraccion_culpable": 0.366,
+   "tipo": "reconocimiento",
+   "distancia": 1.244,
+   "corte_p90": 1.138,
+   "dificil_en_si": false,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-N",
+    "fino:recta-B",
+    "fino:esquina-SE",
+    "grueso:arco-E",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:recta-B",
+    "grueso:esquina-SE"
+   ]
+  },
+  {
+   "i": 1118,
+   "real": 3,
+   "pred": 7,
+   "margen": 0.014,
+   "culpable": "fino:recta-S",
+   "empuje_culpable": 0.447,
+   "segundo": "fino:arco-S",
+   "empuje_segundo": 0.271,
+   "fraccion_culpable": 0.269,
+   "tipo": "reconocimiento",
+   "distancia": 1.185,
+   "corte_p90": 0.404,
+   "dificil_en_si": true,
+   "pred_pixeles": 7,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-S",
+    "fino:recta-S",
+    "fino:esquina-SW",
+    "grueso:arco-W",
+    "grueso:arco-S",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 1155,
+   "real": 9,
+   "pred": 8,
+   "margen": 0.986,
+   "culpable": "grueso:arco-W",
+   "empuje_culpable": 1.007,
+   "segundo": "fino:arco-E",
+   "empuje_segundo": 0.609,
+   "fraccion_culpable": 0.333,
+   "tipo": "composicion",
+   "distancia": 1.035,
+   "corte_p90": 1.138,
+   "dificil_en_si": false,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:recta-H",
+    "fino:esquina-SE",
+    "grueso:arco-E",
+    "grueso:recta-H",
+    "grueso:esquina-NW",
+    "grueso:esquina-SE"
+   ]
+  },
+  {
+   "i": 1468,
+   "real": 8,
+   "pred": 9,
+   "margen": 0.742,
+   "culpable": "fino:recta-V",
+   "empuje_culpable": 0.602,
+   "segundo": "grueso:recta-V",
+   "empuje_segundo": 0.444,
+   "fraccion_culpable": 0.244,
+   "tipo": "reconocimiento",
+   "distancia": 1.013,
+   "corte_p90": 0.767,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-S",
+    "fino:recta-V",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:recta-V"
+   ]
+  },
+  {
+   "i": 1495,
+   "real": 1,
+   "pred": 9,
+   "margen": 0.76,
+   "culpable": "fino:esquina-SW",
+   "empuje_culpable": 1.712,
+   "segundo": "grueso:esquina-SW",
+   "empuje_segundo": 0.747,
+   "fraccion_culpable": 0.466,
+   "tipo": "reconocimiento",
+   "distancia": 1.763,
+   "corte_p90": 1.064,
+   "dificil_en_si": true,
+   "pred_pixeles": 9,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-S",
+    "fino:recta-V",
+    "fino:recta-H",
+    "fino:esquina-NW",
+    "fino:esquina-SW",
+    "grueso:recta-V",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 1529,
+   "real": 8,
+   "pred": 9,
+   "margen": 0.223,
+   "culpable": "fino:esquina-SW",
+   "empuje_culpable": 0.681,
+   "segundo": "grueso:esquina-SW",
+   "empuje_segundo": 0.616,
+   "fraccion_culpable": 0.273,
+   "tipo": "reconocimiento",
+   "distancia": 1.229,
+   "corte_p90": 0.637,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-S",
+    "fino:esquina-SW",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 1580,
+   "real": 9,
+   "pred": 4,
+   "margen": 0.317,
+   "culpable": "grueso:recta-S",
+   "empuje_culpable": 0.666,
+   "segundo": "fino:recta-V",
+   "empuje_segundo": 0.491,
+   "fraccion_culpable": 0.32,
+   "tipo": "reconocimiento",
+   "distancia": 0.924,
+   "corte_p90": 0.213,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:recta-V",
+    "fino:recta-S",
+    "fino:esquina-SE",
+    "grueso:arco-W",
+    "grueso:recta-V",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 1582,
+   "real": 9,
+   "pred": 5,
+   "margen": 1.07,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.427,
+   "segundo": "grueso:arco-W",
+   "empuje_segundo": 1.047,
+   "fraccion_culpable": 0.405,
+   "tipo": "reconocimiento",
+   "distancia": 1.832,
+   "corte_p90": 1.201,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:lazo",
+    "fino:esquina-SW",
+    "grueso:arco-W",
+    "grueso:recta-V"
+   ]
+  },
+  {
+   "i": 1593,
+   "real": 2,
+   "pred": 3,
+   "margen": 0.536,
+   "culpable": "fino:esquina-SW",
+   "empuje_culpable": 0.435,
+   "segundo": "grueso:esquina-SW",
+   "empuje_segundo": 0.339,
+   "fraccion_culpable": 0.245,
+   "tipo": "composicion",
+   "distancia": 0.919,
+   "corte_p90": 1.183,
+   "dificil_en_si": false,
+   "pred_pixeles": 2,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:lazo",
+    "fino:esquina-NE",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:lazo",
+    "grueso:esquina-NW"
+   ]
+  },
+  {
+   "i": 1662,
+   "real": 9,
+   "pred": 5,
+   "margen": 1.831,
+   "culpable": "fino:arco-W",
+   "empuje_culpable": 1.268,
+   "segundo": "grueso:arco-W",
+   "empuje_segundo": 0.861,
+   "fraccion_culpable": 0.345,
+   "tipo": "reconocimiento",
+   "distancia": 1.736,
+   "corte_p90": 1.201,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-W",
+    "fino:arco-N",
+    "fino:arco-S",
+    "fino:lazo",
+    "fino:esquina-SW",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:recta-H",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 1665,
+   "real": 9,
+   "pred": 8,
+   "margen": 0.686,
+   "culpable": "grueso:arco-W",
+   "empuje_culpable": 0.638,
+   "segundo": "fino:arco-E",
+   "empuje_segundo": 0.52,
+   "fraccion_culpable": 0.329,
+   "tipo": "reconocimiento",
+   "distancia": 1.226,
+   "corte_p90": 1.138,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "grueso:arco-W",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 1690,
+   "real": 3,
+   "pred": 8,
+   "margen": 0.258,
+   "culpable": "fino:arco-E",
+   "empuje_culpable": 1.488,
+   "segundo": "fino:lazo",
+   "empuje_segundo": 0.866,
+   "fraccion_culpable": 0.361,
+   "tipo": "reconocimiento",
+   "distancia": 1.143,
+   "corte_p90": 0.846,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:recta-B",
+    "fino:lazo",
+    "fino:esquina-SE",
+    "fino:esquina-SW",
+    "grueso:recta-H",
+    "grueso:recta-S",
+    "grueso:recta-B",
+    "grueso:esquina-NE",
+    "grueso:esquina-SE",
+    "grueso:esquina-SW"
+   ]
+  },
+  {
+   "i": 1727,
+   "real": 3,
+   "pred": 8,
+   "margen": 0.927,
+   "culpable": "fino:arco-E",
+   "empuje_culpable": 1.111,
+   "segundo": "grueso:arco-E",
+   "empuje_segundo": 0.744,
+   "fraccion_culpable": 0.37,
+   "tipo": "reconocimiento",
+   "distancia": 1.401,
+   "corte_p90": 0.846,
+   "dificil_en_si": true,
+   "pred_pixeles": 8,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-S",
+    "fino:recta-S",
+    "fino:recta-B",
+    "grueso:arco-E",
+    "grueso:arco-S",
+    "grueso:recta-S"
+   ]
+  },
+  {
+   "i": 1729,
+   "real": 3,
+   "pred": 5,
+   "margen": 0.301,
+   "culpable": "grueso:esquina-NE",
+   "empuje_culpable": 0.531,
+   "segundo": "fino:esquina-SE",
+   "empuje_segundo": 0.451,
+   "fraccion_culpable": 0.275,
+   "tipo": "reconocimiento",
+   "distancia": 0.587,
+   "corte_p90": 0.093,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-W",
+    "fino:arco-S",
+    "fino:recta-S",
+    "fino:esquina-NE",
+    "fino:esquina-SW",
+    "grueso:recta-S",
+    "grueso:esquina-NE"
+   ]
+  },
+  {
+   "i": 1765,
+   "real": 3,
+   "pred": 8,
+   "margen": 0.405,
+   "culpable": "fino:arco-E",
+   "empuje_culpable": 1.159,
+   "segundo": "grueso:arco-E",
+   "empuje_segundo": 0.406,
+   "fraccion_culpable": 0.344,
+   "tipo": "reconocimiento",
+   "distancia": 0.972,
+   "corte_p90": 0.846,
+   "dificil_en_si": true,
+   "pred_pixeles": 5,
+   "detectores_raros": [
+    "fino:arco-E",
+    "fino:arco-N",
+    "fino:recta-S",
+    "fino:recta-B",
+    "fino:lazo",
+    "fino:esquina-SW",
+    "grueso:arco-W",
+    "grueso:arco-N",
+    "grueso:recta-B",
+    "grueso:esquina-SE"
+   ]
+  }
+ ]
+}

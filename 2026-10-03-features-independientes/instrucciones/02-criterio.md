@@ -164,3 +164,22 @@ descartó es la misma que la de arriba.
 composición; el compositor posicional sube de 0,959. **Qué lo refutaría:** 1↔8 no baja, o el posicional baja
 (los detectores pierden precisión en trazos finos sin ganar en gruesos). En sintético se reporta §A sobre el
 val **grueso** (otro val: no comparable con la corrida 2) — lo que decide es el dígito.
+
+## Corrida 5 — fino Y grueso en el mismo compositor (escrito el 2026-10-03, ANTES de mirar)
+
+**Qué se hace.** No se entrena ningún detector. Se juntan los 13 mapas de la corrida 2 (`nn/pesos/`, «fino»)
+y los 13 de la corrida 4 (`nn/pesos-c4/`, «grueso») de cada dígito: **26 mapas**. Los mismos dos
+compositores lineales, mismos hiperparámetros, mismas 3 semillas, mismos 180/1617: presencia con 26
+entradas, posicional con 26 × 64 = 1.664. Y la misma atribución del error (`errores.py`, sufijo `-c24`),
+con los detectores nombrados `fino:<f>` y `grueso:<f>`.
+
+**Por qué puede servir.** Los dos sistemas empatan (0,959 y 0,957) pero fallan en dígitos distintos: sólo
+25 fallos en común de 65 y 70. Un lineal que vea los dos puede aprender, p. ej., «`recta-V` grueso encendido
+y fino apagado ⇒ cuerpo de un 4, no un 1».
+
+**Riesgo escrito antes:** con 180 imágenes de train, doblar las entradas (832 → 1.664) puede sobreajustar
+más; el posicional ya llega a 1,000 en train con 832.
+
+**Qué se espera:** posicional ≥ 0,965 (al menos ~10 dígitos mejor que el mejor de los dos), con 1↔8 y 4→1
+**los dos** por debajo de 5. **Qué lo refuta:** posicional ≤ 0,959 — entonces combinar no suma y el límite
+está en otro sitio (el compositor lineal o los 180 dígitos de train).
