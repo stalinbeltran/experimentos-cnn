@@ -9,7 +9,7 @@
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
   "reporte": "estudios-redes-neuronales/reportes/estudios/2026/10-octubre/2026-10-03-ruido-nist-ruido-de-entrenamiento.md",
-  "plan": "Corrido el 2026-10-03 en el dev: fase 1 (33 corridas) y fase 2 (84), 0 $, 0 fallos. README.md con el veredicto; reporte #26 en el central",
+  "plan": "Corrido el 2026-10-03 en el dev: fase 1 (33 corridas) y fase 2 (84), 0 $, 0 fallos. README.md con el veredicto; reporte #28 en el central",
   "gasta_por_que": "Entrena en el dev: 33 corridas de 1.338 parametros sobre 360 imagenes de 8 px, ~25 s cada una (18-20 s medidos en el ensayo sin evaluaciones). No alquila. El freno lo ve porque cada corrida es un proceso nn/entrenar_local.py",
   "linaje": "dim-nist (mismo dataset y reparto); no hereda nada mas",
   "escenarios_previstos_fase1": [
