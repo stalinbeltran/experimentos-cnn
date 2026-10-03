@@ -1,0 +1,8 @@
+empiezo curva@0.6-s3: copia 2821b24e94e07041 (semilla de ruido 1052), init 8d4cd1e1cda989a8, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  curva@0.6-s3 ep   1/222 perdida 2.3217 acc~0.103
+  curva@0.6-s3 ep  50/222 perdida 0.1898 acc~0.942 · acc_val 0.7916 brecha +0.1640
+  curva@0.6-s3 ep 100/222 perdida 0.0472 acc~0.992 · acc_val 0.8114 brecha +0.1886
+  curva@0.6-s3 ep 150/222 perdida 0.0067 acc~1.000 · acc_val 0.8194 brecha +0.1806
+  curva@0.6-s3 ep 200/222 perdida 0.0023 acc~1.000 · acc_val 0.8256 brecha +0.1744
+  curva@0.6-s3 ep 222/222 perdida 0.0015 acc~1.000 · acc_val 0.8262 brecha +0.1738
+listo curva@0.6-s3: acc_train 1.0000 acc_val 0.8262 brecha +0.1738 · ce_train 0.0013 ce_val 1.4808 en 22.1 s

@@ -1,0 +1,8 @@
+empiezo limpio-s3: copia dc7573f9099d5072 (semilla de ruido None), init 8d4cd1e1cda989a8, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  limpio-s3 ep   1/222 perdida 2.3219 acc~0.108
+  limpio-s3 ep  50/222 perdida 0.1711 acc~0.950 · acc_val 0.8138 brecha +0.1361
+  limpio-s3 ep 100/222 perdida 0.0346 acc~0.994 · acc_val 0.8405 brecha +0.1540
+  limpio-s3 ep 150/222 perdida 0.0053 acc~1.000 · acc_val 0.8330 brecha +0.1670
+  limpio-s3 ep 200/222 perdida 0.0019 acc~1.000 · acc_val 0.8324 brecha +0.1676
+  limpio-s3 ep 222/222 perdida 0.0013 acc~1.000 · acc_val 0.8343 brecha +0.1657
+listo limpio-s3: acc_train 1.0000 acc_val 0.8343 brecha +0.1657 · ce_train 0.0012 ce_val 1.5595 en 19.0 s

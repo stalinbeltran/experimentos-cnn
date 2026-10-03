@@ -1,0 +1,94 @@
+{
+ "id": "borrado@0.05-s3",
+ "escenario": "borrado@0.05",
+ "tipo": "borrado",
+ "nivel": 0.05,
+ "indice_nivel": 0,
+ "realizacion": 1,
+ "semilla": 3,
+ "semilla_lotes": 103,
+ "semilla_ruido": 1000,
+ "pasos": 3996,
+ "epocas": 222,
+ "lote": 20,
+ "lr": 0.003,
+ "L": 3,
+ "k": 3,
+ "C": 8,
+ "mapas": [
+  6,
+  4,
+  2
+ ],
+ "parametros": 1338,
+ "dataset": "uci-optdigits-8px-r20261002",
+ "huella_init": "8d4cd1e1cda989a8",
+ "huella_copia": "19e0776ba0e85a87",
+ "huella_x_val": "57a6cb6086e0f956",
+ "huella_x_train_limpio": "dc7573f9099d5072",
+ "tinta_media_original": 0.30467,
+ "tinta_media_copia": 0.28931,
+ "acc_train": 1.0,
+ "acc_val": 0.81509,
+ "brecha": 0.18491,
+ "ce_train": 0.00285,
+ "ce_val": 1.45004,
+ "brecha_ce": 1.4472,
+ "acc_train360": 1.0,
+ "ce_train360": 0.0034,
+ "huella_final": "ecfc668faed1cb16",
+ "piso": 0.1,
+ "acc_val_por_clase": {
+  "0": {
+   "n": 160,
+   "acc": 0.9375
+  },
+  "1": {
+   "n": 164,
+   "acc": 0.79268
+  },
+  "2": {
+   "n": 159,
+   "acc": 0.9434
+  },
+  "3": {
+   "n": 165,
+   "acc": 0.82424
+  },
+  "4": {
+   "n": 163,
+   "acc": 0.61963
+  },
+  "5": {
+   "n": 164,
+   "acc": 0.81098
+  },
+  "6": {
+   "n": 163,
+   "acc": 0.93252
+  },
+  "7": {
+   "n": 161,
+   "acc": 0.82609
+  },
+  "8": {
+   "n": 156,
+   "acc": 0.64103
+  },
+  "9": {
+   "n": 162,
+   "acc": 0.82099
+  }
+ },
+ "segundos": 23.0,
+ "maquina": {
+  "cpu": "DO-Regular",
+  "nproc": 2,
+  "hilos_torch": 2,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "dev"
+ },
+ "terminado": "2026-10-03T03:57:44+00:00"
+}

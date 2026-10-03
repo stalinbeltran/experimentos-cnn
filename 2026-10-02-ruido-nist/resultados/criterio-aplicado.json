@@ -1,0 +1,3978 @@
+{
+ "criterio": {
+  "avisos": [],
+  "base": {
+   "acc_val": {
+    "media": 0.8703366666666668,
+    "sd": 0.03168216269974849,
+    "se": 0.018291705163209313,
+    "n": 3,
+    "valores": [
+     0.88312,
+     0.89363,
+     0.83426
+    ]
+   },
+   "ce_val": {
+    "media": 1.0372433333333333,
+    "sd": 0.47838766709995084,
+    "se": 0.2761972483771537,
+    "n": 3,
+    "valores": [
+     0.932,
+     0.62024,
+     1.55949
+    ]
+   },
+   "acc_train": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0006433333333333333,
+    "sd": 0.0004821134029803914,
+    "se": 0.0002783483029906555,
+    "n": 3,
+    "valores": [
+     0.00037,
+     0.00036,
+     0.0012
+    ]
+   },
+   "semillas": [
+    1,
+    2,
+    3
+   ]
+  },
+  "fase2": [
+   "borrado",
+   "vertical",
+   "oblicua",
+   "curva",
+   "recorte",
+   "gaussiano",
+   "sal-pimienta"
+  ],
+  "realizacion": {
+   "oblicua@0.6-r2": {
+    "contra": "oblicua@0.6",
+    "delta_acc_val": {
+     "media": -0.01113000000000001,
+     "sd": 0.03781495868039516,
+     "se": 0.02183247657352072,
+     "n": 3,
+     "valores": [
+      0.01546,
+      0.00557,
+      -0.05442
+     ]
+    },
+    "umbral": 0.04366495314704144,
+    "amplitud_entre_tipos": 0.03916666666666664,
+    "pesa": false,
+    "lectura": "la realización no se distingue (|Δ| dentro del umbral): una copia fija sirve para esta fase"
+   }
+  },
+  "veredictos": {
+   "borrado@0.05": "indistinguible",
+   "borrado@0.1": "indistinguible",
+   "borrado@0.2": "indistinguible",
+   "borrado@0.3": "indistinguible",
+   "borrado@0.4": "indistinguible",
+   "curva@0.2": "indistinguible",
+   "curva@0.4": "indistinguible",
+   "curva@0.6": "indistinguible",
+   "curva@0.8": "ayuda",
+   "curva@1": "ayuda",
+   "externos@0.05": "indistinguible",
+   "gaussiano@0.02": "indistinguible",
+   "gaussiano@0.05": "indistinguible",
+   "gaussiano@0.1": "indistinguible",
+   "gaussiano@0.2": "ayuda",
+   "gaussiano@0.3": "indistinguible",
+   "horizontal@0.6": "indistinguible",
+   "oblicua@0.2": "indistinguible",
+   "oblicua@0.4": "indistinguible",
+   "oblicua@0.6-r2": "indistinguible",
+   "oblicua@0.6": "indistinguible",
+   "oblicua@0.8": "indistinguible",
+   "oblicua@1": "ayuda",
+   "recorte@0.2": "ayuda",
+   "recorte@0.4": "indistinguible",
+   "recorte@0.6": "ayuda",
+   "recorte@0.8": "indistinguible",
+   "recorte@1": "indistinguible",
+   "sal-pimienta@0.02": "indistinguible",
+   "sal-pimienta@0.05": "indistinguible",
+   "sal-pimienta@0.1": "indistinguible",
+   "sal-pimienta@0.2": "indistinguible",
+   "sal-pimienta@0.3": "indistinguible",
+   "vertical@0.2": "indistinguible",
+   "vertical@0.4": "indistinguible",
+   "vertical@0.6": "indistinguible",
+   "vertical@0.8": "indistinguible",
+   "vertical@1": "ayuda"
+  },
+  "por_tipo": {
+   "borrado": {
+    "niveles": [
+     {
+      "nivel": 0.05,
+      "escenario": "borrado@0.05",
+      "delta": -0.0026800000000000157,
+      "se": 0.00831426685483052,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.1,
+      "escenario": "borrado@0.1",
+      "delta": 0.00947999999999997,
+      "se": 0.0029953519548349414,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.2,
+      "escenario": "borrado@0.2",
+      "delta": 0.008449999999999994,
+      "se": 0.005696633508778108,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.3,
+      "escenario": "borrado@0.3",
+      "delta": 0.009069999999999986,
+      "se": 0.0035229391138650104,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.4,
+      "escenario": "borrado@0.4",
+      "delta": 0.018963333333333294,
+      "se": 0.010076163842344872,
+      "veredicto": "indistinguible"
+     }
+    ],
+    "mejor": "borrado@0.4",
+    "mejor_nivel": 0.4,
+    "mejor_delta": 0.018963333333333294,
+    "mejor_veredicto": "indistinguible",
+    "forma": "sube con la intensidad: el mejor es el más fuerte (el eje no está acotado por arriba)",
+    "amplitud": 0.02164333333333331
+   },
+   "vertical": {
+    "niveles": [
+     {
+      "nivel": 0.2,
+      "escenario": "vertical@0.2",
+      "delta": 0.003093333333333318,
+      "se": 0.002923658286766396,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.4,
+      "escenario": "vertical@0.4",
+      "delta": 0.004946666666666655,
+      "se": 0.003052306959953067,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.6,
+      "escenario": "vertical@0.6",
+      "delta": 0.00947999999999997,
+      "se": 0.005053170621830764,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.8,
+      "escenario": "vertical@0.8",
+      "delta": 0.00680333333333331,
+      "se": 0.006898802633629831,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 1.0,
+      "escenario": "vertical@1",
+      "delta": 0.014219999999999974,
+      "se": 0.0019873181258503224,
+      "veredicto": "ayuda"
+     }
+    ],
+    "mejor": "vertical@1",
+    "mejor_nivel": 1.0,
+    "mejor_delta": 0.014219999999999974,
+    "mejor_veredicto": "ayuda",
+    "forma": "sube con la intensidad: el mejor es el más fuerte (el eje no está acotado por arriba)",
+    "amplitud": 0.011126666666666656
+   },
+   "oblicua": {
+    "niveles": [
+     {
+      "nivel": 0.2,
+      "escenario": "oblicua@0.2",
+      "delta": 0.003916666666666679,
+      "se": 0.002728273772512187,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.4,
+      "escenario": "oblicua@0.4",
+      "delta": 0.0010299999999999754,
+      "se": 0.015125885098069444,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.6,
+      "escenario": "oblicua@0.6",
+      "delta": 0.0061833333333333185,
+      "se": 0.004331190495823396,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.8,
+      "escenario": "oblicua@0.8",
+      "delta": 0.006186666666666674,
+      "se": 0.012182969442810084,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 1.0,
+      "escenario": "oblicua@1",
+      "delta": 0.011543333333333275,
+      "se": 0.00350333333333334,
+      "veredicto": "ayuda"
+     }
+    ],
+    "mejor": "oblicua@1",
+    "mejor_nivel": 1.0,
+    "mejor_delta": 0.011543333333333275,
+    "mejor_veredicto": "ayuda",
+    "forma": "sube con la intensidad: el mejor es el más fuerte (el eje no está acotado por arriba)",
+    "amplitud": 0.0105133333333333
+   },
+   "curva": {
+    "niveles": [
+     {
+      "nivel": 0.2,
+      "escenario": "curva@0.2",
+      "delta": 0.004946666666666655,
+      "se": 0.004722235816973905,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.4,
+      "escenario": "curva@0.4",
+      "delta": 0.0035033333333333396,
+      "se": 0.00041333333333330263,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.6,
+      "escenario": "curva@0.6",
+      "delta": 0.0026766666666666237,
+      "se": 0.005370084832766716,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.8,
+      "escenario": "curva@0.8",
+      "delta": 0.020819999999999988,
+      "se": 0.008574899416319733,
+      "veredicto": "ayuda"
+     },
+     {
+      "nivel": 1.0,
+      "escenario": "curva@1",
+      "delta": 0.011956666666666615,
+      "se": 0.003947680050077215,
+      "veredicto": "ayuda"
+     }
+    ],
+    "mejor": "curva@0.8",
+    "mejor_nivel": 0.8,
+    "mejor_delta": 0.020819999999999988,
+    "mejor_veredicto": "ayuda",
+    "forma": "pico interior",
+    "amplitud": 0.018143333333333365
+   },
+   "recorte": {
+    "niveles": [
+     {
+      "nivel": 0.2,
+      "escenario": "recorte@0.2",
+      "delta": 0.011750000000000002,
+      "se": 0.005038147807809268,
+      "veredicto": "ayuda"
+     },
+     {
+      "nivel": 0.4,
+      "escenario": "recorte@0.4",
+      "delta": 0.010513333333333338,
+      "se": 0.010277957535965535,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.6,
+      "escenario": "recorte@0.6",
+      "delta": 0.02885999999999996,
+      "se": 0.010603494706935078,
+      "veredicto": "ayuda"
+     },
+     {
+      "nivel": 0.8,
+      "escenario": "recorte@0.8",
+      "delta": 0.007213333333333294,
+      "se": 0.008053306429314877,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 1.0,
+      "escenario": "recorte@1",
+      "delta": 0.02267666666666664,
+      "se": 0.018927132493973948,
+      "veredicto": "indistinguible"
+     }
+    ],
+    "mejor": "recorte@0.6",
+    "mejor_nivel": 0.6,
+    "mejor_delta": 0.02885999999999996,
+    "mejor_veredicto": "ayuda",
+    "forma": "pico interior",
+    "amplitud": 0.021646666666666665
+   },
+   "gaussiano": {
+    "niveles": [
+     {
+      "nivel": 0.02,
+      "escenario": "gaussiano@0.02",
+      "delta": -0.004743333333333359,
+      "se": 0.01186548823736767,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.05,
+      "escenario": "gaussiano@0.05",
+      "delta": 0.005566666666666646,
+      "se": 0.004803805204673098,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.1,
+      "escenario": "gaussiano@0.1",
+      "delta": 0.0033000000000000065,
+      "se": 0.010188822306822316,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.2,
+      "escenario": "gaussiano@0.2",
+      "delta": 0.016489999999999966,
+      "se": 0.004590711636917882,
+      "veredicto": "ayuda"
+     },
+     {
+      "nivel": 0.3,
+      "escenario": "gaussiano@0.3",
+      "delta": -0.00020666666666668831,
+      "se": 0.00907528205867149,
+      "veredicto": "indistinguible"
+     }
+    ],
+    "mejor": "gaussiano@0.2",
+    "mejor_nivel": 0.2,
+    "mejor_delta": 0.016489999999999966,
+    "mejor_veredicto": "ayuda",
+    "forma": "pico interior",
+    "amplitud": 0.021233333333333326
+   },
+   "sal-pimienta": {
+    "niveles": [
+     {
+      "nivel": 0.02,
+      "escenario": "sal-pimienta@0.02",
+      "delta": 0.001443333333333315,
+      "se": 0.0008233333333333611,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.05,
+      "escenario": "sal-pimienta@0.05",
+      "delta": 0.011133333333333328,
+      "se": 0.018437911426671366,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.1,
+      "escenario": "sal-pimienta@0.1",
+      "delta": 0.007419999999999982,
+      "se": 0.010515000396259301,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.2,
+      "escenario": "sal-pimienta@0.2",
+      "delta": 0.018140000000000007,
+      "se": 0.010533006851480408,
+      "veredicto": "indistinguible"
+     },
+     {
+      "nivel": 0.3,
+      "escenario": "sal-pimienta@0.3",
+      "delta": 0.01711000000000003,
+      "se": 0.013101007594837897,
+      "veredicto": "indistinguible"
+     }
+    ],
+    "mejor": "sal-pimienta@0.2",
+    "mejor_nivel": 0.2,
+    "mejor_delta": 0.018140000000000007,
+    "mejor_veredicto": "indistinguible",
+    "forma": "pico interior",
+    "amplitud": 0.016696666666666693
+   }
+  }
+ },
+ "deltas": {
+  "borrado@0.05": {
+   "acc_val": {
+    "media": -0.0026800000000000157,
+    "sd": 0.014400732620252349,
+    "se": 0.00831426685483052,
+    "n": 3,
+    "valores": [
+     0.00371,
+     0.00742,
+     -0.01917
+    ]
+   },
+   "ce_val": {
+    "media": -0.06996666666666669,
+    "sd": 0.04229611369066119,
+    "se": 0.024419672624978257,
+    "n": 3,
+    "valores": [
+     -0.07512,
+     -0.02533,
+     -0.10945
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0005566666666666668,
+    "sd": 0.0009469072464256113,
+    "se": 0.000546697153621434,
+    "n": 3,
+    "valores": [
+     2e-05,
+     0.0,
+     0.00165
+    ]
+   },
+   "tipo": "borrado",
+   "nivel": 0.05,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8676566666666666,
+    "sd": 0.046075947449112045,
+    "se": 0.026601960662911893,
+    "n": 3,
+    "valores": [
+     0.88683,
+     0.90105,
+     0.81509
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9672766666666667,
+    "sd": 0.4381237236595769,
+    "se": 0.25295084979321797,
+    "n": 3,
+    "valores": [
+     0.85688,
+     0.59491,
+     1.45004
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01662853370966104,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "borrado@0.1": {
+   "acc_val": {
+    "media": 0.00947999999999997,
+    "sd": 0.005188101772324876,
+    "se": 0.0029953519548349414,
+    "n": 3,
+    "valores": [
+     0.00618,
+     0.0068,
+     0.01546
+    ]
+   },
+   "ce_val": {
+    "media": 0.022729999999999955,
+    "sd": 0.02782726540643192,
+    "se": 0.01606607917321463,
+    "n": 3,
+    "valores": [
+     0.02232,
+     0.05076,
+     -0.00489
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.00013,
+    "sd": 0.00021931712199461302,
+    "se": 0.00012662279942148383,
+    "n": 3,
+    "valores": [
+     6e-05,
+     -8e-05,
+     -0.00037
+    ]
+   },
+   "tipo": "borrado",
+   "nivel": 0.1,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8798166666666667,
+    "sd": 0.026651946145325508,
+    "se": 0.015387508281431091,
+    "n": 3,
+    "valores": [
+     0.8893,
+     0.90043,
+     0.84972
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0599733333333334,
+    "sd": 0.4511753651667313,
+    "se": 0.26048621853074005,
+    "n": 3,
+    "valores": [
+     0.95432,
+     0.671,
+     1.5546
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "borrado@0.2": {
+   "acc_val": {
+    "media": 0.008449999999999994,
+    "sd": 0.009866858669303048,
+    "se": 0.005696633508778108,
+    "n": 3,
+    "valores": [
+     -0.00248,
+     0.01113,
+     0.0167
+    ]
+   },
+   "ce_val": {
+    "media": 0.01604999999999997,
+    "sd": 0.017466032749310835,
+    "se": 0.010084018709489431,
+    "n": 3,
+    "valores": [
+     0.02322,
+     0.02879,
+     -0.00386
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.0003266666666666667,
+    "sd": 0.00032393414968683574,
+    "se": 0.00018702346852140717,
+    "n": 3,
+    "valores": [
+     -0.00012,
+     -0.00016,
+     -0.0007
+    ]
+   },
+   "tipo": "borrado",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8787866666666667,
+    "sd": 0.02694784097721619,
+    "se": 0.015558343242274996,
+    "n": 3,
+    "valores": [
+     0.88064,
+     0.90476,
+     0.85096
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0532933333333334,
+    "sd": 0.46118832816251254,
+    "se": 0.2662672054117401,
+    "n": 3,
+    "valores": [
+     0.95522,
+     0.64903,
+     1.55563
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.011393267017556215,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "borrado@0.3": {
+   "acc_val": {
+    "media": 0.009069999999999986,
+    "sd": 0.006101909537185876,
+    "se": 0.0035229391138650104,
+    "n": 3,
+    "valores": [
+     0.00618,
+     0.00495,
+     0.01608
+    ]
+   },
+   "ce_val": {
+    "media": 0.0940966666666666,
+    "sd": 0.0903288837157492,
+    "se": 0.0521514053288862,
+    "n": 3,
+    "valores": [
+     0.03948,
+     0.19836,
+     0.04445
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.00016333333333333334,
+    "sd": 0.00012858201014657268,
+    "se": 7.423685817106694e-05,
+    "n": 3,
+    "valores": [
+     -0.00011,
+     -7e-05,
+     -0.00031
+    ]
+   },
+   "tipo": "borrado",
+   "nivel": 0.3,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8794066666666667,
+    "sd": 0.02559654143304002,
+    "se": 0.014778170086689066,
+    "n": 3,
+    "valores": [
+     0.8893,
+     0.89858,
+     0.85034
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.13134,
+    "sd": 0.41636059323619945,
+    "se": 0.24038590058487205,
+    "n": 3,
+    "valores": [
+     0.97148,
+     0.8186,
+     1.60394
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "borrado@0.4": {
+   "acc_val": {
+    "media": 0.018963333333333294,
+    "sd": 0.017452427720329757,
+    "se": 0.010076163842344872,
+    "n": 3,
+    "valores": [
+     0.01113,
+     0.0068,
+     0.03896
+    ]
+   },
+   "ce_val": {
+    "media": 0.04336666666666663,
+    "sd": 0.19024880350039883,
+    "se": 0.10984019791395949,
+    "n": 3,
+    "valores": [
+     0.04548,
+     0.23255,
+     -0.14793
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.0003666666666666666,
+    "sd": 0.000297713508819021,
+    "se": 0.0001718849744580498,
+    "n": 3,
+    "valores": [
+     -0.00018,
+     -0.00021,
+     -0.00071
+    ]
+   },
+   "tipo": "borrado",
+   "nivel": 0.4,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8893,
+    "sd": 0.01426439273155361,
+    "se": 0.008235550983389019,
+    "n": 3,
+    "valores": [
+     0.89425,
+     0.90043,
+     0.87322
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.08061,
+    "sd": 0.29331352832762414,
+    "se": 0.16934464453691273,
+    "n": 3,
+    "valores": [
+     0.97748,
+     0.85279,
+     1.41156
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.020152327684689744,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.2": {
+   "acc_val": {
+    "media": 0.004946666666666655,
+    "sd": 0.00817915236032033,
+    "se": 0.004722235816973905,
+    "n": 3,
+    "valores": [
+     -0.00124,
+     0.00186,
+     0.01422
+    ]
+   },
+   "ce_val": {
+    "media": -0.06423000000000001,
+    "sd": 0.04015868150226044,
+    "se": 0.023185625575630513,
+    "n": 3,
+    "valores": [
+     -0.06115,
+     -0.0257,
+     -0.10584
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.0001933333333333333,
+    "sd": 0.0003348631561299829,
+    "se": 0.0001933333333333333,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     -0.00058
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8752833333333333,
+    "sd": 0.02418929584203172,
+    "se": 0.01396569646590451,
+    "n": 3,
+    "valores": [
+     0.88188,
+     0.89549,
+     0.84848
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9730133333333333,
+    "sd": 0.438572124095152,
+    "se": 0.25320973390540197,
+    "n": 3,
+    "valores": [
+     0.87085,
+     0.59454,
+     1.45365
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.4": {
+   "acc_val": {
+    "media": 0.0035033333333333396,
+    "sd": 0.0007159143337950827,
+    "se": 0.00041333333333330263,
+    "n": 3,
+    "valores": [
+     0.00309,
+     0.00433,
+     0.00309
+    ]
+   },
+   "ce_val": {
+    "media": -0.030053333333333376,
+    "sd": 0.08187735238350914,
+    "se": 0.04727191143915285,
+    "n": 3,
+    "valores": [
+     -0.11157,
+     -0.03077,
+     0.05218
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.00012333333333333329,
+    "sd": 0.0003326158945891391,
+    "se": 0.00019203587627778768,
+    "n": 3,
+    "valores": [
+     0.00013,
+     0.0,
+     -0.0005
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.4,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8738400000000001,
+    "sd": 0.03214273946010201,
+    "se": 0.018557619279781903,
+    "n": 3,
+    "valores": [
+     0.88621,
+     0.89796,
+     0.83735
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0071899999999998,
+    "sd": 0.5360808550955722,
+    "se": 0.3095064259968334,
+    "n": 3,
+    "valores": [
+     0.82043,
+     0.58947,
+     1.61167
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.6": {
+   "acc_val": {
+    "media": 0.0026766666666666237,
+    "sd": 0.009301259771306969,
+    "se": 0.005370084832766716,
+    "n": 3,
+    "valores": [
+     0.00865,
+     0.00742,
+     -0.00804
+    ]
+   },
+   "ce_val": {
+    "media": -0.06218000000000009,
+    "sd": 0.05413929072309689,
+    "se": 0.0312573340727154,
+    "n": 3,
+    "valores": [
+     -0.10612,
+     -0.0017,
+     -0.07872
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 2.6666666666666717e-05,
+    "sd": 7.571877794400367e-05,
+    "se": 4.371625682868002e-05,
+    "n": 3,
+    "valores": [
+     -6e-05,
+     8e-05,
+     6e-05
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8730133333333333,
+    "sd": 0.04078898911879694,
+    "se": 0.023549533847710132,
+    "n": 3,
+    "valores": [
+     0.89177,
+     0.90105,
+     0.82622
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9750633333333333,
+    "sd": 0.45005765567684025,
+    "se": 0.2598409086558756,
+    "n": 3,
+    "valores": [
+     0.82588,
+     0.61854,
+     1.48077
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.010740169665533431,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@0.8": {
+   "acc_val": {
+    "media": 0.020819999999999988,
+    "sd": 0.014852161458858485,
+    "se": 0.008574899416319733,
+    "n": 3,
+    "valores": [
+     0.00989,
+     0.01484,
+     0.03773
+    ]
+   },
+   "ce_val": {
+    "media": -0.3115833333333334,
+    "sd": 0.21851257316990552,
+    "se": 0.12615829294096276,
+    "n": 3,
+    "valores": [
+     -0.31521,
+     -0.09128,
+     -0.52826
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -6.666666666666648e-06,
+    "sd": 0.0005478442601080469,
+    "se": 0.00031629803104737226,
+    "n": 3,
+    "valores": [
+     0.00048,
+     0.0001,
+     -0.0006
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8911566666666667,
+    "sd": 0.018310481515605548,
+    "se": 0.010571561432026531,
+    "n": 3,
+    "valores": [
+     0.89301,
+     0.90847,
+     0.87199
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.7256600000000001,
+    "sd": 0.2682504350415858,
+    "se": 0.1548744608814938,
+    "n": 3,
+    "valores": [
+     0.61679,
+     0.52896,
+     1.03123
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.017149798832639465,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "curva@1": {
+   "acc_val": {
+    "media": 0.011956666666666615,
+    "sd": 0.006837582418759786,
+    "se": 0.003947680050077215,
+    "n": 3,
+    "valores": [
+     0.01113,
+     0.01917,
+     0.00557
+    ]
+   },
+   "ce_val": {
+    "media": -0.20369000000000007,
+    "sd": 0.07333405007225499,
+    "se": 0.04233943354998192,
+    "n": 3,
+    "valores": [
+     -0.16592,
+     -0.15694,
+     -0.28821
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.001583333333333333,
+    "sd": 0.001137995313405698,
+    "se": 0.0006570219005313123,
+    "n": 3,
+    "valores": [
+     0.00028,
+     0.00238,
+     0.00209
+    ]
+   },
+   "tipo": "curva",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8822933333333333,
+    "sd": 0.03792593615632096,
+    "se": 0.021896549449120468,
+    "n": 3,
+    "valores": [
+     0.89425,
+     0.9128,
+     0.83983
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.8335533333333333,
+    "sd": 0.4081940814530918,
+    "se": 0.23567096280855457,
+    "n": 3,
+    "valores": [
+     0.76608,
+     0.4633,
+     1.27128
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "externos@0.05": {
+   "acc_val": {
+    "media": -0.00041333333333337663,
+    "sd": 0.0052559902333750375,
+    "se": 0.003034547376097122,
+    "n": 3,
+    "valores": [
+     0.00556,
+     -0.00247,
+     -0.00433
+    ]
+   },
+   "ce_val": {
+    "media": -0.03802333333333341,
+    "sd": 0.07526656251838092,
+    "se": 0.043455170130965025,
+    "n": 3,
+    "valores": [
+     -0.0365,
+     0.03647,
+     -0.11404
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -3.999999999999996e-05,
+    "sd": 1.000000000000008e-05,
+    "se": 5.773502691896304e-06,
+    "n": 3,
+    "valores": [
+     -4e-05,
+     -5e-05,
+     -3e-05
+    ]
+   },
+   "tipo": "externos",
+   "nivel": 0.05,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8699233333333334,
+    "sd": 0.03465743258427166,
+    "se": 0.02000947803195055,
+    "n": 3,
+    "valores": [
+     0.88868,
+     0.89116,
+     0.82993
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9992199999999999,
+    "sd": 0.4044701171903803,
+    "se": 0.23352093103902555,
+    "n": 3,
+    "valores": [
+     0.8955,
+     0.65671,
+     1.44545
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.02": {
+   "acc_val": {
+    "media": -0.004743333333333359,
+    "sd": 0.020551628483731686,
+    "se": 0.01186548823736767,
+    "n": 3,
+    "valores": [
+     0.00618,
+     0.00804,
+     -0.02845
+    ]
+   },
+   "ce_val": {
+    "media": -0.010210000000000016,
+    "sd": 0.19555346788027056,
+    "se": 0.11290284732163905,
+    "n": 3,
+    "valores": [
+     -0.20835,
+     -0.00493,
+     0.18265
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00018333333333333334,
+    "sd": 0.00043362810487021405,
+    "se": 0.00025035530307500537,
+    "n": 3,
+    "valores": [
+     -0.00012,
+     -1e-05,
+     0.00068
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.02,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8655933333333333,
+    "sd": 0.05214201217188813,
+    "se": 0.030104204763528358,
+    "n": 3,
+    "valores": [
+     0.8893,
+     0.90167,
+     0.80581
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0270333333333335,
+    "sd": 0.6216651409185924,
+    "se": 0.358918536455156,
+    "n": 3,
+    "valores": [
+     0.72365,
+     0.61531,
+     1.74214
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.02373097647473534,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.05": {
+   "acc_val": {
+    "media": 0.005566666666666646,
+    "sd": 0.008320434684157616,
+    "se": 0.004803805204673098,
+    "n": 3,
+    "valores": [
+     -0.00371,
+     0.00804,
+     0.01237
+    ]
+   },
+   "ce_val": {
+    "media": -0.03752000000000003,
+    "sd": 0.04592039525091217,
+    "se": 0.026512152559408156,
+    "n": 3,
+    "valores": [
+     -0.04505,
+     0.0117,
+     -0.07921
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 3.3333333333333782e-06,
+    "sd": 3.214550253664313e-05,
+    "se": 1.855921454276671e-05,
+    "n": 3,
+    "valores": [
+     4e-05,
+     -1e-05,
+     -2e-05
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.05,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8759033333333334,
+    "sd": 0.027687053532893902,
+    "se": 0.015985127810283873,
+    "n": 3,
+    "valores": [
+     0.87941,
+     0.90167,
+     0.84663
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9997233333333333,
+    "sd": 0.43526837403300206,
+    "se": 0.25130231291768446,
+    "n": 3,
+    "valores": [
+     0.88695,
+     0.63194,
+     1.48028
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.1": {
+   "acc_val": {
+    "media": 0.0033000000000000065,
+    "sd": 0.017647557904707383,
+    "se": 0.010188822306822316,
+    "n": 3,
+    "valores": [
+     0.02041,
+     0.00433,
+     -0.01484
+    ]
+   },
+   "ce_val": {
+    "media": -0.13591,
+    "sd": 0.2142440300218421,
+    "se": 0.12369384840538082,
+    "n": 3,
+    "valores": [
+     -0.33631,
+     0.08991,
+     -0.16133
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0019833333333333335,
+    "sd": 0.003166864906075618,
+    "se": 0.001828390306009937,
+    "n": 3,
+    "valores": [
+     0.00013,
+     0.00018,
+     0.00564
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.1,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8736366666666667,
+    "sd": 0.0470355337307161,
+    "se": 0.027155978060906666,
+    "n": 3,
+    "valores": [
+     0.90353,
+     0.89796,
+     0.81942
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9013333333333332,
+    "sd": 0.434053942999408,
+    "se": 0.25060116083352674,
+    "n": 3,
+    "valores": [
+     0.59569,
+     0.71015,
+     1.39816
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.020377644613644632,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.2": {
+   "acc_val": {
+    "media": 0.016489999999999966,
+    "sd": 0.00795134579803946,
+    "se": 0.004590711636917882,
+    "n": 3,
+    "valores": [
+     0.00742,
+     0.01979,
+     0.02226
+    ]
+   },
+   "ce_val": {
+    "media": -0.2870433333333334,
+    "sd": 0.22795142384581263,
+    "se": 0.1316078159195384,
+    "n": 3,
+    "valores": [
+     -0.23505,
+     -0.08958,
+     -0.5365
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0016600000000000002,
+    "sd": 0.0029534894616368625,
+    "se": 0.0017051979357247656,
+    "n": 3,
+    "valores": [
+     -9e-05,
+     0.0,
+     0.00507
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8868266666666665,
+    "sd": 0.02863117415219528,
+    "se": 0.016530216103985,
+    "n": 3,
+    "valores": [
+     0.89054,
+     0.91342,
+     0.85652
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.7502,
+    "sd": 0.25044735794174394,
+    "se": 0.14459584952549642,
+    "n": 3,
+    "valores": [
+     0.69695,
+     0.53066,
+     1.02299
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "gaussiano@0.3": {
+   "acc_val": {
+    "media": -0.00020666666666668831,
+    "sd": 0.015718849618637298,
+    "se": 0.00907528205867149,
+    "n": 3,
+    "valores": [
+     0.01793,
+     -0.00989,
+     -0.00866
+    ]
+   },
+   "ce_val": {
+    "media": -0.18444333333333338,
+    "sd": 0.5086548193356015,
+    "se": 0.29367199686801004,
+    "n": 3,
+    "valores": [
+     -0.06494,
+     0.25382,
+     -0.74221
+    ]
+   },
+   "acc_train": {
+    "media": -0.0074066666666666725,
+    "sd": 0.012828722981393495,
+    "se": 0.007406666666666673,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     -0.02222
+    ]
+   },
+   "ce_train": {
+    "media": 0.02609,
+    "sd": 0.04447042725227631,
+    "se": 0.0256750131450794,
+    "n": 3,
+    "valores": [
+     0.00046,
+     0.00037,
+     0.07744
+    ]
+   },
+   "tipo": "gaussiano",
+   "nivel": 0.3,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8701300000000001,
+    "sd": 0.03952340698877059,
+    "se": 0.02281884966425784,
+    "n": 3,
+    "valores": [
+     0.90105,
+     0.88374,
+     0.8256
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.8527999999999999,
+    "sd": 0.030959696380940163,
+    "se": 0.017874589039564886,
+    "n": 3,
+    "valores": [
+     0.86706,
+     0.87406,
+     0.81728
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9925933333333333,
+    "sd": 0.012828722981393495,
+    "se": 0.007406666666666673,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     0.97778
+    ]
+   },
+   "umbral": 0.01815056411734298,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.0513500262901588,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "horizontal@0.6": {
+   "acc_val": {
+    "media": -0.010306666666666686,
+    "sd": 0.01237501245790618,
+    "se": 0.007144716773797105,
+    "n": 3,
+    "valores": [
+     -0.0099,
+     0.00186,
+     -0.02288
+    ]
+   },
+   "ce_val": {
+    "media": 0.0031499999999999493,
+    "sd": 0.03914597425023426,
+    "se": 0.02260093877106291,
+    "n": 3,
+    "valores": [
+     -0.04189,
+     0.02236,
+     0.02898
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0005333333333333334,
+    "sd": 0.0006331139971074193,
+    "se": 0.0003655285366576885,
+    "n": 3,
+    "valores": [
+     0.0003,
+     5e-05,
+     0.00125
+    ]
+   },
+   "tipo": "horizontal",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8600300000000001,
+    "sd": 0.04357872301938184,
+    "se": 0.02516018746618025,
+    "n": 3,
+    "valores": [
+     0.87322,
+     0.89549,
+     0.81138
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0403933333333333,
+    "sd": 0.4905163854891429,
+    "se": 0.2831997672040789,
+    "n": 3,
+    "valores": [
+     0.89011,
+     0.6426,
+     1.58847
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01428943354759421,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@0.2": {
+   "acc_val": {
+    "media": 0.003916666666666679,
+    "sd": 0.00472550879094872,
+    "se": 0.002728273772512187,
+    "n": 3,
+    "valores": [
+     -0.00124,
+     0.00495,
+     0.00804
+    ]
+   },
+   "ce_val": {
+    "media": 0.007356666666666641,
+    "sd": 0.009843131276851573,
+    "se": 0.00568293449235908,
+    "n": 3,
+    "valores": [
+     -0.00234,
+     0.01734,
+     0.00707
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.0002533333333333333,
+    "sd": 0.0004301550108197431,
+    "se": 0.0002483501112900451,
+    "n": 3,
+    "valores": [
+     -1e-05,
+     0.0,
+     -0.00075
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8742533333333334,
+    "sd": 0.02890474240212725,
+    "se": 0.016688160806724958,
+    "n": 3,
+    "valores": [
+     0.88188,
+     0.89858,
+     0.8423
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0446,
+    "sd": 0.4750361699912965,
+    "se": 0.2742622606192839,
+    "n": 3,
+    "valores": [
+     0.92966,
+     0.63758,
+     1.56656
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@0.4": {
+   "acc_val": {
+    "media": 0.0010299999999999754,
+    "sd": 0.026198801499305226,
+    "se": 0.015125885098069444,
+    "n": 3,
+    "valores": [
+     0.00989,
+     0.02165,
+     -0.02845
+    ]
+   },
+   "ce_val": {
+    "media": -0.12855000000000003,
+    "sd": 0.10176507701564427,
+    "se": 0.05875409460908522,
+    "n": 3,
+    "valores": [
+     -0.15392,
+     -0.21523,
+     -0.0165
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00452,
+    "sd": 0.007484169960656959,
+    "se": 0.0043209875414462065,
+    "n": 3,
+    "valores": [
+     4e-05,
+     0.00036,
+     0.01316
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 0.4,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8713666666666667,
+    "sd": 0.05785538551710921,
+    "se": 0.03340282240237258,
+    "n": 3,
+    "valores": [
+     0.89301,
+     0.91528,
+     0.80581
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9086933333333334,
+    "sd": 0.5801245575161712,
+    "se": 0.334935069445474,
+    "n": 3,
+    "valores": [
+     0.77808,
+     0.40501,
+     1.54299
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.030251770196138887,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@0.6-r2": {
+   "acc_val": {
+    "media": -0.004946666666666692,
+    "sd": 0.03159696557160719,
+    "se": 0.01824251657834275,
+    "n": 3,
+    "valores": [
+     0.0136,
+     0.01299,
+     -0.04143
+    ]
+   },
+   "ce_val": {
+    "media": -0.0600766666666667,
+    "sd": 0.09887344705902255,
+    "se": 0.057084611275232885,
+    "n": 3,
+    "valores": [
+     -0.16963,
+     -0.03313,
+     0.02253
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0005166666666666667,
+    "sd": 0.000744468490490587,
+    "se": 0.0004298190833879348,
+    "n": 3,
+    "valores": [
+     0.00018,
+     0.0,
+     0.00137
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 0.6,
+   "realizacion": 2,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.86539,
+    "sd": 0.06303346492142087,
+    "se": 0.036392387940337174,
+    "n": 3,
+    "valores": [
+     0.89672,
+     0.90662,
+     0.79283
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9771666666666666,
+    "sd": 0.5310976210013874,
+    "se": 0.30662935445112083,
+    "n": 3,
+    "valores": [
+     0.76237,
+     0.58711,
+     1.58202
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.0364850331566855,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@0.6": {
+   "acc_val": {
+    "media": 0.0061833333333333185,
+    "sd": 0.007501841996025558,
+    "se": 0.004331190495823396,
+    "n": 3,
+    "valores": [
+     -0.00186,
+     0.00742,
+     0.01299
+    ]
+   },
+   "ce_val": {
+    "media": -0.10925333333333331,
+    "sd": 0.12046620950844818,
+    "se": 0.06955119848795642,
+    "n": 3,
+    "valores": [
+     -0.10863,
+     0.0109,
+     -0.23003
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00012666666666666672,
+    "sd": 6.429100507328629e-05,
+    "se": 3.7118429085533434e-05,
+    "n": 3,
+    "valores": [
+     0.0002,
+     0.0001,
+     8e-05
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8765200000000001,
+    "sd": 0.02721140753434122,
+    "se": 0.015710513464980515,
+    "n": 3,
+    "valores": [
+     0.88126,
+     0.90105,
+     0.84725
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.92799,
+    "sd": 0.3607238748682987,
+    "se": 0.20826402625833715,
+    "n": 3,
+    "valores": [
+     0.82337,
+     0.63114,
+     1.32946
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@0.8": {
+   "acc_val": {
+    "media": 0.006186666666666674,
+    "sd": 0.021101522062006158,
+    "se": 0.012182969442810084,
+    "n": 3,
+    "valores": [
+     -0.01113,
+     0.0,
+     0.02969
+    ]
+   },
+   "ce_val": {
+    "media": -0.11663333333333337,
+    "sd": 0.23809242267097316,
+    "se": 0.13746272432109652,
+    "n": 3,
+    "valores": [
+     -0.02152,
+     0.0592,
+     -0.38758
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0003966666666666667,
+    "sd": 0.00039929103838344955,
+    "se": 0.0002305307884956898,
+    "n": 3,
+    "valores": [
+     0.00068,
+     -6e-05,
+     0.00057
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8765233333333334,
+    "sd": 0.015350535278397748,
+    "se": 0.008862635675187787,
+    "n": 3,
+    "valores": [
+     0.87199,
+     0.89363,
+     0.86395
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9206099999999999,
+    "sd": 0.24639122934877367,
+    "se": 0.1422540425904773,
+    "n": 3,
+    "valores": [
+     0.91048,
+     0.67944,
+     1.17191
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.024365938885620168,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "oblicua@1": {
+   "acc_val": {
+    "media": 0.011543333333333275,
+    "sd": 0.006067951329182978,
+    "se": 0.00350333333333334,
+    "n": 3,
+    "valores": [
+     0.00804,
+     0.00804,
+     0.01855
+    ]
+   },
+   "ce_val": {
+    "media": -0.24286333333333335,
+    "sd": 0.30111079727125917,
+    "se": 0.17384639986046432,
+    "n": 3,
+    "valores": [
+     -0.09413,
+     -0.04506,
+     -0.5894
+    ]
+   },
+   "acc_train": {
+    "media": -0.005556666666666654,
+    "sd": 0.009624428987391041,
+    "se": 0.005556666666666655,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     -0.01667
+    ]
+   },
+   "ce_train": {
+    "media": 0.013626666666666667,
+    "sd": 0.023402936425443138,
+    "se": 0.013511691645057295,
+    "n": 3,
+    "valores": [
+     0.00016,
+     7e-05,
+     0.04065
+    ]
+   },
+   "tipo": "oblicua",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8818799999999999,
+    "sd": 0.02571796453843111,
+    "se": 0.014848273749272453,
+    "n": 3,
+    "valores": [
+     0.89116,
+     0.90167,
+     0.85281
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.79438,
+    "sd": 0.2010149549162947,
+    "se": 0.11605603833206324,
+    "n": 3,
+    "valores": [
+     0.83787,
+     0.57518,
+     0.97009
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9944433333333333,
+    "sd": 0.009624428987391041,
+    "se": 0.005556666666666655,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     0.98333
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@0.2": {
+   "acc_val": {
+    "media": 0.011750000000000002,
+    "sd": 0.008726327979167411,
+    "se": 0.005038147807809268,
+    "n": 3,
+    "valores": [
+     0.00371,
+     0.01051,
+     0.02103
+    ]
+   },
+   "ce_val": {
+    "media": -0.07760333333333336,
+    "sd": 0.0666330265959257,
+    "se": 0.038470595842077196,
+    "n": 3,
+    "valores": [
+     -0.12462,
+     -0.00135,
+     -0.10684
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 4.000000000000007e-05,
+    "sd": 2.6457513110646004e-05,
+    "se": 1.5275252316519524e-05,
+    "n": 3,
+    "valores": [
+     3e-05,
+     2e-05,
+     7e-05
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8820866666666668,
+    "sd": 0.02476802441320936,
+    "se": 0.014299825562261647,
+    "n": 3,
+    "valores": [
+     0.88683,
+     0.90414,
+     0.85529
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9596399999999999,
+    "sd": 0.4372370811127528,
+    "se": 0.25243894648013404,
+    "n": 3,
+    "valores": [
+     0.80738,
+     0.61889,
+     1.45265
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.010076295615618536,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@0.4": {
+   "acc_val": {
+    "media": 0.010513333333333338,
+    "sd": 0.017801944650327733,
+    "se": 0.010277957535965535,
+    "n": 3,
+    "valores": [
+     0.02288,
+     0.01855,
+     -0.00989
+    ]
+   },
+   "ce_val": {
+    "media": -0.17803000000000002,
+    "sd": 0.13834017637692966,
+    "se": 0.07987073807096065,
+    "n": 3,
+    "valores": [
+     -0.28545,
+     -0.02193,
+     -0.22671
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.003746666666666667,
+    "sd": 0.006275080344771158,
+    "se": 0.003622919326240158,
+    "n": 3,
+    "valores": [
+     0.00029,
+     -4e-05,
+     0.01099
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 0.4,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.88085,
+    "sd": 0.049010620277650005,
+    "se": 0.028296294810451764,
+    "n": 3,
+    "valores": [
+     0.906,
+     0.91218,
+     0.82437
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.8592133333333334,
+    "sd": 0.4108294235243301,
+    "se": 0.23719247826279077,
+    "n": 3,
+    "valores": [
+     0.64655,
+     0.59831,
+     1.33278
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.02055591507193107,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@0.6": {
+   "acc_val": {
+    "media": 0.02885999999999996,
+    "sd": 0.018365791570199217,
+    "se": 0.010603494706935078,
+    "n": 3,
+    "valores": [
+     0.00865,
+     0.0334,
+     0.04453
+    ]
+   },
+   "ce_val": {
+    "media": -0.38649666666666666,
+    "sd": 0.2596078801449088,
+    "se": 0.1498846794854112,
+    "n": 3,
+    "valores": [
+     -0.33048,
+     -0.15947,
+     -0.66954
+    ]
+   },
+   "acc_train": {
+    "media": -0.0037033333333333176,
+    "sd": 0.006414361490696715,
+    "se": 0.003703333333333318,
+    "n": 3,
+    "valores": [
+     -0.01111,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.010273333333333334,
+    "sd": 0.016842067371119655,
+    "se": 0.009723772130425745,
+    "n": 3,
+    "valores": [
+     0.02972,
+     0.00039,
+     0.00071
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8991966666666666,
+    "sd": 0.024962790976438012,
+    "se": 0.014412274089970848,
+    "n": 3,
+    "valores": [
+     0.89177,
+     0.92703,
+     0.87879
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.6507466666666667,
+    "sd": 0.2187837211342136,
+    "se": 0.12631484029114626,
+    "n": 3,
+    "valores": [
+     0.60152,
+     0.46077,
+     0.88995
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9962966666666667,
+    "sd": 0.006414361490696715,
+    "se": 0.003703333333333318,
+    "n": 3,
+    "valores": [
+     0.98889,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.021206989413870156,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@0.8": {
+   "acc_val": {
+    "media": 0.007213333333333294,
+    "sd": 0.013948735904494464,
+    "se": 0.008053306429314877,
+    "n": 3,
+    "valores": [
+     -0.00619,
+     0.00618,
+     0.02165
+    ]
+   },
+   "ce_val": {
+    "media": -0.10297333333333343,
+    "sd": 0.2928407701009772,
+    "se": 0.1690716974474965,
+    "n": 3,
+    "valores": [
+     -0.02452,
+     0.14265,
+     -0.42705
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00033,
+    "sd": 8.717797887081349e-05,
+    "se": 5.033222956847168e-05,
+    "n": 3,
+    "valores": [
+     0.00029,
+     0.00027,
+     0.00043
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8775499999999999,
+    "sd": 0.021956566216054848,
+    "se": 0.01267662941531911,
+    "n": 3,
+    "valores": [
+     0.87693,
+     0.89981,
+     0.85591
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.93427,
+    "sd": 0.18622588085440753,
+    "se": 0.10751756244136737,
+    "n": 3,
+    "valores": [
+     0.90748,
+     0.76289,
+     1.13244
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.016106612858629753,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "recorte@1": {
+   "acc_val": {
+    "media": 0.02267666666666664,
+    "sd": 0.03278275512115071,
+    "se": 0.018927132493973948,
+    "n": 3,
+    "valores": [
+     0.0235,
+     -0.01051,
+     0.05504
+    ]
+   },
+   "ce_val": {
+    "media": -0.11393666666666673,
+    "sd": 0.539529899943769,
+    "se": 0.3114977329683869,
+    "n": 3,
+    "valores": [
+     -0.02441,
+     0.37523,
+     -0.69263
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0005733333333333334,
+    "sd": 0.0006726316475853133,
+    "se": 0.00038834406279884213,
+    "n": 3,
+    "valores": [
+     0.00114,
+     0.00075,
+     -0.00017
+    ]
+   },
+   "tipo": "recorte",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8930133333333333,
+    "sd": 0.012182123514943239,
+    "se": 0.007033352290653749,
+    "n": 3,
+    "valores": [
+     0.90662,
+     0.88312,
+     0.8893
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9233066666666666,
+    "sd": 0.06572969825986828,
+    "se": 0.03794905898408783,
+    "n": 3,
+    "valores": [
+     0.90759,
+     0.99547,
+     0.86686
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.037854264987947896,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "sal-pimienta@0.02": {
+   "acc_val": {
+    "media": 0.001443333333333315,
+    "sd": 0.0014260551648984238,
+    "se": 0.0008233333333333611,
+    "n": 3,
+    "valores": [
+     0.00062,
+     0.00062,
+     0.00309
+    ]
+   },
+   "ce_val": {
+    "media": 0.047603333333333296,
+    "sd": 0.025091062817930436,
+    "se": 0.014486331872185948,
+    "n": 3,
+    "valores": [
+     0.05676,
+     0.06683,
+     0.01922
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": -0.0001533333333333333,
+    "sd": 0.00026633312473917564,
+    "se": 0.00015376750126227723,
+    "n": 3,
+    "valores": [
+     -2e-05,
+     2e-05,
+     -0.00046
+    ]
+   },
+   "tipo": "sal-pimienta",
+   "nivel": 0.02,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8717799999999999,
+    "sd": 0.030276784835910137,
+    "se": 0.0174803098752091,
+    "n": 3,
+    "valores": [
+     0.88374,
+     0.89425,
+     0.83735
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.0848466666666667,
+    "sd": 0.453519523321029,
+    "se": 0.26183961887214685,
+    "n": 3,
+    "valores": [
+     0.98876,
+     0.68707,
+     1.57871
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "sal-pimienta@0.05": {
+   "acc_val": {
+    "media": 0.011133333333333328,
+    "sd": 0.03193539937644957,
+    "se": 0.018437911426671366,
+    "n": 3,
+    "valores": [
+     0.00062,
+     -0.01422,
+     0.047
+    ]
+   },
+   "ce_val": {
+    "media": -0.11826666666666667,
+    "sd": 0.42567068566361643,
+    "se": 0.24576108495402155,
+    "n": 3,
+    "valores": [
+     0.02689,
+     0.21584,
+     -0.59753
+    ]
+   },
+   "acc_train": {
+    "media": -0.00926000000000001,
+    "sd": 0.016038790478087817,
+    "se": 0.009260000000000008,
+    "n": 3,
+    "valores": [
+     0.0,
+     -0.02778,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.02255666666666667,
+    "sd": 0.039383632810259306,
+    "se": 0.02273815100466859,
+    "n": 3,
+    "valores": [
+     0.00027,
+     0.06803,
+     -0.00063
+    ]
+   },
+   "tipo": "sal-pimienta",
+   "nivel": 0.05,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8814700000000001,
+    "sd": 0.0021726251402393077,
+    "se": 0.0012543657095653129,
+    "n": 3,
+    "valores": [
+     0.88374,
+     0.87941,
+     0.88126
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9189766666666667,
+    "sd": 0.0718070277433437,
+    "se": 0.04145780679732641,
+    "n": 3,
+    "valores": [
+     0.95889,
+     0.83608,
+     0.96196
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9907400000000001,
+    "sd": 0.016038790478087817,
+    "se": 0.009260000000000008,
+    "n": 3,
+    "valores": [
+     1.0,
+     0.97222,
+     1.0
+    ]
+   },
+   "umbral": 0.03687582285334273,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "sal-pimienta@0.1": {
+   "acc_val": {
+    "media": 0.007419999999999982,
+    "sd": 0.018212514927927987,
+    "se": 0.010515000396259301,
+    "n": 3,
+    "valores": [
+     -0.01361,
+     0.01793,
+     0.01794
+    ]
+   },
+   "ce_val": {
+    "media": -0.18964333333333336,
+    "sd": 0.332116630919521,
+    "se": 0.19174762626373704,
+    "n": 3,
+    "valores": [
+     -0.01843,
+     0.02193,
+     -0.57243
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0015466666666666667,
+    "sd": 0.0022199174158813503,
+    "se": 0.001281669917637836,
+    "n": 3,
+    "valores": [
+     0.00026,
+     0.00027,
+     0.00411
+    ]
+   },
+   "tipo": "sal-pimienta",
+   "nivel": 0.1,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8777566666666666,
+    "sd": 0.030527168773624186,
+    "se": 0.017624869109049063,
+    "n": 3,
+    "valores": [
+     0.86951,
+     0.91156,
+     0.8522
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.8476,
+    "sd": 0.18166262328833635,
+    "se": 0.10488296445721458,
+    "n": 3,
+    "valores": [
+     0.91357,
+     0.64217,
+     0.98706
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.021030000792518603,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "sal-pimienta@0.2": {
+   "acc_val": {
+    "media": 0.018140000000000007,
+    "sd": 0.018243703023235157,
+    "se": 0.010533006851480408,
+    "n": 3,
+    "valores": [
+     0.01051,
+     0.00495,
+     0.03896
+    ]
+   },
+   "ce_val": {
+    "media": -0.35844666666666675,
+    "sd": 0.4686228250238494,
+    "se": 0.27055951417592233,
+    "n": 3,
+    "valores": [
+     -0.2035,
+     0.01308,
+     -0.88492
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.003246666666666667,
+    "sd": 0.0026819644541517204,
+    "se": 0.0015484328995615036,
+    "n": 3,
+    "valores": [
+     0.00264,
+     0.00092,
+     0.00618
+    ]
+   },
+   "tipo": "sal-pimienta",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8884766666666667,
+    "sd": 0.01344247125097666,
+    "se": 0.007761014395325181,
+    "n": 3,
+    "valores": [
+     0.89363,
+     0.89858,
+     0.87322
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.6787966666666666,
+    "sd": 0.0477305628851508,
+    "se": 0.027557253330314176,
+    "n": 3,
+    "valores": [
+     0.7285,
+     0.63332,
+     0.67457
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.021066013702960816,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "sal-pimienta@0.3": {
+   "acc_val": {
+    "media": 0.01711000000000003,
+    "sd": 0.022691610784604972,
+    "se": 0.013101007594837897,
+    "n": 3,
+    "valores": [
+     0.00309,
+     0.00495,
+     0.04329
+    ]
+   },
+   "ce_val": {
+    "media": -0.34198333333333336,
+    "sd": 0.43000995620256666,
+    "se": 0.24826636396777105,
+    "n": 3,
+    "valores": [
+     -0.1383,
+     -0.05166,
+     -0.83599
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0059,
+    "sd": 0.003413605132407672,
+    "se": 0.0019708458421026577,
+    "n": 3,
+    "valores": [
+     0.00693,
+     0.00209,
+     0.00868
+    ]
+   },
+   "tipo": "sal-pimienta",
+   "nivel": 0.3,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8874466666666668,
+    "sd": 0.010569400802946837,
+    "se": 0.006102246398754403,
+    "n": 3,
+    "valores": [
+     0.88621,
+     0.89858,
+     0.87755
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.6952599999999999,
+    "sd": 0.11518627001513679,
+    "se": 0.06650282400018814,
+    "n": 3,
+    "valores": [
+     0.7937,
+     0.56858,
+     0.7235
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.026202015189675795,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@0.2": {
+   "acc_val": {
+    "media": 0.003093333333333318,
+    "sd": 0.005063924696649177,
+    "se": 0.002923658286766396,
+    "n": 3,
+    "valores": [
+     -0.00124,
+     0.00866,
+     0.00186
+    ]
+   },
+   "ce_val": {
+    "media": -0.023393333333333377,
+    "sd": 0.03424200101240192,
+    "se": 0.019769628502101688,
+    "n": 3,
+    "valores": [
+     -0.01103,
+     0.00295,
+     -0.0621
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.0008533333333333332,
+    "sd": 0.0014953371972011307,
+    "se": 0.0008633333333333334,
+    "n": 3,
+    "valores": [
+     -1e-05,
+     -1e-05,
+     0.00258
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 0.2,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8734299999999999,
+    "sd": 0.03388464401465658,
+    "se": 0.01956330834325662,
+    "n": 3,
+    "valores": [
+     0.88188,
+     0.90229,
+     0.83612
+    ]
+   },
+   "ce_val_abs": {
+    "media": 1.01385,
+    "sd": 0.4444394568442365,
+    "se": 0.25659724004751105,
+    "n": 3,
+    "valores": [
+     0.92097,
+     0.62319,
+     1.49739
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@0.4": {
+   "acc_val": {
+    "media": 0.004946666666666655,
+    "sd": 0.005286750734934814,
+    "se": 0.003052306959953067,
+    "n": 3,
+    "valores": [
+     0.00556,
+     -0.00062,
+     0.0099
+    ]
+   },
+   "ce_val": {
+    "media": -0.07802666666666673,
+    "sd": 0.09024034592871057,
+    "se": 0.052100288013705996,
+    "n": 3,
+    "valores": [
+     -0.05898,
+     0.00117,
+     -0.17627
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00010000000000000003,
+    "sd": 0.00016522711641858313,
+    "se": 9.539392014169461e-05,
+    "n": 3,
+    "valores": [
+     2e-05,
+     -1e-05,
+     0.00029
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 0.4,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8752833333333333,
+    "sd": 0.02704040741803519,
+    "se": 0.015611786501799771,
+    "n": 3,
+    "valores": [
+     0.88868,
+     0.89301,
+     0.84416
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9592166666666667,
+    "sd": 0.3881507671425284,
+    "se": 0.2240989498958985,
+    "n": 3,
+    "valores": [
+     0.87302,
+     0.62141,
+     1.38322
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@0.6": {
+   "acc_val": {
+    "media": 0.00947999999999997,
+    "sd": 0.0087523482563253,
+    "se": 0.005053170621830764,
+    "n": 3,
+    "valores": [
+     -0.00062,
+     0.01484,
+     0.01422
+    ]
+   },
+   "ce_val": {
+    "media": -0.12023333333333337,
+    "sd": 0.08453316528637347,
+    "se": 0.04880524573353886,
+    "n": 3,
+    "valores": [
+     -0.06707,
+     -0.07592,
+     -0.21771
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00011333333333333338,
+    "sd": 9.291573243177578e-05,
+    "se": 5.364492313143699e-05,
+    "n": 3,
+    "valores": [
+     7e-05,
+     5e-05,
+     0.00022
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 0.6,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8798166666666667,
+    "sd": 0.030084883801227036,
+    "se": 0.01736951576117704,
+    "n": 3,
+    "valores": [
+     0.8825,
+     0.90847,
+     0.84848
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.91701,
+    "sd": 0.4012727971093979,
+    "se": 0.23167495742958497,
+    "n": 3,
+    "valores": [
+     0.86493,
+     0.54432,
+     1.34178
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.010106341243661528,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@0.8": {
+   "acc_val": {
+    "media": 0.00680333333333331,
+    "sd": 0.011949076672836845,
+    "se": 0.006898802633629831,
+    "n": 3,
+    "valores": [
+     -0.00619,
+     0.00928,
+     0.01732
+    ]
+   },
+   "ce_val": {
+    "media": -0.09871666666666672,
+    "sd": 0.09605967745799135,
+    "se": 0.055460080638639934,
+    "n": 3,
+    "valores": [
+     -0.20659,
+     -0.06714,
+     -0.02242
+    ]
+   },
+   "acc_train": {
+    "media": -0.0037033333333333176,
+    "sd": 0.006414361490696715,
+    "se": 0.003703333333333318,
+    "n": 3,
+    "valores": [
+     -0.01111,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.012443333333333334,
+    "sd": 0.021526510012850046,
+    "se": 0.01242833635063215,
+    "n": 3,
+    "valores": [
+     0.0373,
+     3e-05,
+     0.0
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 0.8,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8771400000000001,
+    "sd": 0.02566564435193474,
+    "se": 0.01481806667551472,
+    "n": 3,
+    "valores": [
+     0.87693,
+     0.90291,
+     0.85158
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.9385266666666666,
+    "sd": 0.525464818454417,
+    "se": 0.3033772543843355,
+    "n": 3,
+    "valores": [
+     0.72541,
+     0.5531,
+     1.53707
+    ]
+   },
+   "acc_train_abs": {
+    "media": 0.9962966666666667,
+    "sd": 0.006414361490696715,
+    "se": 0.003703333333333318,
+    "n": 3,
+    "valores": [
+     0.98889,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.013797605267259662,
+   "veredicto": "indistinguible",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  },
+  "vertical@1": {
+   "acc_val": {
+    "media": 0.014219999999999974,
+    "sd": 0.0034421359647753185,
+    "se": 0.0019873181258503224,
+    "n": 3,
+    "valores": [
+     0.01731,
+     0.01051,
+     0.01484
+    ]
+   },
+   "ce_val": {
+    "media": -0.22145666666666666,
+    "sd": 0.17198410517641838,
+    "se": 0.09929506941994207,
+    "n": 3,
+    "valores": [
+     -0.28704,
+     -0.02633,
+     -0.351
+    ]
+   },
+   "acc_train": {
+    "media": 0.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "ce_train": {
+    "media": 0.00017000000000000004,
+    "sd": 0.00021000000000000006,
+    "se": 0.00012124355652982146,
+    "n": 3,
+    "valores": [
+     0.00017,
+     -4e-05,
+     0.00038
+    ]
+   },
+   "tipo": "vertical",
+   "nivel": 1.0,
+   "realizacion": 1,
+   "semillas": [
+    1,
+    2,
+    3
+   ],
+   "n": 3,
+   "sin_base": [],
+   "acc_val_abs": {
+    "media": 0.8845566666666667,
+    "sd": 0.030762354157855585,
+    "se": 0.017760653453944526,
+    "n": 3,
+    "valores": [
+     0.90043,
+     0.90414,
+     0.8491
+    ]
+   },
+   "ce_val_abs": {
+    "media": 0.8157866666666665,
+    "sd": 0.3410475870510351,
+    "se": 0.19690391619038747,
+    "n": 3,
+    "valores": [
+     0.64496,
+     0.59391,
+     1.20849
+    ]
+   },
+   "acc_train_abs": {
+    "media": 1.0,
+    "sd": 0.0,
+    "se": 0.0,
+    "n": 3,
+    "valores": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "umbral": 0.01,
+   "veredicto": "ayuda",
+   "umbral_ce_train": 0.05,
+   "mecanismo": "train limpio sin cambio distinguible"
+  }
+ }
+}

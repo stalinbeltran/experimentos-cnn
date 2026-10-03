@@ -129,6 +129,26 @@ def criterio(por, dl) -> dict:
         if d and d["n"] and (d["veredicto"] == "ayuda" or (d["veredicto"] == "indistinguible" and d["acc_val"]["media"] > 0)):
             c["fase2"].append(tipo)
     c["veredictos"] = {esc: d["veredicto"] for esc, d in dl.items() if d["n"]}
+    # fase 2: dentro de cada tipo con 2+ niveles (realización 1), el mejor nivel y la forma de la curva
+    c["por_tipo"] = {}
+    for tipo in ruido.TIPOS:
+        niveles = sorted(((d["nivel"], esc) for esc, d in dl.items() if d["n"] and d.get("tipo") == tipo and d.get("realizacion") == 1))
+        if len(niveles) < 2:
+            continue
+        medias = [dl[esc]["acc_val"]["media"] for _, esc in niveles]
+        mejor = max(niveles, key=lambda ne: dl[ne[1]]["acc_val"]["media"])
+        k = medias.index(max(medias))
+        if k == 0:
+            forma = "cae con la intensidad: el mejor es el más suave"
+        elif k == len(medias) - 1:
+            forma = "sube con la intensidad: el mejor es el más fuerte (el eje no está acotado por arriba)"
+        else:
+            forma = "pico interior"
+        c["por_tipo"][tipo] = {"niveles": [{"nivel": n, "escenario": esc, "delta": dl[esc]["acc_val"]["media"], "se": dl[esc]["acc_val"]["se"],
+                                           "veredicto": dl[esc]["veredicto"]} for n, esc in niveles],
+                               "mejor": mejor[1], "mejor_nivel": mejor[0], "mejor_delta": dl[mejor[1]]["acc_val"]["media"],
+                               "mejor_veredicto": dl[mejor[1]]["veredicto"], "forma": forma,
+                               "amplitud": max(medias) - min(medias)}
     # la realización: un escenario con -r2 contra su -r1, pareado por semilla
     for esc, sems in por.items():
         tipo, nivel, r = ruido.parsear(esc)
@@ -159,7 +179,11 @@ def figura(dl) -> list[str]:
     filas = [(esc, d) for esc, d in dl.items() if d["n"]]
     if not filas:
         return []
-    filas.sort(key=lambda t: t[1]["acc_val"]["media"])
+    varios = len({(d.get("tipo"), d.get("nivel")) for _, d in filas}) > len({d.get("tipo") for _, d in filas})
+    if varios:   # fase 2: agrupado por tipo (orden de la tabla) y nivel, de arriba abajo
+        filas.sort(key=lambda t: (-ruido.TIPOS.index(t[1]["tipo"]), -(t[1]["nivel"] or 0), -(t[1].get("realizacion") or 0)))
+    else:        # fase 1: ordenado por Δ
+        filas.sort(key=lambda t: t[1]["acc_val"]["media"])
     RES.mkdir(parents=True, exist_ok=True)
     fig, axs = plt.subplots(1, 2, figsize=(10, 0.42 * len(filas) + 1.6), sharey=True)
     ys = np.arange(len(filas))
@@ -177,7 +201,7 @@ def figura(dl) -> list[str]:
     fig.legend(h, l, fontsize=7, loc="lower center", ncol=2, frameon=False)
     axs[0].set_yticks(ys); axs[0].set_yticklabels([esc for esc, _ in filas], fontsize=8)
     fig.suptitle("ruido-nist: Δ pareado por semilla contra `limpio` (los puntos tenues son las semillas)", fontsize=10)
-    fig.tight_layout(rect=(0, 0.06, 1, 1)); fig.savefig(RES / FIGURA, dpi=130); plt.close(fig)
+    fig.tight_layout(rect=(0, 0.06 if len(filas) < 15 else 0.025, 1, 1 - 1.2 / fig.get_figheight())); fig.savefig(RES / FIGURA, dpi=130); plt.close(fig)
     return [FIGURA]
 
 
@@ -208,6 +232,15 @@ def md(por, dl, c, figs) -> str:
     L.append(f"- **Ayudan** (media Δ > umbral): {', '.join(f'`{e}` ({s4(dl[e]['acc_val']['media'])})' for e in ayudan) if ayudan else '**ninguno**'}.")
     L.append(f"- **Perjudican**: {', '.join(f'`{e}` ({s4(dl[e]['acc_val']['media'])})' for e in perj) if perj else 'ninguno'}.")
     L.append(f"- **Pasan a la fase 2** (ayuda, o indistinguible con media > 0, al nivel medio): {', '.join(f'`{t}`' for t in c['fase2']) if c['fase2'] else '**ninguno** — con 180 imágenes y esta red, ningún ruido de la lista mejora la generalización'}.")
+    if c.get("por_tipo"):
+        L += ["", "## Fase 2: la intensidad dentro de cada tipo (Δ exactitud de val, pareado)", "",
+              "| tipo | niveles → Δ | mejor | forma |", "|---|---|---|---|"]
+        for tipo, pt in c["por_tipo"].items():
+            celdas = " · ".join(f"{n['nivel']:g}: {s4(n['delta'])}{'*' if n['veredicto'] == 'ayuda' else ('†' if n['veredicto'] == 'perjudica' else '')}" for n in pt["niveles"])
+            L.append(f"| `{tipo}` | {celdas} | `{pt['mejor']}` ({s4(pt['mejor_delta'])}, **{pt['mejor_veredicto']}**) | {pt['forma']}; amplitud {f4(pt['amplitud'])} |")
+        L += ["", "\\* ayuda · † perjudica (por el umbral de cada escenario). «Mejor» es la mayor media; si no es «ayuda», no se distingue de `limpio`."]
+        ganan = [(tipo, pt) for tipo, pt in c["por_tipo"].items() if pt["mejor_veredicto"] == "ayuda"]
+        L += ["", f"- **Tipos con algún nivel que ayuda**: {', '.join(f'`{pt["mejor"]}` ({s4(pt["mejor_delta"])})' for _, pt in ganan) if ganan else '**ninguno**'}."]
     for esc, r in c["realizacion"].items():
         L.append(f"- **La realización** (`{esc}` contra `{r['contra']}`): Δ = {s4(r['delta_acc_val']['media'])} ± {f4(r['delta_acc_val']['se'])} (umbral {f4(r['umbral'])}; "
                  f"amplitud de las medias entre tipos {f4(r['amplitud_entre_tipos'])}) → {r['lectura']}.")
