@@ -1,14 +1,14 @@
 {
   "id": "feat-ind",
-  "titulo": "Varias CNN pequenas entrenadas por separado, cada una para RECONOCER una sola feature fijada de antemano, y que resultado neto dan juntas sobre un objeto compuesto",
-  "pregunta": "Si cada CNN pequena reconoce una unica feature fijada de antemano (reconoce, no discrimina) y las N se entrenan independientes y en paralelo, ¿que resultado neto dan juntas al reconocer un objeto complejo compuesto por varias de esas features, comparado con una sola CNN que lo clasifica directamente?",
+  "titulo": "Varias CNN pequenas entrenadas por separado, cada una para RECONOCER una sola feature fijada de antemano (salida: mapa 8x8 de presencia y posicion), y que dan juntas sobre digitos reales a traves de un compositor",
+  "pregunta": "Si cada CNN pequena reconoce una unica feature fijada de antemano (reconoce, no discrimina) y las N se entrenan independientes y en paralelo, ¿aprende cada una su feature (presencia y posicion en 8x8), y que resultado neto dan juntas al reconocer un objeto complejo compuesto por varias de esas features? (Sin comparar contra una CNN monolitica, por ahora)",
   "creado": "2026-10-03",
   "estado": "abierto",
-  "dataset": null,
+  "dataset": "feat-ind-sinteticas-8px-r20261003",
   "usa_fv": false,
-  "gasta": "no",
-  "entrada": null,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
   "reporte": null,
-  "plan": "Solo documento de observaciones (OBSERVACIONES.md, 2026-10-03, orden del dueno). Sin codigo ni corrida: cuando se implemente, se declaran gasta/entrada/dataset y nace instrucciones/02-criterio.md ANTES de mirar",
+  "plan": "ESPECIFICACION.md (13 features en 4 grupos + vacio, sintetizadas a 32x32 y reducidas a 8x8 contando bits), instrucciones/02-criterio.md escrito antes de correr; 13 detectores totalmente convolucionales (3.585 parametros) con salida UN mapa 8x8; compositores lineales (presencia / posicional) sobre los digitos de uci-optdigits-8px-r20261002",
   "linaje": "ninguno. La pregunta hermana (como codificar la POSICION relativa de las features) es el experimento feat-pos"
 }

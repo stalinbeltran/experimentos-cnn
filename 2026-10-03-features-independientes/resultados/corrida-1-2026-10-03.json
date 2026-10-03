@@ -1,0 +1,626 @@
+{
+ "corrida": 1,
+ "fecha": "2026-10-03",
+ "config": {
+  "canales": [
+   8,
+   16,
+   16
+  ],
+  "peso_objetivo": 8,
+  "lote": [
+   32,
+   32
+  ],
+  "umbral": 0.5,
+  "epocas": 40,
+  "negativos": "todas las demás familias + vacio (incluidas las que CONTIENEN la feature)"
+ },
+ "detectores": {
+  "arco-E": {
+   "precision": 0.2058,
+   "recall": 0.84,
+   "f1": 0.3305,
+   "pos_ok": 0.9524,
+   "recall_por_radio": {
+    "chico": {
+     "n": 137,
+     "recall": 0.7445
+    },
+    "medio": {
+     "n": 140,
+     "recall": 0.8286
+    },
+    "grande": {
+     "n": 123,
+     "recall": 0.9593
+    }
+   },
+   "recall_por_grosor": {
+    "2": {
+     "n": 135,
+     "recall": 0.8
+    },
+    "3": {
+     "n": 135,
+     "recall": 0.8148
+    },
+    "4": {
+     "n": 130,
+     "recall": 0.9077
+    }
+   },
+   "recall_con_secundaria": 0.7209,
+   "recall_sola": 0.9784,
+   "fp_por_familia_tasa": {
+    "esquina-NE": 0.6357,
+    "esquina-SE": 0.5767,
+    "lazo": 0.5741,
+    "recta-V": 0.288,
+    "arco-S": 0.2494,
+    "arco-N": 0.2292,
+    "recta-B": 0.1785,
+    "recta-S": 0.1632,
+    "esquina-SW": 0.1395,
+    "arco-W": 0.134,
+    "esquina-NW": 0.1117,
+    "recta-H": 0.1108,
+    "vacio": 0.0
+   },
+   "epoca_best": 25,
+   "veredicto": "no aprendió",
+   "segundos": 27.5
+  },
+  "arco-N": {
+   "precision": 0.2376,
+   "recall": 0.9,
+   "f1": 0.376,
+   "pos_ok": 0.9611,
+   "recall_por_radio": {
+    "chico": {
+     "n": 135,
+     "recall": 0.8889
+    },
+    "medio": {
+     "n": 141,
+     "recall": 0.8723
+    },
+    "grande": {
+     "n": 124,
+     "recall": 0.9435
+    }
+   },
+   "recall_por_grosor": {
+    "2": {
+     "n": 125,
+     "recall": 0.808
+    },
+    "3": {
+     "n": 138,
+     "recall": 0.9058
+    },
+    "4": {
+     "n": 137,
+     "recall": 0.9781
+    }
+   },
+   "recall_con_secundaria": 0.8507,
+   "recall_sola": 0.9497,
+   "fp_por_familia_tasa": {
+    "lazo": 0.6787,
+    "esquina-NE": 0.3952,
+    "recta-H": 0.3717,
+    "esquina-NW": 0.3596,
+    "arco-E": 0.2031,
+    "arco-W": 0.1958,
+    "arco-S": 0.1602,
+    "recta-S": 0.1526,
+    "recta-B": 0.1518,
+    "esquina-SE": 0.1231,
+    "esquina-SW": 0.1169,
+    "recta-V": 0.0997,
+    "vacio": 0.0
+   },
+   "epoca_best": 40,
+   "veredicto": "no aprendió",
+   "segundos": 29.2
+  },
+  "arco-S": {
+   "precision": 0.1974,
+   "recall": 0.895,
+   "f1": 0.3234,
+   "pos_ok": 0.9302,
+   "recall_por_radio": {
+    "chico": {
+     "n": 139,
+     "recall": 0.7986
+    },
+    "medio": {
+     "n": 130,
+     "recall": 0.9308
+    },
+    "grande": {
+     "n": 131,
+     "recall": 0.9618
+    }
+   },
+   "recall_por_grosor": {
+    "2": {
+     "n": 151,
+     "recall": 0.8477
+    },
+    "3": {
+     "n": 130,
+     "recall": 0.9231
+    },
+    "4": {
+     "n": 119,
+     "recall": 0.9244
+    }
+   },
+   "recall_con_secundaria": 0.8161,
+   "recall_sola": 0.9558,
+   "fp_por_familia_tasa": {
+    "lazo": 0.8549,
+    "esquina-SW": 0.5312,
+    "esquina-SE": 0.4883,
+    "recta-H": 0.3702,
+    "arco-W": 0.3091,
+    "arco-E": 0.2675,
+    "recta-S": 0.2,
+    "recta-B": 0.186,
+    "arco-N": 0.1856,
+    "esquina-NW": 0.1346,
+    "recta-V": 0.1279,
+    "esquina-NE": 0.1247,
+    "vacio": 0.0
+   },
+   "epoca_best": 20,
+   "veredicto": "no aprendió",
+   "segundos": 133.0
+  },
+  "arco-W": {
+   "precision": 0.1707,
+   "recall": 0.8875,
+   "f1": 0.2863,
+   "pos_ok": 0.907,
+   "recall_por_radio": {
+    "chico": {
+     "n": 137,
+     "recall": 0.8029
+    },
+    "medio": {
+     "n": 114,
+     "recall": 0.9035
+    },
+    "grande": {
+     "n": 149,
+     "recall": 0.953
+    }
+   },
+   "recall_por_grosor": {
+    "2": {
+     "n": 153,
+     "recall": 0.8301
+    },
+    "3": {
+     "n": 120,
+     "recall": 0.9167
+    },
+    "4": {
+     "n": 127,
+     "recall": 0.9291
+    }
+   },
+   "recall_con_secundaria": 0.8404,
+   "recall_sola": 0.9292,
+   "fp_por_familia_tasa": {
+    "lazo": 0.8646,
+    "esquina-NW": 0.6736,
+    "esquina-SW": 0.6667,
+    "recta-V": 0.4385,
+    "arco-N": 0.3385,
+    "arco-S": 0.2876,
+    "recta-B": 0.2663,
+    "esquina-NE": 0.2513,
+    "arco-E": 0.219,
+    "recta-S": 0.1979,
+    "esquina-SE": 0.1593,
+    "recta-H": 0.1466,
+    "vacio": 0.0
+   },
+   "epoca_best": 15,
+   "veredicto": "no aprendió",
+   "segundos": 26.4
+  },
+  "esquina-NE": {
+   "precision": 0.3544,
+   "recall": 0.87,
+   "f1": 0.5036,
+   "pos_ok": 0.9799,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 140,
+     "recall": 0.8
+    },
+    "3": {
+     "n": 129,
+     "recall": 0.8992
+    },
+    "4": {
+     "n": 131,
+     "recall": 0.916
+    }
+   },
+   "recall_con_secundaria": 0.798,
+   "recall_sola": 0.9442,
+   "fp_por_familia_tasa": {
+    "lazo": 0.4031,
+    "arco-E": 0.2262,
+    "arco-N": 0.1922,
+    "esquina-SE": 0.1481,
+    "recta-V": 0.1111,
+    "recta-B": 0.1013,
+    "recta-H": 0.0997,
+    "esquina-NW": 0.0893,
+    "esquina-SW": 0.0829,
+    "arco-W": 0.0799,
+    "arco-S": 0.0747,
+    "recta-S": 0.0393,
+    "vacio": 0.0
+   },
+   "epoca_best": 25,
+   "veredicto": "no aprendió",
+   "segundos": 21.8
+  },
+  "esquina-NW": {
+   "precision": 0.2654,
+   "recall": 0.9175,
+   "f1": 0.4117,
+   "pos_ok": 0.9864,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 123,
+     "recall": 0.8293
+    },
+    "3": {
+     "n": 147,
+     "recall": 0.932
+    },
+    "4": {
+     "n": 130,
+     "recall": 0.9846
+    }
+   },
+   "recall_con_secundaria": 0.8627,
+   "recall_sola": 0.9745,
+   "fp_por_familia_tasa": {
+    "lazo": 0.5455,
+    "arco-N": 0.3394,
+    "arco-W": 0.329,
+    "esquina-SW": 0.2108,
+    "recta-V": 0.2073,
+    "arco-E": 0.1654,
+    "esquina-NE": 0.162,
+    "esquina-SE": 0.1487,
+    "recta-H": 0.1481,
+    "recta-S": 0.1444,
+    "arco-S": 0.1337,
+    "recta-B": 0.1055,
+    "vacio": 0.0
+   },
+   "epoca_best": 25,
+   "veredicto": "no aprendió",
+   "segundos": 36.1
+  },
+  "esquina-SE": {
+   "precision": 0.2888,
+   "recall": 0.815,
+   "f1": 0.4264,
+   "pos_ok": 0.9816,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 134,
+     "recall": 0.7239
+    },
+    "3": {
+     "n": 139,
+     "recall": 0.8489
+    },
+    "4": {
+     "n": 127,
+     "recall": 0.874
+    }
+   },
+   "recall_con_secundaria": 0.7113,
+   "recall_sola": 0.9126,
+   "fp_por_familia_tasa": {
+    "lazo": 0.5736,
+    "arco-E": 0.2898,
+    "arco-S": 0.2219,
+    "esquina-SW": 0.1365,
+    "esquina-NE": 0.1349,
+    "recta-V": 0.125,
+    "recta-S": 0.1094,
+    "esquina-NW": 0.1057,
+    "recta-H": 0.1039,
+    "recta-B": 0.1016,
+    "arco-N": 0.0945,
+    "arco-W": 0.0942,
+    "vacio": 0.0
+   },
+   "epoca_best": 10,
+   "veredicto": "no aprendió",
+   "segundos": 77.1
+  },
+  "esquina-SW": {
+   "precision": 0.3544,
+   "recall": 0.7275,
+   "f1": 0.4767,
+   "pos_ok": 0.9966,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 139,
+     "recall": 0.6187
+    },
+    "3": {
+     "n": 138,
+     "recall": 0.7319
+    },
+    "4": {
+     "n": 123,
+     "recall": 0.8455
+    }
+   },
+   "recall_con_secundaria": 0.6056,
+   "recall_sola": 0.8663,
+   "fp_por_familia_tasa": {
+    "lazo": 0.3789,
+    "arco-W": 0.235,
+    "arco-S": 0.1667,
+    "recta-V": 0.0951,
+    "esquina-NW": 0.0926,
+    "recta-H": 0.0763,
+    "recta-B": 0.0739,
+    "arco-N": 0.0705,
+    "esquina-SE": 0.0591,
+    "esquina-NE": 0.0556,
+    "arco-E": 0.0547,
+    "recta-S": 0.0284,
+    "vacio": 0.0
+   },
+   "epoca_best": 10,
+   "veredicto": "no aprendió",
+   "segundos": 22.9
+  },
+  "lazo": {
+   "precision": 0.6623,
+   "recall": 0.8925,
+   "f1": 0.7604,
+   "pos_ok": 0.9944,
+   "recall_por_radio": {
+    "chico": {
+     "n": 202,
+     "recall": 0.8366
+    },
+    "medio": {
+     "n": 172,
+     "recall": 0.9535
+    },
+    "grande": {
+     "n": 26,
+     "recall": 0.9231
+    }
+   },
+   "recall_por_grosor": {
+    "2": {
+     "n": 139,
+     "recall": 0.777
+    },
+    "3": {
+     "n": 136,
+     "recall": 0.9412
+    },
+    "4": {
+     "n": 125,
+     "recall": 0.968
+    }
+   },
+   "recall_con_secundaria": 0.8534,
+   "recall_sola": 0.9282,
+   "fp_por_familia_tasa": {
+    "arco-N": 0.0716,
+    "esquina-NW": 0.0545,
+    "esquina-SE": 0.0513,
+    "arco-W": 0.0462,
+    "arco-E": 0.0453,
+    "arco-S": 0.044,
+    "esquina-NE": 0.0419,
+    "esquina-SW": 0.0412,
+    "recta-V": 0.029,
+    "recta-S": 0.0206,
+    "recta-H": 0.0182,
+    "recta-B": 0.0105,
+    "vacio": 0.0
+   },
+   "epoca_best": 15,
+   "veredicto": "a medias",
+   "segundos": 83.0
+  },
+  "recta-B": {
+   "precision": 0.3592,
+   "recall": 0.9375,
+   "f1": 0.5194,
+   "pos_ok": 0.9947,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 133,
+     "recall": 0.8872
+    },
+    "3": {
+     "n": 149,
+     "recall": 0.9597
+    },
+    "4": {
+     "n": 118,
+     "recall": 0.9661
+    }
+   },
+   "recall_con_secundaria": 0.8846,
+   "recall_sola": 0.9948,
+   "fp_por_familia_tasa": {
+    "arco-S": 0.2402,
+    "arco-E": 0.2302,
+    "arco-W": 0.2283,
+    "esquina-SW": 0.1888,
+    "esquina-NE": 0.1753,
+    "arco-N": 0.1749,
+    "lazo": 0.1443,
+    "esquina-NW": 0.109,
+    "esquina-SE": 0.1042,
+    "recta-S": 0.0682,
+    "recta-V": 0.0521,
+    "recta-H": 0.0363,
+    "vacio": 0.0
+   },
+   "epoca_best": 40,
+   "veredicto": "no aprendió",
+   "segundos": 87.9
+  },
+  "recta-H": {
+   "precision": 0.3187,
+   "recall": 0.745,
+   "f1": 0.4464,
+   "pos_ok": 0.9698,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 139,
+     "recall": 0.6906
+    },
+    "3": {
+     "n": 136,
+     "recall": 0.7794
+    },
+    "4": {
+     "n": 125,
+     "recall": 0.768
+    }
+   },
+   "recall_con_secundaria": 0.5678,
+   "recall_sola": 0.9204,
+   "fp_por_familia_tasa": {
+    "arco-N": 0.2526,
+    "esquina-NW": 0.2379,
+    "arco-S": 0.2248,
+    "esquina-SE": 0.1979,
+    "esquina-NE": 0.1804,
+    "esquina-SW": 0.1768,
+    "arco-E": 0.0954,
+    "arco-W": 0.0888,
+    "lazo": 0.0649,
+    "recta-B": 0.0518,
+    "recta-S": 0.0468,
+    "recta-V": 0.0417,
+    "vacio": 0.0
+   },
+   "epoca_best": 20,
+   "veredicto": "no aprendió",
+   "segundos": 21.2
+  },
+  "recta-S": {
+   "precision": 0.4008,
+   "recall": 0.7775,
+   "f1": 0.5289,
+   "pos_ok": 1.0,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 142,
+     "recall": 0.7042
+    },
+    "3": {
+     "n": 116,
+     "recall": 0.8276
+    },
+    "4": {
+     "n": 142,
+     "recall": 0.8099
+    }
+   },
+   "recall_con_secundaria": 0.6791,
+   "recall_sola": 0.8638,
+   "fp_por_familia_tasa": {
+    "arco-W": 0.1922,
+    "arco-S": 0.1766,
+    "arco-N": 0.1728,
+    "arco-E": 0.1466,
+    "esquina-SE": 0.1414,
+    "esquina-NW": 0.1037,
+    "lazo": 0.0814,
+    "recta-B": 0.0501,
+    "recta-H": 0.0446,
+    "recta-V": 0.044,
+    "esquina-NE": 0.0345,
+    "esquina-SW": 0.0289,
+    "vacio": 0.0
+   },
+   "epoca_best": 10,
+   "veredicto": "no aprendió",
+   "segundos": 57.1
+  },
+  "recta-V": {
+   "precision": 0.3287,
+   "recall": 0.7025,
+   "f1": 0.4478,
+   "pos_ok": 0.9822,
+   "recall_por_radio": {},
+   "recall_por_grosor": {
+    "2": {
+     "n": 145,
+     "recall": 0.5655
+    },
+    "3": {
+     "n": 138,
+     "recall": 0.7826
+    },
+    "4": {
+     "n": 117,
+     "recall": 0.7778
+    }
+   },
+   "recall_con_secundaria": 0.5306,
+   "recall_sola": 0.8676,
+   "fp_por_familia_tasa": {
+    "esquina-NW": 0.2322,
+    "esquina-SE": 0.2286,
+    "arco-E": 0.2149,
+    "arco-W": 0.21,
+    "esquina-SW": 0.1895,
+    "esquina-NE": 0.1885,
+    "lazo": 0.0573,
+    "recta-H": 0.0557,
+    "recta-B": 0.039,
+    "arco-N": 0.0389,
+    "arco-S": 0.0261,
+    "recta-S": 0.026,
+    "vacio": 0.0
+   },
+   "epoca_best": 5,
+   "veredicto": "no aprendió",
+   "segundos": 22.1
+  }
+ },
+ "ensayos_arco-E": {
+  "sin lazo (8,16,16)": "P 0.23 R 0.87 F1 0.36",
+  "16,32,32 60 ep": "P 0.25 R 0.89 F1 0.39",
+  "16,32,32 60 ep sin lazo": "P 0.23 R 0.87 F1 0.36",
+  "peso 3, 96 neg, sin lazo": "P 0 R 0 (nunca supera 0.5)",
+  "peso 1, 96 neg, sin lazo": "P 0.80 R 0.27 F1 0.40"
+ }
+}
