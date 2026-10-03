@@ -1,0 +1,14 @@
+{
+  "id": "feat-pos",
+  "titulo": "Codificar (NO en texto) la posicion relativa entre features para que esa informacion forme parte del resultado, y si sirven los embeddings para ello",
+  "pregunta": "¿Como se codifica la posicion relativa entre las features de un objeto —p. ej. un 9 = circulo + recta vertical unidos en cierta posicion, y esa es solo una de sus codificaciones posibles— de forma que la informacion posicional entre en el resultado del reconocimiento sin pasar por texto, y sirven los embeddings (de posicion, o de la configuracion entera) para eso?",
+  "creado": "2026-10-03",
+  "estado": "abierto",
+  "dataset": null,
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": null,
+  "reporte": null,
+  "plan": "Solo documento de observaciones (OBSERVACIONES.md, 2026-10-03, orden del dueno). Sin codigo ni corrida",
+  "linaje": "feat-ind (de ahi sale la pregunta: las posiciones de las features que aquel reconoce). No importa nada de el ni se compara contra sus numeros; se puede estudiar con features oraculo sin que feat-ind exista. Ver REGLAS.md § Que NO hereda"
+}
