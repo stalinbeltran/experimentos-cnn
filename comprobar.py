@@ -39,6 +39,7 @@ TEXTO = {".py", ".md", ".json", ".toml", ".sh", ".mjs", ".txt", ".yaml", ".yml",
 # trabajo — son enlaces. No ata nada porque se REGENERA con `--indice`, así que
 # renombrar una carpeta sigue siendo `git mv` + regenerar.
 EXENTOS = {"README.md"}
+IGNORADOS = {".venv", "venv", "node_modules", "__pycache__"}
 MARCA_INI = "<!-- INDICE: generado por `python3 comprobar.py --indice`. No editar a mano. -->"
 MARCA_FIN = "<!-- FIN INDICE -->"
 # El nombre de una carpeta de experimento empieza por su fecha. No es estética:
@@ -186,7 +187,9 @@ def _rutas_cableadas(exps) -> list[str]:
         return []
     malos = []
     for f in raiz().rglob("*"):
-        if not f.is_file() or ".git" in f.parts or f.suffix not in TEXTO:
+        # Ni .git ni los entornos: el .venv con torch son >1 M de líneas que nadie del repo escribió, y
+        # leerlas con un regex por experimento llegó a tardar minutos (medido 2026-10-03).
+        if not f.is_file() or ".git" in f.parts or IGNORADOS & set(f.parts) or f.suffix not in TEXTO:
             continue
         if f.name in EXENTOS:
             continue
