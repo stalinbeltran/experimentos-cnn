@@ -90,7 +90,7 @@ def deltas(por) -> dict[str, dict]:
             out[esc] = {"n": 0, "semillas": sorted(sems), "sin_base": sorted(sems)}; continue
         d = {k: _stats([sems[s][k] - base[s][k] for s in comunes]) for k in ("acc_val", "ce_val", "acc_train", "ce_train")}
         tipo, nivel, r = ruido.parsear(esc)
-        d.update({"tipo": tipo, "nivel": nivel, "realizacion": r, "linea": ruido.es_linea(esc), "semillas": comunes, "n": len(comunes),
+        d.update({"tipo": tipo, "nivel": nivel, "realizacion": r, "linea": ruido.es_linea(esc), "variante": ruido.variante_de(esc), "semillas": comunes, "n": len(comunes),
                   "sin_base": sorted(set(sems) - set(base)),
                   "acc_val_abs": _stats([sems[s]["acc_val"] for s in comunes]),
                   "ce_val_abs": _stats([sems[s]["ce_val"] for s in comunes]),
@@ -132,7 +132,7 @@ def criterio(por, dl) -> dict:
     # fase 2: dentro de cada tipo con 2+ niveles (realización 1), el mejor nivel y la forma de la curva
     c["por_tipo"] = {}
     for tipo in ruido.TIPOS:
-        niveles = sorted(((d["nivel"], esc) for esc, d in dl.items() if d["n"] and d.get("tipo") == tipo and d.get("realizacion") == 1 and not d.get("linea")))
+        niveles = sorted(((d["nivel"], esc) for esc, d in dl.items() if d["n"] and d.get("tipo") == tipo and d.get("realizacion") == 1 and not d.get("linea") and not d.get("variante")))
         if len(niveles) < 2:
             continue
         medias = [dl[esc]["acc_val"]["media"] for _, esc in niveles]
@@ -165,6 +165,21 @@ def criterio(por, dl) -> dict:
                               "veredicto_vs_limpio": dl.get(esc, {}).get("veredicto"),
                               "lectura": ("en línea MEJOR que la copia fija" if st["media"] > u else
                                           ("en línea PEOR que la copia fija" if st["media"] < -u else "indistinguible de la copia fija"))}
+    # fase 4: variante de dibujo (grueso / doble) contra su base, pareado por semilla
+    c["variantes"] = {}
+    for esc, sems in por.items():
+        if ruido.variante_de(esc) is None:
+            continue
+        base = por.get(ruido.base_de(esc), {})
+        comunes = sorted(set(sems) & set(base))
+        if not comunes:
+            c["avisos"].append(f"`{esc}`: no está su base `{ruido.base_de(esc)}` en las mismas semillas"); continue
+        st = _stats([sems[s]["acc_val"] - base[s]["acc_val"] for s in comunes])
+        stce = _stats([sems[s]["ce_val"] - base[s]["ce_val"] for s in comunes])
+        u = _umbral(st, DELTA)
+        c["variantes"][esc] = {"contra": ruido.base_de(esc), "variante": ruido.variante_de(esc), "delta_acc_val": st, "delta_ce_val": stce, "umbral": u,
+                               "veredicto_vs_limpio": dl.get(esc, {}).get("veredicto"),
+                               "lectura": ("MEJOR que su base" if st["media"] > u else ("PEOR que su base" if st["media"] < -u else "indistinguible de su base"))}
     # la realización: un escenario con -r2 contra su -r1, pareado por semilla
     for esc, sems in por.items():
         tipo, nivel, r = ruido.parsear(esc)
@@ -176,7 +191,7 @@ def criterio(por, dl) -> dict:
             c["avisos"].append(f"`{esc}`: no está su realización 1 en las mismas semillas"); continue
         st = _stats([sems[s]["acc_val"] - uno[s]["acc_val"] for s in comunes])
         u = _umbral(st, DELTA)
-        medias = [d["acc_val"]["media"] for d in dl.values() if d["n"] and d.get("realizacion") == 1 and not d.get("linea")]
+        medias = [d["acc_val"]["media"] for d in dl.values() if d["n"] and d.get("realizacion") == 1 and not d.get("linea") and not d.get("variante")]
         amplitud = (max(medias) - min(medias)) if medias else float("nan")
         c["realizacion"][esc] = {"contra": ruido.escenario(tipo, nivel, 1), "delta_acc_val": st, "umbral": u,
                                  "amplitud_entre_tipos": amplitud,
@@ -268,6 +283,17 @@ def md(por, dl, c, figs) -> str:
         mejores = [e for e, r in c["en_linea"].items() if r["lectura"].startswith("en línea MEJOR")]
         peores = [e for e, r in c["en_linea"].items() if r["lectura"].startswith("en línea PEOR")]
         L += ["", f"- **En línea mejor que fija**: {', '.join(f'`{e}`' for e in mejores) if mejores else '**ninguno**'} · **peor**: {', '.join(f'`{e}`' for e in peores) if peores else 'ninguno'}."]
+    if c.get("variantes"):
+        L += ["", "## Fase 4: grosor (`-grueso`, 3–4 px) y número de trazos (`-doble`, 3–4) contra su base, pareado", "",
+              "| escenario | Δ acc val vs `limpio` | veredicto vs `limpio` | **Δ acc val vs base** ± SE | umbral | Δ CE val vs base | lectura |",
+              "|---|---|---|---|---|---|---|"]
+        for esc, r in c["variantes"].items():
+            d = dl.get(esc, {})
+            L.append(f"| `{esc}` (vs `{r['contra']}`) | {s4(d['acc_val']['media']) if d.get('n') else '—'} | {r['veredicto_vs_limpio'] or '—'} | **{s4(r['delta_acc_val']['media'])}** ± {f4(r['delta_acc_val']['se'])} "
+                     f"| {f4(r['umbral'])} | {s4(r['delta_ce_val']['media'])} | {r['lectura']} |")
+        mej = [e for e, r in c["variantes"].items() if r["lectura"].startswith("MEJOR")]
+        peo = [e for e, r in c["variantes"].items() if r["lectura"].startswith("PEOR")]
+        L += ["", f"- **Variantes mejores que su base**: {', '.join(f'`{e}`' for e in mej) if mej else '**ninguna**'} · **peores**: {', '.join(f'`{e}`' for e in peo) if peo else 'ninguna'}."]
     for esc, r in c["realizacion"].items():
         L.append(f"- **La realización** (`{esc}` contra `{r['contra']}`): Δ = {s4(r['delta_acc_val']['media'])} ± {f4(r['delta_acc_val']['se'])} (umbral {f4(r['umbral'])}; "
                  f"amplitud de las medias entre tipos {f4(r['amplitud_entre_tipos'])}) → {r['lectura']}.")

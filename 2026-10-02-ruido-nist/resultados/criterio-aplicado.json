@@ -584,7 +584,8 @@
     "veredicto_vs_limpio": "ayuda",
     "lectura": "en línea MEJOR que la copia fija"
    }
-  }
+  },
+  "variantes": {}
  },
  "deltas": {
   "borrado@0.05": {
@@ -636,6 +637,7 @@
    "nivel": 0.05,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -730,6 +732,7 @@
    "nivel": 0.1,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -824,6 +827,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -918,6 +922,7 @@
    "nivel": 0.3,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1012,6 +1017,7 @@
    "nivel": 0.4,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1106,6 +1112,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1200,6 +1207,7 @@
    "nivel": 0.4,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1294,6 +1302,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1388,6 +1397,7 @@
    "nivel": 0.8,
    "realizacion": 1,
    "linea": true,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1482,6 +1492,7 @@
    "nivel": 0.8,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1576,6 +1587,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1670,6 +1682,7 @@
    "nivel": 0.05,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1764,6 +1777,7 @@
    "nivel": 0.02,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1858,6 +1872,7 @@
    "nivel": 0.05,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -1952,6 +1967,7 @@
    "nivel": 0.1,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2046,6 +2062,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": true,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2140,6 +2157,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2234,6 +2252,7 @@
    "nivel": 0.3,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2328,6 +2347,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2422,6 +2442,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2516,6 +2537,7 @@
    "nivel": 0.4,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2610,6 +2632,7 @@
    "nivel": 0.6,
    "realizacion": 2,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2704,6 +2727,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2798,6 +2822,7 @@
    "nivel": 0.8,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2892,6 +2917,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": true,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -2986,6 +3012,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3080,6 +3107,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3174,6 +3202,7 @@
    "nivel": 0.4,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3268,6 +3297,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": true,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3362,6 +3392,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3456,6 +3487,7 @@
    "nivel": 0.8,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3550,6 +3582,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3644,6 +3677,7 @@
    "nivel": 0.02,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3738,6 +3772,7 @@
    "nivel": 0.05,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3832,6 +3867,7 @@
    "nivel": 0.1,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -3926,6 +3962,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4020,6 +4057,7 @@
    "nivel": 0.3,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4114,6 +4152,7 @@
    "nivel": 0.2,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4208,6 +4247,7 @@
    "nivel": 0.4,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4302,6 +4342,7 @@
    "nivel": 0.6,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4396,6 +4437,7 @@
    "nivel": 0.8,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4490,6 +4532,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": true,
+   "variante": null,
    "semillas": [
     1,
     2,
@@ -4584,6 +4627,7 @@
    "nivel": 1.0,
    "realizacion": 1,
    "linea": false,
+   "variante": null,
    "semillas": [
     1,
     2,

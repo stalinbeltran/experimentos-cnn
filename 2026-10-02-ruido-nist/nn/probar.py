@@ -41,7 +41,16 @@ def main() -> int:
     prueba("-linea: parsear, es_linea, fijo_de y el nombre canónico",
            ruido.parsear("recorte@0.6-linea") == ("recorte", 0.6, 1) and ruido.es_linea("recorte@0.6-linea") and not ruido.es_linea("recorte@0.6")
            and ruido.fijo_de("recorte@0.6-linea") == "recorte@0.6" and ruido.escenario("recorte", 0.6, 1, linea=True) == "recorte@0.6-linea")
-    for malo in ("horizontal", "horizontal@0.7", "limpio-linea", "recorte@0.6-linea-r2", "limpio@0.6", "limpio-r2", "nada@0.6", "oblicua@0.6-r0", "Horizontal@0.6"):
+    prueba("variantes: parsear, variante_de, base_de y el nombre canónico",
+           ruido.parsear("vertical@1-grueso-linea") == ("vertical", 1.0, 1) and ruido.variante_de("vertical@1-grueso-linea") == "grueso"
+           and ruido.base_de("vertical@1-grueso-linea") == "vertical@1-linea" and ruido.base_de("oblicua@1-doble") == "oblicua@1"
+           and ruido.variante_de("vertical@1-linea") is None and ruido.base_de("vertical@1") == "vertical@1"
+           and ruido.escenario("vertical", 1.0, 1, linea=True, variante="doble") == "vertical@1-doble-linea")
+    cu0 = datos.limpio()["cuentas_train"][:40]
+    m0 = ruido.mascaras("vertical", 40, np.random.default_rng(5)); mg = ruido.mascaras("vertical", 40, np.random.default_rng(5), "grueso"); md = ruido.mascaras("vertical", 40, np.random.default_rng(5), "doble")
+    prueba("grueso cubre más que la base y doble también (vertical, 40 máscaras)", mg.mean() > 1.5 * m0.mean() and md.mean() > 1.5 * m0.mean())
+    prueba("doble: cada máscara vertical toca ≥ 3 columnas distintas... o se solapan (≥ 2)", all((mm.sum(0) > 0).sum() >= 2 for mm in md))
+    for malo in ("horizontal", "horizontal@0.7", "limpio-linea", "recorte@0.6-linea-r2", "recorte@0.6-grueso", "gaussiano@0.2-doble-linea", "vertical@1-gordo", "limpio@0.6", "limpio-r2", "nada@0.6", "oblicua@0.6-r0", "Horizontal@0.6"):
         try:
             ruido.parsear(malo); bien = False
         except ValueError:

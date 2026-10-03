@@ -86,3 +86,21 @@ dejó: **el mejor nivel de cada tipo cuyo mejor nivel fue «ayuda»** (`recorte@
   la lectura es que 222 copias distintas sin repetir ninguna no dejan ajustar la copia, y eso es
   un resultado.
 - **No decide** ganador entre tipos (eso ya lo hizo la fase 2) ni combina ruidos.
+
+## Fase 4 — grosor y número de trazos: enmienda del 2026-10-03, escrita antes de lanzarla
+
+El eje que la fase 2 dejó abierto: los trazos suben hasta α = 1, que es el tope de opacidad, así
+que «más» sólo puede ser **más grueso** o **más trazos**. Dos variantes del dibujo, con la misma
+semilla y en línea (la fase 3 enseñó que en línea nunca es peor): **`-grueso`** = 3–4 px de grosor
+a 32 (el plan: 1–2) con 1–2 trazos; **`-doble`** = 3–4 trazos (el plan: 1–2) de 1–2 px. Sobre los
+trazos cuya versión en línea dio «ayuda» en la fase 3 (`vertical@1`, `oblicua@1`, `curva@0.8`),
+× 3 semillas = 18 corridas. Sólo valen para rectas y curvas: `parsear` se niega con el resto.
+
+- **Medida**: Δ contra `limpio` (el veredicto de siempre) y **Δ contra su base** (el mismo
+  escenario en línea sin variante), pareado, umbral `max(2·SE, δ)`: «mejor», «peor» o
+  «indistinguible de su base».
+- **Lo que se espera, escrito antes**: que `-grueso` y `-doble` sumen algo en `vertical` y
+  `oblicua` (siguen la tendencia «más ruido, mejor» de la fase 2) y que en `curva`, que ya tenía
+  pico interior en α, no sumen o resten. Si una variante sale **peor** que su base, el eje está
+  acotado por ese lado y se dice.
+- **No decide** nada sobre combinar tipos ni sobre `recorte`/`gaussiano`, que no tienen trazos.

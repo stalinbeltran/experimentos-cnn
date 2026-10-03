@@ -162,7 +162,7 @@ def entrenar(escenario: str, semilla: int, pasos: int, lr, raiz: Path = PESOS) -
     dir_b.mkdir(parents=True, exist_ok=True)
     registro = dir_b / "metrics.jsonl"
     registro.write_text("", encoding="utf-8")
-    config = {"id": nombre, "escenario": escenario, "tipo": d["tipo"], "nivel": d["nivel"], "linea": d["linea"],
+    config = {"id": nombre, "escenario": escenario, "tipo": d["tipo"], "nivel": d["nivel"], "linea": d["linea"], "variante": d["variante"],
               "indice_nivel": None if d["tipo"] == ruido.LIMPIO else ruido.indice_nivel(d["tipo"], d["nivel"]),
               "realizacion": d["realizacion"], "semilla": semilla, "semilla_lotes": SEMILLA_LOTES + semilla,
               "semilla_ruido": d["semilla_ruido"], "pasos": pasos, "epocas": epocas, "lote": LOTE, "lr": lr,
@@ -274,8 +274,9 @@ def comprobar() -> int:
     except ValueError:
         bien = False
     prueba("parsear_ident('oblicua@0.6-r2-s3')", bien)
+    prueba("parsear_ident('vertical@1-grueso-linea-s2')", parsear_ident("vertical@1-grueso-linea-s2") == ("vertical@1-grueso-linea", 2))
     prueba("parsear_ident('recorte@0.6-linea-s2')", parsear_ident("recorte@0.6-linea-s2") == ("recorte@0.6-linea", 2))
-    for malo in ("limpio", "limpio-s9", "horizontal@0.7-s1", "inventado@0.6-s1", "horizontal-s1", "limpio-linea-s1"):
+    for malo in ("limpio", "limpio-s9", "horizontal@0.7-s1", "inventado@0.6-s1", "horizontal-s1", "limpio-linea-s1", "recorte@0.6-grueso-s1"):
         try:
             parsear_ident(malo); bien = False
         except ValueError:
