@@ -3,16 +3,31 @@
   "titulo": "Combinar los dos ruidos de entrenamiento que mas ayudaron en ruido-nist (gaussiano en linea y recorte): ¿suman, o el mejor solo ya lo da todo?",
   "pregunta": "Con el mismo dato, red, semillas y protocolo de ruido-nist (180 train + 180 copias en linea, 1617 val limpias, pesos iniciales identicos por semilla), ¿aplicar recorte@0.6 y gaussiano@0.2 JUNTOS en la copia —en secuencia sobre la misma imagen, o repartidos al 50 % entre imagenes— sube la exactitud de val por encima del mejor de los dos solos (gaussiano@0.2 en linea, 0,912), y cuanto?",
   "creado": "2026-10-03",
-  "estado": "abierto",
+  "estado": "cerrado",
   "dataset": "uci-optdigits-8px-r20261002",
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
-  "reporte": null,
-  "plan": "PREPARADO y no lanzado (2026-10-03): codigo copiado de ruido-nist con las combinaciones anadidas; criterio antes de mirar en instrucciones/02-criterio.md",
+  "reporte": "estudios-redes-neuronales/reportes/estudios/2026/10-octubre/2026-10-03-ruido-comb-combinar-ruidos.md",
+  "plan": "Corrido el 2026-10-03 en el dev (15 corridas, 0 $, 12 min, 0 fallos). README.md con el veredicto; reporte #29 en el central",
   "gasta_por_que": "Entrena en el dev: 15 corridas de 1.338 parametros, ~25-45 s cada una. No alquila. El freno lo ve porque cada corrida es un proceso nn/entrenar_local.py",
   "linaje": "ruido-nist (mismo dataset, red, semillas, protocolo y codigo; sus dos mejores ruidos en linea son las partes). Lo que cambia, en REGLAS.md",
-  "escenarios_previstos": ["limpio", "gaussiano@0.2-linea", "recorte@0.6-linea", "recorte@0.6+gaussiano@0.2-linea", "recorte@0.6~gaussiano@0.2-linea"],
-  "semillas_previstas": [1, 2, 3],
-  "pendiente": ["Que el dueno diga 'lanza': nn/lanzar.sh todo (15 corridas, ~8 min, 0 $)"]
+  "escenarios_previstos": [
+    "limpio",
+    "gaussiano@0.2-linea",
+    "recorte@0.6-linea",
+    "recorte@0.6+gaussiano@0.2-linea",
+    "recorte@0.6~gaussiano@0.2-linea"
+  ],
+  "semillas_previstas": [
+    1,
+    2,
+    3
+  ],
+  "pendiente": [
+    "Fusionar tema-2 en main",
+    "No decidido: 5 semillas para la secuencial (el SE bajaria a ~0,006)"
+  ],
+  "cerrado": "2026-10-03",
+  "resultado": "Indistinguible, como se escribio antes: la secuencial (recorte@0.6 y encima gaussiano@0.2, en linea) da la exactitud de val mas alta vista, 0,919 (+0,049 sobre limpio), pero contra el mejor simple (gaussiano@0.2-linea, 0,912) es +0,007 ± 0,009, bajo el umbral 0,018; la mezcla (0,903) queda -0,010 ± 0,014. Ninguna resta. Los dos simples salieron bit a bit iguales que en ruido-nist. Lo decidiria subir a 5 semillas"
 }
