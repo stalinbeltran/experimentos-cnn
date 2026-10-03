@@ -90,7 +90,7 @@ sus semillas); el ruido, para mirarlo: [`resultados/muestras-ruido.png`](resulta
   demás**: en el almacén, `foveal-vision-data/experimentos-cnn-resultados/ruido-nist/`.
 - Los avisos a Telegram de los dos cierres **no salieron** (`Falta BOT_TOKEN`: las unidades se
   lanzaron desde una sesión de Claude Code, no desde el bot). El `|| true` hizo su trabajo.
-- Reporte #26 en `estudios-redes-neuronales`.
+- Reporte #28 en `estudios-redes-neuronales` (el #26 lo tomó `dim-nist` al fusionar, y el #27 el banco).
 
 ## Cómo se repite
 
