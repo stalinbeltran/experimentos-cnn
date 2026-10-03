@@ -1,0 +1,8 @@
+empiezo recorte@0.6-linea-s4: EN LÍNEA (una copia nueva por época), época 1 = b3f4f967ab9281aa (semilla de ruido 1062), init ee13eb39cf40b264, 1338 parámetros, 222 épocas, lr 0.003, hilos 2
+  recorte@0.6-linea-s4 ep   1/222 perdida 2.3103 acc~0.094
+  recorte@0.6-linea-s4 ep  50/222 perdida 0.2950 acc~0.897 · acc_val 0.8522 brecha +0.0589
+  recorte@0.6-linea-s4 ep 100/222 perdida 0.1383 acc~0.958 · acc_val 0.8936 brecha +0.0953
+  recorte@0.6-linea-s4 ep 150/222 perdida 0.0575 acc~0.975 · acc_val 0.9011 brecha +0.0934
+  recorte@0.6-linea-s4 ep 200/222 perdida 0.0562 acc~0.981 · acc_val 0.8899 brecha +0.1101
+  recorte@0.6-linea-s4 ep 222/222 perdida 0.0158 acc~1.000 · acc_val 0.9079 brecha +0.0921
+listo recorte@0.6-linea-s4: acc_train 1.0000 acc_val 0.9079 brecha +0.0921 · ce_train 0.0033 ce_val 0.4236 en 28.1 s

@@ -1,22 +1,22 @@
-# Resultados de `ruido-comb` — generado por `nn/informe.py` el 2026-10-03 07:04 UTC
+# Resultados de `ruido-comb` — generado por `nn/informe.py` el 2026-10-03 07:43 UTC
 
 **Generado del disco; no se edita a mano.** Criterio: `instrucciones/02-criterio.md`, escrito antes. Δ pareado por semilla; umbral = max(2·SE, 0,01).
 
 | escenario | n | acc val (media ± sd) | CE val | acc train | **Δ vs `limpio`** ± SE | umbral | veredicto | **Δ vs mejor simple** ± SE | umbral | ¿suman? |
 |---|---:|---|---|---|---|---|---|---|---|---|
-| `limpio` | 3 | 0.8703 ± 0.0317 | 1.0372 | 1.0000 | — | — | base | — | — | — |
-| `gaussiano@0.2-linea` | 3 | 0.9122 ± 0.0207 | 0.3592 | 1.0000 | **+0.0418** ± 0.0064 | 0.0127 | ayuda | referencia | — | — |
-| `recorte@0.6-linea` | 3 | 0.8994 ± 0.0191 | 0.4904 | 1.0000 | **+0.0291** ± 0.0074 | 0.0148 | ayuda | **-0.0128** ± 0.0014 | 0.0100 | RESTAN |
-| `recorte@0.6+gaussiano@0.2-linea` | 3 | 0.9192 ± 0.0143 | 0.2977 | 1.0000 | **+0.0489** ± 0.0140 | 0.0280 | ayuda | **+0.0070** ± 0.0088 | 0.0176 | indistinguible |
-| `recorte@0.6~gaussiano@0.2-linea` | 3 | 0.9027 ± 0.0206 | 0.3965 | 1.0000 | **+0.0324** ± 0.0188 | 0.0375 | indistinguible | **-0.0095** ± 0.0141 | 0.0282 | indistinguible |
+| `limpio` | 5 | 0.8690 ± 0.0241 | 1.0168 | 1.0000 | — | — | base | — | — | — |
+| `gaussiano@0.2-linea` | 5 | 0.9018 ± 0.0343 | 0.3945 | 0.9944 | **+0.0328** ± 0.0107 | 0.0213 | ayuda | referencia | — | — |
+| `recorte@0.6-linea` | 5 | 0.8994 ± 0.0148 | 0.5079 | 1.0000 | **+0.0304** ± 0.0043 | 0.0100 | ayuda | **-0.0023** ± 0.0116 | 0.0232 | indistinguible |
+| `recorte@0.6+gaussiano@0.2-linea` | 5 | 0.9161 ± 0.0118 | 0.2973 | 0.9989 | **+0.0471** ± 0.0080 | 0.0159 | ayuda | **+0.0143** ± 0.0123 | 0.0246 | indistinguible |
+| `recorte@0.6~gaussiano@0.2-linea` | 5 | 0.8982 ± 0.0207 | 0.4025 | 0.9989 | **+0.0292** ± 0.0107 | 0.0213 | ayuda | **-0.0036** ± 0.0106 | 0.0213 | indistinguible |
 
 ## Lo que dice el criterio
 
-- **`recorte@0.6+gaussiano@0.2-linea`** (secuencial) contra `gaussiano@0.2-linea`: Δ = +0.0070 ± 0.0088 (umbral 0.0176; CE val -0.0616) → **indistinguible**.
-- **`recorte@0.6~gaussiano@0.2-linea`** (mezcla) contra `gaussiano@0.2-linea`: Δ = -0.0095 ± 0.0141 (umbral 0.0282; CE val +0.0373) → **indistinguible**.
-- **La forma más cerca de sumar**: `recorte@0.6+gaussiano@0.2-linea` (+0.0070); veredicto indistinguible.
-- `recorte@0.6+gaussiano@0.2-linea` contra `recorte@0.6-linea`: Δ = +0.0198 ± 0.0090 (umbral 0.0180).
-- `recorte@0.6~gaussiano@0.2-linea` contra `recorte@0.6-linea`: Δ = +0.0033 ± 0.0127 (umbral 0.0253).
+- **`recorte@0.6+gaussiano@0.2-linea`** (secuencial) contra `gaussiano@0.2-linea`: Δ = +0.0143 ± 0.0123 (umbral 0.0246; CE val -0.0972) → **indistinguible**.
+- **`recorte@0.6~gaussiano@0.2-linea`** (mezcla) contra `gaussiano@0.2-linea`: Δ = -0.0036 ± 0.0106 (umbral 0.0213; CE val +0.0080) → **indistinguible**.
+- **La forma más cerca de sumar**: `recorte@0.6+gaussiano@0.2-linea` (+0.0143); veredicto indistinguible.
+- `recorte@0.6+gaussiano@0.2-linea` contra `recorte@0.6-linea`: Δ = +0.0167 ± 0.0053 (umbral 0.0106).
+- `recorte@0.6~gaussiano@0.2-linea` contra `recorte@0.6-linea`: Δ = -0.0012 ± 0.0082 (umbral 0.0164).
 
 ## Figuras
 
