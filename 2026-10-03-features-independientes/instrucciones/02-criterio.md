@@ -222,3 +222,70 @@ mitad del dígito: es una feature compleja por construcción, como se pidió.
 **Qué se espera:** `dig` solo entre 0,85 y 0,93 (kernels sacados del propio dato, pero sin etiquetas y con 20
 dígitos); los 39 juntos ≥ 0,975; contribuciones individuales pequeñas (|Δ| < 0,005 casi todas), porque con
 39 detectores hay mucha redundancia.
+
+## Corrida 7 — el grupo `cae`: 13 detectores CNN aprendidos de 100 dígitos SIN etiquetas (escrito el 2026-10-03, ANTES de mirar)
+
+**Encargo del dueño:** como `dig`, pero con CNN en vez de k-means, y con unos 100 dígitos aleatorios.
+
+**Método: autocodificador convolucional disperso.**
+- **100 dígitos al azar** de la partición de train (semilla fija; la etiqueta NO se lee).
+- **Codificador = 13 CNN independientes** (convolución por grupos, sin ningún peso compartido): cada una
+  Conv 3×3 (1→8) + ReLU, Conv 3×3 (8→8) + ReLU, Conv 1×1 (8→1) + sigmoide, con relleno → **un mapa 8×8 en
+  [0,1]**. Campo receptivo 5×5, como `dig`. Al aplicarlo, cada una es un detector que no depende de las otras.
+- **Decodificador**: un kernel 5×5 propio por detector; la reconstrucción es la suma de los 13 mapas convolu-
+  cionados con su kernel. Pérdida: error cuadrático de reconstrucción + λ · media de los mapas (dispersión:
+  obliga a que cada detector se encienda poco y se especialice).
+- Para no memorizar 100 imágenes, en cada paso el dígito se desplaza al azar ±1 celda.
+- **λ se elige sólo con los 100 dígitos y sin etiquetas**: entre {0,003, 0,01, 0,03}, el mayor con el que
+  los 13 detectores siguen vivos (cada uno con activación media > 0,01) y la reconstrucción no se degrada más
+  de un 50 % respecto del menor. Val no interviene.
+
+**Nombres.** Grupo **`cae`** (*convolutional autoencoder*). Detectores `cae:NN`, numerados por activación
+media sobre los 100 dígitos (01 = el que más se enciende), con el mismo alias automático que `dig`, calculado
+sobre su **kernel de decodificador** (= lo que ese detector «pinta» cuando se enciende).
+
+**Qué se mide:** lo mismo que la corrida 6 — `cae` solo, `fino + grueso + cae` (39) frente a `fino + grueso`
+(26), y la contribución por eliminación. Con el compositor **sin cambios** (el sobreajuste queda pendiente,
+así que la comparación de 39 contra 26 arrastra el mismo problema y se lee con eso delante).
+
+**Qué se espera:** `cae` solo ≥ `dig` solo (0,888), porque ve 5× más dígitos y cada detector es no lineal;
+entre 0,88 y 0,94. Los 39 juntos, igual que con `dig`: no más de 0,972 mientras el compositor sobreajuste.
+
+### Enmienda a la corrida 7 (mismo día, ANTES de mirar ninguna etiqueta ni val)
+
+Con la regla de λ de arriba se eligió λ = 0,003 (13/13 vivos) y el autocodificador **degeneró en copiar
+píxeles**: los kernels de decodificador son puntos sueltos, un detector (`cae:09`) reproduce el dígito entero
+y dos (`cae:01`, `cae:02`) son el negativo del fondo (`resultados/detectores-cae.png` de esa versión, en la
+historia de git). Es la solución trivial de un autocodificador **sobrecompleto** —13 mapas 8×8 para
+reconstruir un 8×8—, y la dispersión L1 sola no la impide: con λ mayor mueren detectores antes de que deje de
+copiar (12/13 con 0,01; 11/13 con 0,03). Se juzgó sólo con los 100 dígitos y su reconstrucción, sin etiquetas.
+
+**Cambio: dispersión «el ganador se lo lleva todo» (WTA), en vez de L1.** Al entrenar, de cada mapa se conserva
+sólo su celda más activa por imagen (espacial), y de esa celda sólo el 20 % de imágenes del lote en que más se
+activa (de vida, para que cada detector se especialice en unas imágenes y no en todas). La reconstrucción es
+la suma de esos «sellos» 5×5. Así copiar un píxel no sirve: cada detector tiene que explicar un trozo de
+trazo con su kernel. Es la técnica de Makhzani y Frey (2015) *(de memoria, no comprobado desde aquí)*. **Al
+aplicarlo como detector** se usa el mapa entero (sin WTA): la WTA sólo da forma al aprendizaje. Sin λ que
+elegir; mismos 100 dígitos, pasos, `lr` y semilla.
+
+### Enmienda 2 a la corrida 7 (mismo día, todavía sin etiquetas ni val)
+
+Con WTA los **kernels de decodificador salieron trazos** (lo buscado), pero los **mapas del codificador
+saturaron a ≈ 1 en todas las celdas** (activación media 0,93–0,99): la WTA sólo entrena la celda ganadora y
+nada empuja hacia abajo a las demás, así que la sigmoide se queda arriba. Un mapa constante no es un detector.
+**Cambio:** salida ReLU (no sigmoide) y, además de la WTA, una penalización L1 pequeña sobre el mapa ENTERO
+(λ = 0,01 sobre la media): los ganadores cargan la reconstrucción y el resto baja a 0. Al aplicarlo, cada
+mapa se divide por su escala (percentil 99 de sus valores ganadores sobre los 100 dígitos, guardado con los
+pesos) y se recorta a [0, 1], para que esté en el mismo rango que los demás grupos.
+
+### Enmienda 3 a la corrida 7 (mismo día, todavía sin etiquetas ni val)
+
+La enmienda 2 se fue al otro extremo: **11 de 13 detectores muertos** (ReLU a cero, rematados por la L1) y la
+reconstrucción sin aprender (mse 0,12, lo de predecir una constante). Dos parches seguidos han fallado, así que
+se vuelve a la receta **completa** del método en vez de seguir improvisando: codificador ReLU, **decodificador
+lineal** (la sigmoide de salida impedía reconstruir con sellos), **sin L1**, WTA espacial + de vida al
+entrenar. La de vida asegura que cada detector gane en el 20 % de cada lote, así que ninguno puede morir.
+**Al aplicarlo como detector se usa la WTA espacial** (sólo la celda máxima del mapa, con su valor, escalado por
+el p99 de sus ganadores y recortado a [0, 1]): es lo mismo que vio el decodificador, y da un pico en la
+posición donde encontró su trazo —el mismo formato «¿está? ¿dónde?» que los detectores sintéticos—.
+Si esto también degenera, se para y se dice, en vez de un cuarto parche.

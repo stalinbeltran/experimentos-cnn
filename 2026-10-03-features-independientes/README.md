@@ -198,6 +198,39 @@ EMPEORA** al mejor, −0,008, 13 dígitos).
 15 detectores «raros» por fallo frente a 4 por acierto. O sea: los kernels obtenidos **sí llevan información**
 (0,888 solos), pero lo que sobra ahora no son detectores, sino capacidad del compositor frente a 180 dígitos.
 
+## Corrida 7 (2026-10-03): el grupo `cae` — 13 detectores CNN de 100 dígitos sin etiquetas — PARCIAL
+
+**Obtenedor** (`nn/obtenedor_cnn.py`): autocodificador convolucional disperso. El codificador son **13 CNN
+independientes** (convolución por grupos, ningún peso compartido; `detector(j)` saca cada una como red suelta, y
+se comprueba que suelta da exactamente lo mismo); el decodificador, un kernel 5×5 por detector. 100 dígitos de
+train al azar, sin leer la etiqueta. Pesos en `nn/pesos-cae/`, imagen en `resultados/detectores-cae.png`.
+
+**Costó tres enmiendas, las tres escritas antes de mirar etiquetas o val** (`02-criterio.md`, corrida 7):
+1. Con dispersión L1 el autocodificador **copió píxeles** (kernels = puntos sueltos; un detector = el dígito
+   entero). Es la salida trivial de un autocodificador sobrecompleto.
+2. Con WTA («el ganador se lo lleva todo») los kernels pasaron a ser **trazos**, pero los mapas saturaron a ≈1.
+3. Con ReLU + L1, **11 de 13 murieron**. Se volvió a la receta completa (decodificador lineal, sin L1, WTA
+   espacial y de vida, y WTA espacial también al aplicar): **7 de 13 vivos**, con kernels de trazo
+   (`\`, `/`, verticales y uno en forma de lazo) y un pico donde encuentran su trazo. Los otros 6 nacieron con
+   la ReLU apagada y nunca recibieron gradiente. **Ahí se paró**, como estaba escrito.
+
+| sobre dígitos (3 semillas) | `cae` solo (13, 7 vivos) | `dig` solo | fino + grueso (26) | fino + grueso + `cae` (39) |
+|---|---:|---:|---:|---:|
+| posicional | 0,743 ± 0,000 | 0,888 | **0,972** | 0,970 ± 0,000 |
+| presencia | 0,572 ± 0,011 | 0,524 | 0,829 | **0,875 ± 0,001** |
+
+Contra el criterio: `cae` solo ≥ `dig` ❌ (0,743, 14 puntos por debajo); los 39 no pasan de 0,972 ✅ (0,970).
+Lo único que mejora es el compositor de **presencia** con los 39 (0,829 → 0,875).
+
+**Contribución dentro de `cae`** (quitar uno y re-entrenar): aquí sí es grande y limpia, porque los mapas son
+ralos y no se solapan: `cae:02` vale **114 dígitos**, `cae:03` 74, `cae:01` 48, `cae:07`/`05`/`04` 24–28; los 6
+muertos, 0 (−1, ruido). O sea: **6 detectores CNN hacen todo el trabajo del grupo**.
+
+Lectura: el método funciona —kernels de trazo, independientes, sin etiquetas— pero (a) pierde la mitad de los
+detectores por neuronas muertas y (b) el mapa de un pico es menos informativo que el mapa graduado de `dig` o de
+los sintéticos. Arreglo propuesto, NO aplicado: LeakyReLU o sesgo inicial positivo en la última capa del
+codificador (que todos empiecen encendidos), y probar el mapa entero en vez del pico al aplicarlo.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -205,8 +238,14 @@ EMPEORA** al mejor, −0,008, 13 dígitos).
 - ~~Dataset con trazos gruesos y re-entreno~~: hecho en la corrida 4 (arriba) — 1↔8 arreglado, 4→1 nuevo.
 - ~~Fino y grueso a la vez~~: hecho en la corrida 5 (arriba) — 0,972, el mejor.
 - ~~Obtener features de los dígitos sin etiquetas~~: hecho en la corrida 6 (grupo `dig`), no mejora al combinar.
-- **Compositor con más regularización** (L2 elegido sobre train por validación cruzada, o mapas reducidos a 4×4)
-  antes de seguir añadiendo detectores: es lo que diría si el banco grande ayuda o no.
+- ⏳ **PENDIENTE PRIORITARIO, pedido por el dueño el 2026-10-03: el SOBREAJUSTE del compositor.** Con 180
+  dígitos de train y 832–2.496 entradas, el compositor posicional llega a acierto 1,000 en train en todas las
+  corridas, y en la 6 quitar casi cualquier detector *mejora* val. Antes de juzgar si un banco de detectores
+  más grande ayuda, hay que frenar eso. Opciones, a elegir con criterio escrito antes: (a) L2 del compositor
+  elegido por validación cruzada **dentro** de los 180 de train (val no se toca), (b) mapas reducidos a 4×4
+  (÷4 entradas), (c) compositor de presencia + posición gruesa (máximo por cuadrante). Lo que decide: si con
+  el compositor regularizado los 39 detectores superan a los 26.
+- `cae` con los 13 vivos (LeakyReLU / sesgo inicial positivo) y mapa graduado al aplicarlo (corrida 7).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).
