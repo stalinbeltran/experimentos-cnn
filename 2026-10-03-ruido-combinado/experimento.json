@@ -27,7 +27,7 @@
     5
   ],
   "pendiente": [
-    "Fusionar tema-2 en main"
+    "Nada: fusionado en main el 2026-10-03"
   ],
   "cerrado": "2026-10-03",
   "resultado": "Indistinguible con 5 semillas, y se cierra: la secuencial (recorte@0.6 y encima gaussiano@0.2, en linea) da la exactitud de val mas alta y mas estable, 0,916 ± 0,012 (+0,047 sobre limpio), pero contra el mejor simple (gaussiano@0.2-linea, 0,902 ± 0,034) es +0,014 ± 0,012, bajo el umbral 0,025. La mezcla (0,898) no se distingue. Ninguna resta. La secuencial si supera al recorte solo (+0,017, umbral 0,011). Ampliar de 3 a 5 semillas subio la ventaja de la secuencial pero el gaussiano solo resulto mas variable entre semillas"
