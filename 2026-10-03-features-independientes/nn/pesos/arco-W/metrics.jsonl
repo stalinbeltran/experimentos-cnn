@@ -1,0 +1,80 @@
+{"epoca": 1, "paso": 63, "perdida": 1.067173, "s": 0.93}
+{"epoca": 2, "paso": 126, "perdida": 0.739489, "s": 0.9}
+{"epoca": 3, "paso": 189, "perdida": 0.641485, "s": 0.85}
+{"epoca": 4, "paso": 252, "perdida": 0.592077, "s": 0.91}
+{"epoca": 5, "paso": 315, "perdida": 0.550486, "precision": 0.3859, "recall": 0.795, "f1": 0.5196, "pos_ok": 0.827, "umbral": 0.5, "s": 1.7}
+{"epoca": 6, "paso": 378, "perdida": 0.525036, "s": 0.83}
+{"epoca": 7, "paso": 441, "perdida": 0.504614, "s": 0.86}
+{"epoca": 8, "paso": 504, "perdida": 0.484751, "s": 0.85}
+{"epoca": 9, "paso": 567, "perdida": 0.474209, "s": 0.88}
+{"epoca": 10, "paso": 630, "perdida": 0.461952, "precision": 0.4861, "recall": 0.83, "f1": 0.6131, "pos_ok": 0.8163, "umbral": 0.55, "s": 1.81}
+{"epoca": 11, "paso": 693, "perdida": 0.445204, "s": 0.92}
+{"epoca": 12, "paso": 756, "perdida": 0.439644, "s": 0.87}
+{"epoca": 13, "paso": 819, "perdida": 0.4396, "s": 0.89}
+{"epoca": 14, "paso": 882, "perdida": 0.430991, "s": 0.89}
+{"epoca": 15, "paso": 945, "perdida": 0.434472, "precision": 0.4948, "recall": 0.8375, "f1": 0.6221, "pos_ok": 0.8328, "umbral": 0.65, "s": 1.71}
+{"epoca": 16, "paso": 1008, "perdida": 0.426206, "s": 0.88}
+{"epoca": 17, "paso": 1071, "perdida": 0.424114, "s": 0.92}
+{"epoca": 18, "paso": 1134, "perdida": 0.418506, "s": 0.9}
+{"epoca": 19, "paso": 1197, "perdida": 0.415096, "s": 5.56}
+{"epoca": 20, "paso": 1260, "perdida": 0.416781, "precision": 0.4912, "recall": 0.835, "f1": 0.6185, "pos_ok": 0.8563, "umbral": 0.6, "s": 1.56}
+{"epoca": 21, "paso": 1323, "perdida": 0.398804, "s": 0.86}
+{"epoca": 22, "paso": 1386, "perdida": 0.403234, "s": 0.71}
+{"epoca": 23, "paso": 1449, "perdida": 0.39649, "s": 0.74}
+{"epoca": 24, "paso": 1512, "perdida": 0.391042, "s": 0.71}
+{"epoca": 25, "paso": 1575, "perdida": 0.390472, "precision": 0.5419, "recall": 0.825, "f1": 0.6541, "pos_ok": 0.8333, "umbral": 0.55, "s": 1.36}
+{"epoca": 26, "paso": 1638, "perdida": 0.392807, "s": 0.82}
+{"epoca": 27, "paso": 1701, "perdida": 0.388322, "s": 0.8}
+{"epoca": 28, "paso": 1764, "perdida": 0.367118, "s": 0.75}
+{"epoca": 29, "paso": 1827, "perdida": 0.386278, "s": 0.78}
+{"epoca": 30, "paso": 1890, "perdida": 0.381164, "precision": 0.5252, "recall": 0.8325, "f1": 0.6441, "pos_ok": 0.8408, "umbral": 0.65, "s": 1.42}
+{"epoca": 31, "paso": 1953, "perdida": 0.373583, "s": 0.8}
+{"epoca": 32, "paso": 2016, "perdida": 0.364168, "s": 0.79}
+{"epoca": 33, "paso": 2079, "perdida": 0.365511, "s": 0.71}
+{"epoca": 34, "paso": 2142, "perdida": 0.368673, "s": 0.77}
+{"epoca": 35, "paso": 2205, "perdida": 0.379735, "precision": 0.5334, "recall": 0.8175, "f1": 0.6456, "pos_ok": 0.841, "umbral": 0.6, "s": 1.48}
+{"epoca": 36, "paso": 2268, "perdida": 0.355068, "s": 0.75}
+{"epoca": 37, "paso": 2331, "perdida": 0.355172, "s": 0.79}
+{"epoca": 38, "paso": 2394, "perdida": 0.353428, "s": 0.77}
+{"epoca": 39, "paso": 2457, "perdida": 0.364223, "s": 0.73}
+{"epoca": 40, "paso": 2520, "perdida": 0.36309, "precision": 0.5922, "recall": 0.795, "f1": 0.6788, "pos_ok": 0.8491, "umbral": 0.5, "s": 1.51}
+{"epoca": 41, "paso": 2583, "perdida": 0.361772, "s": 0.75}
+{"epoca": 42, "paso": 2646, "perdida": 0.35403, "s": 0.77}
+{"epoca": 43, "paso": 2709, "perdida": 0.34812, "s": 0.74}
+{"epoca": 44, "paso": 2772, "perdida": 0.341147, "s": 0.74}
+{"epoca": 45, "paso": 2835, "perdida": 0.339996, "precision": 0.5554, "recall": 0.8275, "f1": 0.6647, "pos_ok": 0.8459, "umbral": 0.55, "s": 1.43}
+{"epoca": 46, "paso": 2898, "perdida": 0.335809, "s": 0.74}
+{"epoca": 47, "paso": 2961, "perdida": 0.344044, "s": 0.77}
+{"epoca": 48, "paso": 3024, "perdida": 0.330687, "s": 0.79}
+{"epoca": 49, "paso": 3087, "perdida": 0.330017, "s": 0.77}
+{"epoca": 50, "paso": 3150, "perdida": 0.343673, "precision": 0.5548, "recall": 0.835, "f1": 0.6667, "pos_ok": 0.8593, "umbral": 0.65, "s": 1.67}
+{"epoca": 51, "paso": 3213, "perdida": 0.331074, "s": 0.86}
+{"epoca": 52, "paso": 3276, "perdida": 0.336951, "s": 0.8}
+{"epoca": 53, "paso": 3339, "perdida": 0.338863, "s": 0.83}
+{"epoca": 54, "paso": 3402, "perdida": 0.331878, "s": 0.76}
+{"epoca": 55, "paso": 3465, "perdida": 0.330465, "precision": 0.5506, "recall": 0.83, "f1": 0.662, "pos_ok": 0.8735, "umbral": 0.6, "s": 1.6}
+{"epoca": 56, "paso": 3528, "perdida": 0.321346, "s": 0.87}
+{"epoca": 57, "paso": 3591, "perdida": 0.326272, "s": 0.8}
+{"epoca": 58, "paso": 3654, "perdida": 0.325206, "s": 0.79}
+{"epoca": 59, "paso": 3717, "perdida": 0.327254, "s": 0.78}
+{"epoca": 60, "paso": 3780, "perdida": 0.322997, "precision": 0.5847, "recall": 0.8025, "f1": 0.6765, "pos_ok": 0.8785, "umbral": 0.5, "s": 1.65}
+{"epoca": 61, "paso": 3843, "perdida": 0.323028, "s": 0.82}
+{"epoca": 62, "paso": 3906, "perdida": 0.32794, "s": 0.8}
+{"epoca": 63, "paso": 3969, "perdida": 0.315706, "s": 0.82}
+{"epoca": 64, "paso": 4032, "perdida": 0.307255, "s": 0.81}
+{"epoca": 65, "paso": 4095, "perdida": 0.303823, "precision": 0.6158, "recall": 0.8175, "f1": 0.7025, "pos_ok": 0.8685, "umbral": 0.75, "s": 1.71}
+{"epoca": 66, "paso": 4158, "perdida": 0.320247, "s": 0.87}
+{"epoca": 67, "paso": 4221, "perdida": 0.32004, "s": 0.84}
+{"epoca": 68, "paso": 4284, "perdida": 0.315893, "s": 0.93}
+{"epoca": 69, "paso": 4347, "perdida": 0.304115, "s": 0.98}
+{"epoca": 70, "paso": 4410, "perdida": 0.316446, "precision": 0.6231, "recall": 0.81, "f1": 0.7043, "pos_ok": 0.8519, "umbral": 0.6, "s": 1.84}
+{"epoca": 71, "paso": 4473, "perdida": 0.305486, "s": 0.96}
+{"epoca": 72, "paso": 4536, "perdida": 0.326413, "s": 0.96}
+{"epoca": 73, "paso": 4599, "perdida": 0.308136, "s": 0.89}
+{"epoca": 74, "paso": 4662, "perdida": 0.308188, "s": 0.91}
+{"epoca": 75, "paso": 4725, "perdida": 0.301373, "precision": 0.6026, "recall": 0.8225, "f1": 0.6956, "pos_ok": 0.8602, "umbral": 0.65, "s": 1.82}
+{"epoca": 76, "paso": 4788, "perdida": 0.295702, "s": 0.92}
+{"epoca": 77, "paso": 4851, "perdida": 0.303985, "s": 0.93}
+{"epoca": 78, "paso": 4914, "perdida": 0.298442, "s": 1.04}
+{"epoca": 79, "paso": 4977, "perdida": 0.303135, "s": 1.22}
+{"epoca": 80, "paso": 5040, "perdida": 0.301625, "precision": 0.6129, "recall": 0.8075, "f1": 0.6969, "pos_ok": 0.8545, "umbral": 0.7, "s": 1.88}
