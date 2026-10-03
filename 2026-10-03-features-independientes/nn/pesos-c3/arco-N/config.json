@@ -1,0 +1,39 @@
+{
+ "feature": "arco-N",
+ "semilla": 1,
+ "epocas": 40,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.001,
+ "contra": "todas las demás + vacio",
+ "enfatizar": [
+  "arco-W",
+  "esquina-NW",
+  "arco-E"
+ ],
+ "frac_enfasis": 0.5,
+ "desde": "/home/deploy/src/experimentos-cnn/2026-10-03-features-independientes/nn/pesos/arco-N/last.pt",
+ "huella_desde": "33da618e62b36403",
+ "huella_init": "33da618e62b36403",
+ "n_train_pos": 2000,
+ "n_train_neg": 21153,
+ "n_val_pos": 400,
+ "n_val_neg": 4253,
+ "canales": [
+  16,
+  32,
+  32
+ ],
+ "parametros": 14081,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1 (enmienda corrida 2); ver best.umbral",
+ "dataset": "feat-ind-sinteticas-8px-r20261003",
+ "negativos_excluidos_por_contener": [
+  "lazo"
+ ],
+ "huella_imagenes": "d388d941a937a3f7"
+}

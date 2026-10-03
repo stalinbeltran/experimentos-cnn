@@ -48,7 +48,7 @@ case "$MODO" in
         ORDEN="cd '$EXP' && '$PY' -u nn/entrenar_local.py --todas; node '$COORD_HOME/scripts/notify.mjs' 'feat-ind: los 13 detectores terminaron (nn/lanzar.sh --estado)' || true" ;;
     reentrenar)
         UNIDAD=feat-ind-reentreno
-        ORDEN="cd '$EXP' && '$PY' -u nn/entrenar_local.py --reentrenar-todos && '$PY' nn/aplicar.py --pesos nn/pesos --pesos nn/pesos-c3 --sufijo -c3 && '$PY' nn/compositor.py --sufijo -c3; node '$COORD_HOME/scripts/notify.mjs' 'feat-ind: re-entreno (corrida 3) terminado (nn/lanzar.sh --estado, resultados/compositores-c3.json)' || true" ;;
+        ORDEN="cd '$EXP' && '$PY' -u nn/entrenar_local.py --reentrenar-todos && '$PY' nn/aplicar.py --pesos nn/pesos --pesos nn/pesos-c3 --sufijo=-c3 && '$PY' nn/compositor.py --sufijo -c3; node '$COORD_HOME/scripts/notify.mjs' 'feat-ind: re-entreno (corrida 3) terminado (nn/lanzar.sh --estado, resultados/compositores-c3.json)' || true" ;;
     una)
         shift
         [ $# -ge 1 ] || { echo "✗ una <feature> [args]" >&2; exit 2; }
