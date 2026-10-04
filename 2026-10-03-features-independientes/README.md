@@ -294,6 +294,52 @@ perder generalización. **No es lo que tapaba a los grupos nuevos.** Con este co
 con **más dígitos de train** para el compositor, o con un compositor que **combine** detectores (no lineal), que
 es justo lo que un lineal no puede hacer.
 
+## Aporte de `cae3`, de forma incremental (2026-10-04)
+
+Compositor lineal, 3 semillas (`resultados/incremental-cae3.json`):
+
+| banco | det | posicional | presencia |
+|---|---:|---:|---:|
+| cae3 | 13 | 0,926 | 0,490 |
+| cae3 + fino | 26 | 0,959 | 0,808 |
+| cae3 + grueso | 26 | 0,964 | 0,823 |
+| cae3 + fino + grueso | 39 | 0,967 | 0,867 |
+| *fino* | 13 | 0,959 | 0,718 |
+| *grueso* | 13 | 0,957 | 0,769 |
+| *fino + grueso* | 26 | **0,972** | 0,829 |
+
+En el posicional, `cae3` **no añade nada a fino** (0,959 = 0,959), **añade a grueso** (+0,007) y **resta a
+fino + grueso** (−0,005). En el de presencia añade siempre (+0,04 a +0,09): lo que trae `cae3` es el *dónde*, y
+cuando el compositor ya tiene el *dónde* de los sintéticos, sobra.
+
+## Corrida 10 (2026-10-04): un compositor que COMBINA detectores — no rompe el techo
+
+Criterio escrito antes (§ «Corrida 10»). `nn/compositor_comb.py`: Conv 3×3 (J detectores → 16 canales) + ReLU
+sobre los mapas apilados —cada canal es una combinación aprendida de detectores en una celda y sus vecinas, con
+«Y» / «pero no» gracias a la ReLU— y una lineal 16·64 → 10. 300 épocas, L2 0,001, 3 semillas.
+
+| banco | det | lineal | combinante | Δ |
+|---|---:|---:|---:|---:|
+| cae3 | 13 | 0,926 | 0,931 ± 0,004 | +0,005 |
+| fino | 13 | 0,959 | 0,957 ± 0,001 | −0,003 |
+| grueso | 13 | 0,957 | 0,963 ± 0,004 | +0,005 |
+| fino + grueso | 26 | **0,972** | 0,970 ± 0,001 | −0,002 |
+| cae3 + fino + grueso | 39 | 0,967 | **0,972** ± 0,001 | +0,006 |
+| todos | 65 | 0,965 | 0,956 ± 0,002 | −0,009 |
+
+Contra el criterio:
+1. ¿El combinante supera al lineal en fino + grueso? **No** (0,970 contra 0,972).
+2. ¿Con el combinante un banco grande supera a fino + grueso por ≥ 0,003? **No**: el mejor, cae3 + fino +
+   grueso, da 0,9724 — igual que el lineal de fino + grueso (0,9720).
+3. Se esperaba que subiera todos los bancos: sube los que el lineal aprovechaba peor (cae3, grueso, el de 39) y
+   **baja** fino, fino + grueso y sobre todo el de 65 (−0,009): con 180 dígitos y 20 mil parámetros, ahí sí
+   aparece el sobreajuste dañino que el criterio nombraba como riesgo.
+
+**Conclusión:** el techo de **~0,972** aguanta con tres compositores distintos (lineal, lineal regularizado,
+combinante) y con cinco grupos de detectores. Lo más probable es que el límite esté en los **180 dígitos de
+train** del compositor —y en los dígitos difíciles en sí, que eran 32 de los 45 fallos de la corrida 5—, no en
+cómo se combinan los detectores.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -302,9 +348,10 @@ es justo lo que un lineal no puede hacer.
 - ~~Fino y grueso a la vez~~: hecho en la corrida 5 (arriba) — 0,972, el mejor.
 - ~~Obtener features de los dígitos sin etiquetas~~: hecho en la corrida 6 (grupo `dig`), no mejora al combinar.
 - ~~Sobreajuste del compositor~~: estudiado en la corrida 9 — no era el problema (sobreajuste benigno).
-- **¿Aportan los grupos nuevos con más datos o con un compositor no lineal?** Curva de acierto según el número de
-  dígitos de train del compositor (36 → 180, y hasta ~900 tomando de val una parte nueva para train), y un
-  compositor con una capa oculta pequeña; en los dos casos, 26 detectores contra 65.
+- ~~Compositor no lineal~~: corrida 10, no rompe el techo de ~0,972.
+- **Curva de acierto según el número de dígitos de train del compositor** (36 → 180, y hasta ~900 tomando de
+  val una parte nueva para train): es lo que queda para saber si el techo es de datos. 26 detectores contra 65,
+  lineal y combinante.
 - ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).

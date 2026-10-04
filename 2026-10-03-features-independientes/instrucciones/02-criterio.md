@@ -354,3 +354,31 @@ los 180 y se mide en val con las 3 semillas de siempre. Sólo el compositor **po
 
 **Qué se espera:** la CV elige L2 mayor que el actual (0,03–0,3) en los bancos grandes; fino + grueso sube
 poco (≤ 0,975); el banco de 65 supera a 26 por ~0,005. Y el acierto en train deja de ser 1,000.
+
+## Corrida 10 — un compositor que COMBINA detectores (escrito el 2026-10-04, ANTES de mirar)
+
+**Por qué.** El compositor lineal sólo **suma** evidencias: «lazo arriba» y «recta abajo» suman cada una por
+su lado, pero no puede expresar «lazo arriba **Y** recta abajo» ni «recta-V gruesa **pero NO** fina». La corrida
+9 descartó el sobreajuste como causa del techo; queda probar si lo que falta es **combinar**.
+
+**El compositor combinante** (`nn/compositor_comb.py`): entrada = los J mapas 8×8 apilados como canales.
+1. **Conv 3×3, J → 16 canales, ReLU, con relleno**: cada canal de salida es una combinación aprendida de
+   detectores **en una celda y sus 8 vecinas** (p. ej. «arco-W fino aquí y recta-V gruesa justo debajo»). La
+   ReLU es lo que permite el «Y» / «pero no».
+2. **Lineal 16 × 64 → 10** (la parte posicional, como el compositor de siempre).
+
+Fijo antes de mirar: 16 canales, Adam `lr` 3e-3, L2 0,001, 300 épocas a lote completo, 3 semillas, los mismos
+180/1617. Parámetros: J·9·16 + 16 + 10.250 (de 12.138 con 13 detectores a 19.626 con 65).
+
+**Bancos:** cae3 · fino · grueso · fino + grueso · cae3 + fino + grueso · todos (65). Junto a cada uno, su
+compositor lineal (ya medido) para la diferencia.
+
+**Qué decide** (umbral 0,003 ≈ 5 dígitos, como en la corrida 9):
+1. ¿El combinante supera al lineal en fino + grueso? → combinar ayuda aunque no haya detectores nuevos.
+2. ¿Con el combinante, un banco grande (cae3 + fino + grueso, o todos) supera a fino + grueso por ≥ 0,003? →
+   los grupos nuevos sí llevaban información, pero sólo **combinada**.
+
+**Qué se espera:** el combinante sube a todos los bancos (más en los pequeños: con cae3 solo, de 0,926 a ~0,95);
+fino + grueso hacia 0,975–0,98; y **sí** gana el banco grande, por poco (~0,005). Riesgo: con 180 dígitos y 12–20
+mil parámetros, sobreajuste dañino de verdad; si el combinante queda **por debajo** del lineal en todos los
+bancos, es eso.

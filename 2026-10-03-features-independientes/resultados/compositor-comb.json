@@ -1,0 +1,67 @@
+{
+ "canales": 16,
+ "lr": 0.003,
+ "l2": 0.001,
+ "epocas": 300,
+ "semillas": [
+  1,
+  2,
+  3
+ ],
+ "bancos": {
+  "cae3": {
+   "detectores": 13,
+   "parametros": 12138,
+   "comb_val": 0.9309,
+   "comb_val_sd": 0.004,
+   "comb_train": 1.0,
+   "lineal_val": 0.9264,
+   "delta": 0.0045
+  },
+  "fino": {
+   "detectores": 13,
+   "parametros": 12138,
+   "comb_val": 0.9565,
+   "comb_val_sd": 0.0013,
+   "comb_train": 1.0,
+   "lineal_val": 0.9592,
+   "delta": -0.0027
+  },
+  "grueso": {
+   "detectores": 13,
+   "parametros": 12138,
+   "comb_val": 0.9625,
+   "comb_val_sd": 0.0041,
+   "comb_train": 1.0,
+   "lineal_val": 0.9571,
+   "delta": 0.0054
+  },
+  "fino+grueso": {
+   "detectores": 26,
+   "parametros": 14010,
+   "comb_val": 0.9699,
+   "comb_val_sd": 0.0009,
+   "comb_train": 1.0,
+   "lineal_val": 0.972,
+   "delta": -0.0021
+  },
+  "cae3+fino+grueso": {
+   "detectores": 39,
+   "parametros": 15882,
+   "comb_val": 0.9724,
+   "comb_val_sd": 0.0009,
+   "comb_train": 1.0,
+   "lineal_val": 0.9668,
+   "delta": 0.0056
+  },
+  "todos": {
+   "detectores": 65,
+   "parametros": 19626,
+   "comb_val": 0.9561,
+   "comb_val_sd": 0.0019,
+   "comb_train": 1.0,
+   "lineal_val": 0.9647,
+   "delta": -0.0086
+  }
+ }
+}

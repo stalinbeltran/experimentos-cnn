@@ -76,6 +76,7 @@ sobre dígitos reales.
 | `nn/obtenedor.py` | grupo `dig`: 13 kernels 5×5 por k-means de parches de 20 dígitos SIN etiqueta; `DetectorKernel` autocontenido | `--aprender` → `nn/pesos-dig/` · `--aplicar` → `mapas-digitos-dig.npz` y `-c24dig.npz` |
 | `nn/obtenedor_cnn.py` | grupos `cae` (c7), `cae5` y `cae3` (c8): autocodificador convolucional disperso (WTA), codificador = 13 CNN independientes, 100 dígitos SIN etiqueta | `[--grupo cae5\|cae3] --aprender` → `nn/pesos-<grupo>/` · `--aplicar` → `mapas-digitos-<grupo>.npz` y `-c24<grupo>.npz` |
 | `nn/compositor_reg.py` | corrida 9: compositor posicional con L2 y resolución elegidos por CV de 5 pliegues dentro de train, 6 bancos | `python nn/compositor_reg.py` → `resultados/compositor-reg.json` |
+| `nn/compositor_comb.py` | corrida 10: compositor que combina detectores (Conv 3×3 J→16 + ReLU + lineal) frente al lineal, 6 bancos | `python nn/compositor_comb.py` → `resultados/compositor-comb.json` |
 | `nn/contribucion.py` | contribución de cada detector por eliminación (re-entrena el compositor sin él) | `python nn/contribucion.py --sufijo -c24dig` |
 | `nn/errores.py` | atribución del error del compositor posicional (culpable, reconocimiento/composición, difíciles en sí) | `python nn/errores.py [--sufijo -c3]` |
 

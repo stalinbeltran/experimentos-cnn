@@ -1,0 +1,37 @@
+{
+ "cae3": {
+  "detectores": 13,
+  "posicional": 0.9264,
+  "presencia": 0.4902
+ },
+ "cae3 + fino": {
+  "detectores": 26,
+  "posicional": 0.9592,
+  "presencia": 0.8075
+ },
+ "cae3 + grueso": {
+  "detectores": 26,
+  "posicional": 0.9641,
+  "presencia": 0.8225
+ },
+ "cae3 + fino + grueso": {
+  "detectores": 39,
+  "posicional": 0.9668,
+  "presencia": 0.8669
+ },
+ "fino": {
+  "detectores": 13,
+  "posicional": 0.9592,
+  "presencia": 0.7178
+ },
+ "grueso": {
+  "detectores": 13,
+  "posicional": 0.9571,
+  "presencia": 0.7689
+ },
+ "fino + grueso": {
+  "detectores": 26,
+  "posicional": 0.972,
+  "presencia": 0.8293
+ }
+}
