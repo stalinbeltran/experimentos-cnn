@@ -260,6 +260,40 @@ con el sobreajuste del compositor (pendiente). El de presencia sí sube: 0,829 �
 - `cae5`: todos menos uno ayudan; `cae5:01` 71 dígitos, `cae5:04` 63, `cae5:09` 37, `cae5:03`/`08` ~31.
 - `cae3`: reparto mucho más plano (`cae3:01` 18, `cae3:03` 14, el resto ≤ 10): ningún trozo 3×3 es imprescindible.
 
+## Corrida 9 (2026-10-04): el sobreajuste del compositor — NO era el problema
+
+Criterio escrito antes (`02-criterio.md` § «Corrida 9»). L2 ∈ {0,001…1} y resolución del mapa {8×8, 4×4}
+elegidos por **validación cruzada de 5 pliegues dentro de los 180 de train**; val sólo al final. Script
+`nn/compositor_reg.py`, resultados en `resultados/compositor-reg.json`.
+
+| banco | detectores | CV elige | val (CV) | val sin regularizar (el de siempre) |
+|---|---:|---|---:|---:|
+| fino | 13 | 4×4, L2 0,001 | 0,955 | 0,959 |
+| fino + grueso | 26 | 4×4, L2 0,01 | 0,959 | **0,972** |
+| + dig | 39 | 8×8, L2 0,001 | 0,964 | 0,964 |
+| + cae5 | 39 | 4×4, L2 0,01 | 0,961 | 0,967 |
+| + cae3 | 39 | 4×4, L2 0,001 | **0,973** | 0,967 |
+| todos | 65 | 8×8, L2 0,003 | 0,964 | 0,965 |
+
+**La CV no ayuda, y en varios bancos empeora.** El diagnóstico —val para cada L2 y resolución, sólo para mirar,
+no para elegir (`resultados/compositor-reg-diagnostico-val.json`)— lo explica: **cuanto más se regulariza, peor,
+de forma monótona**, en los dos bancos y en las dos resoluciones. En fino + grueso: L2 0,001 → 0,972; 0,03 →
+0,964; 1 → 0,934. Con 4×4, todavía peor. O sea que el compositor de siempre ya estaba en el mejor punto de la
+rejilla, y la CV (pliegues de 36 dígitos: un dígito = 0,028) es demasiado ruidosa para ver diferencias de 0,005.
+
+Contra el criterio:
+- ¿Algún banco grande supera a fino + grueso por ≥ 0,003 con el compositor regularizado? **No**: el mejor,
+  + cae3, da 0,973 contra 0,972 (+0,001, ruido).
+- ¿La regularización sube a fino + grueso? **No**: lo baja.
+- Se esperaba que la CV eligiera L2 de 0,03–0,3 y que train dejara de ser 1,000: **no**. Eligió L2 bajos, y
+  donde train baja de 1,000, val baja también.
+
+**Conclusión:** el acierto 1,000 en train era **sobreajuste benigno**: el lineal separa los 180 de train sin
+perder generalización. **No es lo que tapaba a los grupos nuevos.** Con este compositor y 180 dígitos, `dig`,
+`cae5` y `cae3` no aportan información que fino + grueso no tenga ya. Lo que queda abierto es si la aportarían
+con **más dígitos de train** para el compositor, o con un compositor que **combine** detectores (no lineal), que
+es justo lo que un lineal no puede hacer.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -267,13 +301,10 @@ con el sobreajuste del compositor (pendiente). El de presencia sí sube: 0,829 �
 - ~~Dataset con trazos gruesos y re-entreno~~: hecho en la corrida 4 (arriba) — 1↔8 arreglado, 4→1 nuevo.
 - ~~Fino y grueso a la vez~~: hecho en la corrida 5 (arriba) — 0,972, el mejor.
 - ~~Obtener features de los dígitos sin etiquetas~~: hecho en la corrida 6 (grupo `dig`), no mejora al combinar.
-- ⏳ **PENDIENTE PRIORITARIO, pedido por el dueño el 2026-10-03: el SOBREAJUSTE del compositor.** Con 180
-  dígitos de train y 832–2.496 entradas, el compositor posicional llega a acierto 1,000 en train en todas las
-  corridas, y en la 6 quitar casi cualquier detector *mejora* val. Antes de juzgar si un banco de detectores
-  más grande ayuda, hay que frenar eso. Opciones, a elegir con criterio escrito antes: (a) L2 del compositor
-  elegido por validación cruzada **dentro** de los 180 de train (val no se toca), (b) mapas reducidos a 4×4
-  (÷4 entradas), (c) compositor de presencia + posición gruesa (máximo por cuadrante). Lo que decide: si con
-  el compositor regularizado los 39 detectores superan a los 26.
+- ~~Sobreajuste del compositor~~: estudiado en la corrida 9 — no era el problema (sobreajuste benigno).
+- **¿Aportan los grupos nuevos con más datos o con un compositor no lineal?** Curva de acierto según el número de
+  dígitos de train del compositor (36 → 180, y hasta ~900 tomando de val una parte nueva para train), y un
+  compositor con una capa oculta pequeña; en los dos casos, 26 detectores contra 65.
 - ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).

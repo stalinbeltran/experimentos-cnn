@@ -318,3 +318,39 @@ de cada grupo. Con el compositor **sin cambios** (el sobreajuste sigue pendiente
 trozo de trazo, menos específico—, pero con más detectores repartiendo el trabajo. **Qué lo refuta:** que siga
 habiendo detectores muertos, o que el mapa graduado sature como en la enmienda 1 (activación media > 0,5); si
 pasa, se dice y se para.
+
+## Corrida 9 — el SOBREAJUSTE del compositor (escrito el 2026-10-04, ANTES de mirar)
+
+**El problema** (anotado como pendiente prioritario): con 180 dígitos de train y 832–2.496 entradas, el
+compositor posicional llega a 1,000 en train en todas las corridas, y añadir grupos de detectores (`dig`, `cae`,
+`cae5`, `cae3`) nunca supera al de 26 (0,972): o los grupos nuevos no aportan, o el compositor no puede
+aprovecharlos con 180 ejemplos. Esta corrida separa las dos cosas.
+
+**Método.** Se mantiene el compositor (regresión logística, mismo optimizador, 300 épocas), y se eligen **dos
+mandos por validación cruzada de 5 pliegues DENTRO de los 180 de train** (estratificada por clase; **val no se
+toca** hasta el final):
+- **L2** ∈ {0,001 (el actual) · 0,003 · 0,01 · 0,03 · 0,1 · 0,3 · 1};
+- **resolución del mapa** ∈ {8×8 (la actual) · 4×4 (media de bloques 2×2: ÷4 entradas)}.
+
+Se elige la pareja de mayor acierto medio en los 5 pliegues (empate → la más regularizada), se re-entrena con
+los 180 y se mide en val con las 3 semillas de siempre. Sólo el compositor **posicional**.
+
+**Bancos que se comparan** (todos con su propia elección de mandos):
+
+| banco | detectores |
+|---|---:|
+| fino | 13 |
+| fino + grueso | 26 |
+| fino + grueso + dig | 39 |
+| fino + grueso + cae5 | 39 |
+| fino + grueso + cae3 | 39 |
+| **todos** (fino + grueso + dig + cae5 + cae3) | **65** |
+
+**Qué decide** (umbral = 0,003, unos 5 dígitos, ≈ 3× la sd entre semillas medida hasta ahora):
+- Si con el compositor regularizado **algún banco grande supera a fino + grueso por ≥ 0,003**, el sobreajuste
+  era lo que tapaba el aporte de los grupos nuevos.
+- Si no, los grupos nuevos no aportan nada que fino + grueso no tenga, regularizado o no.
+- Aparte: si la regularización sube a fino + grueso por ≥ 0,003 sobre su 0,972.
+
+**Qué se espera:** la CV elige L2 mayor que el actual (0,03–0,3) en los bancos grandes; fino + grueso sube
+poco (≤ 0,975); el banco de 65 supera a 26 por ~0,005. Y el acierto en train deja de ser 1,000.
