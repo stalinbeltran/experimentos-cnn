@@ -1,0 +1,196 @@
+{
+ "test": 717,
+ "transformaciones": [
+  "desplazar",
+  "ruido",
+  "engrosar",
+  "adelgazar",
+  "ocluir"
+ ],
+ "casos": {
+  "fino": {
+   "acc_train": 1.0,
+   "acc_test": 0.9637,
+   "G1_brecha": 0.0363,
+   "acc_n36": 0.8312,
+   "acc_n1080": 0.9847,
+   "G2": 0.8442,
+   "acc_transformado": {
+    "desplazar": 0.5556,
+    "ruido": 0.9093,
+    "engrosar": 0.5937,
+    "adelgazar": 0.8917,
+    "ocluir": 0.7206
+   },
+   "G3": {
+    "desplazar": 0.5765,
+    "ruido": 0.9436,
+    "engrosar": 0.616,
+    "adelgazar": 0.9252,
+    "ocluir": 0.7477
+   },
+   "G3_medio": 0.7618
+  },
+  "grueso": {
+   "acc_train": 1.0,
+   "acc_test": 0.954,
+   "G1_brecha": 0.046,
+   "acc_n36": 0.8531,
+   "acc_n1080": 0.9833,
+   "G2": 0.8676,
+   "acc_transformado": {
+    "desplazar": 0.57,
+    "ruido": 0.9191,
+    "engrosar": 0.8033,
+    "adelgazar": 0.9386,
+    "ocluir": 0.7159
+   },
+   "G3": {
+    "desplazar": 0.5975,
+    "ruido": 0.9635,
+    "engrosar": 0.8421,
+    "adelgazar": 0.9839,
+    "ocluir": 0.7505
+   },
+   "G3_medio": 0.8275
+  },
+  "fino+grueso": {
+   "acc_train": 1.0,
+   "acc_test": 0.9744,
+   "G1_brecha": 0.0256,
+   "acc_n36": 0.8689,
+   "acc_n1080": 0.9902,
+   "G2": 0.8775,
+   "acc_transformado": {
+    "desplazar": 0.583,
+    "ruido": 0.9382,
+    "engrosar": 0.7555,
+    "adelgazar": 0.9386,
+    "ocluir": 0.7462
+   },
+   "G3": {
+    "desplazar": 0.5983,
+    "ruido": 0.9628,
+    "engrosar": 0.7753,
+    "adelgazar": 0.9633,
+    "ocluir": 0.7657
+   },
+   "G3_medio": 0.8131
+  },
+  "dig": {
+   "acc_train": 0.9907,
+   "acc_test": 0.8777,
+   "G1_brecha": 0.113,
+   "acc_n36": 0.7308,
+   "acc_n1080": 0.9331,
+   "G2": 0.7833,
+   "acc_transformado": {
+    "desplazar": 0.3087,
+    "ruido": 0.8577,
+    "engrosar": 0.5207,
+    "adelgazar": 0.8735,
+    "ocluir": 0.59
+   },
+   "G3": {
+    "desplazar": 0.3517,
+    "ruido": 0.9772,
+    "engrosar": 0.5932,
+    "adelgazar": 0.9952,
+    "ocluir": 0.6721
+   },
+   "G3_medio": 0.7179
+  },
+  "cae5": {
+   "acc_train": 0.9926,
+   "acc_test": 0.8591,
+   "G1_brecha": 0.1335,
+   "acc_n36": 0.6806,
+   "acc_n1080": 0.9303,
+   "G2": 0.7316,
+   "acc_transformado": {
+    "desplazar": 0.3505,
+    "ruido": 0.7638,
+    "engrosar": 0.3956,
+    "adelgazar": 0.5225,
+    "ocluir": 0.6671
+   },
+   "G3": {
+    "desplazar": 0.408,
+    "ruido": 0.8891,
+    "engrosar": 0.4605,
+    "adelgazar": 0.6082,
+    "ocluir": 0.7765
+   },
+   "G3_medio": 0.6285
+  },
+  "cae3": {
+   "acc_train": 1.0,
+   "acc_test": 0.9159,
+   "G1_brecha": 0.0841,
+   "acc_n36": 0.7252,
+   "acc_n1080": 0.9758,
+   "G2": 0.7432,
+   "acc_transformado": {
+    "desplazar": 0.3417,
+    "ruido": 0.8912,
+    "engrosar": 0.8308,
+    "adelgazar": 0.8136,
+    "ocluir": 0.7722
+   },
+   "G3": {
+    "desplazar": 0.3731,
+    "ruido": 0.9731,
+    "engrosar": 0.9071,
+    "adelgazar": 0.8883,
+    "ocluir": 0.8431
+   },
+   "G3_medio": 0.7969
+  },
+  "todos": {
+   "acc_train": 1.0,
+   "acc_test": 0.9661,
+   "G1_brecha": 0.0339,
+   "acc_n36": 0.8401,
+   "acc_n1080": 0.9847,
+   "G2": 0.8532,
+   "acc_transformado": {
+    "desplazar": 0.4635,
+    "ruido": 0.9475,
+    "engrosar": 0.7889,
+    "adelgazar": 0.9354,
+    "ocluir": 0.7438
+   },
+   "G3": {
+    "desplazar": 0.4798,
+    "ruido": 0.9808,
+    "engrosar": 0.8167,
+    "adelgazar": 0.9682,
+    "ocluir": 0.77
+   },
+   "G3_medio": 0.8031
+  },
+  "píxeles crudos": {
+   "acc_train": 1.0,
+   "acc_test": 0.8903,
+   "G1_brecha": 0.1097,
+   "acc_n36": 0.7276,
+   "acc_n1080": 0.953,
+   "G2": 0.7634,
+   "acc_transformado": {
+    "desplazar": 0.2817,
+    "ruido": 0.8791,
+    "engrosar": 0.7494,
+    "adelgazar": 0.8963,
+    "ocluir": 0.6955
+   },
+   "G3": {
+    "desplazar": 0.3164,
+    "ruido": 0.9875,
+    "engrosar": 0.8418,
+    "adelgazar": 1.0068,
+    "ocluir": 0.7812
+   },
+   "G3_medio": 0.7867
+  }
+ }
+}

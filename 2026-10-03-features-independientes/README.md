@@ -371,6 +371,59 @@ lineal) llega a **0,99**. Los grupos aprendidos de dígitos (`dig`, `cae5`, `cae
 los sintéticos no tengan, ni con poco ni con mucho dato; y el compositor combinante sólo ayuda con muy pocos
 datos (N = 36: +0,026), donde imponer «combinaciones locales» parece funcionar como un buen sesgo.
 
+## Corrida 12 (2026-10-04): la capacidad GENERALIZADORA de cada caso
+
+**Definición, escrita antes de evaluar** (`02-criterio.md` § «Corrida 12»). Generalizar = acertar con dígitos no
+vistos, en tres sentidos que no tienen por qué ir juntos:
+- **G1 · brecha** = acierto en train − acierto en test (compositor con los 180 originales);
+- **G2 · eficiencia de datos** = acierto con N = 36 / acierto con N = 1080 (cuánto de su mejor acierto alcanza
+  viendo 3,6 dígitos por clase);
+- **G3 · robustez** = acierto sobre el test **transformado** / acierto limpio, con 5 transformaciones que nada vio
+  nunca al entrenar: desplazar 1 celda, ruido σ 0,15, engrosar, adelgazar, ocluir un bloque 3×3
+  (`resultados/transformaciones.png`).
+
+Compositor lineal posicional, test de 717 (el de la corrida 11), 3 semillas. `nn/generalizacion.py`,
+`resultados/generalizacion.json`. Se comprueba primero que los mapas recalculados casan con los guardados.
+
+| caso | test | G1 brecha ↓ | G2 ↑ | G3 desplazar | ruido | engrosar | adelgazar | ocluir | **G3 medio** ↑ |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| fino | 0,964 | 0,036 | 0,844 | 0,577 | 0,944 | 0,616 | 0,925 | 0,748 | 0,762 |
+| grueso | 0,954 | 0,046 | 0,868 | 0,598 | 0,964 | 0,842 | 0,984 | 0,750 | **0,828** |
+| **fino + grueso** | **0,974** | **0,026** | **0,877** | 0,598 | 0,963 | 0,775 | 0,963 | 0,766 | 0,813 |
+| dig | 0,878 | 0,113 | 0,783 | 0,352 | 0,977 | 0,593 | 0,995 | 0,672 | 0,718 |
+| cae5 | 0,859 | 0,134 | 0,732 | 0,408 | 0,889 | 0,461 | 0,608 | 0,776 | 0,628 |
+| cae3 | 0,916 | 0,084 | 0,743 | 0,373 | 0,973 | **0,907** | 0,888 | **0,843** | 0,797 |
+| todos (65) | 0,966 | 0,034 | 0,853 | 0,480 | 0,981 | 0,817 | 0,968 | 0,770 | 0,803 |
+| *píxeles crudos* | 0,890 | 0,110 | 0,763 | 0,316 | 0,988 | 0,842 | 1,007 | 0,781 | 0,787 |
+
+Y el acierto **absoluto** bajo cada transformación (el cociente favorece a quien parte de más abajo):
+
+| caso | limpio | desplazar | ruido | engrosar | adelgazar | ocluir |
+|---|---:|---:|---:|---:|---:|---:|
+| fino + grueso | **0,974** | **0,583** | 0,938 | 0,755 | **0,939** | 0,746 |
+| grueso | 0,954 | 0,570 | 0,919 | 0,803 | **0,939** | 0,716 |
+| cae3 | 0,916 | 0,342 | 0,891 | **0,831** | 0,814 | **0,772** |
+| todos | 0,966 | 0,464 | **0,948** | 0,789 | 0,935 | 0,744 |
+| píxeles crudos | 0,890 | 0,282 | 0,879 | 0,749 | 0,896 | 0,696 |
+
+**Contra lo esperado (escrito antes):**
+- ✅ **Desplazar hunde a todos** (a 0,32–0,60 del limpio): el compositor posicional ata cada evidencia a una celda.
+  Los sintéticos son los que menos caen (≈0,6) y los píxeles crudos los que más (0,32).
+- ❌ **Engrosar/adelgazar: fino + grueso NO es el más robusto.** Al engrosar lo es `cae3` (0,907, y 0,831 absoluto,
+  el mejor), luego `grueso` y los píxeles crudos; `fino` solo se hunde (0,616). Y `cae5` es frágil a los dos
+  (0,46 y 0,61). Esperaba lo contrario para `cae3`: sus trozos 3×3 sobreviven a cambiar el grosor.
+- ❌ **Ruido: los detectores sintéticos NO aguantan mejor que los píxeles crudos** en proporción (0,96 frente a
+  0,99), aunque en absoluto sigan por encima (0,938 frente a 0,879).
+- ❌/≈ **Ocluir:** el mejor es `cae3` (0,843); los sintéticos, como los píxeles crudos (~0,75–0,78).
+- ✅ **G2:** fino + grueso generaliza desde pocos datos mejor que nadie (0,877 frente a 0,763 de los píxeles
+  crudos), y `todos` por debajo de él (0,853).
+
+**Lectura:** **fino + grueso es el que mejor generaliza en G1, en G2 y en el acierto absoluto** —incluido bajo
+desplazamiento, ruido y adelgazado—; **`grueso` solo es el más robusto en proporción** (G3 medio 0,828). La
+debilidad común es el **desplazamiento**, y es del compositor, no de los detectores: son convolucionales, pero el
+lineal posicional espera cada cosa en su celda. Lo siguiente obvio sería un compositor que tolere ±1 celda
+(posición más gruesa, o máximo local 3×3 antes del lineal) — anotado, no hecho.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -381,6 +434,8 @@ datos (N = 36: +0,026), donde imponer «combinaciones locales» parece funcionar
 - ~~Sobreajuste del compositor~~: estudiado en la corrida 9 — no era el problema (sobreajuste benigno).
 - ~~Compositor no lineal~~: corrida 10, no rompe el techo de ~0,972.
 - ~~Curva según el nº de dígitos de train~~: corrida 11 — el techo era de datos; con 900, 0,992.
+- **Robustez al desplazamiento** (corrida 12: todos caen a ~0,3–0,6 con 1 celda): un compositor que tolere ±1
+  celda —máximo local 3×3 de cada mapa antes del lineal, o posición en 4×4— y medir G3 otra vez.
 - ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).

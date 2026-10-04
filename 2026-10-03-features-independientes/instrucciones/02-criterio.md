@@ -412,3 +412,45 @@ estratificado de los 180 originales; por encima, los 180 + una parte estratifica
 3. ¿En algún N ≥ 360, el combinante supera al lineal en ≥ 0,003 con el mismo banco?
 
 **Qué se espera:** (1) sí, hacia 0,985 en N = 1080; (2) sí desde N ≈ 540; (3) sí con 65 detectores desde N ≈ 900.
+
+## Corrida 12 — la capacidad GENERALIZADORA de cada caso (escrito el 2026-10-04, ANTES de evaluar)
+
+### Definición
+
+**Generalizar** = acertar con dígitos que el sistema **no vio**, en tres sentidos distintos, y se miden los tres
+porque no tienen por qué ir juntos:
+
+- **G1 · brecha (memoria contra generalización):** `acierto en train − acierto en test`, con el compositor
+  entrenado con los 180 originales. Pequeña = lo aprendido vale igual fuera. ⚠ Con train en 1,000 la brecha es
+  sólo `1 − test`, así que G1 dice lo mismo que el acierto en test; se reporta igual, pero no es la medida fuerte.
+- **G2 · eficiencia de datos (generalizar desde pocos ejemplos):** `acierto(N = 36) / acierto(N = 1080)` en el
+  test: qué fracción de su mejor acierto alcanza viendo **3,6 dígitos por clase**. Más alto = generaliza antes.
+- **G3 · robustez (generalizar a condiciones NO vistas):** el compositor se entrena con los 180 limpios y se
+  evalúa sobre el test **transformado** (los detectores también ven la imagen transformada). Medida:
+  `acierto transformado / acierto limpio`. Cinco transformaciones, fijas (semilla 2027), ninguna vista nunca al
+  entrenar nada:
+  1. **desplazar** cada dígito 1 celda en una de las 8 direcciones (relleno con 0);
+  2. **ruido** gaussiano σ = 0,15, recortado a [0, 1];
+  3. **engrosar**: `0,5·x + 0,5·máximo 3×3`;
+  4. **adelgazar**: `0,5·x + 0,5·mínimo 3×3`;
+  5. **ocluir** un bloque 3×3 al azar (a 0).
+  Y su media, **G3 medio**.
+
+### Casos
+
+Los bancos de detectores fino · grueso · fino + grueso · dig · cae5 · cae3 · todos, con el compositor **lineal
+posicional** (el de siempre), y como referencia el mismo lineal sobre los **64 píxeles crudos** (no es una
+comparación de arquitecturas: dice cuánto aportan los detectores frente a no tener ninguno). Test = los 717 de la
+corrida 11; 3 semillas; N = 36 y 1080 para G2 con el mismo reparto anidado.
+
+### Qué se espera
+
+- **G3, desplazar:** los detectores son convolucionales, pero el compositor posicional no lo es — un desplazamiento
+  de 1 celda mueve todos los mapas, así que **todos caen mucho** (a ~0,6–0,7 del limpio), y los píxeles crudos
+  también. Es la debilidad esperada del diseño posicional.
+- **G3, engrosar/adelgazar:** fino + grueso es el más robusto (ya cubre dos grosores); `cae3` y `dig`, aprendidos
+  de los propios dígitos, los más frágiles.
+- **G3, ruido y ocluir:** los detectores sintéticos aguantan mejor que los píxeles crudos (se entrenaron con ruido
+  y con una segunda feature encima).
+- **G2:** fino + grueso por encima de los píxeles crudos (0,87 frente a algo menor), `todos` por debajo de fino +
+  grueso (más entradas, peor con pocos datos, como ya se vio).
