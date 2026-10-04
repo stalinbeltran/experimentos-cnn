@@ -231,6 +231,35 @@ detectores por neuronas muertas y (b) el mapa de un pico es menos informativo qu
 los sintéticos. Arreglo propuesto, NO aplicado: LeakyReLU o sesgo inicial positivo en la última capa del
 codificador (que todos empiecen encendidos), y probar el mapa entero en vez del pico al aplicarlo.
 
+## Corrida 8 (2026-10-03/04): `cae` arreglado en dos tamaños — `cae5` (5×5) y `cae3` (3×3)
+
+Los dos arreglos propuestos al cerrar la 7 (criterio escrito antes, § «Corrida 8»): LeakyReLU + sesgo inicial
++0,5 para que nadie nazca apagado, y el **mapa entero** (graduado) al aplicarlo en vez del pico. Mismos 100
+dígitos sin etiqueta. `cae3`: kernel de decodificador 3×3 y campo receptivo 3×3. Pesos en `nn/pesos-cae5/` y
+`nn/pesos-cae3/`, imágenes en `resultados/detectores-cae5.png` y `-cae3.png`.
+
+- **13/13 vivos en los dos** ✅ (la 7 tenía 7). **Sin saturar** ✅: activación media del mapa ≤ 0,01 (`cae5`) y
+  ≤ 0,18 (`cae3`), muy por debajo del 0,5 que habría parado la corrida.
+- Reconstrucción: `cae5` mse 0,040 (la 7: 0,072); `cae3` 0,072.
+
+| sobre dígitos (3 semillas) | `cae` (c7) | **`cae5`** | **`cae3`** | `dig` | fino + grueso | + `cae5` (39) | + `cae3` (39) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| posicional | 0,743 | 0,855 | **0,926** | 0,888 | **0,972** | 0,967 | 0,967 |
+| presencia | 0,572 | **0,726** | 0,490 | 0,524 | 0,829 | **0,891** | 0,866 |
+
+Contra el criterio: `cae5` > 0,743 ✅ (0,855) y cerca de `dig` (0,888) — casi; **`cae3` por debajo de `cae5` ❌:
+salió al revés, 0,926**, el mejor de los grupos obtenidos sin etiquetas y a 3 puntos de los sintéticos finos
+(0,959). Lectura posible (sin medir): el trazo 3×3 es un trozo genérico que aparece en muchos sitios, y lo que
+informa es **dónde** aparece; el posicional lo aprovecha (0,926) y el de presencia, que no ve el dónde, se hunde
+(0,490). Con el 5×5 es al revés: el trozo es más específico y ya «dice» más sólo con estar (presencia 0,726).
+
+Añadidos a fino + grueso, ninguno pasa del 0,972 (0,967 los dos) — el mismo techo que `dig` y `cae`, coherente
+con el sobreajuste del compositor (pendiente). El de presencia sí sube: 0,829 → **0,891** con `cae5`.
+
+**Contribución dentro de cada grupo** (quitar uno y re-entrenar, semilla 1):
+- `cae5`: todos menos uno ayudan; `cae5:01` 71 dígitos, `cae5:04` 63, `cae5:09` 37, `cae5:03`/`08` ~31.
+- `cae3`: reparto mucho más plano (`cae3:01` 18, `cae3:03` 14, el resto ≤ 10): ningún trozo 3×3 es imprescindible.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -245,7 +274,7 @@ codificador (que todos empiecen encendidos), y probar el mapa entero en vez del 
   elegido por validación cruzada **dentro** de los 180 de train (val no se toca), (b) mapas reducidos a 4×4
   (÷4 entradas), (c) compositor de presencia + posición gruesa (máximo por cuadrante). Lo que decide: si con
   el compositor regularizado los 39 detectores superan a los 26.
-- `cae` con los 13 vivos (LeakyReLU / sesgo inicial positivo) y mapa graduado al aplicarlo (corrida 7).
+- ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).
 - Una sola semilla por detector; un solo compositor lineal (sin MLP).

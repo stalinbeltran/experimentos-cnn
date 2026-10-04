@@ -289,3 +289,32 @@ entrenar. La de vida asegura que cada detector gane en el 20 % de cada lote, as�
 el p99 de sus ganadores y recortado a [0, 1]): es lo mismo que vio el decodificador, y da un pico en la
 posición donde encontró su trazo —el mismo formato «¿está? ¿dónde?» que los detectores sintéticos—.
 Si esto también degenera, se para y se dice, en vez de un cuarto parche.
+
+## Corrida 8 — `cae` arreglado, en dos tamaños: `cae5` y `cae3` (escrito el 2026-10-03, ANTES de mirar)
+
+**Encargo del dueño:** aplicar los dos arreglos propuestos al cerrar la corrida 7, y hacer lo mismo con kernels 3×3.
+
+**Los dos arreglos** (sobre la receta de la enmienda 3: decodificador lineal, WTA espacial + de vida, sin L1):
+1. **Que nadie nazca muerto:** LeakyReLU (pendiente 0,1) en las capas ocultas **y** en la salida del codificador
+   durante el entrenamiento —un detector apagado sigue recibiendo gradiente—, y sesgo inicial +0,5 en la última
+   capa de cada detector.
+2. **Mapa graduado al aplicarlo:** el detector entrega el mapa ENTERO (`max(0, mapa)` / escala, recortado a
+   [0, 1]), no sólo el pico. La escala sigue siendo el p99 de sus valores ganadores sobre los 100 dígitos.
+
+**Dos tamaños, mismos 100 dígitos, misma semilla, mismos pasos:**
+
+| grupo | kernel del decodificador | campo receptivo del codificador | capas de cada detector |
+|---|---|---|---|
+| `cae5` | 5×5 | 5×5 | Conv 3×3 → Conv 3×3 → Conv 1×1 (como la corrida 7) |
+| `cae3` | 3×3 | 3×3 | Conv 3×3 → Conv 1×1 → Conv 1×1 |
+
+Nombres `cae5:NN` y `cae3:NN`, numerados por activación media; el `cae` de la corrida 7 se conserva tal cual.
+
+**Qué se mide:** lo de siempre — cada grupo solo, cada uno añadido a fino + grueso (39), y la contribución dentro
+de cada grupo. Con el compositor **sin cambios** (el sobreajuste sigue pendiente).
+
+**Qué se espera:** 13/13 vivos en los dos. `cae5` solo por encima del `cae` de la corrida 7 (0,743) y cerca de
+`dig` (0,888): más detectores vivos y mapa graduado. `cae3` por debajo de `cae5` solo —un 3×3 en un 8×8 es un
+trozo de trazo, menos específico—, pero con más detectores repartiendo el trabajo. **Qué lo refuta:** que siga
+habiendo detectores muertos, o que el mapa graduado sature como en la enmienda 1 (activación media > 0,5); si
+pasa, se dice y se para.

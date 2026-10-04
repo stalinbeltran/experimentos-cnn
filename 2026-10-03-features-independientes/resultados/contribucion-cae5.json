@@ -1,0 +1,86 @@
+{
+ "sufijo": "-cae5",
+ "acc_todos": 0.8547,
+ "n_val": 1617,
+ "segundos": 9.0,
+ "detectores": [
+  {
+   "detector": "cae5:01",
+   "acc_sin": 0.8108,
+   "contribucion": 0.0439,
+   "digitos": 71
+  },
+  {
+   "detector": "cae5:04",
+   "acc_sin": 0.8157,
+   "contribucion": 0.039,
+   "digitos": 63
+  },
+  {
+   "detector": "cae5:09",
+   "acc_sin": 0.8318,
+   "contribucion": 0.0229,
+   "digitos": 37
+  },
+  {
+   "detector": "cae5:03",
+   "acc_sin": 0.8349,
+   "contribucion": 0.0198,
+   "digitos": 32
+  },
+  {
+   "detector": "cae5:08",
+   "acc_sin": 0.8355,
+   "contribucion": 0.0192,
+   "digitos": 31
+  },
+  {
+   "detector": "cae5:05",
+   "acc_sin": 0.8398,
+   "contribucion": 0.0149,
+   "digitos": 24
+  },
+  {
+   "detector": "cae5:11",
+   "acc_sin": 0.8404,
+   "contribucion": 0.0143,
+   "digitos": 23
+  },
+  {
+   "detector": "cae5:07",
+   "acc_sin": 0.8448,
+   "contribucion": 0.0099,
+   "digitos": 16
+  },
+  {
+   "detector": "cae5:06",
+   "acc_sin": 0.846,
+   "contribucion": 0.0087,
+   "digitos": 14
+  },
+  {
+   "detector": "cae5:12",
+   "acc_sin": 0.8472,
+   "contribucion": 0.0075,
+   "digitos": 12
+  },
+  {
+   "detector": "cae5:10",
+   "acc_sin": 0.8479,
+   "contribucion": 0.0068,
+   "digitos": 11
+  },
+  {
+   "detector": "cae5:02",
+   "acc_sin": 0.8522,
+   "contribucion": 0.0025,
+   "digitos": 4
+  },
+  {
+   "detector": "cae5:13",
+   "acc_sin": 0.859,
+   "contribucion": -0.0043,
+   "digitos": -7
+  }
+ ]
+}

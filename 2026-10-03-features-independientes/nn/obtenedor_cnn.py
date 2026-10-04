@@ -5,6 +5,7 @@ convolucional disperso. Método y criterio escritos antes en instrucciones/02-cr
     python nn/obtenedor_cnn.py --aprender     elige λ (sólo con los 100 dígitos) y entrena → nn/pesos-cae/
                                               + resultados/detectores-cae.png
     python nn/obtenedor_cnn.py --aplicar      → resultados/mapas-digitos-cae.npz y mapas-digitos-c24cae.npz
+    ... --grupo cae5|cae3                     corrida 8: las variantes arregladas (5×5 y 3×3) → nn/pesos-cae5/, -cae3/
 
 `Codificador` es AUTOCONTENIDO: 13 CNN independientes (conv por grupos, ningún peso compartido).
 `detector(j)` extrae la j-ésima como una red suelta, para usarla sin las otras.
@@ -24,6 +25,23 @@ import torch.nn.functional as Fn
 
 AQUI = Path(__file__).resolve().parent
 PESOS = AQUI / "pesos-cae"
+# Corrida 8: dos variantes ARREGLADAS (LeakyReLU + sesgo inicial, mapa graduado). La corrida 7 es `cae` y no cambia.
+VARIANTES = {
+    "cae":  {"lado": 5, "arreglado": False},
+    "cae5": {"lado": 5, "arreglado": True},
+    "cae3": {"lado": 3, "arreglado": True},
+}
+FUGA = 0.1
+SESGO_INICIAL = 0.5
+VAR = {"nombre": "cae", **VARIANTES["cae"]}
+
+
+def usar(nombre: str) -> None:
+    """Fija la variante: grupo, carpeta de pesos, tamaño del kernel y si lleva los arreglos de la corrida 8."""
+    global GRUPO, PESOS, LADO_DEC, VAR
+    VAR = {"nombre": nombre, **VARIANTES[nombre]}
+    GRUPO, LADO_DEC = nombre, VAR["lado"]
+    PESOS = AQUI / f"pesos-{nombre}"
 RES = AQUI.parent / "resultados"
 GRUPO = "cae"
 K = 13
@@ -44,15 +62,25 @@ class Codificador(nn.Module):
     """13 CNN independientes: groups=K en todas las capas salvo la primera, cuya entrada es 1 canal
     (así cada grupo de CANALES filtros de la capa 1 es exclusivo de su detector)."""
 
-    def __init__(self, k: int = K, c: int = CANALES):
+    def __init__(self, k: int = K, c: int = CANALES, lado: int = 5, arreglado: bool = False):
         super().__init__()
-        self.k, self.c = k, c
+        self.k, self.c, self.lado, self.arreglado = k, c, lado, arreglado
+        k2 = 3 if lado == 5 else 1                                          # 5×5: 3×3+3×3 · 3×3: 3×3+1×1
         self.c1 = nn.Conv2d(1, k * c, 3, padding=1)
-        self.c2 = nn.Conv2d(k * c, k * c, 3, padding=1, groups=k)
+        self.c2 = nn.Conv2d(k * c, k * c, k2, padding=k2 // 2, groups=k)
         self.c3 = nn.Conv2d(k * c, k, 1, groups=k)
+        if arreglado:
+            with torch.no_grad():
+                self.c3.bias.fill_(SESGO_INICIAL)                           # corrida 8: que nadie nazca apagado
+
+    def act(self, z):
+        return Fn.leaky_relu(z, FUGA) if self.arreglado else Fn.relu(z)
 
     def forward(self, x):
-        return Fn.relu(self.c3(Fn.relu(self.c2(Fn.relu(self.c1(x))))))         # (N, K, 8, 8), ≥ 0 (enmienda 2: no sigmoide)
+        z = self.c3(self.act(self.c2(self.act(self.c1(x)))))
+        # al entrenar la variante arreglada, la salida también es leaky (un detector «apagado» recibe gradiente);
+        # al aplicar, siempre ≥ 0
+        return self.act(z) if (self.arreglado and self.training) else Fn.relu(z)
 
 
 def wta(m: torch.Tensor, vida: float = VIDA) -> torch.Tensor:
@@ -73,7 +101,7 @@ def wta(m: torch.Tensor, vida: float = VIDA) -> torch.Tensor:
 class Autocodificador(nn.Module):
     def __init__(self):
         super().__init__()
-        self.enc = Codificador()
+        self.enc = Codificador(lado=VAR["lado"], arreglado=VAR["arreglado"])
         self.dec = nn.Conv2d(K, 1, LADO_DEC, padding=LADO_DEC // 2, bias=True)        # un kernel 5×5 por detector
 
     def forward(self, x, usar_wta: bool = False):
@@ -83,13 +111,14 @@ class Autocodificador(nn.Module):
 
 def detector(enc: Codificador, j: int) -> nn.Sequential:
     """La j-ésima CNN como red suelta (1 → 1 canal), copiando SÓLO sus pesos."""
-    c = enc.c
-    d1, d2, d3 = nn.Conv2d(1, c, 3, padding=1), nn.Conv2d(c, c, 3, padding=1), nn.Conv2d(c, 1, 1)
+    c = enc.c; k2 = enc.c2.kernel_size[0]
+    d1, d2, d3 = nn.Conv2d(1, c, 3, padding=1), nn.Conv2d(c, c, k2, padding=k2 // 2), nn.Conv2d(c, 1, 1)
     with torch.no_grad():
         d1.weight.copy_(enc.c1.weight[j * c:(j + 1) * c]); d1.bias.copy_(enc.c1.bias[j * c:(j + 1) * c])
         d2.weight.copy_(enc.c2.weight[j * c:(j + 1) * c]); d2.bias.copy_(enc.c2.bias[j * c:(j + 1) * c])
         d3.weight.copy_(enc.c3.weight[j:j + 1]); d3.bias.copy_(enc.c3.bias[j:j + 1])
-    return nn.Sequential(d1, nn.ReLU(), d2, nn.ReLU(), d3, nn.ReLU())
+    a = (lambda: nn.LeakyReLU(FUGA)) if enc.arreglado else nn.ReLU
+    return nn.Sequential(d1, a(), d2, a(), d3, nn.ReLU())
 
 
 def desplazar(x: torch.Tensor, g: torch.Generator) -> torch.Tensor:
@@ -109,13 +138,19 @@ LAMBDA_L1 = 0.0                     # enmienda 2 la puso a 0,01 y mató 11/13; e
 
 
 class Escala(nn.Module):
-    """Al aplicar: WTA espacial (sólo la celda máxima, con su valor) y escala a [0, 1] (enmienda 3)."""
+    """Al aplicar. `cae` (corrida 7): WTA espacial (sólo el pico). Arreglados (corrida 8): el mapa ENTERO.
+    En los dos casos dividido por la escala del detector y recortado a [0, 1]."""
 
-    def __init__(self, e: float):
-        super().__init__(); self.e = e
+    def __init__(self, e: float, graduado: bool = False):
+        super().__init__(); self.e, self.graduado = e, graduado
 
     def forward(self, m):
-        return (wta(m, vida=1.0) / self.e).clamp(0, 1)
+        return ((m if self.graduado else wta(m, vida=1.0)) / self.e).clamp(0, 1)
+
+
+def salida(m: torch.Tensor, escalas: torch.Tensor) -> torch.Tensor:
+    """Lo que entrega el grupo entero al aplicarlo (para el dibujo, la activación y la verificación)."""
+    return ((m if VAR["arreglado"] else wta(m, 1.0)) / escalas[None, :, None, None]).clamp(0, 1)
 
 
 def entrenar(x: torch.Tensor, lam: float = LAMBDA_L1) -> tuple[Autocodificador, dict]:
@@ -143,9 +178,11 @@ def aprender() -> int:
     ae, r = entrenar(x)
     lam = LAMBDA_L1; ensayos = {"wta": (ae, r)}
     with torch.no_grad():                                                    # escala por detector: p99 de sus ganadores
-        ganadores = ae.enc(x).flatten(2).max(2).values                       # (N, K)
+        ae.eval(); ganadores = ae.enc(x).flatten(2).max(2).values           # (N, K)
         escalas = torch.quantile(ganadores, 0.99, dim=0).clamp_min(1e-6)
-        r["activacion"] = [round(float(a), 4) for a in (wta(ae.enc(x), 1.0) / escalas[None, :, None, None]).clamp(0, 1).flatten(2).max(2).values.mean(0)]
+        ae.eval(); sal = salida(ae.enc(x), escalas)
+        r["activacion"] = [round(float(a), 4) for a in sal.flatten(2).max(2).values.mean(0)]     # pico medio
+        r["activacion_media_mapa"] = [round(float(a), 4) for a in sal.mean((0, 2, 3))]          # ¿satura?
         r["vivos"] = int(sum(a > VIVO for a in r["activacion"]))
     print(f"  WTA (vida {VIDA}): mse {r['mse']:.5f}  vivos {r['vivos']}/{K}  ({time.time() - t0:.0f} s)", flush=True)
     orden = np.argsort(-np.array(r["activacion"]))                              # cae:01 = el que más se enciende
@@ -154,8 +191,9 @@ def aprender() -> int:
     alias_ = [obtenedor.alias(dec[j]) for j in orden]
     PESOS.mkdir(parents=True, exist_ok=True)
     torch.save({"autocodificador": ae.state_dict(), "escalas": escalas.tolist(), "orden": orden.tolist(), "nombres": nombres, "alias": alias_,
-                "k": K, "canales": CANALES}, PESOS / "autocodificador.pt")
-    meta = {"grupo": GRUPO, "metodo": "autocodificador convolucional disperso (WTA); codificador = 13 CNN independientes; sin etiquetas",
+                "k": K, "canales": CANALES, "variante": VAR}, PESOS / "autocodificador.pt")
+    meta = {"grupo": GRUPO, "variante": VAR, "fuga": FUGA if VAR["arreglado"] else None,
+            "sesgo_inicial": SESGO_INICIAL if VAR["arreglado"] else None, "metodo": "autocodificador convolucional disperso (WTA); codificador = 13 CNN independientes; sin etiquetas",
             "n_digitos": N_DIGITOS, "indices_digitos": elegidos.tolist(), "semilla_digitos": SEMILLA_DIGITOS, "semilla": SEMILLA,
             "pasos": PASOS, "lr": LR, "dispersion": f"WTA espacial (máximo por mapa) + de vida ({VIDA}) + L1 {LAMBDA_L1} sobre el mapa entero; salida ReLU",
             "escalas_p99": [round(float(e), 4) for e in escalas],
@@ -176,7 +214,7 @@ def dibujar(ae, orden, nombres, alias_, x) -> Path:
     """Por detector: su kernel de decodificador (lo que «pinta») y su mapa sobre 6 de los dígitos usados."""
     from PIL import Image, ImageDraw                                        # noqa: PLC0415
     _, m = ae(x[:6]); dec = ae.dec.weight[0].numpy()        # mapas SIN wta: lo que ve el detector al aplicarlo
-    m = (wta(m, 1.0) / torch.quantile(ae.enc(x).flatten(2).max(2).values, 0.99, dim=0).clamp_min(1e-6)[None, :, None, None]).clamp(0, 1)
+    ae.eval(); m = salida(ae.enc(x[:6]), torch.quantile(ae.enc(x).flatten(2).max(2).values, 0.99, dim=0).clamp_min(1e-6))
     esc, sep, etq = 6, 6, 12; t = 8 * esc; tk = LADO_DEC * 8
     W = sep + 120 + 7 * (t + sep); H = sep + 2 * etq + (t + sep) * (K + 1)
     im = Image.new("L", (W, H), 255); d = ImageDraw.Draw(im)
@@ -190,7 +228,7 @@ def dibujar(ae, orden, nombres, alias_, x) -> Path:
         for c in range(6):
             im.paste(Image.fromarray(((1 - m[c, j].numpy()) * 255).astype(np.uint8)).resize((t, t), Image.NEAREST),
                      (sep + 120 + (c + 1) * (t + sep), y0))
-    destino = RES / "detectores-cae.png"; im.save(destino)
+    destino = RES / f"detectores-{GRUPO}.png"; im.save(destino)
     return destino
 
 
@@ -200,26 +238,28 @@ def aplicar() -> int:
     est = torch.load(PESOS / "autocodificador.pt", weights_only=False)
     ae = Autocodificador(); ae.load_state_dict(est["autocodificador"]); ae.eval()
     esc = est["escalas"]
-    dets = [nn.Sequential(detector(ae.enc, j), Escala(esc[j])) for j in est["orden"]]   # cada uno, suelto
+    dets = [nn.Sequential(detector(ae.enc, j), Escala(esc[j], VAR["arreglado"])) for j in est["orden"]]   # cada uno, suelto
     dig = datos.digitos(); x = torch.from_numpy(dig["x"])
     sigma = np.stack([dd(x)[:, 0].numpy() for dd in dets], 1).astype(np.float32)
     # comprobación: los detectores sueltos dan EXACTAMENTE lo mismo que el codificador entero
-    juntos = (wta(ae.enc(x), 1.0) / torch.tensor(esc)[None, :, None, None]).clamp(0, 1)[:, est["orden"]].numpy()
+    juntos = salida(ae.enc(x), torch.tensor(esc))[:, est["orden"]].numpy()
     assert np.allclose(sigma, juntos, atol=1e-5), "los detectores sueltos no reproducen el codificador"
     nombres = list(est["nombres"])
-    np.savez_compressed(RES / "mapas-digitos-cae.npz", sigma=sigma, y=dig["y"], train=dig["train"],
+    np.savez_compressed(RES / f"mapas-digitos-{GRUPO}.npz", sigma=sigma, y=dig["y"], train=dig["train"],
                         umbrales=np.full(K, UMBRAL, np.float32), nombres=np.array(nombres))
     c24 = dict(np.load(RES / "mapas-digitos-c24.npz"))
     if not (np.array_equal(c24["y"], dig["y"]) and np.array_equal(c24["train"], dig["train"])):
         raise SystemExit("✗ mapas-digitos-c24.npz no es de los mismos dígitos")
-    np.savez_compressed(RES / "mapas-digitos-c24cae.npz", sigma=np.concatenate([c24["sigma"], sigma], 1), y=dig["y"],
+    np.savez_compressed(RES / f"mapas-digitos-c24{GRUPO}.npz", sigma=np.concatenate([c24["sigma"], sigma], 1), y=dig["y"],
                         train=dig["train"], umbrales=np.concatenate([c24["umbrales"], np.full(K, UMBRAL, np.float32)]),
                         nombres=np.array([str(n) for n in c24["nombres"]] + nombres))
-    print(f"{K} detectores {GRUPO} (sueltos, verificados contra el codificador) sobre {len(x)} dígitos → mapas-digitos-cae.npz, -c24cae.npz")
+    print(f"{K} detectores {GRUPO} (sueltos, verificados contra el codificador) sobre {len(x)} dígitos → mapas-digitos-{GRUPO}.npz, -c24{GRUPO}.npz")
     return 0
 
 
 if __name__ == "__main__":
+    if "--grupo" in sys.argv:
+        usar(sys.argv[sys.argv.index("--grupo") + 1])
     if "--aprender" in sys.argv:
         raise SystemExit(aprender())
     if "--aplicar" in sys.argv:

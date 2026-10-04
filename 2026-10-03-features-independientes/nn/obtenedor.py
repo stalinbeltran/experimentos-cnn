@@ -77,7 +77,8 @@ def kmeans_esferico(P: np.ndarray, k: int, semilla: int, iters: int) -> tuple[np
 
 def alias(kern: np.ndarray) -> str:
     """Orientación dominante (tensor de estructura) + dónde está la tinta dentro del kernel."""
-    k = kern.reshape(LADO_K, LADO_K)
+    n = int(round(np.sqrt(kern.size)))                              # 5×5 (dig, cae, cae5) o 3×3 (cae3)
+    k = kern.reshape(n, n); c0 = (n - 1) / 2; lim = 0.5 * c0 / 2
     gy, gx = np.gradient(k)
     jxx, jyy, jxy = (gx * gx).sum(), (gy * gy).sum(), (gx * gy).sum()
     coher = np.sqrt((jxx - jyy) ** 2 + 4 * jxy ** 2) / max(1e-9, jxx + jyy)
@@ -88,8 +89,8 @@ def alias(kern: np.ndarray) -> str:
         ang = (np.degrees(0.5 * np.arctan2(2 * jxy, jxx - jyy)) + 90) % 180     # ángulo del trazo, y hacia abajo
         ori = "H" if ang < 22.5 or ang >= 157.5 else ("\\" if ang < 67.5 else ("V" if ang < 112.5 else "/"))
     m = np.clip(k, 0, None); tot = m.sum() or 1.0
-    fy = (m.sum(1) * np.arange(LADO_K)).sum() / tot - 2; fx = (m.sum(0) * np.arange(LADO_K)).sum() / tot - 2
-    v = "N" if fy < -0.5 else ("S" if fy > 0.5 else ""); h = "W" if fx < -0.5 else ("E" if fx > 0.5 else "")
+    fy = (m.sum(1) * np.arange(n)).sum() / tot - c0; fx = (m.sum(0) * np.arange(n)).sum() / tot - c0
+    v = "N" if fy < -lim else ("S" if fy > lim else ""); h = "W" if fx < -lim else ("E" if fx > lim else "")
     return f"{ori}-{(v + h) or 'c'}"
 
 
