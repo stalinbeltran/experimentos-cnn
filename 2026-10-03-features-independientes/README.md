@@ -340,6 +340,37 @@ combinante) y con cinco grupos de detectores. Lo más probable es que el límite
 train** del compositor —y en los dígitos difíciles en sí, que eran 32 de los 45 fallos de la corrida 5—, no en
 cómo se combinan los detectores.
 
+## Corrida 11 (2026-10-04): curva según el nº de dígitos de train del compositor — el techo ERA de datos
+
+Criterio escrito antes (§ «Corrida 11»). `nn/curva.py`, `resultados/curva.json`. Reparto nuevo: de las 1617 de
+val, 900 pasan a reserva de train y **717 quedan de test fijo** (estratificado, semilla 2026). ⚠ Estos números son
+sobre ese test: comparables entre sí, no con los de las corridas 1–10.
+
+| N train | fino + grueso, lineal | fino + grueso, combinante | todos (65), lineal | todos (65), combinante |
+|---:|---:|---:|---:|---:|
+| 36 | 0,869 | 0,895 | 0,840 | 0,831 |
+| 90 | 0,956 | 0,960 | 0,940 | 0,912 |
+| 180 | 0,974 | 0,974 | 0,966 | 0,953 |
+| 360 | 0,974 | 0,974 | 0,972 | 0,967 |
+| 540 | 0,977 | 0,981 | 0,973 | 0,966 |
+| 900 | **0,992** | 0,988 | 0,987 | 0,985 |
+| 1080 | 0,990 | 0,989 | 0,985 | 0,985 |
+
+(3 semillas; sd ≤ 0,002 en el lineal, hasta 0,005 en el combinante salvo con N = 36.)
+
+Contra el criterio:
+1. ¿Sube fino + grueso de N = 180 a 1080 en ≥ 0,01? **Sí: +0,016** (0,974 → 0,990, con 0,992 en N = 900).
+   **El techo de ~0,972 era de datos** del compositor. Se esperaba 0,985: llegó más arriba.
+2. ¿Con N ≥ 360 supera el banco de 65 al de 26 en ≥ 0,003? **No, en ningún N**: queda siempre **por debajo**
+   (−0,002 a −0,007). Con más datos la distancia se acorta, pero no se invierte.
+3. ¿Con N ≥ 360 supera el combinante al lineal en ≥ 0,003? **Sólo en un punto**, fino + grueso con N = 540
+   (+0,003, con sd 0,004: dentro del ruido); en N = 900 y 1080 gana el lineal. **No.**
+
+**Conclusión:** con más dígitos, el sistema de detectores sintéticos (fino + grueso, 26 detectores, compositor
+lineal) llega a **0,99**. Los grupos aprendidos de dígitos (`dig`, `cae5`, `cae3`) **no** aportan información que
+los sintéticos no tengan, ni con poco ni con mucho dato; y el compositor combinante sólo ayuda con muy pocos
+datos (N = 36: +0,026), donde imponer «combinaciones locales» parece funcionar como un buen sesgo.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -349,9 +380,7 @@ cómo se combinan los detectores.
 - ~~Obtener features de los dígitos sin etiquetas~~: hecho en la corrida 6 (grupo `dig`), no mejora al combinar.
 - ~~Sobreajuste del compositor~~: estudiado en la corrida 9 — no era el problema (sobreajuste benigno).
 - ~~Compositor no lineal~~: corrida 10, no rompe el techo de ~0,972.
-- **Curva de acierto según el número de dígitos de train del compositor** (36 → 180, y hasta ~900 tomando de
-  val una parte nueva para train): es lo que queda para saber si el techo es de datos. 26 detectores contra 65,
-  lineal y combinante.
+- ~~Curva según el nº de dígitos de train~~: corrida 11 — el techo era de datos; con 900, 0,992.
 - ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).

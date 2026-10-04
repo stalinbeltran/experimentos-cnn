@@ -382,3 +382,33 @@ compositor lineal (ya medido) para la diferencia.
 fino + grueso hacia 0,975–0,98; y **sí** gana el banco grande, por poco (~0,005). Riesgo: con 180 dígitos y 12–20
 mil parámetros, sobreajuste dañino de verdad; si el combinante queda **por debajo** del lineal en todos los
 bancos, es eso.
+
+## Corrida 11 — curva de acierto según el nº de dígitos de train del COMPOSITOR (escrito el 2026-10-04, ANTES de mirar)
+
+**Pregunta:** ¿el techo de ~0,972 es de datos? Si lo es, con más dígitos para entrenar el compositor (a) todos
+los bancos suben, y (b) los bancos grandes (65 detectores) y el compositor combinante, que hoy no ganan, pasan
+a ganar.
+
+**Reparto nuevo, fijo antes de mirar** (semilla 2026, estratificado por clase; el dato publicado no cambia):
+- de las 1617 de val salen **900 a una reserva de train** (90 por clase) y quedan **717 como TEST**;
+- el **test es el mismo para todos los puntos de la curva**, y no se ha usado para elegir nada.
+- Los kernels de `dig` y `cae*` se aprendieron con 20/100 dígitos de los **180 originales de train** (sin
+  etiqueta), y los detectores sintéticos no vieron ningún dígito: nada del test entró en ningún detector.
+
+**Tamaños de train del compositor:** N ∈ {36, 90, 180, 360, 540, 900, 1080}. Por debajo de 180, un subconjunto
+estratificado de los 180 originales; por encima, los 180 + una parte estratificada de la reserva (anidados: el de
+540 contiene al de 360).
+
+**Qué se compara en cada N:** fino + grueso (26) contra todos (65), con el compositor **lineal** y el
+**combinante** (los de las corridas 9 y 10, mismos hiperparámetros), 3 semillas.
+
+⚠ Los números de esta corrida van sobre el **test de 717**, no sobre las 1617 de antes: comparables entre sí,
+**no** con los de las corridas 1–10.
+
+**Qué decide** (umbral 0,003, como siempre):
+1. ¿Sube fino + grueso lineal de N = 180 a N = 1080 en ≥ 0,01? → el techo era de datos.
+2. ¿En algún N ≥ 360, todos (65) supera a fino + grueso (26) en ≥ 0,003 con el mismo compositor? → los grupos
+   nuevos aportan cuando hay datos para aprovecharlos.
+3. ¿En algún N ≥ 360, el combinante supera al lineal en ≥ 0,003 con el mismo banco?
+
+**Qué se espera:** (1) sí, hacia 0,985 en N = 1080; (2) sí desde N ≈ 540; (3) sí con 65 detectores desde N ≈ 900.
