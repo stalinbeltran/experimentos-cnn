@@ -79,6 +79,7 @@ sobre dígitos reales.
 | `nn/compositor_comb.py` | corrida 10: compositor que combina detectores (Conv 3×3 J→16 + ReLU + lineal) frente al lineal, 6 bancos | `python nn/compositor_comb.py` → `resultados/compositor-comb.json` |
 | `nn/curva.py` | corrida 11: curva según N de train del compositor (36→1080), test fijo de 717, 26 contra 65, lineal y combinante | `python nn/curva.py` → `resultados/curva.json` |
 | `nn/generalizacion.py` | corrida 12: G1 brecha, G2 eficiencia de datos, G3 robustez a 5 transformaciones no vistas; 7 bancos + píxeles crudos | `python nn/generalizacion.py` → `resultados/generalizacion.json`, `transformaciones.png` |
+| `nn/desplazamiento.py` | corrida 13: compositores tolerantes a ±1 celda (A posicional · B máx 3×3 · C 4×4 · D aumento) con las 5 transformaciones | `python nn/desplazamiento.py` → `resultados/desplazamiento.json` |
 | `nn/contribucion.py` | contribución de cada detector por eliminación (re-entrena el compositor sin él) | `python nn/contribucion.py --sufijo -c24dig` |
 | `nn/errores.py` | atribución del error del compositor posicional (culpable, reconocimiento/composición, difíciles en sí) | `python nn/errores.py [--sufijo -c3]` |
 

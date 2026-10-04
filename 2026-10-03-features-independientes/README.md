@@ -424,6 +424,50 @@ debilidad común es el **desplazamiento**, y es del compositor, no de los detect
 lineal posicional espera cada cosa en su celda. Lo siguiente obvio sería un compositor que tolere ±1 celda
 (posición más gruesa, o máximo local 3×3 antes del lineal) — anotado, no hecho.
 
+## Corrida 13 (2026-10-04): robustez al DESPLAZAMIENTO — un máximo 3×3 antes del lineal lo resuelve en gran parte
+
+Criterio escrito antes (§ «Corrida 13»). Los detectores no se tocan; cambia lo que el compositor lee de cada mapa:
+**A** posicional (el de siempre) · **B** máximo 3×3 de cada celda (una evidencia vale en su celda y en las 8
+vecinas) · **C** máximo 2×2 → rejilla 4×4 · **D** A entrenado con los 180 dígitos y sus 8 desplazamientos
+(⚠ D **ve** desplazamientos al entrenar: su columna «desplazar» es invariancia aprendida, no generalización a algo
+no visto). `nn/desplazamiento.py`, `resultados/desplazamiento.json`. Test de 717, 3 semillas.
+
+| caso | variante | limpio | **desplazar** | ruido | engrosar | adelgazar | ocluir | G3 medio |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| fino + grueso | A | **0,974** | 0,583 | 0,938 | **0,755** | 0,939 | 0,746 | 0,813 |
+| | **B** | 0,967 | **0,837** | 0,919 | 0,659 | 0,929 | 0,701 | 0,837 |
+| | C | 0,965 | 0,771 | 0,911 | 0,671 | 0,910 | 0,697 | 0,821 |
+| | D ⚠ | 0,954 | 0,929 | 0,889 | 0,533 | 0,899 | 0,633 | 0,814 |
+| todos (65) | A | 0,966 | 0,464 | 0,948 | 0,789 | 0,935 | 0,744 | 0,803 |
+| | **B** | **0,971** | **0,836** | 0,940 | 0,736 | 0,928 | **0,767** | **0,866** |
+| | C | 0,972 | 0,688 | 0,947 | 0,765 | 0,927 | 0,751 | 0,839 |
+| | D ⚠ | 0,962 | 0,938 | 0,929 | 0,520 | 0,888 | 0,689 | 0,824 |
+| cae3 | A | 0,916 | 0,342 | 0,891 | 0,831 | 0,814 | 0,772 | 0,797 |
+| | B | 0,931 | 0,624 | 0,878 | 0,691 | 0,555 | 0,728 | 0,747 |
+| | D ⚠ | 0,944 | 0,869 | 0,893 | 0,521 | 0,385 | 0,660 | 0,705 |
+| píxeles crudos | A | 0,890 | 0,282 | 0,879 | 0,749 | 0,896 | 0,696 | 0,787 |
+| | B | 0,808 | 0,305 | 0,743 | 0,504 | 0,826 | 0,618 | 0,741 |
+| | D ⚠ | 0,834 | 0,558 | 0,761 | 0,569 | 0,557 | 0,530 | 0,714 |
+
+(`cae3` C, en el json.)
+
+Contra el criterio:
+1. ¿B o C suben el desplazado de fino + grueso en ≥ 0,10? **Sí, los dos**: B **+0,25** (0,583 → 0,837), C +0,19.
+2. ¿Coste en limpio? B −0,007 y C −0,009, **dentro del 0,01**; D −0,020, fuera.
+3. ¿Cambia el ranking? **Sí, y es lo más interesante:** con B, **el banco de 65 supera por fin a fino + grueso en
+   limpio** (0,971 frente a 0,967, +0,004) y es el mejor en G3 medio (0,866) y en ocluir. Los detectores extra
+   sobraban cuando cada evidencia iba atada a su celda; con tolerancia de ±1 celda, aportan.
+- Se esperaba B a ~0,80 en desplazado ✅ (0,837) perdiendo ≤ 0,005 en limpio ❌ (0,007, por poco); C peor que B
+  en las dos cosas ✅; D la que más sube ✅ (0,93); y los píxeles crudos sin mejorar con B ✅ (0,305: un máximo de
+  píxeles emborrona el dígito, uno de detectores sólo mueve evidencias).
+
+**El precio que no estaba previsto:** el máximo 3×3 empeora **engrosar** (fino + grueso 0,755 → 0,659) y ocluir;
+y D (el aumento) hunde engrosar en todos (~0,52). Tolerar posición y tolerar grosor tiran en direcciones
+opuestas con este compositor: engrosar un dígito ya «ensancha» sus evidencias, y el máximo las ensancha otra vez.
+
+**Conclusión:** el compositor **B (máximo 3×3 antes del lineal) con los 65 detectores** es el más equilibrado
+medido hasta hoy: 0,971 en limpio, 0,836 desplazado, G3 medio 0,866.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
@@ -434,8 +478,9 @@ lineal posicional espera cada cosa en su celda. Lo siguiente obvio sería un com
 - ~~Sobreajuste del compositor~~: estudiado en la corrida 9 — no era el problema (sobreajuste benigno).
 - ~~Compositor no lineal~~: corrida 10, no rompe el techo de ~0,972.
 - ~~Curva según el nº de dígitos de train~~: corrida 11 — el techo era de datos; con 900, 0,992.
-- **Robustez al desplazamiento** (corrida 12: todos caen a ~0,3–0,6 con 1 celda): un compositor que tolere ±1
-  celda —máximo local 3×3 de cada mapa antes del lineal, o posición en 4×4— y medir G3 otra vez.
+- ~~Robustez al desplazamiento~~: corrida 13 — el máximo 3×3 la resuelve en gran parte (0,58 → 0,84).
+- **Desplazamiento y grosor a la vez**: con el máximo 3×3, engrosar empeora. Probar B con la curva de datos (con
+  N = 900 el banco de 65 + B podría pasar de 0,99) y un máximo sólo sobre los grupos que no sufren al engrosar.
 - ~~`cae` con los 13 vivos y mapa graduado~~: hecho en la corrida 8 (`cae5`, `cae3`).
 - Un `dig` con mapas más ralos (umbral, o competencia entre kernels) para que no se parezca «algo» a todo.
 - Curva por tamaño de train (§7 de la especificación): no hecha. La atribución del error, hecha (arriba).

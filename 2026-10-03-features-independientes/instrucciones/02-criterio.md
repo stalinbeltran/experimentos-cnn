@@ -454,3 +454,34 @@ corrida 11; 3 semillas; N = 36 y 1080 para G2 con el mismo reparto anidado.
   y con una segunda feature encima).
 - **G2:** fino + grueso por encima de los píxeles crudos (0,87 frente a algo menor), `todos` por debajo de fino +
   grueso (más entradas, peor con pocos datos, como ya se vio).
+
+## Corrida 13 — robustez al DESPLAZAMIENTO: compositores que toleran ±1 celda (escrito el 2026-10-04, ANTES de mirar)
+
+**Por qué.** En la corrida 12, desplazar 1 celda hundía a todos (G3 0,32–0,60). Los detectores son
+convolucionales —su mapa se desplaza con el dígito—; lo que no tolera nada es el compositor posicional, que pega
+cada evidencia a una celda. Se prueban tres formas de darle tolerancia, **sin tocar los detectores**:
+
+| variante | qué se hace a cada mapa antes del lineal | entradas por detector |
+|---|---|---:|
+| **A · posicional** (la de siempre) | nada | 64 |
+| **B · máx 3×3** | máximo en la vecindad 3×3 de cada celda (paso 1, relleno): una evidencia vale en su celda y en las 8 vecinas | 64 |
+| **C · máx 2×2 → 4×4** | máximo por bloques 2×2: la posición se lee en una rejilla 4×4 | 16 |
+| **D · aumento** | A, pero el compositor se entrena con cada dígito de train y sus 8 desplazamientos de 1 celda (180 × 9) | 64 |
+
+⚠ **D no mide lo mismo que B y C.** En D el compositor **ha visto** desplazamientos al entrenar (en otros dígitos),
+así que su G3-desplazar deja de ser «generalizar a una condición no vista» y pasa a ser «invariancia aprendida».
+Se reporta igual, marcado.
+
+**Casos:** fino + grueso, cae3, todos (65) y los píxeles crudos (a los que se aplica lo mismo: máximo 3×3, 2×2,
+aumento). Test de 717, compositor de los 180 originales, 3 semillas, mismas 5 transformaciones de la corrida 12.
+
+**Qué decide** (umbral 0,003 sobre el acierto absoluto):
+1. ¿B o C suben el acierto **desplazado** de fino + grueso (0,583) en ≥ 0,10? → la tolerancia del compositor era
+   lo que faltaba.
+2. ¿A qué precio en el **limpio** (0,974)? Si baja más de 0,01, se dice.
+3. ¿Cambia el ranking de casos bajo desplazamiento?
+
+**Qué se espera:** B sube el desplazado a ~0,80 perdiendo ≤ 0,005 en limpio; C sube algo menos y pierde más en
+limpio (6↔9 necesita posición fina); D es la que más sube el desplazado (~0,90), a costa de no ser comparable.
+Los píxeles crudos con máximo 3×3 mejoran mucho menos que los detectores (un máximo de píxeles emborrona el dígito;
+un máximo de detectores sólo mueve evidencias).
