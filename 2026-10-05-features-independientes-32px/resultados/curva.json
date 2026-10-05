@@ -1,0 +1,46 @@
+{
+ "test": 717,
+ "curva": {
+  "36": {
+   "lineal": 0.7922,
+   "lineal_sd": 0.0
+  },
+  "90": {
+   "lineal": 0.8931,
+   "lineal_sd": 0.0016
+  },
+  "180": {
+   "lineal": 0.9419,
+   "lineal_sd": 0.0008
+  },
+  "360": {
+   "lineal": 0.9637,
+   "lineal_sd": 0.0
+  },
+  "540": {
+   "lineal": 0.9596,
+   "lineal_sd": 0.0
+  },
+  "900": {
+   "lineal": 0.9749,
+   "lineal_sd": 0.0
+  },
+  "1080": {
+   "lineal": 0.9735,
+   "lineal_sd": 0.0
+  }
+ },
+ "con_extra": {
+  "extra_solo": {
+   "n_train": 3823,
+   "lineal": 0.9637,
+   "lineal_sd": 0.0
+  },
+  "1080+extra": {
+   "n_train": 4903,
+   "lineal": 0.9726,
+   "lineal_sd": 0.0008
+  }
+ },
+ "segundos": 32.2
+}

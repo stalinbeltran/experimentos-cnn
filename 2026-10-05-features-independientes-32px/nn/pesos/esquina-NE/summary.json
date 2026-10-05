@@ -1,0 +1,355 @@
+{
+ "feature": "esquina-NE",
+ "semilla": 1,
+ "epocas": 80,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.002,
+ "huella_init": "60e283d8cc003e53",
+ "n_train_pos": 2000,
+ "n_train_neg": 24021,
+ "n_val_pos": 400,
+ "n_val_neg": 4823,
+ "canales": [
+  16,
+  32,
+  32,
+  32,
+  32,
+  32
+ ],
+ "strides": [
+  1,
+  2,
+  2,
+  1,
+  1,
+  1
+ ],
+ "parametros": 41825,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1; ver best.umbral",
+ "dataset": "feat-ind32-sinteticas-32px-r20261005",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "c8e2fde2f1a5b708",
+ "segundos": 353.4,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4823,
+  "tp": 354,
+  "fp": 51,
+  "fn": 46,
+  "precision": 0.8741,
+  "recall": 0.885,
+  "f1": 0.8795,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.9124,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 140,
+    "recall": 0.8357
+   },
+   "3": {
+    "n": 129,
+    "recall": 0.8837
+   },
+   "4": {
+    "n": 131,
+    "recall": 0.9389
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 389,
+    "fp": 3,
+    "tasa": 0.0077
+   },
+   "arco-W": {
+    "n": 388,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "arco-N": {
+    "n": 385,
+    "fp": 6,
+    "tasa": 0.0156
+   },
+   "arco-S": {
+    "n": 388,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "recta-V": {
+    "n": 387,
+    "fp": 7,
+    "tasa": 0.0181
+   },
+   "recta-H": {
+    "n": 381,
+    "fp": 8,
+    "tasa": 0.021
+   },
+   "recta-S": {
+    "n": 382,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "recta-B": {
+    "n": 385,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "lazo": {
+    "n": 382,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "esquina-NW": {
+    "n": 392,
+    "fp": 3,
+    "tasa": 0.0077
+   },
+   "esquina-SE": {
+    "n": 378,
+    "fp": 10,
+    "tasa": 0.0265
+   },
+   "esquina-SW": {
+    "n": 386,
+    "fp": 3,
+    "tasa": 0.0078
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7882,
+  "recall_sola": 0.9848,
+  "conf_pos_media": 0.9103,
+  "conf_neg_media": 0.0174,
+  "umbral": 0.8
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4823,
+  "tp": 352,
+  "fp": 39,
+  "fn": 48,
+  "precision": 0.9003,
+  "recall": 0.88,
+  "f1": 0.89,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.9006,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 140,
+    "recall": 0.8429
+   },
+   "3": {
+    "n": 129,
+    "recall": 0.8837
+   },
+   "4": {
+    "n": 131,
+    "recall": 0.916
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 389,
+    "fp": 3,
+    "tasa": 0.0077
+   },
+   "arco-W": {
+    "n": 388,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "arco-N": {
+    "n": 385,
+    "fp": 5,
+    "tasa": 0.013
+   },
+   "arco-S": {
+    "n": 388,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "recta-V": {
+    "n": 387,
+    "fp": 6,
+    "tasa": 0.0155
+   },
+   "recta-H": {
+    "n": 381,
+    "fp": 7,
+    "tasa": 0.0184
+   },
+   "recta-S": {
+    "n": 382,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "recta-B": {
+    "n": 385,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "lazo": {
+    "n": 382,
+    "fp": 4,
+    "tasa": 0.0105
+   },
+   "esquina-NW": {
+    "n": 392,
+    "fp": 3,
+    "tasa": 0.0077
+   },
+   "esquina-SE": {
+    "n": 378,
+    "fp": 8,
+    "tasa": 0.0212
+   },
+   "esquina-SW": {
+    "n": 386,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7685,
+  "recall_sola": 0.9949,
+  "conf_pos_media": 0.9012,
+  "conf_neg_media": 0.0133,
+  "umbral": 0.8,
+  "epoca": 70
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.7831,
+   "recall": 0.9475,
+   "f1": 0.8575
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.809,
+   "recall": 0.9425,
+   "f1": 0.8707
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.818,
+   "recall": 0.9325,
+   "f1": 0.8715
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.8375,
+   "recall": 0.9275,
+   "f1": 0.8802
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.8409,
+   "recall": 0.925,
+   "f1": 0.881
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.8561,
+   "recall": 0.9225,
+   "f1": 0.8881
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.8629,
+   "recall": 0.9125,
+   "f1": 0.887
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.8646,
+   "recall": 0.91,
+   "f1": 0.8867
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.8705,
+   "recall": 0.9075,
+   "f1": 0.8886
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.8747,
+   "recall": 0.9075,
+   "f1": 0.8908
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.8744,
+   "recall": 0.905,
+   "f1": 0.8894
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.8867,
+   "recall": 0.9,
+   "f1": 0.8933
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.8883,
+   "recall": 0.895,
+   "f1": 0.8917
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.8945,
+   "recall": 0.89,
+   "f1": 0.8922
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.9003,
+   "recall": 0.88,
+   "f1": 0.89
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.9079,
+   "recall": 0.8625,
+   "f1": 0.8846
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.9133,
+   "recall": 0.8425,
+   "f1": 0.8765
+  }
+ ],
+ "huella_final": "be4f58750c227265",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+  "nproc": 28,
+  "hilos_torch": 1,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "92ab8dac8671"
+ },
+ "terminado": "2026-10-05T12:59:16+00:00"
+}

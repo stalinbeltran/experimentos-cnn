@@ -1,0 +1,18 @@
+empiezo esquina-NW: 2000 pos / 24028 neg, 80 épocas, init 60e283d8cc003e53
+  esquina-NW ep   5/80 perdida 0.3013 · umbral 0.50 P 0.582 R 0.880 F1 0.701 pos≤1 1.000  [23 s]
+  esquina-NW ep  10/80 perdida 0.2050 · umbral 0.75 P 0.717 R 0.907 F1 0.801 pos≤1 1.000  [45 s]
+  esquina-NW ep  15/80 perdida 0.1759 · umbral 0.75 P 0.782 R 0.870 F1 0.824 pos≤1 1.000  [68 s]
+  esquina-NW ep  20/80 perdida 0.1567 · umbral 0.65 P 0.790 R 0.877 F1 0.832 pos≤1 1.000  [90 s]
+  esquina-NW ep  25/80 perdida 0.1283 · umbral 0.70 P 0.791 R 0.890 F1 0.838 pos≤1 1.000  [112 s]
+  esquina-NW ep  30/80 perdida 0.1120 · umbral 0.55 P 0.822 R 0.887 F1 0.853 pos≤1 1.000  [135 s]
+  esquina-NW ep  35/80 perdida 0.1053 · umbral 0.70 P 0.866 R 0.843 F1 0.854 pos≤1 1.000  [157 s]
+  esquina-NW ep  40/80 perdida 0.0976 · umbral 0.85 P 0.900 R 0.812 F1 0.854 pos≤1 1.000  [179 s]
+  esquina-NW ep  45/80 perdida 0.0933 · umbral 0.80 P 0.902 R 0.848 F1 0.874 pos≤1 1.000  [202 s]
+  esquina-NW ep  50/80 perdida 0.1004 · umbral 0.25 P 0.842 R 0.850 F1 0.846 pos≤1 1.000  [224 s]
+  esquina-NW ep  55/80 perdida 0.0879 · umbral 0.85 P 0.901 R 0.845 F1 0.872 pos≤1 1.000  [246 s]
+  esquina-NW ep  60/80 perdida 0.0987 · umbral 0.70 P 0.882 R 0.858 F1 0.870 pos≤1 1.000  [269 s]
+  esquina-NW ep  65/80 perdida 0.0804 · umbral 0.55 P 0.862 R 0.873 F1 0.867 pos≤1 1.000  [291 s]
+  esquina-NW ep  70/80 perdida 0.0796 · umbral 0.90 P 0.900 R 0.835 F1 0.866 pos≤1 1.000  [313 s]
+  esquina-NW ep  75/80 perdida 0.0732 · umbral 0.90 P 0.896 R 0.863 F1 0.879 pos≤1 1.000  [336 s]
+  esquina-NW ep  80/80 perdida 0.0813 · umbral 0.75 P 0.849 R 0.870 F1 0.859 pos≤1 1.000  [356 s]
+listo esquina-NW: best ep 75 umbral 0.90 F1 0.8790 P 0.8961 R 0.8625 pos≤1 1.0000 → a medias · 357.8 s

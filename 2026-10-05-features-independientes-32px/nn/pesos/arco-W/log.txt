@@ -1,0 +1,18 @@
+empiezo arco-W: 2000 pos / 21144 neg, 80 épocas, init 60e283d8cc003e53
+  arco-W ep   5/80 perdida 0.4717 · umbral 0.50 P 0.551 R 0.802 F1 0.653 pos≤1 0.860  [23 s]
+  arco-W ep  10/80 perdida 0.3340 · umbral 0.55 P 0.670 R 0.915 F1 0.774 pos≤1 0.847  [45 s]
+  arco-W ep  15/80 perdida 0.2756 · umbral 0.85 P 0.742 R 0.915 F1 0.820 pos≤1 0.844  [67 s]
+  arco-W ep  20/80 perdida 0.2453 · umbral 0.70 P 0.765 R 0.920 F1 0.835 pos≤1 0.894  [89 s]
+  arco-W ep  25/80 perdida 0.2127 · umbral 0.70 P 0.809 R 0.910 F1 0.857 pos≤1 0.923  [111 s]
+  arco-W ep  30/80 perdida 0.1903 · umbral 0.55 P 0.795 R 0.912 F1 0.850 pos≤1 0.940  [133 s]
+  arco-W ep  35/80 perdida 0.1809 · umbral 0.45 P 0.780 R 0.920 F1 0.844 pos≤1 0.957  [155 s]
+  arco-W ep  40/80 perdida 0.1671 · umbral 0.75 P 0.852 R 0.877 F1 0.865 pos≤1 0.966  [177 s]
+  arco-W ep  45/80 perdida 0.1521 · umbral 0.50 P 0.856 R 0.875 F1 0.865 pos≤1 0.963  [200 s]
+  arco-W ep  50/80 perdida 0.1436 · umbral 0.45 P 0.835 R 0.897 F1 0.865 pos≤1 0.975  [222 s]
+  arco-W ep  55/80 perdida 0.1359 · umbral 0.80 P 0.878 R 0.885 F1 0.882 pos≤1 0.969  [244 s]
+  arco-W ep  60/80 perdida 0.1349 · umbral 0.75 P 0.825 R 0.910 F1 0.866 pos≤1 0.973  [266 s]
+  arco-W ep  65/80 perdida 0.1148 · umbral 0.80 P 0.890 R 0.868 F1 0.878 pos≤1 0.971  [288 s]
+  arco-W ep  70/80 perdida 0.1236 · umbral 0.90 P 0.857 R 0.870 F1 0.864 pos≤1 0.983  [310 s]
+  arco-W ep  75/80 perdida 0.1161 · umbral 0.70 P 0.878 R 0.882 F1 0.880 pos≤1 0.975  [332 s]
+  arco-W ep  80/80 perdida 0.1173 · umbral 0.55 P 0.872 R 0.885 F1 0.878 pos≤1 0.977  [353 s]
+listo arco-W: best ep 55 umbral 0.80 F1 0.8817 P 0.8784 R 0.8850 pos≤1 0.9689 → a medias · 354.3 s

@@ -1,0 +1,18 @@
+empiezo recta-H: 2000 pos / 13739 neg, 80 épocas, init 60e283d8cc003e53
+  recta-H ep   5/80 perdida 0.3104 · umbral 0.65 P 0.855 R 0.925 F1 0.888 pos≤1 0.981  [22 s]
+  recta-H ep  10/80 perdida 0.1930 · umbral 0.75 P 0.898 R 0.950 F1 0.923 pos≤1 0.987  [43 s]
+  recta-H ep  15/80 perdida 0.1389 · umbral 0.80 P 0.952 R 0.943 F1 0.947 pos≤1 0.987  [65 s]
+  recta-H ep  20/80 perdida 0.1399 · umbral 0.85 P 0.937 R 0.935 F1 0.936 pos≤1 0.987  [86 s]
+  recta-H ep  25/80 perdida 0.1149 · umbral 0.85 P 0.974 R 0.925 F1 0.949 pos≤1 0.989  [108 s]
+  recta-H ep  30/80 perdida 0.1055 · umbral 0.75 P 0.969 R 0.935 F1 0.952 pos≤1 0.984  [129 s]
+  recta-H ep  35/80 perdida 0.1372 · umbral 0.75 P 0.959 R 0.940 F1 0.950 pos≤1 0.976  [150 s]
+  recta-H ep  40/80 perdida 0.0967 · umbral 0.20 P 0.982 R 0.930 F1 0.955 pos≤1 0.987  [172 s]
+  recta-H ep  45/80 perdida 0.0906 · umbral 0.50 P 0.969 R 0.940 F1 0.954 pos≤1 0.979  [193 s]
+  recta-H ep  50/80 perdida 0.1336 · umbral 0.90 P 0.892 R 0.953 F1 0.921 pos≤1 0.982  [215 s]
+  recta-H ep  55/80 perdida 0.0876 · umbral 0.35 P 0.972 R 0.955 F1 0.963 pos≤1 0.987  [236 s]
+  recta-H ep  60/80 perdida 0.0823 · umbral 0.25 P 0.970 R 0.953 F1 0.961 pos≤1 0.987  [258 s]
+  recta-H ep  65/80 perdida 0.0919 · umbral 0.10 P 0.987 R 0.925 F1 0.955 pos≤1 0.976  [279 s]
+  recta-H ep  70/80 perdida 0.0832 · umbral 0.55 P 0.982 R 0.940 F1 0.960 pos≤1 0.989  [301 s]
+  recta-H ep  75/80 perdida 0.0767 · umbral 0.15 P 0.965 R 0.958 F1 0.961 pos≤1 0.984  [322 s]
+  recta-H ep  80/80 perdida 0.0738 · umbral 0.20 P 0.970 R 0.960 F1 0.965 pos≤1 0.987  [343 s]
+listo recta-H: best ep 80 umbral 0.20 F1 0.9648 P 0.9697 R 0.9600 pos≤1 0.9870 → aprendió · 344.4 s

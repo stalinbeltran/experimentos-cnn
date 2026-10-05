@@ -1,0 +1,80 @@
+{"epoca": 1, "paso": 63, "perdida": 1.067998, "s": 3.34}
+{"epoca": 2, "paso": 126, "perdida": 0.795564, "s": 3.44}
+{"epoca": 3, "paso": 189, "perdida": 0.630029, "s": 3.42}
+{"epoca": 4, "paso": 252, "perdida": 0.550914, "s": 3.41}
+{"epoca": 5, "paso": 315, "perdida": 0.484802, "precision": 0.5354, "recall": 0.8875, "f1": 0.6679, "pos_ok": 0.9944, "umbral": 0.5, "s": 9.06}
+{"epoca": 6, "paso": 378, "perdida": 0.44051, "s": 3.35}
+{"epoca": 7, "paso": 441, "perdida": 0.415, "s": 3.36}
+{"epoca": 8, "paso": 504, "perdida": 0.382306, "s": 3.44}
+{"epoca": 9, "paso": 567, "perdida": 0.353484, "s": 3.35}
+{"epoca": 10, "paso": 630, "perdida": 0.330154, "precision": 0.6441, "recall": 0.9275, "f1": 0.7602, "pos_ok": 0.9973, "umbral": 0.7, "s": 8.83}
+{"epoca": 11, "paso": 693, "perdida": 0.308539, "s": 3.33}
+{"epoca": 12, "paso": 756, "perdida": 0.299484, "s": 3.36}
+{"epoca": 13, "paso": 819, "perdida": 0.291156, "s": 3.4}
+{"epoca": 14, "paso": 882, "perdida": 0.276339, "s": 3.42}
+{"epoca": 15, "paso": 945, "perdida": 0.260843, "precision": 0.7308, "recall": 0.9025, "f1": 0.8076, "pos_ok": 1.0, "umbral": 0.6, "s": 8.95}
+{"epoca": 16, "paso": 1008, "perdida": 0.244906, "s": 3.27}
+{"epoca": 17, "paso": 1071, "perdida": 0.235581, "s": 3.4}
+{"epoca": 18, "paso": 1134, "perdida": 0.23411, "s": 3.37}
+{"epoca": 19, "paso": 1197, "perdida": 0.190353, "s": 3.4}
+{"epoca": 20, "paso": 1260, "perdida": 0.166506, "precision": 0.771, "recall": 0.9175, "f1": 0.8379, "pos_ok": 1.0, "umbral": 0.5, "s": 8.78}
+{"epoca": 21, "paso": 1323, "perdida": 0.174358, "s": 3.38}
+{"epoca": 22, "paso": 1386, "perdida": 0.157536, "s": 3.38}
+{"epoca": 23, "paso": 1449, "perdida": 0.166907, "s": 3.37}
+{"epoca": 24, "paso": 1512, "perdida": 0.146317, "s": 3.39}
+{"epoca": 25, "paso": 1575, "perdida": 0.143261, "precision": 0.8215, "recall": 0.8975, "f1": 0.8578, "pos_ok": 1.0, "umbral": 0.75, "s": 8.87}
+{"epoca": 26, "paso": 1638, "perdida": 0.137615, "s": 3.43}
+{"epoca": 27, "paso": 1701, "perdida": 0.13176, "s": 3.4}
+{"epoca": 28, "paso": 1764, "perdida": 0.132171, "s": 3.38}
+{"epoca": 29, "paso": 1827, "perdida": 0.132112, "s": 3.35}
+{"epoca": 30, "paso": 1890, "perdida": 0.125934, "precision": 0.8381, "recall": 0.88, "f1": 0.8585, "pos_ok": 1.0, "umbral": 0.8, "s": 8.84}
+{"epoca": 31, "paso": 1953, "perdida": 0.135584, "s": 3.37}
+{"epoca": 32, "paso": 2016, "perdida": 0.126011, "s": 3.42}
+{"epoca": 33, "paso": 2079, "perdida": 0.12165, "s": 3.43}
+{"epoca": 34, "paso": 2142, "perdida": 0.125427, "s": 3.32}
+{"epoca": 35, "paso": 2205, "perdida": 0.117233, "precision": 0.8537, "recall": 0.89, "f1": 0.8715, "pos_ok": 1.0, "umbral": 0.85, "s": 8.75}
+{"epoca": 36, "paso": 2268, "perdida": 0.110406, "s": 3.39}
+{"epoca": 37, "paso": 2331, "perdida": 0.114081, "s": 3.35}
+{"epoca": 38, "paso": 2394, "perdida": 0.12801, "s": 3.41}
+{"epoca": 39, "paso": 2457, "perdida": 0.117151, "s": 3.37}
+{"epoca": 40, "paso": 2520, "perdida": 0.108491, "precision": 0.8476, "recall": 0.89, "f1": 0.8683, "pos_ok": 1.0, "umbral": 0.75, "s": 8.83}
+{"epoca": 41, "paso": 2583, "perdida": 0.112229, "s": 3.36}
+{"epoca": 42, "paso": 2646, "perdida": 0.096957, "s": 3.42}
+{"epoca": 43, "paso": 2709, "perdida": 0.105878, "s": 3.38}
+{"epoca": 44, "paso": 2772, "perdida": 0.097314, "s": 3.35}
+{"epoca": 45, "paso": 2835, "perdida": 0.103924, "precision": 0.818, "recall": 0.91, "f1": 0.8615, "pos_ok": 1.0, "umbral": 0.75, "s": 9.03}
+{"epoca": 46, "paso": 2898, "perdida": 0.109141, "s": 3.39}
+{"epoca": 47, "paso": 2961, "perdida": 0.102424, "s": 3.41}
+{"epoca": 48, "paso": 3024, "perdida": 0.101359, "s": 3.41}
+{"epoca": 49, "paso": 3087, "perdida": 0.101257, "s": 3.35}
+{"epoca": 50, "paso": 3150, "perdida": 0.100583, "precision": 0.833, "recall": 0.91, "f1": 0.8698, "pos_ok": 1.0, "umbral": 0.9, "s": 8.83}
+{"epoca": 51, "paso": 3213, "perdida": 0.101211, "s": 3.3}
+{"epoca": 52, "paso": 3276, "perdida": 0.107243, "s": 3.4}
+{"epoca": 53, "paso": 3339, "perdida": 0.093341, "s": 3.4}
+{"epoca": 54, "paso": 3402, "perdida": 0.103156, "s": 3.34}
+{"epoca": 55, "paso": 3465, "perdida": 0.098281, "precision": 0.8678, "recall": 0.87, "f1": 0.8689, "pos_ok": 1.0, "umbral": 0.5, "s": 8.93}
+{"epoca": 56, "paso": 3528, "perdida": 0.094712, "s": 3.36}
+{"epoca": 57, "paso": 3591, "perdida": 0.099179, "s": 3.43}
+{"epoca": 58, "paso": 3654, "perdida": 0.09617, "s": 3.34}
+{"epoca": 59, "paso": 3717, "perdida": 0.091441, "s": 3.38}
+{"epoca": 60, "paso": 3780, "perdida": 0.090732, "precision": 0.8969, "recall": 0.87, "f1": 0.8832, "pos_ok": 1.0, "umbral": 0.75, "s": 8.94}
+{"epoca": 61, "paso": 3843, "perdida": 0.089724, "s": 3.33}
+{"epoca": 62, "paso": 3906, "perdida": 0.092785, "s": 3.41}
+{"epoca": 63, "paso": 3969, "perdida": 0.098109, "s": 3.28}
+{"epoca": 64, "paso": 4032, "perdida": 0.09276, "s": 3.34}
+{"epoca": 65, "paso": 4095, "perdida": 0.093066, "precision": 0.8691, "recall": 0.88, "f1": 0.8745, "pos_ok": 1.0, "umbral": 0.75, "s": 8.88}
+{"epoca": 66, "paso": 4158, "perdida": 0.093145, "s": 3.39}
+{"epoca": 67, "paso": 4221, "perdida": 0.091339, "s": 3.34}
+{"epoca": 68, "paso": 4284, "perdida": 0.094191, "s": 3.37}
+{"epoca": 69, "paso": 4347, "perdida": 0.086514, "s": 3.38}
+{"epoca": 70, "paso": 4410, "perdida": 0.085724, "precision": 0.8976, "recall": 0.855, "f1": 0.8758, "pos_ok": 1.0, "umbral": 0.85, "s": 8.86}
+{"epoca": 71, "paso": 4473, "perdida": 0.088268, "s": 3.39}
+{"epoca": 72, "paso": 4536, "perdida": 0.076883, "s": 3.36}
+{"epoca": 73, "paso": 4599, "perdida": 0.080444, "s": 3.38}
+{"epoca": 74, "paso": 4662, "perdida": 0.080041, "s": 3.38}
+{"epoca": 75, "paso": 4725, "perdida": 0.081191, "precision": 0.8747, "recall": 0.855, "f1": 0.8647, "pos_ok": 1.0, "umbral": 0.85, "s": 8.87}
+{"epoca": 76, "paso": 4788, "perdida": 0.0823, "s": 3.37}
+{"epoca": 77, "paso": 4851, "perdida": 0.079959, "s": 3.35}
+{"epoca": 78, "paso": 4914, "perdida": 0.08327, "s": 3.23}
+{"epoca": 79, "paso": 4977, "perdida": 0.089254, "s": 2.99}
+{"epoca": 80, "paso": 5040, "perdida": 0.084112, "precision": 0.901, "recall": 0.865, "f1": 0.8827, "pos_ok": 1.0, "umbral": 0.8, "s": 7.74}

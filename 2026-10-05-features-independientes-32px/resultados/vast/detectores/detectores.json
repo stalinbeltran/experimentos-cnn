@@ -1,27 +1,83 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-05T12:44:23+00:00"
+  },
+  {
+   "paso": "repuesto",
+   "hora": "2026-10-05T12:44:32+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-05T12:44:33+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-05T12:45:34+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-05T12:52:09+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-05T12:53:10+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-05T12:53:18+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-05T13:00:03+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-05T13:00:06+00:00"
   }
  ],
  "id": "detectores",
  "etiqueta": "expc-fi32-detectores",
  "experimento": "feat-ind32",
  "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast.json",
- "oferta": 48453748,
- "precio_hora": 0.05511,
+ "oferta": 25468214,
+ "precio_hora": 0.06622,
  "maquina": {
-  "vcpu": 18.0,
-  "cpu": "Xeon E5-2686 v4",
-  "ram_gb": 31.4,
-  "ghz": 3.0,
-  "gpu": "Quadro P4000",
-  "ubicacion": "Nevada, US",
-  "host": 37055,
-  "fiabilidad": 0.9969
+  "vcpu": 28.0,
+  "cpu": "Xeon E5-2680 v4",
+  "ram_gb": 31.2,
+  "ghz": 3.3,
+  "gpu": "RTX 2060S",
+  "ubicacion": "Vietnam, VN",
+  "host": 35916,
+  "fiabilidad": 0.9955
  },
  "horas_max": 3.0,
- "tope_precio": 0.4
+ "tope_precio": 0.4,
+ "iid": 54316653,
+ "intentos_clave": 1,
+ "payload_mb": 12.42,
+ "sha256": "9b4973a65179f5be",
+ "segundos_max": 9679,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/arco-E",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/arco-W",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/arco-N",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/arco-S",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/recta-V",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/recta-H",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/recta-S",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/recta-B",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/lazo",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/esquina-NE",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/esquina-NW",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/esquina-SE",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/pesos/esquina-SW"
+ ],
+ "apartado": [],
+ "minutos": 15.5,
+ "coste_usd": 0.0172
 }

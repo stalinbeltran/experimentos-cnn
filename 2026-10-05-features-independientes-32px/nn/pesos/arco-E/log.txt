@@ -1,0 +1,18 @@
+empiezo arco-E: 2000 pos / 21151 neg, 80 épocas, init 60e283d8cc003e53
+  arco-E ep   5/80 perdida 0.4422 · umbral 0.55 P 0.653 R 0.805 F1 0.721 pos≤1 0.910  [22 s]
+  arco-E ep  10/80 perdida 0.3378 · umbral 0.60 P 0.691 R 0.873 F1 0.771 pos≤1 0.888  [44 s]
+  arco-E ep  15/80 perdida 0.2763 · umbral 0.60 P 0.757 R 0.887 F1 0.817 pos≤1 0.879  [66 s]
+  arco-E ep  20/80 perdida 0.2314 · umbral 0.60 P 0.803 R 0.877 F1 0.839 pos≤1 0.880  [88 s]
+  arco-E ep  25/80 perdida 0.1985 · umbral 0.60 P 0.832 R 0.868 F1 0.849 pos≤1 0.908  [110 s]
+  arco-E ep  30/80 perdida 0.1857 · umbral 0.70 P 0.871 R 0.840 F1 0.855 pos≤1 0.908  [133 s]
+  arco-E ep  35/80 perdida 0.1699 · umbral 0.75 P 0.844 R 0.855 F1 0.850 pos≤1 0.915  [155 s]
+  arco-E ep  40/80 perdida 0.1558 · umbral 0.70 P 0.827 R 0.863 F1 0.845 pos≤1 0.927  [177 s]
+  arco-E ep  45/80 perdida 0.1503 · umbral 0.75 P 0.798 R 0.870 F1 0.833 pos≤1 0.957  [199 s]
+  arco-E ep  50/80 perdida 0.1385 · umbral 0.75 P 0.882 R 0.825 F1 0.853 pos≤1 0.952  [221 s]
+  arco-E ep  55/80 perdida 0.1345 · umbral 0.25 P 0.897 R 0.830 F1 0.862 pos≤1 0.958  [243 s]
+  arco-E ep  60/80 perdida 0.1236 · umbral 0.70 P 0.907 R 0.805 F1 0.853 pos≤1 0.966  [265 s]
+  arco-E ep  65/80 perdida 0.1420 · umbral 0.65 P 0.835 R 0.838 F1 0.837 pos≤1 0.955  [287 s]
+  arco-E ep  70/80 perdida 0.1228 · umbral 0.75 P 0.865 R 0.845 F1 0.855 pos≤1 0.953  [309 s]
+  arco-E ep  75/80 perdida 0.1163 · umbral 0.50 P 0.872 R 0.848 F1 0.859 pos≤1 0.959  [331 s]
+  arco-E ep  80/80 perdida 0.0999 · umbral 0.80 P 0.903 R 0.787 F1 0.841 pos≤1 0.971  [352 s]
+listo arco-E: best ep 55 umbral 0.25 F1 0.8623 P 0.8973 R 0.8300 pos≤1 0.9578 → a medias · 353.2 s
