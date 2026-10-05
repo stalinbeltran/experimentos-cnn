@@ -1,0 +1,27 @@
+{
+ "banco": "fino (13 detectores, corrida 2)",
+ "test": 717,
+ "curva": {
+  "36": 0.8312,
+  "90": 0.9428,
+  "180": 0.9637,
+  "360": 0.9716,
+  "540": 0.9749,
+  "900": 0.9833,
+  "1080": 0.9847
+ },
+ "con_extra": {
+  "extra_solo": 0.9754,
+  "1080+extra": 0.9819
+ },
+ "desplazado": {
+  "A_posicional": {
+   "limpio": 0.9637,
+   "desplazar": 0.5556
+  },
+  "B_max3": {
+   "limpio": 0.9489,
+   "desplazar": 0.7736
+  }
+ }
+}

@@ -47,6 +47,20 @@ La **precisión** —lo que fallaba a 8×8 (0,61–0,67 en arcos y esquinas)— 
 resultado neto: el compositor a 32×32 queda 0,01 por debajo del de 8×8 y la curva de datos se aplana antes. A 8×8 el
 conteo 4×4 suavizaba el trazo manuscrito hasta parecerse al sintético; a 32×32 esa diferencia la ve el detector.
 
+## La comparación justa: 13 detectores a 8×8 contra 13 a 32×32 (2026-10-05)
+
+H3 comparaba contra el banco fino+grueso (26). El dueño pidió el 8×8 con sólo los 13 del banco fino: es la corrida 14
+de `feat-ind` (`resultados/curva-fino.json` allí), mismo test de 717 y mismo compositor.
+
+| N train | 36 | 90 | 180 | 360 | 540 | 900 | 1080 | otros escritores | 1080 + otros | desplazado con B |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| fino 8×8 | **0,831** | **0,943** | **0,964** | **0,972** | **0,975** | **0,983** | **0,985** | **0,975** | **0,982** | **0,774** |
+| **fino 32×32** | 0,792 | 0,893 | 0,942 | 0,964 | 0,960 | 0,975 | 0,974 | 0,964 | 0,973 | 0,733 |
+
+**Con el mismo banco, 8×8 gana en TODOS los puntos**: −0,04/−0,05 con pocos datos, −0,01 con muchos. Así que la
+conclusión de arriba se refuerza: a 32×32 los detectores son mejores en lo sintético y peores como entrada del
+compositor de dígitos.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los

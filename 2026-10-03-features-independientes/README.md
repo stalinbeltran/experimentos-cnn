@@ -468,6 +468,22 @@ opuestas con este compositor: engrosar un dígito ya «ensancha» sus evidencias
 **Conclusión:** el compositor **B (máximo 3×3 antes del lineal) con los 65 detectores** es el más equilibrado
 medido hasta hoy: 0,971 en limpio, 0,836 desplazado, G3 medio 0,866.
 
+## Corrida 14 (2026-10-05): sólo el banco `fino` (13 detectores), para comparar con `feat-ind32`
+
+Pedida por el dueño para comparar con `feat-ind32` (los mismos 13 detectores con la entrada a 32×32) en igualdad de
+banco. `nn/curva_fino.py`, `resultados/curva-fino.json`. Sin entrenar nada: los pesos de la corrida 2. Test de 717.
+Los puntos N = 36 / 180 / 1080 casan con los de la corrida 12 (0,831 / 0,964 / 0,985).
+
+| N train | 36 | 90 | 180 | 360 | 540 | 900 | 1080 | otros escritores (3823) | 1080 + otros |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **fino 8×8** | **0,831** | **0,943** | **0,964** | **0,972** | **0,975** | **0,983** | **0,985** | **0,975** | **0,982** |
+| fino 32×32 (`feat-ind32`) | 0,792 | 0,893 | 0,942 | 0,964 | 0,960 | 0,975 | 0,974 | 0,964 | 0,973 |
+
+Desplazado (1 celda): A 0,556 → **B (máx 3×3) 0,774** a 8×8, contra 0,608 → 0,733 a 32×32.
+
+**A 8×8 gana en todos los N**, por 0,01–0,05 (más con pocos datos). Los dígitos de otros escritores se redujeron a 8×8
+desde `uci-optdigits-orig-32px-r20261005`, como NIST hizo los publicados.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).
