@@ -28,7 +28,7 @@ La **precisión** —lo que fallaba a 8×8 (0,61–0,67 en arcos y esquinas)— 
 | 1↔8 / 4→1 (posicional, semilla 1) | 22 / 1–3 | **5 / 4** |
 | curva N = 180 / 900 (test 717) | *fino+grueso* 0,974 / 0,992 | 0,942 / 0,975 |
 | con los 3823 de otros escritores (solos / + 1080) | — | 0,964 / 0,973 |
-| G6 test · G1 · G2 · desplazado (A) | 0,964 · 0,036 · 0,844 · 0,577 | 0,942 · 0,058 · 0,814 · 0,608 |
+| test · G1 · G2 · desplazado (A) | 0,964 · 0,036 · 0,844 · 0,577 | 0,942 · 0,058 · 0,814 · 0,608 |
 | desplazado con B (máx 3×3) | — | **0,733** (+0,125 sobre A) |
 | píxeles crudos (test 717) | 0,890 (8×8) | 0,896 (32×32) |
 
