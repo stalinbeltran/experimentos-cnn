@@ -9,6 +9,6 @@
   "gasta": "no",
   "entrada": null,
   "reporte": null,
-  "plan": "SOLO ESPECIFICACION (REGLAS.md) y criterio escrito antes de calcular ningun grupo (instrucciones/02-criterio.md). Sin codigo. Al implementar pasa a gasta=entrena-local con entrada nn/entrenar_local.py (k-means en el dev, ~10 min estimados, 0 $)",
-  "linaje": "feat-ind32 (sus 13 detectores de 32x32, congelados y COPIADOS con su huella; contra su firma por clase y los errores de C se leen los grupos) y feat-ind (su banco fino de 8x8, como contraste). La lectura por prototipos —varias formas por digito— es la de feat-pos §5. No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda"
+  "plan": "SOLO ESPECIFICACION (REGLAS.md) y criterio escrito antes de calcular ningun grupo (instrucciones/02-criterio.md), segunda version tras el revisor y el verificador. Sin codigo. Pendiente del dueno: D1 banco principal (por defecto los dos), D2 parecido continuo o composicion discreta (por defecto continuo), D3 la lectura L6 (por defecto dentro). Al implementar pasa a gasta=entrena-local con entrada nn/entrenar_local.py (k-means en el dev, ~15 min estimados, 0 $)",
+  "linaje": "feat-ind32 y feat-ind (sus dos bancos de 13 detectores, de 32x32 y de 8x8, congelados y COPIADOS con su huella; contra su firma por clase y los errores de C se leen los grupos). La lectura por prototipos —varias formas por digito— es la de feat-pos §5. No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda"
 }
