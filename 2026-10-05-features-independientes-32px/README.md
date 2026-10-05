@@ -81,36 +81,43 @@ Con 36 dígitos de train (3,6 por clase), cada uno «sirve» para acertar ~105 n
 en el panel derecho. ⚠ F depende del tamaño del conjunto de no vistos: compara representaciones entre sí, no es una
 propiedad absoluta.
 
-## Ganancia G = (% aciertos) ÷ (% train) (2026-10-05)
+## Ganancia G = ((val − errores)/val) ÷ (train/(train + val)) (2026-10-05)
 
 ![ganancia](resultados/ganancia-generalizacion.png)
 
-Pedida por el dueño como versión **independiente del tamaño del dataset** del factor F: se divide por el total T tanto
-los aciertos como las muestras de train. Un dataset de T dígitos (balanceado, T/10 por clase, del pool de 5620); N = p·T
-a train y los T − N restantes se evalúan: **% aciertos** = aciertos sobre los no vistos ÷ T, **% train** = N ÷ T.
-`nn/ganancia.py` aquí y en `feat-ind` (las mismas particiones: misma huella), `nn/figura_ganancia.py` la figura.
-T ∈ {500, 1000, 2000, 4000} y p ∈ {2, 4, 10, 20, 50} % (p·T/10 entero en todos: el % de train es EXACTO), 3 semillas.
+**Definición del dueño, corregida ese mismo día:** G = acierto en val ÷ p, con p = train/(train + val) la fracción del
+dataset que se usa para entrenar. Una primera versión usaba «aciertos ÷ T entre N ÷ T» (= aciertos/N), que era un
+error de definición; queda en `resultados/ganancia.json` como `aciertos_por_muestra`. La conclusión no cambió.
 
-⚠ **El T se cancela: G = aciertos ÷ N**, o sea el F de antes con «lo no visto» = el resto del dataset. Eso quita el
-tamaño arbitrario del conjunto de evaluación, **pero no la dependencia del tamaño del dataset**, y se midió:
+Un dataset de T dígitos (balanceado, T/10 por clase, del pool de 5620 de 43 escritores); train = N = p·T, val = el
+resto. T ∈ {500, 1000, 2000, 4000} y p ∈ {2, 4, 10, 20, 50} % (p·T/10 entero en todos: el % de train es EXACTO), 3
+semillas. `nn/ganancia.py` aquí y en `feat-ind` (las mismas particiones: misma huella), `nn/figura_ganancia.py`.
 
-| | dataset de 500 | dataset de 4000 |
-|---|---:|---:|
-| 2 % de train = | **10** muestras | **80** muestras |
-| acierto sobre los no vistos | 64,7 % | 94,8 % |
-| **G** (detectores 8×8) | **31,7** | **46,5** (1,47×) |
+**Qué es G:**
+- **G = 1** ⇔ el modelo acierta en lo no visto la misma fracción que la fracción que vio; **G = 47** con p = 2 % es
+  «viendo el 2 % del dataset, acierta el 95 % del resto».
+- **Techo 1/p** (acierto 100 %) y **azar 1/(10·p)**: G ÷ techo = acierto. Entre representaciones, G sólo varía lo
+  que varía el acierto, y la curva la dibuja el 1/p.
+- **No depende de un conjunto de evaluación arbitrario** (val es el resto del dataset), que era el problema de F.
 
-- **Panel 2:** con el mismo % de train, G cambia con T; las curvas sólo se juntan a partir del 10–20 %, donde G ≈
-  (1 − p)/p para todos (el techo), que no distingue nada.
-- **Panel 3, el control:** contra **N** (muestras, no %), los cuatro tamaños casi coinciden: a igual N el acierto
-  difiere ≤ 2 puntos (N = 20: 78,3 / 80,3 · N = 80: 93,0 / 94,8 · N = 400: 97,0 / 97,2), frente a 30 puntos a igual %.
-  **La variable que no depende del tamaño del dataset es N, no el % de train**: el acierto depende de cuántas muestras
-  se ven, no de qué fracción son.
-- **Panel 1:** con T = 4000 y 2 % de train, G = 46,5 (detectores 8×8) · 44,5 (32×32) · 43,6 / 43,7 (píxeles 8×8 /
-  32×32): como F, G está dominada por 1/p y separa poco las representaciones.
+**Pero no es independiente del tamaño del dataset, y por los DOS lados** (detectores 8×8, medido):
 
-Si «% aciertos» se lee como el acierto (aciertos ÷ no vistos) en vez de aciertos ÷ T, G sale dividida por (1 − p): la
-conclusión no cambia, porque la dependencia viene del acierto a p fijo.
+| | T = 500 | T = 2000 | T = 4000 |
+|---|---:|---:|---:|
+| **mismo p = 2 %** → train | 10 muestras · acierto 64,7 % · **G 32,3** | — | 80 muestras · acierto 94,8 % · **G 47,4** (1,47×) |
+| **mismo train = 80 muestras** → p | — | 4 % · acierto 93,0 % · **G 23,3** | 2 % · acierto 94,8 % · **G 47,4** (2,04×) |
+
+- **A p fijo**, G cambia con T porque el acierto depende de cuántas muestras se ven, y el 2 % de 500 no son las mismas
+  que el 2 % de 4000 (panel 2: las curvas sólo se juntan desde el 10–20 %, donde todas están en el techo).
+- **A train fijo**, G se dobla cuando se dobla el dataset, con casi el mismo acierto: el denominador es la fracción, y
+  80 muestras son la mitad de fracción en un dataset del doble.
+- **Panel 3, el control:** contra N (muestras), los cuatro tamaños casi coinciden (≤ 2 puntos a igual N, frente a 30 a
+  igual %). Lo que no depende del tamaño del dataset es el acierto en función de N.
+- **Panel 1:** con T = 4000 y 2 % de train, G = 47,4 (detectores 8×8) · 45,4 (32×32) · 44,5 / 44,6 (píxeles 8×8 /
+  32×32), o sea los aciertos 94,8 · 90,9 · 88,9 · 89,2 % divididos por 0,02.
+
+**Para qué sirve, entonces:** para comparar representaciones **con el mismo T y el mismo p**, diciendo siempre T. Si se
+quiere un número que no dependa del tamaño del dataset, el denominador tiene que ser N (o N por clase), no p.
 
 ## Lo que queda pendiente
 

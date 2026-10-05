@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Ganancia G = (% aciertos) / (% train), pedida por el dueño el 2026-10-05 para la figura de `feat-ind32`, y la prueba de
+"""Ganancia G = acierto en val / fracción de train, pedida por el dueño el 2026-10-05 para la figura de `feat-ind32`, y la prueba de
 si es independiente del tamaño del dataset.
 
 Un «dataset» de T dígitos se saca del pool de 5620 (los 1797 de test de UCI + los 3823 de otros 30 escritores, reducidos
 aquí a 8×8 por bloques 4×4), BALANCEADO: T/10 por clase. N = p·T van a train (p·T/10 por clase) y los T − N restantes se
 evalúan:
 
-    % aciertos = aciertos sobre los T − N no vistos / T      % train = N / T      G = aciertos / N   (el T se cancela)
+    G = ((val − errores) / val) / (train / (train + val))  =  acierto en val / p      (train = N, val = T − N, p = N / T)
+
+Definición del dueño, CORREGIDA el 2026-10-05 (la primera, «aciertos ÷ T entre N ÷ T» = aciertos / N, era un error suyo;
+queda en el json como `aciertos_por_muestra` para poder comparar). Techo 1/p (acierto 100 %); azar 1/(10·p).
 
 T ∈ {500, 1000, 2000, 4000} y p ∈ {2, 4, 10, 20, 50} %: p·T/10 sale ENTERO en todas las combinaciones, así que el % de
 train es EXACTAMENTE el mismo en los cuatro tamaños (con un reparto proporcional, el redondeo daba 1,4 % donde se
@@ -88,8 +91,8 @@ def main() -> int:
                     acc = C.logistica(x[tr], y[tr], x[te], y[te], sem)["acc_val"]
                     Tr, N = len(tr) + len(te), len(tr)
                     filas.append({"T": T, "p": p, "sem": sem, "T_real": Tr, "N": N, "n_test": len(te), "acc": acc,
-                                  "pct_aciertos": round(acc * len(te) / Tr, 5), "pct_train": round(N / Tr, 5),
-                                  "G": round(acc * len(te) / N, 3)})
+                                  "pct_train": round(N / Tr, 5), "G": round(acc / (N / Tr), 3),
+                                  "aciertos_por_muestra": round(acc * len(te) / N, 3)})
             print(f"{nombre:<20} T={T:>4}: " + " · ".join(
                 f"p={q:.0%} G {np.mean([f['G'] for f in filas if f['T'] == T and f['p'] == q]):.1f}" for q in FRACCIONES)
                 + f"  [{time.time() - t0:.0f} s]", flush=True)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""La figura de la ganancia G = (% aciertos) / (% train): lee resultados/ganancia.json de AQUÍ y el de `feat-ind` (por su id,
+"""La figura de la ganancia G = ((val − errores)/val) / (train/(train + val)) = acierto en val / p: lee resultados/ganancia.json de AQUÍ y el de `feat-ind` (por su id,
 en el registro) y dibuja resultados/ganancia-generalizacion.png. Se niega si los dos no evaluaron los MISMOS dígitos.
 
   1. G según el % de train, las 4 representaciones, dataset de 4000.
@@ -61,11 +61,12 @@ def main() -> int:
     pt = np.geomspace(0.02, 0.5, 50)
     for ax in (a1, a2):
         ax.set_yscale("log")
-        ax.plot(pt * 100, (1 - pt) / pt, color=T2, lw=1, ls=":", zorder=1)
-        ax.set_xlabel("% de train (N / T)")
+        ax.plot(pt * 100, 1 / pt, color=T2, lw=1, ls=":", zorder=1)
+        ax.set_xlabel("% de train = train / (train + val)")
         ax.set_xticks([2, 4, 10, 20, 50]); ax.set_xticklabels(["2", "4", "10", "20", "50"])
-    a1.annotate("techo: 100 % de acierto", (3, (1 - 0.03) / 0.03), xytext=(8, 4), textcoords="offset points", color=T2, fontsize=9.5)
-    a1.set_ylabel("G = % aciertos ÷ % train  (= aciertos ÷ N)")
+        ax.set_yticks([2, 5, 10, 20, 50]); ax.set_yticklabels(["2", "5", "10", "20", "50"]); ax.minorticks_off()
+    a1.annotate("techo: acierto 100 % (G = 1/p)", (3, 1 / 0.03), xytext=(8, 4), textcoords="offset points", color=T2, fontsize=9.5)
+    a1.set_ylabel("G = acierto en val ÷ (train / (train + val))")
 
     # 1. las cuatro representaciones, dataset de 4000
     for nombre, col, mk, ls in SERIES:
@@ -84,15 +85,18 @@ def main() -> int:
         a2.plot(p * 100, g, color=col, marker="o", ms=7, lw=2, mec=SUP, mew=1.2, zorder=3, label=f"T = {T}")
         a3.plot(n, acc * 100, color=col, marker="o", ms=7, lw=2, mec=SUP, mew=1.2, zorder=3, label=f"T = {T}")
     gmin, gmax = medias(casos[ref], min(Ts))[1][0], medias(casos[ref], Tmax)[1][0]
+    # mismo N con distinto T: el primer punto de T = Tmax (p = 2 %) y el segundo de T = Tmax/2 (p = 4 %)
+    _, gm, nm, am = medias(casos[ref], Tmax // 2)
     a2.set_title("2 · ¿Independiente del tamaño del dataset?", loc="left", fontsize=12.5, color=T1)
-    a2.text(0.98, 0.97, f"mismo 2 % de train:\nT = {Tmax} → G {gmax:.1f}\nT = {min(Ts)}  → G {gmin:.1f}  ({gmax / gmin:.2f}×)\n"
-            "NO: el % de train esconde N,\ny el acierto depende de N", transform=a2.transAxes, ha="right", va="top",
+    a2.text(0.98, 0.97, f"mismo 2 % de train:\nT = {Tmax} → G {gmax:.1f}\nT = {min(Ts)}  → G {gmin:.1f}  ({gmax / gmin:.2f}×)\n\n"
+            f"mismas {int(nm[1])} muestras de train:\nT = {Tmax} → G {gmax:.1f}\nT = {Tmax // 2} → G {gm[1]:.1f}  ({gmax / gm[1]:.2f}×)\n\n"
+            "NO: G depende de T por los dos lados", transform=a2.transAxes, ha="right", va="top",
             fontsize=9, color=T2, family="monospace")
     a2.legend(frameon=False, loc="lower left", fontsize=9.5, title="detectores 8×8 (13)", title_fontsize=9.5)
     a3.set_xlabel("muestras de train N (escala log)"); a3.set_ylabel("acierto sobre los no vistos (%)")
     a3.set_title("3 · Control: contra N, los cuatro tamaños casi coinciden", loc="left", fontsize=12.5, color=T1)
     a3.legend(frameon=False, loc="lower right", fontsize=9.5, title="detectores 8×8 (13)", title_fontsize=9.5)
-    fig.suptitle("Ganancia G = (% aciertos sobre los no vistos) ÷ (% de train) · datasets balanceados de T dígitos del pool de "
+    fig.suptitle("Ganancia G = ((val − errores)/val) ÷ (train/(train + val)) · datasets balanceados de T dígitos del pool de "
                  "5620 (43 escritores) · compositor lineal posicional · media de 3 semillas", x=0.01, ha="left", fontsize=10, color=T2)
     fig.tight_layout(rect=(0, 0, 1, 0.95))
     destino = RES / "ganancia-generalizacion.png"

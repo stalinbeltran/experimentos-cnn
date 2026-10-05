@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Ganancia G = (% aciertos) / (% train), pedida por el dueño el 2026-10-05, y la prueba de si es independiente del tamaño
+"""Ganancia G = acierto en val / fracción de train, pedida por el dueño el 2026-10-05, y la prueba de si es independiente del tamaño
 del dataset. Lo mismo que `nn/ganancia.py` de `feat-ind` (allí, a 8×8), con los 13 detectores de 32×32 y los píxeles de
 32×32. `particion()` está COPIADA de allí sin cambios: los dos evalúan los mismos dígitos (la figura lo comprueba).
 
 Dataset BALANCEADO de T dígitos (T/10 por clase) del pool de 5620; N = p·T a train, los T − N restantes se evalúan:
 
-    % aciertos = aciertos sobre los T − N no vistos / T      % train = N / T      G = aciertos / N   (el T se cancela)
+    G = ((val − errores) / val) / (train / (train + val))  =  acierto en val / p      (train = N, val = T − N, p = N / T)
+
+Definición del dueño, CORREGIDA el 2026-10-05 (la primera, «aciertos ÷ T entre N ÷ T» = aciertos / N, era un error suyo;
+queda en el json como `aciertos_por_muestra` para poder comparar). Techo 1/p (acierto 100 %); azar 1/(10·p).
 
 T ∈ {500, 1000, 2000, 4000}, p ∈ {2, 4, 10, 20, 50} % (p·T/10 entero en todas), 3 semillas.
 
@@ -75,8 +78,8 @@ def main() -> int:
                     acc = float((K.predecir(K.ajustar(x[tr], y[tr], sem), x[te]) == y[te]).mean())
                     Tr, N = len(tr) + len(te), len(tr)
                     filas.append({"T": T, "p": p, "sem": sem, "T_real": Tr, "N": N, "n_test": len(te), "acc": round(acc, 4),
-                                  "pct_aciertos": round(acc * len(te) / Tr, 5), "pct_train": round(N / Tr, 5),
-                                  "G": round(acc * len(te) / N, 3)})
+                                  "pct_train": round(N / Tr, 5), "G": round(acc / (N / Tr), 3),
+                                  "aciertos_por_muestra": round(acc * len(te) / N, 3)})
             print(f"{nombre:<22} T={T:>4}: " + " · ".join(
                 f"p={q:.0%} G {np.mean([f['G'] for f in filas if f['T'] == T and f['p'] == q]):.1f}" for q in FRACCIONES)
                 + f"  [{time.time() - t0:.0f} s]", flush=True)

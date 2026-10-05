@@ -116,7 +116,7 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/componer.py` | C4, C5 y C6 de una vez | `python nn/componer.py` |
 | `nn/factor.py` | factor F(N) = no vistos acertados ÷ N (4540 no vistos), detectores y píxeles de 32×32 | `python nn/factor.py` → `resultados/factor.json` |
 | `nn/figura_factor.py` | la figura de F(N) con los 4 casos (lee el `factor.json` de `feat-ind` por su id) | `python nn/figura_factor.py` |
-| `nn/ganancia.py` | G = % aciertos ÷ % train con datasets balanceados de 500–4000 dígitos; `particion()` copiada de `feat-ind` | `python nn/ganancia.py` → `resultados/ganancia.json` |
+| `nn/ganancia.py` | G = acierto en val ÷ (train/(train + val)) con datasets balanceados de 500–4000 dígitos; `particion()` copiada de `feat-ind` | `python nn/ganancia.py` → `resultados/ganancia.json` |
 | `nn/figura_ganancia.py` | la figura de G en tres paneles; se niega si los dos experimentos no evaluaron los mismos dígitos | `python nn/figura_ganancia.py` |
 
 - ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.

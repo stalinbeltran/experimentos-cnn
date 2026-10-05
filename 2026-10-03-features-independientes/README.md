@@ -486,8 +486,8 @@ desde `uci-optdigits-orig-32px-r20261005`, como NIST hizo los publicados.
 
 ## Datos para las figuras de `feat-ind32` (2026-10-05)
 
-Sin entrenar nada (pesos de la corrida 2): `nn/factor.py` (F(N) sobre 4540 no vistos) y `nn/ganancia.py` (G = % aciertos ÷
-% train con datasets balanceados de 500–4000 dígitos) calculan aquí la parte de 8×8. Las figuras y su lectura están en el
+Sin entrenar nada (pesos de la corrida 2): `nn/factor.py` (F(N) sobre 4540 no vistos) y `nn/ganancia.py` (G = acierto en val ÷
+(train/(train + val)), con datasets balanceados de 500–4000 dígitos) calculan aquí la parte de 8×8. Las figuras y su lectura están en el
 README de `feat-ind32`.
 
 ## Lo que queda pendiente
