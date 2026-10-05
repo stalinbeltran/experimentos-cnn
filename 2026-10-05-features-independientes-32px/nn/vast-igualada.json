@@ -1,6 +1,6 @@
 {
  "experimento": "feat-ind32",
- "descripcion": "La CNN del repo con el terreno igualado: tres peldaños (+ padding, + cabeza densa, + capacidad), 180 entrenamientos en UNA máquina. Después, nn/curvas_cnn.py --resumen y la figura en el dev.",
+ "descripcion": "La CNN del repo con el terreno igualado: tres peldaños (+ padding, + cabeza densa, + capacidad) y el control 3b (la ancha con lr 3e-3), 240 entrenamientos en DOS máquinas a la vez, cada una con una red ancha y una pequeña.",
  "maquina": {
   "cpus": 32,
   "max_cpus": 65,
@@ -37,18 +37,25 @@
  "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
  "trabajos": [
   {
-   "id": "igualada",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --modelos cnn3ancha,cnn3pad,cnn3plana --procesos $P",
+   "id": "igualada-1",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --modelos cnn3ancha,cnn3pad --procesos $P",
    "trae": [
-    "curvas-cnn/cnn3pad",
-    "curvas-cnn/cnn3plana",
-    "curvas-cnn/cnn3ancha"
+    "curvas-cnn/cnn3ancha",
+    "curvas-cnn/cnn3pad"
+   ]
+  },
+  {
+   "id": "igualada-2",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --modelos cnn3ancha3,cnn3plana --procesos $P",
+   "trae": [
+    "curvas-cnn/cnn3ancha3",
+    "curvas-cnn/cnn3plana"
    ]
   }
  ],
  "notas": [
   "`run` y `trae` relativos a `nn/`; cada subdirectorio nuevo se trae por separado (nn/curvas-cnn/ ya existe aquí).",
-  "Medido en el dev el 2026-10-05, 1 hilo, 200 pasos extrapolados a 3996 (SIN mirar ningún acierto): cnn3ancha ~140 s, cnn3pad ~22 s, cnn3plana ~21 s → ~183 min de CPU, una máquina de ≥ 32 vCPU.",
-  "La ancha (186.538 parámetros) cabe holgada: menos operaciones por imagen que el banco de 13 detectores, que ya corrió con 32 procesos y min_ram 30."
+  "La ancha (186.538 parámetros) cabe holgada: menos operaciones por imagen que el banco de 13 detectores, que ya corrió con 32 procesos y min_ram 30.",
+  "Medido en el dev el 2026-10-05, 1 hilo, 200 pasos extrapolados a 3996 (SIN mirar ningún acierto): ancha ~140 s, cnn3pad ~22 s, cnn3plana ~21 s → ~163 min de CPU por máquina."
  ]
 }

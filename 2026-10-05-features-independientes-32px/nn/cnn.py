@@ -165,12 +165,15 @@ class CNN3PadPlanaAncha(CNN3Igualada):
 MODELOS = {"cnn3": (CNN3, 3e-3), "lenet5": (LeNet5, 1e-3),
            "cnn3pos": (CNN3Pos, 3e-3), "aprendidos13": (Banco13, 2e-3), "ajuste13": (Banco13, None),
            # el terreno igualado: el lr de la del repo para las pequeñas; para la ancha, el de LeNet-5 (decidido ANTES de correr)
-           "cnn3pad": (CNN3Pad, 3e-3), "cnn3plana": (CNN3PadPlana, 3e-3), "cnn3ancha": (CNN3PadPlanaAncha, 1e-3)}
+           "cnn3pad": (CNN3Pad, 3e-3), "cnn3plana": (CNN3PadPlana, 3e-3), "cnn3ancha": (CNN3PadPlanaAncha, 1e-3),
+           # 3b, control añadido a raíz del revisor ANTES de correr: la ancha con el lr de la del repo, para que el peldaño 3 no
+           # cambie dos cosas a la vez (capacidad y lr)
+           "cnn3ancha3": (CNN3PadPlanaAncha, 3e-3)}
 ETIQUETAS = {"cnn3": "CNN 3 capas 8×8 (la del repo)", "lenet5": "LeNet-5 32×32",
              "cnn3pos": "A · CNN 3 capas + compositor", "aprendidos13": "B · detectores aprendidos",
              "ajuste13": "C · detectores sintéticos + ajuste fino",
              "cnn3pad": "CNN 3 capas · 1 + padding", "cnn3plana": "CNN 3 capas · 2 + cabeza densa",
-             "cnn3ancha": "CNN 3 capas · 3 + capacidad (187k)"}
+             "cnn3ancha": "CNN 3 capas · 3 + capacidad (187k), lr 1e-3", "cnn3ancha3": "CNN 3 capas · 3b + capacidad, lr 3e-3"}
 # C: primero sólo el compositor con los detectores congelados (la mitad de los pasos), después todo, con los detectores a un
 # lr 10× menor que el compositor. El compositor recién inicializado es aleatorio, y sin la fase congelada sus primeros
 # gradientes podrían deshacer lo que los detectores traen — RAZONAMIENTO (la práctica habitual de «entrenar la cabeza y

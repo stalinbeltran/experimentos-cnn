@@ -142,3 +142,7 @@ A 60,7 / 86,0 / 92,4 / 97,6, N(95 %) = 560; B 63,3 / 87,5 / 94,9 / 98,6, 230; C 
    aprendida) con muchos datos, y **por debajo de C en todo N**, por ≥ 5 puntos con N ≤ 40.
 4. **N(95 %)**: peldaño 2 entre 400 y 700; peldaño 3 entre 200 y 400. C (108) necesita **al menos 2× menos** que cualquier
    peldaño: si no, igualar el terreno se come la ventaja de las features definidas.
+
+⚠ **Añadido antes de correr, a raíz del revisor**: el peldaño 3 cambiaba dos cosas a la vez (capacidad y lr, de 3e-3 a 1e-3;
+B usó 2e-3). Se añade **3b (`cnn3ancha3`)**: la misma red ancha con el lr de la del repo (3e-3). Las predicciones de arriba
+se refieren a la 3 (lr 1e-3); si la 3 falla la predicción 3 y la 3b la cumple, la causa era el lr, y se dice así.
