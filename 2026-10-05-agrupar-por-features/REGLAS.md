@@ -1,9 +1,9 @@
 # Reglas de `feat-agr`
 
-**ESPECIFICACIÓN del 2026-10-05, sin implementar.** No hay código, ni grupos, ni un solo número propio. El criterio,
-escrito **antes de calcular ningún grupo**, está en `instrucciones/02-criterio.md`. Esta versión es la segunda del mismo
-día: la primera (`6d42bda`) la pasaron por el `verificador` y el `revisor`, y lo que corrigieron está aplicado aquí.
-Al implementar se reescribe lo que cambie, en el mismo commit.
+**IMPLEMENTADO y corrido el 2026-10-05**, con las opciones por defecto (D1–D3), por orden del dueño («Si»). Lo que salió,
+en `README.md`. El criterio, escrito **antes de calcular ningún grupo**, en `instrucciones/02-criterio.md`. La
+especificación pasó por el `verificador` (dos veces) y por el `revisor` antes de implementarse (`6d42bda` → `fb109c5`).
+Lo que cambió al implementar está marcado aquí donde ocurre.
 
 **Qué pregunta:** si cada dígito se describe por las features que lo componen —qué detector se enciende y en qué zona—
 y se agrupan los dígitos por esa descripción **sin leer la etiqueta**, ¿salen grupos de formas semejantes —variantes de
@@ -13,7 +13,7 @@ dígitos distintos— y cuánto coinciden esos grupos con las etiquetas de NIST?
 **La idea en una línea:** en todo lo de hoy la etiqueta organizaba (los detectores se componían *para* predecirla).
 Aquí se agrupa sin ella, y la etiqueta sólo entra **después**, como lente para leer unos grupos que se formaron solos.
 
-## ⏳ Lo que decide el dueño antes de implementar (el coste no cambia con ninguna)
+## Lo que decidió el dueño: «Si» = los valores por defecto (2026-10-05)
 
 | # | qué | por defecto | por qué hay que decidirlo |
 |---|---|---|---|
@@ -133,21 +133,24 @@ la advertencia de la tabla de §2: el nombre es el del dibujo.
 - **Pesos:** las copias de los detectores (`nn/detectores-32px/`, `nn/detectores-8px/`, 3,05 MB) y `nn/detectores.json`.
   Se commitean. No se entrena ninguna red.
 - **Los grupos:** las particiones principales (Z32 y Z8, K = 30) en `resultados/grupos-<brazo>-K30.json`: a qué grupo
-  va cada uno de los 5620, centroides, medoides, lo que se enciende y el árbol. **Se commitean**: son el producto del
-  experimento. Las demás particiones, en `resultados/grupos.npz` (no se commitea: `*.npz`; se regeneran con las mismas
-  semillas).
+  va cada uno de los 5620, centroides, medoides, lo que se enciende, el árbol y qué manda (L7). **Se commitean**: son el
+  producto del experimento. Cada corrida de k-means, en `resultados/grupos/<ajuste>-<brazo>-K<k>-s<semilla>.npz` (no se
+  commitean: `*.npz`; se regeneran iguales con las mismas semillas, comprobado al repetir todo el 2026-10-05). La decisión
+  de Z−a, en `resultados/regla-sin-arcos.json`.
 - **Métricas:** `resultados/lecturas.json` — L1–L7 por brazo, K y semilla, y la evaluación del criterio.
 - **Figuras** (`nn/figuras.py`):
   - `grupos-<brazo>-K30.png` para Z32, Z8 y X8 — una fila por grupo, en el orden del árbol: tamaño, mezcla de
     etiquetas, el medoide grande y 15 miembros al azar. **Es lo primero que se mira**, antes que cualquier número;
   - `enciende-<brazo>-K30.png` — por grupo, los 13 mapas de zona (3×3) medios;
   - `arbol-<brazo>-K30.png` — el dendrograma de los 30 grupos;
-  - `los-1.png` — todos los 1, ordenados por su grupo, con su índice de bandera (L2b);
-  - `consistencia.png` — L4 por brazo y transformación.
+  - `los-1.png` — los «grupos del 1» de Z32, Z8 y X8, con sus 1 ordenados por la bandera corregida b′ (a posteriori,
+    §5), y los 20 unos con más b′ con el grupo de Z32 de cada uno;
+  - `auditoria-1-Z32.png` — *(a posteriori)* 40 unos al azar de cada grupo de Z32 con ≥ 30 unos, numerados, para contar a
+    ojo cuántos tienen bandera;
+  - `consistencia.png` — L4 por brazo y transformación (la paleta, validada con la herramienta de la skill `dataviz`).
 - **Qué se commitea:** todo menos `*.npz` (las representaciones y las particiones secundarias se regeneran en minutos).
-- **Presupuesto de tamaño:** el tope del repo es ≈5 MB por experimento. Pesos 3,05 MB + figuras ≤ 1,5 MB (en grises o
-  con paleta, ≤ 150 KB cada una; las 12 de `feat-ind32` suman 2,3 MB) + JSON < 0,5 MB. Si el total pasa de 5 MB, se
-  pregunta antes de commitear.
+- **Presupuesto de tamaño:** el tope del repo es ≈5 MB por experimento. **Medido al commitear: 3,97 MB** — pesos 3,05 MB,
+  10 figuras 578 KB (ninguna pasa de 90 KB), JSON 0,25 MB, y el código.
 - **Reporte en el central:** **no** — 0 $ y no cambia `ESTADO.md` (la misma decisión que `feat-ind`). Si el dueño lo
   quiere, se escribe.
 
@@ -167,9 +170,12 @@ la advertencia de la tabla de §2: el nombre es el del dibujo.
 - **Dos ajustes:** (a) sobre los **5620**, que es lo que se dibuja y se lee; (b) sobre los **3823** de 30 escritores
   —Z32, Z8 y X8—, para medir si los grupos valen para los 13 que no vio (cada uno se asigna al centroide más cercano) y
   para elegir a quién etiquetar (L6).
-- ⚠ **La etiqueta no puede entrar por accidente, y eso lo garantiza el código, no el cuidado:** el cargador de dígitos
-  **no devuelve** `etiquetas` salvo que se pidan explícitamente, y sólo la lectura las pide. `--comprobar` falla si el
-  script que agrupa las toca.
+- ⚠ **La etiqueta no puede entrar por accidente, y eso lo garantiza el código, no el cuidado:** `datos.cargar()` **no
+  devuelve** etiquetas; hay que llamar a `datos.etiquetas()`, y sólo lo hacen la lectura, las figuras y las
+  comprobaciones. `datos.py --comprobar` falla si `representar.py` o `entrenar_local.py` la piden. ✅ **Saltó una vez, y
+  con razón:** la primera versión llamaba `"etiquetas"` a la salida del k-means (el grupo de cada dígito). No leía ninguna
+  etiqueta de NIST, pero dos cosas distintas con el mismo nombre son justo la confusión que el control existe para impedir.
+  Se renombró a `"grupos"` y se repitió todo desde cero.
 
 ### 5. Las lecturas — la etiqueta entra aquí, y sólo aquí
 
@@ -200,7 +206,24 @@ dicen las rejillas.
 **El brazo condicional Z−a, decidido ahora:** si en un banco los 4 arcos aportan **más de la mitad** de la separación
 entre grupos (L7), se repite ese brazo **sin los arcos** y se reportan H1, H2 y H4 con él. La regla va escrita antes
 porque los arcos se encienden en tres de cada cuatro 1 (§2), y es el camino más probable por el que el grosor acabe
-mandando sobre la forma.
+mandando sobre la forma. *(Al correr: 37,9 % en Z32 y 33,7 % en Z8 → **no** se disparó.)*
+
+**Detalles que el criterio no fijaba, decididos al implementar y ANTES de leer nada con etiquetas** (están también en la
+cabecera de `nn/leer.py`):
+- el azar de L1: 20 permutaciones de las etiquetas (semilla 0);
+- «persiste en K′»: el grupo de K′ donde cae la **mayoría relativa** de los *c* de cada lado (empate: el de menor número);
+- el bloque de `windep` de un grupo sólo se mira si el grupo tiene ≥ 10 miembros de `windep`;
+- L6: el azar con semillas 1001–1005, el estratificado con 2001–2005, y el compositor (copiado de `feat-ind32`) con 1–3.
+
+**Añadido A POSTERIORI —después de ver H1— y que no cambia ningún veredicto:**
+- ⚠ **El testigo *b* no medía la bandera.** Su punto ciego no era sólo el «\»: en un 1 inclinado como «/», la bandera
+  arranca a la derecha del tallo central y *b* la subestima. El grupo que a ojo son todos 1 con bandera (g15 de Z32) tiene
+  *b* medio **−2,2**.
+- Se probó un **índice corregido b′** (`nn/leer.py`, `bandera_corregida`): la bandera contra el borde izquierdo del tallo
+  extrapolado. **Tampoco sirve**: una bandera larga baja hasta las filas del tallo y tuerce la recta ajustada. Sus «más
+  abanderados» son barras gruesas.
+- Por eso, **una cuenta a ojo** (por Claude, aproximada) sobre `auditoria-1-Z32.png`, y lo que se enciende en cada grupo
+  del 1 (`grupos-Z32-K30.json`). Las dos cosas están en el README, marcadas como lo que son.
 
 ### 6. Pasos
 
@@ -213,6 +236,7 @@ mandando sobre la forma.
 4. **Mirar** las rejillas, antes que los números.
 5. **Leer:** L1–L7 → `resultados/lecturas.json`, con la evaluación del criterio. README con lo que salió, y
    `feat-agr` en «Quién lo usa» del README del dataset.
+6. **Figuras** (`nn/figuras.py`), y mirarlas antes de escribir el README.
 
 - **Qué se mide y con qué umbral:** `instrucciones/02-criterio.md` (comprobaciones de cordura y H0–H6), escrito antes.
 - **Cuántos brazos y cuántas semillas:** los de §3; 5 semillas de k-means; el compositor de L6, 3 semillas del
@@ -222,29 +246,29 @@ mandando sobre la forma.
 
 ### 7. Dónde corre y cuánto cuesta
 
-**0 $, en el dev, sin alquilar nada.** Estimado, **no medido**: ≤ 15 min en total. Los mapas de los 5620 con el banco de
-32 tardaron 41 s (medido el 2026-10-05 en `feat-ind32`, `nn/aplicar.py`, con pesos de prueba de la misma red) y 33 s al
-repetirlo ese día (el `verificador`); ×4 con las transformaciones ≈ 2–3 min. El banco de 8, ~1 min; los k-means,
-~8 min (lo caro es M32, 832 dimensiones); L6, < 1 min.
+**0 $, en el dev, sin alquilar nada. Medido el 2026-10-05** (se estimaban ≤ 15 min): `representar.py` 127 s ·
+`entrenar_local.py` 33 s (los 190 k-means de los tres ajustes) · `leer.py` 72 s · `figuras.py` ~15 s. Unos 4 min en total.
 
-Al implementar, `gasta` pasa a `entrena-local` con la entrada en `nn/entrenar_local.py` —el contrato con el freno: si
-esto tarda, el freno tiene que verlo—. Si la primera pasada entera pasa de 10 min, se lanza como unidad
-(`desacoplar-persistente.sh`) con un lanzador que imprime la orden, tiene modo seco y se niega a lanzar dos veces.
+`gasta` es `entrena-local` con la entrada en `nn/entrenar_local.py` —el contrato con el freno—. Como cada paso cabe de
+sobra en el turno, no hizo falta lanzarlo como unidad.
 
 ## Scripts
 
-Previstos. Los nombres y las banderas son de este experimento, y si cambian al implementar, esta tabla cambia en el
-mismo commit.
+Los de este experimento, tal como quedaron al implementar (las dos redes de detector, que se preveían en dos ficheros,
+van juntas en `nn/detectores.py`).
 
 | script | qué hace | cómo se llama |
 |---|---|---|
-| `nn/detector32.py`, `nn/detector8.py` | las dos redes de detector, copiadas y autocontenidas: cargar y huella | — |
-| `nn/datos.py` | los 5620 por `exigir_dataset`, con sus huellas; **sin etiquetas** salvo `con_etiquetas=True`; los bloques de `windep`; la `particion()` copiada | `python nn/datos.py --comprobar` |
+| `nn/detectores.py` | las dos redes de detector, copiadas y autocontenidas; copia los `best.pt` una vez (por `id`, con commit y huella) y comprueba que reproducen la firma de origen | `--copiar` (una vez) · `--comprobar` |
+| `nn/datos.py` | los 5620 por `exigir_dataset`, con sus huellas; `cargar()` **sin etiquetas**, `etiquetas()` aparte; los bloques de `windep`; la `particion()` copiada y las 6000 evaluaciones de C | `python nn/datos.py --comprobar` |
 | `nn/representar.py` | P, Z y M de los bancos, y X8; limpios y transformados; los tres índices de L2b | `python nn/representar.py` → `resultados/representaciones.npz` |
 | `nn/metricas.py` | k-means++, Ward, pureza, NMI, ARI, AUC y κ en numpy, probados contra casos hechos a mano | `python nn/metricas.py --comprobar` |
-| `nn/entrenar_local.py` | los k-means de todos los brazos (el nombre es el contrato con el freno) | `python nn/entrenar_local.py [--brazos Z32,Z8,X8] [--K 10,30]` → `resultados/grupos.npz`, `grupos-<brazo>-K30.json` |
-| `nn/leer.py` | L1–L7 y el criterio | `python nn/leer.py` → `resultados/lecturas.json` |
+| `nn/entrenar_local.py` | los k-means de los tres ajustes (reanudable: salta lo hecho), la regla de Z−a y las particiones principales (el nombre es el contrato con el freno) | `python nn/entrenar_local.py [--solo a\|b\|c]` → `resultados/grupos/*.npz`, `grupos-<brazo>-K30.json`, `regla-sin-arcos.json` |
+| `nn/leer.py` | L1–L7, el criterio y lo añadido a posteriori (marcado) | `python nn/leer.py` → `resultados/lecturas.json` |
 | `nn/figuras.py` | las figuras de § Salidas | `python nn/figuras.py` → `resultados/*.png` |
+
+Para repetirlo entero: `nn/detectores.py --comprobar` → `nn/representar.py` → `nn/entrenar_local.py` → `nn/leer.py` →
+`nn/figuras.py` (las copias de los detectores ya están en git; `--copiar` se niega a pisarlas).
 
 - **Dependencias:** el `.venv` de la raíz (numpy 2.5.3, torch 2.14.1 CPU, Pillow 12.3.0, matplotlib 3.10.9; comprobado el
   2026-10-05). **No hay scipy ni scikit-learn**, y no se instalan: k-means, Ward, NMI, ARI, AUC y κ son ~150 líneas de

@@ -127,3 +127,12 @@ la mitad en un banco, se corre Z−a** (ese banco sin arcos) y H1, H2 y H4 se re
   en vez de «con bandera / sin bandera»—. H1, H2 y H4 lo tienen como rival explícito, y Z−a es la salida si son los arcos.
 
 Si sale al revés en cualquiera de estos puntos, eso es un resultado y se escribe tal cual.
+
+## Al correr (2026-10-05) — nota, NO enmienda: ningún umbral cambió
+
+Resultados y veredictos en `README.md`. Lo único que hay que saber al leer esta página después: **el testigo de H1
+(`bandera`) resultó no medir la bandera** en los 1 de NIST. Un 1 inclinado como «/» le resta bandera, y el grupo que a ojo
+es todo 1 con bandera sale con −2,2 de media. Se vio **después** de correr; un índice corregido, probado a posteriori,
+tampoco sirvió. H1 queda **refutada tal como estaba escrita**, y eso dice que el instrumento no valía, no que el corte no
+exista. Lo que hay en su lugar —una cuenta a ojo y lo que se enciende en cada grupo— está en el README, marcado como lo
+que es.

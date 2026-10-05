@@ -1,0 +1,198 @@
+{
+ "32": {
+  "origen": "feat-ind32",
+  "entrada": "32×32 0/1",
+  "clave_firma_en_origen": "firma_windep",
+  "detectores": {
+   "arco-E": {
+    "huella": "110ee726045e1621",
+    "umbral": 0.25,
+    "sha256_fichero": "b94652c74f80f364",
+    "ruta_en_origen": "nn/pesos/arco-E/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "arco-W": {
+    "huella": "93b2e3bb788451fc",
+    "umbral": 0.8,
+    "sha256_fichero": "1db55c8fa6741a15",
+    "ruta_en_origen": "nn/pesos/arco-W/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "arco-N": {
+    "huella": "6b156a8eaad7ec7b",
+    "umbral": 0.65,
+    "sha256_fichero": "f2b5ad8f0c5d7c91",
+    "ruta_en_origen": "nn/pesos/arco-N/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "arco-S": {
+    "huella": "64ca7817bb44e611",
+    "umbral": 0.8,
+    "sha256_fichero": "6ffa930df28ac412",
+    "ruta_en_origen": "nn/pesos/arco-S/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "recta-V": {
+    "huella": "f1c01f8f8763e63c",
+    "umbral": 0.55,
+    "sha256_fichero": "731a832680239c82",
+    "ruta_en_origen": "nn/pesos/recta-V/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "recta-H": {
+    "huella": "5ffbfbaa21b39541",
+    "umbral": 0.2,
+    "sha256_fichero": "91f3a993910aa343",
+    "ruta_en_origen": "nn/pesos/recta-H/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "recta-S": {
+    "huella": "844b7d4c85b4ad2a",
+    "umbral": 0.6,
+    "sha256_fichero": "d52065c8443dcfc6",
+    "ruta_en_origen": "nn/pesos/recta-S/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "recta-B": {
+    "huella": "4cd67d9da2f34ac6",
+    "umbral": 0.6,
+    "sha256_fichero": "7fe85855294e342e",
+    "ruta_en_origen": "nn/pesos/recta-B/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "lazo": {
+    "huella": "32456548f74fcd05",
+    "umbral": 0.65,
+    "sha256_fichero": "82fc1761adb057ff",
+    "ruta_en_origen": "nn/pesos/lazo/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "esquina-NE": {
+    "huella": "f720e17c67d2dbf3",
+    "umbral": 0.8,
+    "sha256_fichero": "ba6b35201f778158",
+    "ruta_en_origen": "nn/pesos/esquina-NE/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "esquina-NW": {
+    "huella": "9932ae7137879b64",
+    "umbral": 0.9,
+    "sha256_fichero": "b39f404008723725",
+    "ruta_en_origen": "nn/pesos/esquina-NW/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "esquina-SE": {
+    "huella": "faf812f5531e9524",
+    "umbral": 0.75,
+    "sha256_fichero": "d6a6cbee86ca36ee",
+    "ruta_en_origen": "nn/pesos/esquina-SE/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   },
+   "esquina-SW": {
+    "huella": "31d410466bcf5318",
+    "umbral": 0.8,
+    "sha256_fichero": "c4caed27aeedc453",
+    "ruta_en_origen": "nn/pesos/esquina-SW/best.pt",
+    "commit_en_origen": "4e1a63605b8809d6a73c5385845fa7fab1ce3d98"
+   }
+  }
+ },
+ "8": {
+  "origen": "feat-ind",
+  "entrada": "8×8 = cuentas 4×4 ÷ 16",
+  "clave_firma_en_origen": "firma",
+  "detectores": {
+   "arco-E": {
+    "huella": "df8e687a93424bee",
+    "umbral": 0.6,
+    "sha256_fichero": "b2eadaec70d96bb8",
+    "ruta_en_origen": "nn/pesos/arco-E/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "arco-W": {
+    "huella": "5f70a4449a451d36",
+    "umbral": 0.6,
+    "sha256_fichero": "af7e8c0e6b1e6f07",
+    "ruta_en_origen": "nn/pesos/arco-W/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "arco-N": {
+    "huella": "33da618e62b36403",
+    "umbral": 0.65,
+    "sha256_fichero": "ba429161a7d5f6e8",
+    "ruta_en_origen": "nn/pesos/arco-N/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "arco-S": {
+    "huella": "286885302f2d960d",
+    "umbral": 0.75,
+    "sha256_fichero": "e3268efb24217edf",
+    "ruta_en_origen": "nn/pesos/arco-S/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "recta-V": {
+    "huella": "f0ec5e6366e3df0b",
+    "umbral": 0.65,
+    "sha256_fichero": "068ed2b9d55290b6",
+    "ruta_en_origen": "nn/pesos/recta-V/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "recta-H": {
+    "huella": "f1eea09cb0168c8d",
+    "umbral": 0.6,
+    "sha256_fichero": "d905d26fea8e5904",
+    "ruta_en_origen": "nn/pesos/recta-H/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "recta-S": {
+    "huella": "a0dd5cd497018a64",
+    "umbral": 0.65,
+    "sha256_fichero": "116dbf42da8fb60e",
+    "ruta_en_origen": "nn/pesos/recta-S/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "recta-B": {
+    "huella": "e0627dca26536013",
+    "umbral": 0.8,
+    "sha256_fichero": "5d1a0486ee008e77",
+    "ruta_en_origen": "nn/pesos/recta-B/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "lazo": {
+    "huella": "fd7e455a909249b4",
+    "umbral": 0.55,
+    "sha256_fichero": "d1bfc41e4f6b330f",
+    "ruta_en_origen": "nn/pesos/lazo/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "esquina-NE": {
+    "huella": "107f740961fd0c12",
+    "umbral": 0.7,
+    "sha256_fichero": "2d1466ebd8ba630c",
+    "ruta_en_origen": "nn/pesos/esquina-NE/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "esquina-NW": {
+    "huella": "a4a09454cb3c19a9",
+    "umbral": 0.55,
+    "sha256_fichero": "d453861c94abd88e",
+    "ruta_en_origen": "nn/pesos/esquina-NW/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "esquina-SE": {
+    "huella": "44f76c95e33600c0",
+    "umbral": 0.7,
+    "sha256_fichero": "f4d8ad3610187138",
+    "ruta_en_origen": "nn/pesos/esquina-SE/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   },
+   "esquina-SW": {
+    "huella": "99f6286aa1ee8126",
+    "umbral": 0.75,
+    "sha256_fichero": "32c89d3fb30aadf7",
+    "ruta_en_origen": "nn/pesos/esquina-SW/best.pt",
+    "commit_en_origen": "fbeecc6f73860777d34228200072e5a721e944fb"
+   }
+  }
+ }
+}
