@@ -11,5 +11,5 @@
   "reporte": "estudios-redes-neuronales #30",
   "plan": "REGLAS.md (plan e implementacion) e instrucciones/02-criterio.md, escrito antes de entrenar",
   "linaje": "feat-ind (de ahi sale la pregunta y contra sus numeros se compara, porque los digitos 32x32 son EXACTAMENTE los mismos 1797 que feat-ind vio a 8x8 — comprobado 2026-10-05). No importa codigo de el: se copia. Ver REGLAS.md § Que NO hereda",
-  "gasta_por_que": "Los 13 detectores en UNA maquina de Vast a la vez (nn/vast.sh detectores, tope 3 h, se destruye sola). Lo demas, minutos en el dev. El freno de Telegram es `/use exp-vast`."
+  "gasta_por_que": "Dos trabajos en Vast con nn/vast.sh, cada uno en UNA máquina a la vez y destruida sola: los 13 detectores (`detectores`, tope 3 h) y las 120 curvas de CNN (`cnn`, tope 2 h). Lo demás, minutos en el dev. El freno de Telegram es `/use exp-vast`."
 }

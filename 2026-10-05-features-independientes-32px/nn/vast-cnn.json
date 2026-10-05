@@ -1,0 +1,51 @@
+{
+ "experimento": "feat-ind32",
+ "descripcion": "Curvas de CNN: las 120 (CNN de 3 capas del repo y LeNet-5 × 60 particiones de la ganancia) A LA VEZ en UNA máquina, un proceso de 1 hilo por vCPU pagada. Después, nn/curvas_cnn.py --resumen y la figura en el dev.",
+ "maquina": {
+  "cpus": 24,
+  "max_cpus": 49,
+  "min_ram": 16,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.4
+ },
+ "envia": [
+  {
+   "origen": "../..",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras"
+   ]
+  },
+  {
+   "origen": "$EXPCNN_DATOS/experimentos-cnn/uci-optdigits-orig-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/uci-optdigits-orig-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "cnn",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --procesos $P",
+   "trae": [
+    "curvas-cnn"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` relativos a `nn/` en la máquina, como en vast.json.",
+  "Sólo viaja el dato de 32×32: el 8×8 de la CNN de 3 capas se reduce de él (bit a bit el de 8 px, comprobado en datos.py).",
+  "Medido en el dev el 2026-10-05, 1 hilo: LeNet-5 ~45 s y CNN de 3 capas ~19 s por entrenamiento; las 120 suman ~64 min en serie.",
+  "Cada entrenamiento deja su json al terminar y se salta si ya existe: un relanzamiento no repite lo hecho, y lo que se trae vale aunque falte algo."
+ ]
+}

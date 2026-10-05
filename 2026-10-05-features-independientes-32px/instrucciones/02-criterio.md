@@ -64,3 +64,26 @@ ruido σ 0,15, dilatar 2 px, erosionar 1 px, ocluir 12×12 px). Los G3 se compar
 - H3 no: 13 detectores no llegan a lo que daban 26.
 - Lo que más probablemente salga mal: **la transferencia sintético → manuscrito empeora**, porque a 32×32 el
   trazo manuscrito binarizado de NIST es más irregular que el sintético, y a 8×8 el conteo lo suavizaba.
+
+## Curvas de CNN (2026-10-05) — escrito ANTES de correr los 120 entrenamientos
+
+Pedido del dueño: comparar las curvas con modelos tradicionales. Dos CNN entrenadas de punta a punta (`nn/cnn.py`): la
+**CNN de 3 capas** del repo (la de `ruido-nist`, 1.338 parámetros, 8×8) y una **LeNet-5** sobre 32×32 (61.706
+parámetros). Mismas 60 particiones que la ganancia (comprobado por huella), 3996 pasos de 20, sin selección ni aumento.
+
+⚠ **Lo que ya se vio antes de escribir esto**, al medir el tiempo de un entrenamiento (semilla 1, 4 puntos): LeNet-5 98,8 %
+con N = 2000 y 60,4 % con N = 10; CNN de 3 capas 96,8 % y 43,5 %. Las predicciones de abajo los tienen en cuenta.
+
+Se compara contra las curvas de la ganancia (detectores 8×8: 64,6 % con N = 10, 95,8 % con 160–200, 98,1 % con 2000;
+N(95 %) = 133), con las mismas funciones (`nn/muestras_necesarias.py`: media por N, isotónica, sin extrapolar).
+
+1. **Cruce detectores 8×8 – LeNet-5.** Por los 4 puntos vistos, LeNet-5 gana con muchos datos y pierde con muy pocos: hay
+   un cruce. **Predicción: entre N = 200 y N = 1000.** Se reporta el N del cruce. Si LeNet-5 queda por encima de los
+   detectores para todo N ≥ 40, la ventaja de los detectores es sólo del régimen de muy pocos datos, y se dice así.
+2. **N(95 %) de LeNet-5**: predicción **250–500** (los detectores, 133: entre 2× y 4× menos muestras).
+3. **CNN de 3 capas contra la logística sobre píxeles**: en N = 180 / 1617 quedó por debajo (86,9 % contra 90,4–90,8 %).
+   Predicción: **por debajo hasta N ≈ 500 y por encima desde ~1000** (en N = 2000 ya se vio 96,8 %, por encima de los
+   píxeles 8×8, 95,4 %).
+4. **Coherencia con lo medido en N = 180 / 1617** (`ruido-comb`): la curva de la CNN de 3 capas en N = 160–200 tiene que
+   caer cerca de 86,9 ± 2,4 %. Si se aleja más de 5 puntos, el protocolo distinto (datasets mezclados de 43 escritores)
+   pesa más de lo que se suponía en `comparar_cnn.py`, y se dice.
