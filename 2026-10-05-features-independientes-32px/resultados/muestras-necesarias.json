@@ -1,0 +1,411 @@
+{
+ "definicion": "N(ε) = muestras de train para acertar ε de cada 1000 dígitos nuevos; curva acierto(N) con los 4 tamaños de dataset juntos, isotónica, interpolada en log N; sin extrapolar",
+ "objetivos_por_1000": [
+  800,
+  900,
+  950,
+  970,
+  980
+ ],
+ "referencia": "píxeles 32×32",
+ "representaciones": {
+  "detectores 8×8 (13)": {
+   "N_medidos": [
+    10,
+    20,
+    40,
+    50,
+    80,
+    100,
+    160,
+    200,
+    250,
+    400,
+    500,
+    800,
+    1000,
+    2000
+   ],
+   "acierto_isotonico": [
+    0.6462,
+    0.7929,
+    0.8968,
+    0.9059,
+    0.9382,
+    0.9382,
+    0.9575,
+    0.9575,
+    0.9653,
+    0.9708,
+    0.9708,
+    0.9787,
+    0.9813,
+    0.9813
+   ],
+   "acierto_max": 0.9813,
+   "N_para": {
+    "800": {
+     "N": 21.0,
+     "estado": "ok",
+     "texto": "21",
+     "por_semilla": [
+      "20",
+      "22",
+      "22"
+     ],
+     "veces_menos_que_referencia": 1.54
+    },
+    "900": {
+     "N": 43.2,
+     "estado": "ok",
+     "texto": "43",
+     "por_semilla": [
+      "39",
+      "39",
+      "55"
+     ],
+     "veces_menos_que_referencia": 2.73
+    },
+    "950": {
+     "N": 133.2,
+     "estado": "ok",
+     "texto": "133",
+     "por_semilla": [
+      "138",
+      "126",
+      "133"
+     ],
+     "veces_menos_que_referencia": 5.13
+    },
+    "970": {
+     "N": 373.7,
+     "estado": "ok",
+     "texto": "374",
+     "por_semilla": [
+      "573",
+      "289",
+      "417"
+     ],
+     "veces_menos_que_referencia": null
+    },
+    "980": {
+     "N": 894.4,
+     "estado": "ok",
+     "texto": "894",
+     "por_semilla": [
+      "1104",
+      "927",
+      "494"
+     ],
+     "veces_menos_que_referencia": null
+    }
+   }
+  },
+  "detectores 32×32 (13)": {
+   "N_medidos": [
+    10,
+    20,
+    40,
+    50,
+    80,
+    100,
+    160,
+    200,
+    250,
+    400,
+    500,
+    800,
+    1000,
+    2000
+   ],
+   "acierto_isotonico": [
+    0.6483,
+    0.7572,
+    0.848,
+    0.848,
+    0.9036,
+    0.9036,
+    0.9368,
+    0.9383,
+    0.9387,
+    0.9532,
+    0.9532,
+    0.9627,
+    0.9627,
+    0.9685
+   ],
+   "acierto_max": 0.9685,
+   "N_para": {
+    "800": {
+     "N": 27.7,
+     "estado": "ok",
+     "texto": "28",
+     "por_semilla": [
+      "32",
+      "24",
+      "28"
+     ],
+     "veces_menos_que_referencia": 1.17
+    },
+    "900": {
+     "N": 77.6,
+     "estado": "ok",
+     "texto": "78",
+     "por_semilla": [
+      "77",
+      "79",
+      "79"
+     ],
+     "veces_menos_que_referencia": 1.52
+    },
+    "950": {
+     "N": 360.6,
+     "estado": "ok",
+     "texto": "361",
+     "por_semilla": [
+      "531",
+      "362",
+      "361"
+     ],
+     "veces_menos_que_referencia": 1.89
+    },
+    "970": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "1725",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    },
+    "980": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "> 2000",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    }
+   }
+  },
+  "píxeles 8×8": {
+   "N_medidos": [
+    10,
+    20,
+    40,
+    50,
+    80,
+    100,
+    160,
+    200,
+    250,
+    400,
+    500,
+    800,
+    1000,
+    2000
+   ],
+   "acierto_isotonico": [
+    0.6095,
+    0.7144,
+    0.8387,
+    0.8482,
+    0.886,
+    0.886,
+    0.9159,
+    0.9185,
+    0.9187,
+    0.9358,
+    0.9358,
+    0.9456,
+    0.9539,
+    0.9539
+   ],
+   "acierto_max": 0.9539,
+   "N_para": {
+    "800": {
+     "N": 32.2,
+     "estado": "ok",
+     "texto": "32",
+     "por_semilla": [
+      "31",
+      "31",
+      "34"
+     ],
+     "veces_menos_que_referencia": 1.0
+    },
+    "900": {
+     "N": 124.7,
+     "estado": "ok",
+     "texto": "125",
+     "por_semilla": [
+      "129",
+      "128",
+      "122"
+     ],
+     "veces_menos_que_referencia": 0.95
+    },
+    "950": {
+     "N": 899.9,
+     "estado": "ok",
+     "texto": "900",
+     "por_semilla": [
+      "797",
+      "929",
+      "893"
+     ],
+     "veces_menos_que_referencia": 0.76
+    },
+    "970": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "> 2000",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    },
+    "980": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "> 2000",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    }
+   }
+  },
+  "píxeles 32×32": {
+   "N_medidos": [
+    10,
+    20,
+    40,
+    50,
+    80,
+    100,
+    160,
+    200,
+    250,
+    400,
+    500,
+    800,
+    1000,
+    2000
+   ],
+   "acierto_isotonico": [
+    0.5905,
+    0.7083,
+    0.8407,
+    0.8459,
+    0.8894,
+    0.8894,
+    0.9197,
+    0.9197,
+    0.9307,
+    0.9385,
+    0.9385,
+    0.9558,
+    0.9633,
+    0.967
+   ],
+   "acierto_max": 0.967,
+   "N_para": {
+    "800": {
+     "N": 32.3,
+     "estado": "ok",
+     "texto": "32",
+     "por_semilla": [
+      "33",
+      "32",
+      "33"
+     ],
+     "veces_menos_que_referencia": 1.0
+    },
+    "900": {
+     "N": 117.9,
+     "estado": "ok",
+     "texto": "118",
+     "por_semilla": [
+      "123",
+      "121",
+      "111"
+     ],
+     "veces_menos_que_referencia": 1.0
+    },
+    "950": {
+     "N": 683.0,
+     "estado": "ok",
+     "texto": "683",
+     "por_semilla": [
+      "675",
+      "500",
+      "645"
+     ],
+     "veces_menos_que_referencia": 1.0
+    },
+    "970": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "1892",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    },
+    "980": {
+     "N": null,
+     "estado": "encima",
+     "texto": "> 2000",
+     "por_semilla": [
+      "> 2000",
+      "> 2000",
+      "> 2000"
+     ],
+     "veces_menos_que_referencia": null
+    }
+   }
+  }
+ },
+ "por_tamano": {
+  "500": {
+   "850": "33",
+   "900": "48",
+   "925": "78",
+   "950": "155",
+   "970": "> 250"
+  },
+  "1000": {
+   "850": "29",
+   "900": "47",
+   "925": "77",
+   "950": "147",
+   "970": "474"
+  },
+  "2000": {
+   "850": "≤ 40",
+   "900": "≤ 40",
+   "925": "70",
+   "950": "179",
+   "970": "397"
+  },
+  "4000": {
+   "850": "≤ 80",
+   "900": "≤ 80",
+   "925": "≤ 80",
+   "950": "89",
+   "970": "352"
+  }
+ }
+}

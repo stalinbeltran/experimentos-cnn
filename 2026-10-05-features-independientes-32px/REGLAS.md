@@ -118,6 +118,7 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/figura_factor.py` | la figura de F(N) con los 4 casos (lee el `factor.json` de `feat-ind` por su id) | `python nn/figura_factor.py` |
 | `nn/ganancia.py` | G = acierto en val ÷ (train/(train + val)) con datasets balanceados de 500–4000 dígitos; `particion()` copiada de `feat-ind` | `python nn/ganancia.py` → `resultados/ganancia.json` |
 | `nn/figura_ganancia.py` | la figura de G en tres paneles; se niega si los dos experimentos no evaluaron los mismos dígitos | `python nn/figura_ganancia.py` |
+| `nn/muestras_necesarias.py` | N(ε): muestras para acertar ε de cada 1000 nuevos, desde los datos de la ganancia (no entrena); tabla, rango entre semillas, comprobación por tamaño de dataset y figura | `python nn/muestras_necesarias.py` → `resultados/muestras-necesarias.json` y `.png` |
 
 - ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.
 - **Dependencias:** el `.venv` de la raíz (torch 2.14.1 CPU, numpy 2.5.3, Pillow 12.3.0); el de Vast, las mismas.

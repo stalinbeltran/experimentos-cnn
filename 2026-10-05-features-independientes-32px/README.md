@@ -119,7 +119,45 @@ semillas. `nn/ganancia.py` aquí y en `feat-ind` (las mismas particiones: misma 
 **Para qué sirve, entonces:** para comparar representaciones **con el mismo T y el mismo p**, diciendo siempre T. Si se
 quiere un número que no dependa del tamaño del dataset, el denominador tiene que ser N (o N por clase), no p.
 
-## Lo que queda pendiente
+## Muestras necesarias N(ε): cuánto cuesta cada nivel de acierto (2026-10-05)
+
+![muestras necesarias](resultados/muestras-necesarias.png)
+
+**N(ε) = muestras de train necesarias para acertar ε de cada 1000 dígitos nuevos.** Es la alternativa D del análisis de
+ese día, pedida por el dueño tras ver que G depende del tamaño del dataset. Va **por cada 1000** (una tasa) y no en
+número de aciertos, porque un recuento depende de cuántos dígitos se evalúan. `nn/muestras_necesarias.py`: sale de los
+mismos 240 entrenamientos de la ganancia (no se entrena nada). Curva acierto(N) con los cuatro tamaños de dataset
+juntos (N de 10 a 2000), monótona por regresión isotónica, invertida interpolando en log N. **Sin extrapolar**: «> 2000»
+es que no se alcanza con lo medido. Entre paréntesis, el rango de las 3 semillas.
+
+| | N(800) | N(900) | N(950) | N(970) | N(980) | máximo con N ≤ 2000 |
+|---|---:|---:|---:|---:|---:|---:|
+| **detectores 8×8 (13)** | **21** | **43** (39–55) | **133** (126–138) | **374** | **894** | **981** |
+| detectores 32×32 (13) | 28 | 78 (77–79) | 361 (361–531) | > 2000 | > 2000 | 969 |
+| píxeles 32×32 | 32 | 118 (111–123) | 683 (500–675) | > 2000 | > 2000 | 967 |
+| píxeles 8×8 | 32 | 125 (122–129) | 900 (797–929) | > 2000 | > 2000 | 954 |
+
+**Cuántas veces menos muestras que los píxeles de 32×32** (el dato crudo a su resolución nativa), para 800 / 900 / 950:
+detectores 8×8 **1,5× / 2,7× / 5,1×** · detectores 32×32 1,2× / 1,5× / 1,9× · píxeles 8×8 1,0× / 0,95× / 0,76×. La
+ventaja de los detectores 8×8 **crece con la exigencia**, y sólo ellos pasan de 970.
+
+**Y es independiente del tamaño del dataset**, que es lo que G no cumplía. Detectores 8×8, cada dataset por separado:
+
+| | T = 500 | T = 1000 | T = 2000 | T = 4000 |
+|---|---:|---:|---:|---:|
+| N(900) | 48 | 47 | ≤ 40 | ≤ 80 |
+| N(925) | 78 | 77 | 70 | ≤ 80 |
+| N(950) | 155 | 147 | 179 | 89 |
+
+(≤: el nivel ya se pasa con el N más pequeño de ese dataset.) No hay tendencia con T. El 89 de T = 4000 es ruido: con un
+mismo T = 1000 las tres semillas dan 93, 129 y 303, y en T = 2000 una semilla sacó 90,6 % con 80 muestras frente a 94,2–94,4
+de las otras.
+
+⚠ **Cerca del techo N(ε) amplifica el ruido**: la curva es casi plana, y un punto de acierto son el doble de muestras.
+Con un solo dataset de 5 puntos y 3 semillas el factor de incertidumbre a 950 llega a ~3; con los cuatro tamaños juntos,
+a ~1,5 (los rangos de la tabla). Para cifras más finas, más semillas: es local, minutos y 0 $.
+
+
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
   detectores con el ruido de grosor/irregularidad del manuscrito, o un banco grueso a 32×32 (la corrida 4 de feat-ind).
