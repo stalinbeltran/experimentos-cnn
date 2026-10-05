@@ -1,0 +1,171 @@
+{
+ "protocolo": "uci-optdigits-8px-r20261002: 180 train / 1617 val (windep), el mismo en todos los puntos de N = 180",
+ "cnn": [
+  {
+   "etiqueta": "CNN 2 capas (dim-nist)",
+   "experimento": "dim-nist",
+   "brazo": "w8",
+   "descripcion": "2 capas sin padding, kernel 4",
+   "parametros": 1258,
+   "semillas": 5,
+   "acc_val_pct": 85.12,
+   "sd_pct": 2.48,
+   "por_semilla_pct": [
+    84.97,
+    85.53,
+    88.56,
+    84.97,
+    81.57
+   ],
+   "muestras_equivalentes": {
+    "detectores 8×8 (13)": {
+     "N": 29.5,
+     "texto": "30",
+     "veces_menos_que_180": 6.1
+    },
+    "detectores 32×32 (13)": {
+     "N": 51.4,
+     "texto": "51",
+     "veces_menos_que_180": 3.5
+    },
+    "píxeles 8×8": {
+     "N": 51.9,
+     "texto": "52",
+     "veces_menos_que_180": 3.47
+    },
+    "píxeles 32×32": {
+     "N": 52.9,
+     "texto": "53",
+     "veces_menos_que_180": 3.4
+    }
+   }
+  },
+  {
+   "etiqueta": "CNN 3 capas (ruido-comb, limpio)",
+   "experimento": "ruido-comb",
+   "escenario": "limpio",
+   "descripcion": "3 × conv 3×3, C = 8, GAP",
+   "parametros": 1338,
+   "semillas": 5,
+   "acc_val_pct": 86.9,
+   "sd_pct": 2.41,
+   "por_semilla_pct": [
+    88.31,
+    89.36,
+    83.43,
+    87.94,
+    85.47
+   ],
+   "muestras_equivalentes": {
+    "detectores 8×8 (13)": {
+     "N": 33.2,
+     "texto": "33",
+     "veces_menos_que_180": 5.42
+    },
+    "detectores 32×32 (13)": {
+     "N": 59.7,
+     "texto": "60",
+     "veces_menos_que_180": 3.02
+    },
+    "píxeles 8×8": {
+     "N": 64.8,
+     "texto": "65",
+     "veces_menos_que_180": 2.78
+    },
+    "píxeles 32×32": {
+     "N": 64.2,
+     "texto": "64",
+     "veces_menos_que_180": 2.8
+    }
+   }
+  },
+  {
+   "etiqueta": "CNN 3 capas + mejor aumento de datos",
+   "experimento": "ruido-comb",
+   "escenario": "recorte@0.6+gaussiano@0.2-linea",
+   "descripcion": "la misma, con recorte + ruido gaussiano en línea",
+   "parametros": 1338,
+   "semillas": 5,
+   "acc_val_pct": 91.61,
+   "sd_pct": 1.18,
+   "por_semilla_pct": [
+    93.44,
+    91.71,
+    90.6,
+    91.77,
+    90.54
+   ],
+   "muestras_equivalentes": {
+    "detectores 8×8 (13)": {
+     "N": 58.0,
+     "texto": "58",
+     "veces_menos_que_180": 3.1
+    },
+    "detectores 32×32 (13)": {
+     "N": 119.3,
+     "texto": "119",
+     "veces_menos_que_180": 1.51
+    },
+    "píxeles 8×8": {
+     "N": 163.2,
+     "texto": "163",
+     "veces_menos_que_180": 1.1
+    },
+    "píxeles 32×32": {
+     "N": 151.2,
+     "texto": "151",
+     "veces_menos_que_180": 1.19
+    }
+   }
+  }
+ ],
+ "puntos_N180": [
+  {
+   "etiqueta": "detectores 8×8 (13)",
+   "acc_val_pct": 95.92,
+   "sd_pct": 0.06,
+   "aprende_de_los_180": "lineal 832 → 10 (8.330 parámetros)"
+  },
+  {
+   "etiqueta": "detectores 32×32 (13)",
+   "acc_val_pct": 94.91,
+   "sd_pct": 0.04,
+   "aprende_de_los_180": "lineal 832 → 10 (8.330 parámetros)"
+  },
+  {
+   "etiqueta": "píxeles 32×32",
+   "acc_val_pct": 90.83,
+   "sd_pct": 0.04,
+   "n_train": 180,
+   "n_val": 1617,
+   "aprende_de_los_180": "lineal 1024 → 10 (10.250 parámetros)"
+  },
+  {
+   "etiqueta": "píxeles 8×8",
+   "acc_val_pct": 90.43,
+   "sd_pct": 0.04,
+   "n_train": 180,
+   "n_val": 1617,
+   "aprende_de_los_180": "lineal 64 → 10 (650 parámetros)"
+  },
+  {
+   "etiqueta": "CNN 2 capas (dim-nist)",
+   "acc_val_pct": 85.12,
+   "sd_pct": 2.48,
+   "aprende_de_los_180": "toda la red (1.258 parámetros)"
+  },
+  {
+   "etiqueta": "CNN 3 capas (ruido-comb, limpio)",
+   "acc_val_pct": 86.9,
+   "sd_pct": 2.41,
+   "aprende_de_los_180": "toda la red (1.338 parámetros)"
+  },
+  {
+   "etiqueta": "CNN 3 capas + mejor aumento de datos",
+   "acc_val_pct": 91.61,
+   "sd_pct": 1.18,
+   "aprende_de_los_180": "toda la red (1.338 parámetros)"
+  }
+ ],
+ "nota": "las curvas (muestras equivalentes) son de los datasets mezclados de la ganancia; en N = 180 los dos protocolos casi coinciden para detectores 8×8 (95,9 % aquí, ~95,8 % en la curva)"
+}

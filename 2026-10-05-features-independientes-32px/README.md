@@ -173,6 +173,42 @@ de las otras.
 Con un solo dataset de 5 puntos y 3 semillas el factor de incertidumbre al 95 % llega a ~3; con los cuatro tamaños juntos,
 a ~1,5 (los rangos de la tabla).
 
+## Comparación con CNN entrenadas de punta a punta (2026-10-05)
+
+![comparación con CNN](resultados/comparacion-cnn.png)
+
+Pedida por el dueño: comparar con modelos «tradicionales», con lo que ya hubiera en los repos. **No se entrenó ninguna
+CNN**: `nn/comparar_cnn.py` lee las de `dim-nist` y `ruido-comb` (por su id), que usan **exactamente el mismo dato** que la
+corrida 2 de `feat-ind` y la C4 de aquí —`uci-optdigits-8px-r20261002`, 180 de train y 1617 de val— y comprueba que es
+así. Lo único calculado es la regresión logística sobre píxeles con ese mismo reparto.
+
+**En N = 180, el mismo train y la misma val para todos:**
+
+| | acierto val | qué aprende de los 180 dígitos |
+|---|---:|---|
+| **detectores 8×8 (13) + compositor** | **95,9 ± 0,1 %** | un lineal 832 → 10 (8.330 parámetros); los detectores, de 32.400 sintéticos |
+| detectores 32×32 (13) + compositor | 94,9 ± 0,0 % | ídem |
+| CNN 3 capas + el mejor aumento de datos (`ruido-comb`) | 91,6 ± 1,2 % | toda la red (1.338 parámetros) |
+| logística sobre píxeles 32×32 | 90,8 % | un lineal 1024 → 10 |
+| logística sobre píxeles 8×8 | 90,4 % | un lineal 64 → 10 |
+| CNN 3 capas, sin aumento (`ruido-comb`, 5 semillas) | 86,9 ± 2,4 % | toda la red (1.338 parámetros) |
+| CNN 2 capas (`dim-nist`, brazo w8) | 85,1 ± 2,5 % | toda la red (1.258 parámetros) |
+
+**Muestras equivalentes** (las curvas de la ganancia): para el 86,9 % de la CNN de 3 capas, los detectores 8×8 necesitan
+**33 muestras (5,4× menos que 180)**, los de 32×32 60 y los píxeles ~65; para el 91,6 % de la CNN con aumento, 58 (3,1×),
+119 y 151–163.
+
+⚠ **Tres cosas para leerlo bien:**
+1. **Estas CNN son diminutas** (~1.300 parámetros), diseñadas para otras preguntas, y con 180 muestras sobreajustan (train
+   100 %, val 87 %): sin aumento de datos quedan **por debajo de una regresión logística sobre píxeles**. No son «la mejor
+   CNN posible». Una CNN estándar mayor —p. ej. LeNet-5 sobre 32×32, el formato para el que se diseñó— **no está medida**.
+2. **Los detectores no aprenden de los 180**: aprendieron de 32.400 dibujos sintéticos, y sólo el compositor aprende de los
+   dígitos. La comparación es «conocimiento previo sintético + un lineal» contra «aprenderlo todo de 180», que es justo la
+   pregunta del experimento — pero hay que decirlo.
+3. **Las muestras equivalentes cruzan dos protocolos**: las curvas son de los datasets mezclados (43 escritores) y las CNN,
+   de los 1797 de 13 escritores. En N = 180 los dos casi coinciden para los detectores 8×8 (95,9 % aquí, ~95,8 % en la
+   curva), así que la cuenta es razonable, no exacta.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
@@ -180,3 +216,4 @@ a ~1,5 (los rangos de la tabla).
 - 1 semilla de detectores; el compositor sí lleva 3.
 - La opción B (mapa 32×32) del plan, sin correr.
 - N(ε) cerca del techo, con 3 semillas: rango de hasta ~1,5× al 95 %. Más semillas lo afinan (local, minutos, 0 $).
+- Curvas completas de CNN (la de 3 capas del repo y una estándar, p. ej. LeNet-5 sobre 32×32) sobre las mismas 60 particiones de la ganancia: hoy sólo hay su punto de N = 180.

@@ -119,6 +119,7 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/ganancia.py` | G = acierto en val ÷ (train/(train + val)) con datasets balanceados de 500–4000 dígitos; `particion()` copiada de `feat-ind` | `python nn/ganancia.py` → `resultados/ganancia.json` |
 | `nn/figura_ganancia.py` | la figura de G en tres paneles; se niega si los dos experimentos no evaluaron los mismos dígitos | `python nn/figura_ganancia.py` |
 | `nn/muestras_necesarias.py` | N(ε): muestras para llegar a un acierto ε (%) sobre los nuevos, desde los datos de la ganancia (no entrena); tabla, rango entre semillas, el ejemplo leído en horizontal y en vertical, comprobación por tamaño de dataset y figura de 3 paneles (N(ε), su inversa y la comprobación) | `python nn/muestras_necesarias.py` → `resultados/muestras-necesarias.json` y `.png` |
+| `nn/comparar_cnn.py` | comparación con las CNN ya entrenadas del repo (`dim-nist`, `ruido-comb`, por id; mismo 180/1617, comprobado) + logística sobre píxeles; muestras equivalentes con las curvas de la ganancia; no entrena CNN | `python nn/comparar_cnn.py` → `resultados/comparacion-cnn.json` y `.png` |
 
 - ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.
 - **Dependencias:** el `.venv` de la raíz (torch 2.14.1 CPU, numpy 2.5.3, Pillow 12.3.0); el de Vast, las mismas.
