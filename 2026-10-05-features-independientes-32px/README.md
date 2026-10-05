@@ -81,6 +81,37 @@ Con 36 dígitos de train (3,6 por clase), cada uno «sirve» para acertar ~105 n
 en el panel derecho. ⚠ F depende del tamaño del conjunto de no vistos: compara representaciones entre sí, no es una
 propiedad absoluta.
 
+## Ganancia G = (% aciertos) ÷ (% train) (2026-10-05)
+
+![ganancia](resultados/ganancia-generalizacion.png)
+
+Pedida por el dueño como versión **independiente del tamaño del dataset** del factor F: se divide por el total T tanto
+los aciertos como las muestras de train. Un dataset de T dígitos (balanceado, T/10 por clase, del pool de 5620); N = p·T
+a train y los T − N restantes se evalúan: **% aciertos** = aciertos sobre los no vistos ÷ T, **% train** = N ÷ T.
+`nn/ganancia.py` aquí y en `feat-ind` (las mismas particiones: misma huella), `nn/figura_ganancia.py` la figura.
+T ∈ {500, 1000, 2000, 4000} y p ∈ {2, 4, 10, 20, 50} % (p·T/10 entero en todos: el % de train es EXACTO), 3 semillas.
+
+⚠ **El T se cancela: G = aciertos ÷ N**, o sea el F de antes con «lo no visto» = el resto del dataset. Eso quita el
+tamaño arbitrario del conjunto de evaluación, **pero no la dependencia del tamaño del dataset**, y se midió:
+
+| | dataset de 500 | dataset de 4000 |
+|---|---:|---:|
+| 2 % de train = | **10** muestras | **80** muestras |
+| acierto sobre los no vistos | 64,7 % | 94,8 % |
+| **G** (detectores 8×8) | **31,7** | **46,5** (1,47×) |
+
+- **Panel 2:** con el mismo % de train, G cambia con T; las curvas sólo se juntan a partir del 10–20 %, donde G ≈
+  (1 − p)/p para todos (el techo), que no distingue nada.
+- **Panel 3, el control:** contra **N** (muestras, no %), los cuatro tamaños casi coinciden: a igual N el acierto
+  difiere ≤ 2 puntos (N = 20: 78,3 / 80,3 · N = 80: 93,0 / 94,8 · N = 400: 97,0 / 97,2), frente a 30 puntos a igual %.
+  **La variable que no depende del tamaño del dataset es N, no el % de train**: el acierto depende de cuántas muestras
+  se ven, no de qué fracción son.
+- **Panel 1:** con T = 4000 y 2 % de train, G = 46,5 (detectores 8×8) · 44,5 (32×32) · 43,6 / 43,7 (píxeles 8×8 /
+  32×32): como F, G está dominada por 1/p y separa poco las representaciones.
+
+Si «% aciertos» se lee como el acierto (aciertos ÷ no vistos) en vez de aciertos ÷ T, G sale dividida por (1 − p): la
+conclusión no cambia, porque la dependencia viene del acierto a p fijo.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los

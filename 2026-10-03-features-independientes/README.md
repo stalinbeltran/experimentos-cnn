@@ -484,6 +484,12 @@ Desplazado (1 celda): A 0,556 → **B (máx 3×3) 0,774** a 8×8, contra 0,608 �
 **A 8×8 gana en todos los N**, por 0,01–0,05 (más con pocos datos). Los dígitos de otros escritores se redujeron a 8×8
 desde `uci-optdigits-orig-32px-r20261005`, como NIST hizo los publicados.
 
+## Datos para las figuras de `feat-ind32` (2026-10-05)
+
+Sin entrenar nada (pesos de la corrida 2): `nn/factor.py` (F(N) sobre 4540 no vistos) y `nn/ganancia.py` (G = % aciertos ÷
+% train con datasets balanceados de 500–4000 dígitos) calculan aquí la parte de 8×8. Las figuras y su lectura están en el
+README de `feat-ind32`.
+
 ## Lo que queda pendiente
 
 - ~~Re-entrenar arcos y esquinas con sus contra-casos~~: hecho en la corrida 3, no mejora (arriba).

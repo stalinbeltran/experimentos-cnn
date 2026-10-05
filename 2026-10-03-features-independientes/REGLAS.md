@@ -82,6 +82,9 @@ sobre dígitos reales.
 | `nn/desplazamiento.py` | corrida 13: compositores tolerantes a ±1 celda (A posicional · B máx 3×3 · C 4×4 · D aumento) con las 5 transformaciones | `python nn/desplazamiento.py` → `resultados/desplazamiento.json` |
 | `nn/contribucion.py` | contribución de cada detector por eliminación (re-entrena el compositor sin él) | `python nn/contribucion.py --sufijo -c24dig` |
 | `nn/errores.py` | atribución del error del compositor posicional (culpable, reconocimiento/composición, difíciles en sí) | `python nn/errores.py [--sufijo -c3]` |
+| `nn/curva_fino.py` | corrida 14: sólo el banco fino (13), curva por N, otros escritores y desplazado, para comparar con `feat-ind32` | `python nn/curva_fino.py` → `resultados/curva-fino.json` |
+| `nn/factor.py` | factor F(N) a 8×8 (detectores fino y píxeles), para la figura de `feat-ind32` | `python nn/factor.py` → `resultados/factor.json` |
+| `nn/ganancia.py` | G = % aciertos ÷ % train a 8×8, para la figura de `feat-ind32`; su `particion()` está copiada allí | `python nn/ganancia.py` → `resultados/ganancia.json` |
 
 - ⚠ `gasta` es `entrena-local`: el que entrena **se llama `entrenar_local.py`** (contrato con el freno).
 - **Dependencias:** el `.venv` de la raíz del repo (torch 2.14 CPU, numpy, Pillow). Sin matplotlib
