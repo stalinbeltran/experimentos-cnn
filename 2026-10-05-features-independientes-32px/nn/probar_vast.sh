@@ -20,6 +20,7 @@ caso() {   # caso <modo> <texto que TIENE que salir en la orden>...
 caso detectores "/vast.json" "resultados/vast/detectores" "--horas-max 3" "--prefijo expc-fi32-"
 caso cnn "/vast-cnn.json" "resultados/vast/cnn" "--horas-max 2" "--prefijo expc-fi32-"
 caso compositor "/vast-compositor.json" "resultados/vast/compositor" "--horas-max 2" "--prefijo expc-fi32-"
+caso igualada "/vast-igualada.json" "resultados/vast/igualada" "--horas-max 2" "--prefijo expc-fi32-"
 
 if "$AQUI/vast.sh" lo-que-sea >/dev/null 2>&1; then echo "  [FALLA] un modo desconocido NO se negó"; fallos=$((fallos + 1))
 else echo "  [   ok] un modo desconocido se niega"; fi

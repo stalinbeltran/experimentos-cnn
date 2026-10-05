@@ -119,13 +119,58 @@ class Banco13(nn.Module):
                 "6.weight": cat("salida.weight"), "6.bias": cat("salida.bias")}
 
 
+# --- la CNN del repo con el terreno igualado (pedida el 2026-10-05): una desventaja quitada por peldaño ------------------
+
+class CNN3Igualada(nn.Module):
+    """3 × Conv 3×3 + ReLU CON padding (los mapas siguen en 8×8, en vez de 8 → 6 → 4 → 2) y una de dos cabezas:
+    `gap` = promedio global + Linear(C → 10), la del repo; `plana` = aplanar (C × 64) + Linear(→ 10), la cabeza clásica de
+    una CNN, que conserva la posición. Sin σ: es una CNN tradicional, no el compositor de los detectores."""
+    entrada = 8
+
+    def __init__(self, canales=(8, 8, 8), cabeza: str = "gap"):
+        super().__init__()
+        capas, cin = [], 1
+        for c in canales:
+            capas += [nn.Conv2d(cin, c, 3, padding=1), nn.ReLU()]
+            cin = c
+        self.tronco = nn.Sequential(*capas)
+        self.cabeza = (nn.Sequential(nn.AdaptiveAvgPool2d(1), nn.Flatten(), nn.Linear(cin, 10)) if cabeza == "gap"
+                       else nn.Sequential(nn.Flatten(), nn.Linear(cin * 64, 10)))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.cabeza(self.tronco(x))
+
+
+class CNN3Pad(CNN3Igualada):
+    """Peldaño 1: sólo padding. Mismos 1.338 parámetros que la del repo."""
+    def __init__(self):
+        super().__init__((8, 8, 8), "gap")
+
+
+class CNN3PadPlana(CNN3Igualada):
+    """Peldaño 2: padding + cabeza densa (512 → 10). 6.378 parámetros."""
+    def __init__(self):
+        super().__init__((8, 8, 8), "plana")
+
+
+class CNN3PadPlanaAncha(CNN3Igualada):
+    """Peldaño 3: padding + cabeza densa + capacidad: canales 48/96/96, 186.538 parámetros (el banco de detectores +
+    compositor tiene 191.383)."""
+    def __init__(self):
+        super().__init__((48, 96, 96), "plana")
+
+
 # nombre → (clase, lr). Mismos pasos y lote para todas (los de ruido-nist: 3996 pasos de 20). `ajuste13` no tiene un lr:
 # entrena en dos fases (AJUSTE).
 MODELOS = {"cnn3": (CNN3, 3e-3), "lenet5": (LeNet5, 1e-3),
-           "cnn3pos": (CNN3Pos, 3e-3), "aprendidos13": (Banco13, 2e-3), "ajuste13": (Banco13, None)}
+           "cnn3pos": (CNN3Pos, 3e-3), "aprendidos13": (Banco13, 2e-3), "ajuste13": (Banco13, None),
+           # el terreno igualado: el lr de la del repo para las pequeñas; para la ancha, el de LeNet-5 (decidido ANTES de correr)
+           "cnn3pad": (CNN3Pad, 3e-3), "cnn3plana": (CNN3PadPlana, 3e-3), "cnn3ancha": (CNN3PadPlanaAncha, 1e-3)}
 ETIQUETAS = {"cnn3": "CNN 3 capas 8×8 (la del repo)", "lenet5": "LeNet-5 32×32",
              "cnn3pos": "A · CNN 3 capas + compositor", "aprendidos13": "B · detectores aprendidos",
-             "ajuste13": "C · detectores sintéticos + ajuste fino"}
+             "ajuste13": "C · detectores sintéticos + ajuste fino",
+             "cnn3pad": "CNN 3 capas · 1 + padding", "cnn3plana": "CNN 3 capas · 2 + cabeza densa",
+             "cnn3ancha": "CNN 3 capas · 3 + capacidad (187k)"}
 # C: primero sólo el compositor con los detectores congelados (la mitad de los pasos), después todo, con los detectores a un
 # lr 10× menor que el compositor. El compositor recién inicializado es aleatorio, y sin la fase congelada sus primeros
 # gradientes podrían deshacer lo que los detectores traen — RAZONAMIENTO (la práctica habitual de «entrenar la cabeza y

@@ -4,7 +4,8 @@
 #   nn/vast.sh detectores         los 13 detectores (vast.json): alquila, entrena, trae los pesos y DESTRUYE la máquina
 #   nn/vast.sh cnn                las 120 curvas de CNN (vast-cnn.json): ídem, trae nn/curvas-cnn/
 #   nn/vast.sh compositor         A, B y C, las CNN con el compositor (vast-compositor.json): DOS máquinas a la vez
-#   nn/vast.sh --estado           lee los libros del DISCO (los dos)
+#   nn/vast.sh igualada           la CNN del repo con el terreno igualado, tres peldaños (vast-igualada.json)
+#   nn/vast.sh --estado           lee los libros del DISCO (todos)
 #   nn/vast.sh apagar             para las unidades y destruye TODAS las máquinas expc-fi32-*
 #
 #   VAST_SECO=1 nn/vast.sh <modo> imprime unidad, etiqueta y orden SIN tocar la API
@@ -45,15 +46,18 @@ case "$MODO" in
     compositor)
         DESC="$AQUI/vast-compositor.json"; LIBRO="$EXP/resultados/vast/compositor"; HORAS=2
         DATASET=uci-optdigits-orig-32px-r20261005; COMPROBAR="curvas_cnn.py" ;;
+    igualada)
+        DESC="$AQUI/vast-igualada.json"; LIBRO="$EXP/resultados/vast/igualada"; HORAS=2
+        DATASET=uci-optdigits-orig-32px-r20261005; COMPROBAR="curvas_cnn.py" ;;
     --estado)
-        for l in detectores cnn compositor; do
+        for l in detectores cnn compositor igualada; do
             if [ -d "$EXP/resultados/vast/$l" ]; then echo "== $l"; $V trabajo --estado --libro "$EXP/resultados/vast/$l"; fi
         done
         exit 0 ;;
     apagar)
         $V trabajo --apagar "$PREFIJO"; exit 0 ;;
     *)
-        echo "✗ modo '$MODO' desconocido: detectores | cnn | compositor | --estado | apagar"; exit 2 ;;
+        echo "✗ modo '$MODO' desconocido: detectores | cnn | compositor | igualada | --estado | apagar"; exit 2 ;;
 esac
 
 EXPCNN_DATOS=$(cd "$REPO" && python3 -c "from expcnn import exigir_datos; print(exigir_datos())")

@@ -116,3 +116,29 @@ con N = 10 / 40 / 200 / 2000; CNN de 3 capas del repo 53,0 / 70,8 / 87,4 / 95,6;
 4. **La fase congelada de C** (mismos detectores, compositor por Adam en minilotes y sin L2) contra la curva de los
    detectores congelados: si queda **por encima en N ≥ 400** (como el punto visto), la diferencia es del protocolo del
    compositor, no del ajuste fino, y se dice así; el ajuste fino es lo que C gana sobre su propia fase congelada.
+
+## La CNN del repo con el terreno igualado (2026-10-05) — escrito ANTES de correr los 180 entrenamientos
+
+Observación del dueño: la CNN del repo tenía un serio hándicap por la enorme reducción de sus salidas (8 → 6 → 4 → 2 sin
+padding). Se le quita una desventaja por peldaño (`nn/cnn.py`, `CNN3Igualada`), mismas 60 particiones, 3996 pasos de 20,
+Adam, sin selección ni aumento, y sin σ (es una CNN tradicional, no el compositor de los detectores):
+
+1. **+ padding** (`cnn3pad`): mapas en 8×8, cabeza la del repo (promedio global + 8 → 10). 1.338 parámetros, lr 3e-3.
+2. **+ cabeza densa** (`cnn3plana`): aplanar 8 × 64 → 10, la cabeza clásica, conserva la posición. 6.378, lr 3e-3.
+3. **+ capacidad** (`cnn3ancha`): canales 48/96/96, 186.538 parámetros (el banco + compositor: 191.383). lr 1e-3, el de
+   LeNet-5 — decidido aquí, sin ensayo.
+
+No se ha visto ningún acierto de estos tres: el tiempo se midió con 200 pasos y extrapolando.
+
+Referencias (mismas particiones): CNN del repo 53,0 / 70,8 / 87,4 / 95,6 % con N = 10 / 40 / 200 / 2000, N(95 %) = 1000;
+A 60,7 / 86,0 / 92,4 / 97,6, N(95 %) = 560; B 63,3 / 87,5 / 94,9 / 98,6, 230; C 73,3 / 91,5 / 96,5 / 98,9, 108.
+
+1. **Peldaño 1 (sólo padding)**: predicción **cambio pequeño**, dentro de ±3 puntos de la del repo en N = 160–200: el promedio
+   global sigue tirando la posición (y con padding promedia sobre 64 celdas en vez de 4). Si el padding solo sube más de
+   5 puntos, la reducción era el hándicap principal, como sugiere el dueño, y se dice así.
+2. **Peldaño 2 (+ cabeza densa)**: aquí está **el salto**: ≥ +5 puntos sobre el peldaño 1 en N = 160–200, y a ±2 puntos de A
+   (CNN + compositor) en todo N ≥ 40 —son casi la misma red: difieren en la σ y en 8 contra 13 mapas—.
+3. **Peldaño 3 (+ capacidad)**: por encima del peldaño 2 desde N = 400 (≥ +1 punto), **parecido a B** (misma capacidad,
+   aprendida) con muchos datos, y **por debajo de C en todo N**, por ≥ 5 puntos con N ≤ 40.
+4. **N(95 %)**: peldaño 2 entre 400 y 700; peldaño 3 entre 200 y 400. C (108) necesita **al menos 2× menos** que cualquier
+   peldaño: si no, igualar el terreno se come la ventaja de las features definidas.
