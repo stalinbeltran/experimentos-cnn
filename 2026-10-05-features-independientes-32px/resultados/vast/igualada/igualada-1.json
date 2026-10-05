@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-05T20:11:35+00:00"
+  }
+ ],
+ "id": "igualada-1",
+ "etiqueta": "expc-fi32-igualada-1",
+ "experimento": "feat-ind32",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast-igualada.json",
+ "oferta": 52396039,
+ "precio_hora": 0.11704,
+ "maquina": {
+  "vcpu": 36.57142857142857,
+  "cpu": "AMD EPYC 7C13 64-Core Processor",
+  "ram_gb": 72.0,
+  "ghz": 3.7207029,
+  "gpu": "RTX A4000",
+  "ubicacion": "Estonia, EE",
+  "host": 152000,
+  "fiabilidad": 0.9849
+ },
+ "horas_max": 2.0,
+ "tope_precio": 0.5
+}
