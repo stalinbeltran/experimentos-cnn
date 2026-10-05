@@ -127,8 +127,9 @@ ETIQUETAS = {"cnn3": "CNN 3 capas 8×8 (la del repo)", "lenet5": "LeNet-5 32×32
              "cnn3pos": "A · CNN 3 capas + compositor", "aprendidos13": "B · detectores aprendidos",
              "ajuste13": "C · detectores sintéticos + ajuste fino"}
 # C: primero sólo el compositor con los detectores congelados (la mitad de los pasos), después todo, con los detectores a un
-# lr 10× menor que el compositor. El compositor recién inicializado es aleatorio: sin la fase congelada, sus primeros
-# gradientes deshacen lo que los detectores traen.
+# lr 10× menor que el compositor. El compositor recién inicializado es aleatorio, y sin la fase congelada sus primeros
+# gradientes podrían deshacer lo que los detectores traen — RAZONAMIENTO (la práctica habitual de «entrenar la cabeza y
+# después ajustar»), NO medido aquí: C no se ha corrido sin la fase congelada.
 AJUSTE = {"pasos_congelado": 1998, "lr_compositor_congelado": 3e-3, "lr_compositor": 1e-3, "lr_detectores": 1e-4}
 INIT_AJUSTE = "init-detectores-8px.pt"
 

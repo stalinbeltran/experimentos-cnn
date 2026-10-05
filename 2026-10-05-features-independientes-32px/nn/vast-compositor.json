@@ -56,6 +56,6 @@
   "`run` y `trae` relativos a `nn/` en la máquina. Se trae cada subdirectorio nuevo por separado: nn/curvas-cnn/ ya existe aquí (LeNet-5 y la CNN de 3 capas) y el lanzador aparta lo que pisaría algo.",
   "nn/init-detectores-8px.pt viaja con el repo (no está bajo pesos/): C arranca de él y curvas_cnn.py se niega antes de empezar si su huella no casa.",
   "Medido en el dev el 2026-10-05, 1 hilo, N = 2000: aprendidos13 ~275 s, ajuste13 ~180 s, cnn3pos ~27 s. B suma ~275 min de CPU y C + A ~207: dos máquinas de ≥ 32 vCPU, ~2 rondas cada una.",
-  "min_ram 30: un banco de 13 detectores evalúa por lotes de 512 (~0,5 GB por proceso con torch) × 32–64 procesos."
+  "min_ram 30: medido por el revisor el 2026-10-05 en el dev (fork, lotes de 512): ~0,37 GB propios por proceso del banco en el pico (RSS 516–567 MB, ~143 MB compartidos con el padre) → ~24 GB con 64 procesos."
  ]
 }

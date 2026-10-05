@@ -43,7 +43,7 @@ al grosor (1↔8). Las dos cosas son de resolución: un arco de radio 4 px ocupa
 
 ## Salidas
 
-Pesos en `nn/pesos/<feature>/` (best/last, config, metrics, summary), igual de forma que en `feat-ind` para comparar; `resultados/*.json` por corrida; los `*.npz` no se commitean. El reporte va al repo central sólo si cambia `ESTADO.md`.
+Pesos en `nn/pesos/<feature>/` (best/last, config, metrics, summary), igual de forma que en `feat-ind` para comparar; `resultados/*.json` por corrida; los `*.npz` no se commitean. Toda corrida que alquila deja su reporte en el repo central (`estudios-redes-neuronales`), cambie o no `ESTADO.md` (regla del coordinador; #30, #31…).
 
 ### 2. La salida del detector: ¿mapa 8×8 o 32×32? — DECIDIR
 
