@@ -110,10 +110,12 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/datos.py` | genera/publica las sintéticas y los dígitos; comprueba las dos igualdades con los de 8 px | `--generar [--publicar]` · `--digitos <dir> [--publicar]` · `--comprobar` |
 | `nn/modelo.py` | el detector (autocontenido) 32×32 → mapa 8×8 | `python nn/modelo.py` |
 | `nn/entrenar_local.py` | entrena UN detector; `--comprobar` el mecanismo (incluye 1 época real) | `--feature f [--semilla s] [--epocas n] [--hilos h]` · `--comprobar` |
-| `nn/vast.sh` | Vast, dos modos: `detectores` (C3) y `cnn` (curvas de CNN); se niega si el dataset del modo no está empujado o si su comprobación falla | `detectores` · `cnn` · `--estado` · `apagar` · `VAST_SECO=1 …` |
+| `nn/vast.sh` | Vast, tres modos: `detectores` (C3), `cnn` (curvas de CNN) y `compositor` (A, B y C, dos máquinas); se niega si el dataset del modo no está empujado o si su comprobación falla | `detectores` · `cnn` · `compositor` · `--estado` · `apagar` · `VAST_SECO=1 …` |
 | `nn/probar_vast.sh` | prueba en seco del lanzador: cada modo construye SU orden y uno desconocido se niega (con el `vast.sh` de un solo modo, los 4 casos de `cnn` fallan) | `nn/probar_vast.sh` |
 | `nn/vast.json` | el descriptor del trabajo (máquina, qué se envía, qué se trae) | — |
 | `nn/vast-cnn.json` | el descriptor de las curvas de CNN: una máquina de 24–48 vCPU, un proceso de 1 hilo por vCPU pagada | — |
+| `nn/vast-compositor.json` | el descriptor de A, B y C: dos trabajos (B sola; C + A), cada uno en una máquina de 32–64 vCPU | — |
+| `nn/init-detectores-8px.pt` | los 13 detectores de la corrida 2 de `feat-ind`, apilados para el banco agrupado (punto de partida de C); huella 792edc8b65501166, con el origen de cada uno | lo escribe `nn/curvas_cnn.py --exportar-init` |
 | `nn/aplicar.py` | los 13 sobre los 5620 dígitos → `resultados/mapas-digitos.npz`, firma, rejilla | `python nn/aplicar.py` |
 | `nn/componer.py` | C4, C5 y C6 de una vez | `python nn/componer.py` |
 | `nn/factor.py` | factor F(N) = no vistos acertados ÷ N (4540 no vistos), detectores y píxeles de 32×32 | `python nn/factor.py` → `resultados/factor.json` |
@@ -122,8 +124,8 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/figura_ganancia.py` | la figura de G en tres paneles; se niega si los dos experimentos no evaluaron los mismos dígitos | `python nn/figura_ganancia.py` |
 | `nn/muestras_necesarias.py` | N(ε): muestras para llegar a un acierto ε (%) sobre los nuevos, desde los datos de la ganancia (no entrena); tabla, rango entre semillas, el ejemplo leído en horizontal y en vertical, comprobación por tamaño de dataset y figura de 3 paneles (N(ε), su inversa y la comprobación) | `python nn/muestras_necesarias.py` → `resultados/muestras-necesarias.json` y `.png` |
 | `nn/comparar_cnn.py` | comparación con las CNN ya entrenadas del repo (`dim-nist`, `ruido-comb`, por id; mismo 180/1617, comprobado) + logística sobre píxeles; muestras equivalentes con las curvas de la ganancia; no entrena CNN | `python nn/comparar_cnn.py` → `resultados/comparacion-cnn.json` y `.png` |
-| `nn/cnn.py` | las dos CNN tradicionales, autocontenidas: la de 3 capas de `ruido-nist` (copiada) y LeNet-5 sobre 32×32 | `python nn/cnn.py` |
-| `nn/curvas_cnn.py` | las 120 curvas de CNN sobre las 60 particiones de la ganancia (comprobadas por huella); un json por entrenamiento, se salta lo hecho | `--comprobar` · `--todas [--procesos K]` · `--una m T p s` · `--resumen` |
+| `nn/cnn.py` | las redes de punta a punta, autocontenidas: la CNN de 3 capas de `ruido-nist` (copiada), LeNet-5 sobre 32×32, y A (`cnn3pos`), B y C (`Banco13`: los 13 detectores como convoluciones agrupadas + el compositor) | `python nn/cnn.py` |
+| `nn/curvas_cnn.py` | las curvas de las redes de punta a punta sobre las 60 particiones de la ganancia (comprobadas por huella); un json por entrenamiento, se salta lo hecho; exporta el punto de partida de C comprobando que el banco agrupado reproduce los detectores | `--comprobar` · `--exportar-init` · `--todas --modelos a,b [--procesos K]` · `--una m T p s` · `--resumen` |
 | `nn/figura_curvas_cnn.py` | las seis curvas (4 de la ganancia + 2 CNN) sobre las mismas particiones (comprobado por huella), N(ε) y la evaluación del criterio | `python nn/figura_curvas_cnn.py` → `resultados/curvas-cnn-comparacion.json` y `resultados/curvas-cnn.png` |
 
 - ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.

@@ -87,3 +87,32 @@ N(95 %) = 133), con las mismas funciones (`nn/muestras_necesarias.py`: media por
 4. **Coherencia con lo medido en N = 180 / 1617** (`ruido-comb`): la curva de la CNN de 3 capas en N = 160–200 tiene que
    caer cerca de 86,9 ± 2,4 %. Si se aleja más de 5 puntos, el protocolo distinto (datasets mezclados de 43 escritores)
    pesa más de lo que se suponía en `comparar_cnn.py`, y se dice.
+
+## CNN con el compositor de los detectores (2026-10-05) — escrito ANTES de correr los 180 entrenamientos
+
+Pregunta del dueño: ¿se puede entrenar la CNN de 3 capas con un compositor como el de los detectores? Tres variantes
+(`nn/cnn.py`), todas con el compositor de `feat-ind` (σ de 13 mapas 8×8 → 832 → 10), sobre las mismas 60 particiones,
+3996 pasos de 20, Adam, sin selección ni aumento:
+
+- **A · `cnn3pos`**: la CNN de 3 capas con padding, 13 mapas y el compositor en vez del promedio global (9.943 parámetros).
+- **B · `aprendidos13`**: la arquitectura de los 13 detectores (convoluciones agrupadas: exactamente 13 redes; comprobado
+  contra los detectores de `feat-ind` a 4·10⁻⁶) + compositor, de punta a punta y desde cero (191.383 parámetros).
+- **C · `ajuste13`**: los detectores sintéticos de `feat-ind` (nn/init-detectores-8px.pt, huella 792edc8b65501166) +
+  compositor: 1998 pasos sólo el compositor (congelados) y 1998 todo, detectores a lr 1e-4 y compositor a 1e-3.
+
+⚠ **Lo ya visto antes de escribir esto**, al medir tiempos (semilla 1, N = 2000, T = 4000): A 97,85 %, B 99,05 %, C 98,95 %
+— y C **ya daba 98,95 % al acabar la fase congelada**, por encima del 98,1 % de la curva de los detectores con el compositor
+de siempre (L2 1e-3, 300 épocas a lote completo). Las predicciones lo tienen en cuenta.
+
+Referencias (curvas de la ganancia y de las CNN, mismas particiones): detectores 8×8 congelados 64,6 / 89,7 / 95,8 / 98,1 %
+con N = 10 / 40 / 200 / 2000; CNN de 3 capas del repo 53,0 / 70,8 / 87,4 / 95,6; LeNet-5 60,1 / 80,9 / 91,5 / 98,5.
+
+1. **A contra la CNN del repo**: A por encima en todo N; en N = 160–200, **+4 a +8 puntos** (87,4 → 91–95). Y A por encima de
+   la mejor logística sobre píxeles desde N ≈ 80. Si A no mejora a la CNN del repo, el promedio global no era el problema.
+2. **B contra los detectores congelados**: B **por debajo con pocos datos** (N ≤ 200) —definir las features ayuda cuando
+   faltan datos— y **por encima con muchos** (ya visto en N = 2000). Predicción del cruce: **entre N = 200 y 1000**.
+3. **C**: no peor que los detectores congelados en ningún N (más de 1 punto por debajo sería que el ajuste estropea), y
+   **por encima de B en N ≤ 200**. Y C por encima de LeNet-5 en todo N.
+4. **La fase congelada de C** (mismos detectores, compositor por Adam en minilotes y sin L2) contra la curva de los
+   detectores congelados: si queda **por encima en N ≥ 400** (como el punto visto), la diferencia es del protocolo del
+   compositor, no del ajuste fino, y se dice así; el ajuste fino es lo que C gana sobre su propia fase congelada.
