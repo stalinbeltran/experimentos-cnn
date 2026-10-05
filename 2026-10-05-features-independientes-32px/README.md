@@ -119,47 +119,64 @@ semillas. `nn/ganancia.py` aquí y en `feat-ind` (las mismas particiones: misma 
 **Para qué sirve, entonces:** para comparar representaciones **con el mismo T y el mismo p**, diciendo siempre T. Si se
 quiere un número que no dependa del tamaño del dataset, el denominador tiene que ser N (o N por clase), no p.
 
-## Muestras necesarias N(ε): cuánto cuesta cada nivel de acierto (2026-10-05)
+## Muestras necesarias N(ε) y su inversa, la curva de aprendizaje (2026-10-05)
 
 ![muestras necesarias](resultados/muestras-necesarias.png)
 
-**N(ε) = muestras de train necesarias para acertar ε de cada 1000 dígitos nuevos.** Es la alternativa D del análisis de
-ese día, pedida por el dueño tras ver que G depende del tamaño del dataset. Va **por cada 1000** (una tasa) y no en
-número de aciertos, porque un recuento depende de cuántos dígitos se evalúan. `nn/muestras_necesarias.py`: sale de los
-mismos 240 entrenamientos de la ganancia (no se entrena nada). Curva acierto(N) con los cuatro tamaños de dataset
-juntos (N de 10 a 2000), monótona por regresión isotónica, invertida interpolando en log N. **Sin extrapolar**: «> 2000»
-es que no se alcanza con lo medido. Entre paréntesis, el rango de las 3 semillas.
+**N(ε) = muestras de train necesarias para llegar a un acierto ε sobre los dígitos nuevos.** Es la alternativa D del
+análisis de ese día, pedida por el dueño tras ver que G depende del tamaño del dataset. ε es una **tasa** (95 % = 950
+aciertos de cada 1000): un recuento de aciertos dependería de cuántos dígitos se evalúan. `nn/muestras_necesarias.py`
+sale de los mismos 240 entrenamientos de la ganancia (no se entrena nada): curva acierto(N) con los cuatro tamaños de
+dataset juntos (N de 10 a 2000), monótona por regresión isotónica, invertida interpolando en log N. **Sin extrapolar**:
+«> 2000» es que no se alcanza con lo medido. Entre paréntesis, el rango de las 3 semillas: el valor central sale de la
+curva **conjunta** (las tres juntas) y el rango de la curva de **cada** semilla, así que no tiene por qué contenerlo (683
+frente a 500–675).
 
-| | N(800) | N(900) | N(950) | N(970) | N(980) | máximo con N ≤ 2000 |
+| | N(80 %) | N(90 %) | N(95 %) | N(97 %) | N(98 %) | máximo con N ≤ 2000 |
 |---|---:|---:|---:|---:|---:|---:|
-| **detectores 8×8 (13)** | **21** | **43** (39–55) | **133** (126–138) | **374** | **894** | **981** |
-| detectores 32×32 (13) | 28 | 78 (77–79) | 361 (361–531) | > 2000 | > 2000 | 969 |
-| píxeles 32×32 | 32 | 118 (111–123) | 683 (500–675) | > 2000 | > 2000 | 967 |
-| píxeles 8×8 | 32 | 125 (122–129) | 900 (797–929) | > 2000 | > 2000 | 954 |
+| **detectores 8×8 (13)** | **21** | **43** (39–55) | **133** (126–138) | **374** | **894** | **98,1 %** |
+| detectores 32×32 (13) | 28 | 78 (77–79) | 361 (361–531) | > 2000 | > 2000 | 96,9 % |
+| píxeles 32×32 | 32 | 118 (111–123) | 683 (500–675) | > 2000 | > 2000 | 96,7 % |
+| píxeles 8×8 | 32 | 125 (122–129) | 900 (797–929) | > 2000 | > 2000 | 95,4 % |
 
-**Cuántas veces menos muestras que los píxeles de 32×32** (el dato crudo a su resolución nativa), para 800 / 900 / 950:
+**Cuántas veces menos muestras que los píxeles de 32×32** (el dato crudo a su resolución nativa), para 80 / 90 / 95 %:
 detectores 8×8 **1,5× / 2,7× / 5,1×** · detectores 32×32 1,2× / 1,5× / 1,9× · píxeles 8×8 1,0× / 0,95× / 0,76×. La
-ventaja de los detectores 8×8 **crece con la exigencia**, y sólo ellos pasan de 970.
+ventaja de los detectores 8×8 **crece con la exigencia**, y sólo ellos pasan del 97 % en la curva conjunta (una semilla
+suelta de detectores 32×32 y otra de píxeles 32×32 lo rozan con N ≈ 1700–1900).
 
-**Y es independiente del tamaño del dataset**, que es lo que G no cumplía. Detectores 8×8, cada dataset por separado:
+**El panel 2 es el mismo dato con los ejes intercambiados**: la curva de aprendizaje (acierto según N). N(ε) no añade
+información; cambia la pregunta («¿cuántas muestras para llegar a ε?» en vez de «¿qué acierto con N?») y la dirección en
+que se compara. El mismo ejemplo, leído de las dos formas:
+
+| lectura | se compara | detectores 8×8 | píxeles 32×32 | diferencia |
+|---|---|---:|---:|---:|
+| horizontal (panel 1, y la flecha ↔ del 2) | muestras para el mismo 95 % | 133 | 683 | **5,1×** |
+| vertical (la flecha ↕ del panel 2) | acierto con las mismas 133 muestras | 95,0 % | 90,8 % | **4,2 puntos** |
+
+Cerca del techo, una distancia vertical pequeña es una horizontal grande: cuando lo caro son los datos, la que importa
+es la horizontal, y por eso N(ε) separa las representaciones mucho más que el acierto a N fijo.
+
+**Y es independiente del tamaño del dataset**, que es lo que G no cumplía (panel 3). Detectores 8×8, cada dataset por
+separado:
 
 | | T = 500 | T = 1000 | T = 2000 | T = 4000 |
 |---|---:|---:|---:|---:|
-| N(900) | 48 | 47 | ≤ 40 | ≤ 80 |
-| N(925) | 78 | 77 | 70 | ≤ 80 |
-| N(950) | 155 | 147 | 179 | 89 |
+| N(90 %) | 48 | 47 | ≤ 40 | ≤ 80 |
+| N(92,5 %) | 78 | 77 | 70 | ≤ 80 |
+| N(95 %) | 155 | 147 | 179 | 89 |
 
 (≤: el nivel ya se pasa con el N más pequeño de ese dataset.) No hay tendencia con T. El 89 de T = 4000 es ruido: con un
 mismo T = 1000 las tres semillas dan 93, 129 y 303, y en T = 2000 una semilla sacó 90,6 % con 80 muestras frente a 94,2–94,4
 de las otras.
 
 ⚠ **Cerca del techo N(ε) amplifica el ruido**: la curva es casi plana, y un punto de acierto son el doble de muestras.
-Con un solo dataset de 5 puntos y 3 semillas el factor de incertidumbre a 950 llega a ~3; con los cuatro tamaños juntos,
-a ~1,5 (los rangos de la tabla). Para cifras más finas, más semillas: es local, minutos y 0 $.
+Con un solo dataset de 5 puntos y 3 semillas el factor de incertidumbre al 95 % llega a ~3; con los cuatro tamaños juntos,
+a ~1,5 (los rangos de la tabla).
 
-
+## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
   detectores con el ruido de grosor/irregularidad del manuscrito, o un banco grueso a 32×32 (la corrida 4 de feat-ind).
 - 1 semilla de detectores; el compositor sí lleva 3.
 - La opción B (mapa 32×32) del plan, sin correr.
+- N(ε) cerca del techo, con 3 semillas: rango de hasta ~1,5× al 95 %. Más semillas lo afinan (local, minutos, 0 $).
