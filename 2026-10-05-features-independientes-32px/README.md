@@ -335,6 +335,32 @@ CNN tradicional llega a lo que da LeNet-5 (N(95 %) 357–583 contra 412) y a B c
 **C sigue ganando en todo N** (de 0,6 puntos con 2000 muestras a 11 con 20) y necesita **3,3–5,4× menos muestras** para el
 95 %: la ventaja de las features definidas no era un artefacto de comparar contra una CNN coja.
 
+## Los dígitos que falla C (2026-10-05)
+
+![errores de C](resultados/errores-c.png)
+
+Pedido del dueño. En Vast sólo se guardó el resumen de cada entrenamiento, así que `nn/errores_c.py` **reentrena C aquí** con
+el mismo código y las mismas semillas (`curvas_cnn.entrenar_red`), para el modelo final —T = 4000, 50 % de train: N = 2000
+y 2000 dígitos nuevos por semilla—. **Las tres semillas dan exactamente el acierto de Vast** (0,9895 · 0,9875 · 0,9895): son
+los mismos modelos. 0 $, ~4,5 min en el dev. Datos por dígito en `resultados/errores-c.json`.
+
+- **67 fallos en 6000 = 54 dígitos distintos**: cada semilla saca su dataset del mismo pool, y **12 dígitos fallan en más de
+  una semilla** (casi siempre en todas las que los tenían en el test): son dígitos difíciles, no ruido del entrenamiento.
+- **Pares, contando cada dígito una vez**: 8→1 ×7 · 3→5 ×5 · 9→4 ×4 · 0→8 ×3 · 3→8 ×3 · 4→9 ×3 · 9→1 ×3 · 9→3 ×3.
+- **Fallos seguros**: 28 de los 67 con confianza ≥ 0,9, y sólo 6 por debajo de 0,6.
+- **Repartidos entre escritores**: por grupo, en la misma proporción que el pool (`tra` 36 % de los fallos contra 34 % del
+  pool, `windep` 30 / 32, `cv` 19 / 17, `wdep` 15 / 17): ningún grupo de escritores concentra los errores.
+
+**Lo que se ve, a ojo (descripción, no medida):**
+- **8→1**: casi todos son **8 muy gruesos**, con los lazos rellenos: en el 8×8 quedan como una columna sólida. Es el problema
+  del grosor que ya señaló la atribución del error de `feat-ind`.
+- **3→5**: 3 con el trazo de arriba plano o anguloso; un par se leen como 5 también a simple vista (#2761).
+- **0→8**: 0 con un trazo o lazo dentro (#4628, fallado en las tres semillas).
+- **4↔9**: 4 con la parte de arriba cerrada (parecen 9) y 9 con el lazo abierto.
+- **4→0**: dos 4 del mismo estilo, en forma de «L4» con el travesaño bajo, cada uno fallado dos veces.
+- Algunos son dudosos también para una persona (#2872, «1→8», es una mancha rellena): posible **ruido de etiqueta**, no
+  comprobado.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los

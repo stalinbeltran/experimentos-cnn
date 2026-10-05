@@ -96,10 +96,9 @@ def _evaluar(red, x, y) -> tuple[float, float]:
     return float((out.argmax(1) == y).float().mean()), float(F_.cross_entropy(out, y))
 
 
-def entrenar(modelo: str, T: int, p: float, sem: int, pasos: int = PASOS, raiz: Path = SALIDA) -> dict:
-    destino = ruta(modelo, T, p, sem, raiz)
-    if destino.exists():
-        return json.loads(destino.read_text())
+def entrenar_red(modelo: str, T: int, p: float, sem: int, pasos: int = PASOS):
+    """Entrena UNA red y la devuelve con su partición: (red, tr, te, extra, t0). Es lo que hace `entrenar` antes de evaluar,
+    separado para poder mirar predicciones dígito a dígito (nn/errores_c.py) con EXACTAMENTE el mismo entrenamiento."""
     torch.set_num_threads(1)
     d = dato(); y = d["y"]
     tr, te = Gn.particion(y, T, p, sem)
@@ -126,6 +125,17 @@ def entrenar(modelo: str, T: int, p: float, sem: int, pasos: int = PASOS, raiz: 
         extra = {"acc_congelado": round(acc1, 4), "ce_congelado": round(ce1, 4), "pasos_congelado": n1, "init": init["huella"]}
     else:
         _pasos(red, torch.optim.Adam(red.parameters(), lr=lr), xtr, ytr, pasos, rng, lote)
+    return red, tr, te, extra, t0
+
+
+def entrenar(modelo: str, T: int, p: float, sem: int, pasos: int = PASOS, raiz: Path = SALIDA) -> dict:
+    destino = ruta(modelo, T, p, sem, raiz)
+    if destino.exists():
+        return json.loads(destino.read_text())
+    red, tr, te, extra, t0 = entrenar_red(modelo, T, p, sem, pasos)
+    d = dato(); y = d["y"]; clase, lr = C.MODELOS[modelo]; x = d[clase.entrada]
+    xtr, ytr, xte, yte = x[tr], torch.from_numpy(y[tr]), x[te], torch.from_numpy(y[te])
+    lote = min(LOTE, len(tr))
     acc, ce = _evaluar(red, xte, yte)
     acc_tr, _ = _evaluar(red, xtr, ytr)
     Tr, N = len(tr) + len(te), len(tr)
