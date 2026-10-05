@@ -10,7 +10,9 @@ aprendió» (F1 0,70–0,74, se disparan entre sí: corrida 2) y atribuyó un te
 al grosor (1↔8). Las dos cosas son de resolución: un arco de radio 4 px ocupa 1 celda a 8×8 y 8 px a
 32×32.
 
-## 1. El dato: comparable, y comprobado
+## Entradas
+
+### 1. El dato: comparable, y comprobado
 
 - **Dígitos:** UCI *optdigits-orig*, el original sin reducir (bitmaps binarios 32×32, preprocesado NIST).
   Se descargó de `archive.ics.uci.edu/static/public/80/…zip` (HTTP 200, 591 KB) el 2026-10-05. Trae 4
@@ -36,7 +38,11 @@ al grosor (1↔8). Las dos cosas son de resolución: un arco de radio 4 px ocupa
   comprimir, ≈ 2–4 MB empaquetados en bits: *estimado*) y `uci-optdigits-orig-32px-r<fecha>` (5620 × 128 B
   empaquetados ≈ 0,7 MB). ⚠ Antes de publicar, `/use almacen` → `estado`, porque se llenó el 2026-10-03.
 
-## 2. La salida del detector: ¿mapa 8×8 o 32×32? — DECIDIR
+## Salidas
+
+Pesos en `nn/pesos/<feature>/` (best/last, config, metrics, summary), igual de forma que en `feat-ind` para comparar; `resultados/*.json` por corrida; los `*.npz` no se commitean. El reporte va al repo central sólo si cambia `ESTADO.md`.
+
+### 2. La salida del detector: ¿mapa 8×8 o 32×32? — DECIDIR
 
 | opción | qué es | a favor | en contra |
 |---|---|---|---|
@@ -51,7 +57,9 @@ padding. Pérdida: BCE por celda (objetivo ×8) + BCE sobre el máximo, umbral p
 train, mejor F1 de val. Las dos enmiendas de `feat-ind` (`CONTIENE` y umbral por detector) entran desde
 el principio, porque allí se midió que sin ellas el criterio mide otra cosa.
 
-## 3. Criterio — se escribe en `instrucciones/02-criterio.md` ANTES de generar nada
+## Procesos
+
+### 3. Criterio — se escribe en `instrucciones/02-criterio.md` ANTES de generar nada
 
 Lo que propongo escribir allí (§A y §B con los mismos umbrales que `feat-ind`, porque la pregunta es
 justo «¿cambia al subir la resolución?»):
@@ -70,7 +78,7 @@ justo «¿cambia al subir la resolución?»):
   compositor ya compensa. Si sale peor que 8×8, también es un resultado: a 32×32 el manuscrito es más
   irregular que el sintético y la transferencia puede empeorar.
 
-## 4. Las corridas, en orden (cada una con su criterio antes)
+### 4. Las corridas, en orden (cada una con su criterio antes)
 
 | # | qué | reproduce de `feat-ind` | coste *(estimado)* |
 |---|---|---|---|
@@ -91,7 +99,7 @@ con modo seco, `--estado` y que se niegue a lanzar dos veces (las reglas del 202
 **una máquina de Vast con muchas CPU** (≈0,1–0,3 $ *estimado*) — eso cambia `gasta` a `alquila` y es
 decisión del dueño.
 
-## 5. Antes de escribir código
+### 5. Antes de escribir código
 
 1. Comprobar que `optdigits.tes` == `load_digits` (el orden), para que el reparto por índice valga.
 2. Decidir A/B (§2) y local/Vast (§4).
@@ -99,7 +107,11 @@ decisión del dueño.
 4. Pasar `gasta` a `entrena-local` y `entrada` a `nn/entrenar_local.py` en el mismo commit que el código
    (para que el freno lo vea desde el primer entrenamiento).
 
-## 6. Qué NO hereda
+## Scripts
+
+Todavía ninguno: se copian de `feat-ind/nn/` y se adaptan a 32×32 al implementar (`features.py`, `datos.py`, `modelo.py`, `entrenar_local.py`, `lanzar.sh`, `aplicar.py`, `compositor.py`, `curva.py`, `desplazamiento.py`, `generalizacion.py`, `errores.py`).
+
+## Qué NO hereda
 
 - **Se copia de `feat-ind`** el vocabulario, los generadores y la estructura de `nn/`, para no
   reescribirlos. Se copian, no se importan.
