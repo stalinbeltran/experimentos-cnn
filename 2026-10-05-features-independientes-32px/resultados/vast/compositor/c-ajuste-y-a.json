@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-05T19:31:37+00:00"
+  }
+ ],
+ "id": "c-ajuste-y-a",
+ "etiqueta": "expc-fi32-c-ajuste-y-a",
+ "experimento": "feat-ind32",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast-compositor.json",
+ "oferta": 48540474,
+ "precio_hora": 0.14044,
+ "maquina": {
+  "vcpu": 32.0,
+  "cpu": "AMD EPYC 7763 64-Core Processor",
+  "ram_gb": 126.0,
+  "ghz": 3.5304929,
+  "gpu": "RTX 5060 Ti",
+  "ubicacion": "Italy, IT",
+  "host": 42379,
+  "fiabilidad": 0.9966
+ },
+ "horas_max": 2.0,
+ "tope_precio": 0.5
+}

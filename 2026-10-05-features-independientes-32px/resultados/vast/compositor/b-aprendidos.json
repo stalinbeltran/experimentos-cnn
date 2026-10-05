@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-05T19:31:37+00:00"
+  }
+ ],
+ "id": "b-aprendidos",
+ "etiqueta": "expc-fi32-b-aprendidos",
+ "experimento": "feat-ind32",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast-compositor.json",
+ "oferta": 54326512,
+ "precio_hora": 0.13778,
+ "maquina": {
+  "vcpu": 32.0,
+  "cpu": "AMD EPYC 7502 32-Core Processor",
+  "ram_gb": 125.8,
+  "ghz": 2.5,
+  "gpu": "RTX 5060 Ti",
+  "ubicacion": "Florida, US",
+  "host": 129899,
+  "fiabilidad": 0.7837
+ },
+ "horas_max": 2.0,
+ "tope_precio": 0.5
+}

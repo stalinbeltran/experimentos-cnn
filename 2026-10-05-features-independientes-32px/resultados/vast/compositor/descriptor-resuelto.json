@@ -1,0 +1,63 @@
+{
+ "experimento": "feat-ind32",
+ "descripcion": "CNN con el compositor de los detectores: B (aprendidos13, 60) en una máquina y C + A (ajuste13 y cnn3pos, 120) en otra, a la vez. Después, nn/curvas_cnn.py --resumen y la figura en el dev.",
+ "maquina": {
+  "cpus": 32,
+  "max_cpus": 65,
+  "min_ram": 30,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.5
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/uci-optdigits-orig-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/uci-optdigits-orig-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "b-aprendidos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --modelos aprendidos13 --procesos $P",
+   "trae": [
+    "curvas-cnn/aprendidos13"
+   ]
+  },
+  {
+   "id": "c-ajuste-y-a",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\nP=${TRABAJO_VCPU:-$(nproc)}\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · $P procesos de 1 hilo\"\n../.venv/bin/python -u nn/curvas_cnn.py --todas --modelos ajuste13,cnn3pos --procesos $P",
+   "trae": [
+    "curvas-cnn/ajuste13",
+    "curvas-cnn/cnn3pos"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` relativos a `nn/` en la máquina. Se trae cada subdirectorio nuevo por separado: nn/curvas-cnn/ ya existe aquí (LeNet-5 y la CNN de 3 capas) y el lanzador aparta lo que pisaría algo.",
+  "nn/init-detectores-8px.pt viaja con el repo (no está bajo pesos/): C arranca de él y curvas_cnn.py se niega antes de empezar si su huella no casa.",
+  "Medido en el dev el 2026-10-05, 1 hilo, N = 2000: aprendidos13 ~275 s, ajuste13 ~180 s, cnn3pos ~27 s. B suma ~275 min de CPU y C + A ~207: dos máquinas de ≥ 32 vCPU, ~2 rondas cada una.",
+  "min_ram 30: medido por el revisor el 2026-10-05 en el dev (fork, lotes de 512): ~0,37 GB propios por proceso del banco en el pico (RSS 516–567 MB, ~143 MB compartidos con el padre) → ~24 GB con 64 procesos."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-05-features-independientes-32px/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast-compositor.json"
+}
