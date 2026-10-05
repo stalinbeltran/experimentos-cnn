@@ -295,6 +295,46 @@ compositor: entrenado de otra forma, el mismo banco congelado sube hasta 4,8 pun
 ⚠ **Lo que no está medido:** C sin la fase congelada (su motivo es razonamiento, no medida); con aumento de datos o con
 selección por validación; y cuánto de la mejora del compositor viene de quitar el L2 y cuánto del minilote.
 
+## La CNN del repo con el terreno igualado (2026-10-05)
+
+![igualada](resultados/igualada.png)
+
+Observación del dueño: la CNN del repo tenía un serio hándicap por la enorme reducción de sus salidas (8 → 6 → 4 → 2 sin
+padding). Se le quitó una desventaja por peldaño (`CNN3Igualada` en `nn/cnn.py`; sin σ: CNN tradicional), sobre las mismas
+60 particiones y el mismo protocolo. Dos máquinas de Vast a la vez (`nn/vast.sh igualada`), 2026-10-05 20:11 → 20:16 UTC,
+AMD EPYC 7C13 y 7B13 (32–37 vCPU), **0,0174 $**, rc 0, destruidas. El control 3b (la ancha con el lr de la del repo) se
+añadió antes de correr, a raíz del revisor, para que el peldaño 3 no cambiara dos cosas a la vez.
+
+| acierto (%) con N = | 10 | 40 | 200 | 2000 | N(90 %) | N(95 %) |
+|---|---:|---:|---:|---:|---:|---:|
+| CNN 3 capas del repo (sin padding, promedio global) | 53,0 | 70,8 | 87,4 | 95,6 | 348 | 1000 |
+| 1 · + padding | 33,3 | 66,4 | 87,7 | 92,7 | 359 | > 2000 |
+| 2 · + cabeza densa (aplanar → lineal) | 55,8 | 83,0 | 91,9 | 97,9 | 122 | 583 |
+| 3 · + capacidad (186.538 parámetros), lr 1e-3 | 62,5 | 82,5 | 92,4 | 98,3 | 116 | 500 |
+| 3b · ídem con lr 3e-3 | 51,0 | 83,1 | 93,0 | 98,6 | 113 | 357 |
+| *A · CNN 3 capas + compositor* | 60,7 | 86,0 | 92,4 | 97,6 | 98 | 560 |
+| *LeNet-5 32×32* | 60,1 | 80,9 | 91,5 | 98,5 | 123 | 412 |
+| ***C · detectores sintéticos + ajuste fino*** | **73,3** | **91,5** | **96,5** | **98,9** | **36** | **108** |
+
+**Contra el criterio (escrito antes):**
+1. ✅ **El padding solo no cambia casi nada** en N = 160–200 (+0,3 puntos, dentro de ±3) — y **empeora en los extremos**: −20
+   puntos con 10 muestras y −3 con 800 o más. La hipótesis de que la reducción era el hándicap principal **no se sostiene**:
+   con padding el promedio global junta 64 celdas en vez de 4, y la red queda todavía más ciega a la posición.
+2. ❌ **La cabeza densa es el salto grande, pero algo menor de lo previsto**: +4,2 puntos sobre el peldaño 1 en N = 160–200 (se
+   predijo ≥ +5) —+4,5 sobre la del repo, y +12 con 40 muestras—. Queda a ≤ 2 puntos de A desde N = 50, pero 3–5 por debajo
+   con 10–40 muestras: con pocos datos, la σ y los 13 mapas de A ayudan.
+3. ⚠ **La capacidad añade poco**: entre +0,3 y +1,2 puntos sobre el peldaño 2 (no llega al +1 previsto en todo N ≥ 400). ✅
+   parecida a B desde N = 1000 (a menos de 1 punto) y ✅ por debajo de C en todo N, por 9–11 puntos con N ≤ 40.
+4. ⚠ **N(95 %)**: ✅ peldaño 2 = 583 (400–700); ❌ peldaño 3 = 500 (se predijo 200–400) — pero ✅ **3b = 357**: el lr explicaba
+   parte de lo que quedaba (aunque con lr 3e-3 la red es inestable con 10 muestras: 51,0 % contra 62,5). ✅ **C (108)
+   necesita 3,3× menos muestras que el mejor peldaño** (357).
+
+**Lectura:** el hándicap de la CNN del repo **no era la reducción sino la cabeza**: el promedio global tira la posición, y el
+padding solo lo empeora. Con el terreno igualado —padding, cabeza densa y la misma capacidad que el banco de detectores— la
+CNN tradicional llega a lo que da LeNet-5 (N(95 %) 357–583 contra 412) y a B con muchos datos (98,3–98,6 % con 2000), pero
+**C sigue ganando en todo N** (de 0,6 puntos con 2000 muestras a 11 con 20) y necesita **3,3–5,4× menos muestras** para el
+95 %: la ventaja de las features definidas no era un artefacto de comparar contra una CNN coja.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los

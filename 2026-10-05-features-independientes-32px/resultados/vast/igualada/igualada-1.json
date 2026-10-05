@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-05T20:11:35+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-05T20:11:36+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-05T20:12:24+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-05T20:12:36+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-05T20:13:17+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-05T20:13:21+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-05T20:16:03+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-05T20:16:04+00:00"
   }
  ],
  "id": "igualada-1",
@@ -23,5 +51,18 @@
   "fiabilidad": 0.9849
  },
  "horas_max": 2.0,
- "tope_precio": 0.5
+ "tope_precio": 0.5,
+ "iid": 54375047,
+ "intentos_clave": 1,
+ "payload_mb": 4.38,
+ "sha256": "5fed7fc017159564",
+ "segundos_max": 6497,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/curvas-cnn/cnn3ancha",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/curvas-cnn/cnn3pad"
+ ],
+ "apartado": [],
+ "minutos": 4.5,
+ "coste_usd": 0.0087
 }
