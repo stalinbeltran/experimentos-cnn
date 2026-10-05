@@ -8,7 +8,7 @@
   "usa_fv": false,
   "gasta": "alquila",
   "entrada": "nn/entrenar_local.py",
-  "reporte": "estudios-redes-neuronales #30",
+  "reporte": "estudios-redes-neuronales #30 (detectores 32×32) y #31 (curvas de CNN)",
   "plan": "REGLAS.md (plan e implementacion) e instrucciones/02-criterio.md, escrito antes de entrenar",
   "linaje": "feat-ind (de ahi sale la pregunta y contra sus numeros se compara, porque los digitos 32x32 son EXACTAMENTE los mismos 1797 que feat-ind vio a 8x8 — comprobado 2026-10-05). No importa codigo de el: se copia. Ver REGLAS.md § Que NO hereda",
   "gasta_por_que": "Dos trabajos en Vast con nn/vast.sh, cada uno en UNA máquina a la vez y destruida sola: los 13 detectores (`detectores`, tope 3 h) y las 120 curvas de CNN (`cnn`, tope 2 h). Lo demás, minutos en el dev. El freno de Telegram es `/use exp-vast`."
