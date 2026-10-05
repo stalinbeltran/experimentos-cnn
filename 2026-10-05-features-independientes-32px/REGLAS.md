@@ -1,4 +1,8 @@
-# Reglas de `feat-ind32` — PLAN (2026-10-05, nada implementado ni corrido)
+# Reglas de `feat-ind32`
+
+**Plan del 2026-10-05, IMPLEMENTADO ese mismo día** con las dos decisiones del dueño: **mapa de salida 8×8**
+(opción A del §2) y **Vast**, con *«todo lo que es paralelo debe correrse en paralelo»*. El criterio, escrito
+antes de entrenar, está en `instrucciones/02-criterio.md`.
 
 **Qué pregunta:** lo mismo que `feat-ind`, pero sin reducir la imagen. Cada CNN pequeña reconoce una sola
 feature fijada de antemano. Las 13 se entrenan por separado y un compositor las junta sobre dígitos
@@ -22,9 +26,9 @@ al grosor (1↔8). Las dos cosas son de resolución: un arco de radio 4 px ocupa
   al reducir cada bitmap de `windep` contando bloques 4×4, las **1797 de 1797** filas coinciden exactas
   (los 64 valores y la etiqueta) con `optdigits.tes`, en el mismo orden. Así que **el reparto de
   `feat-ind` (180/1617, y el 900+717 de la corrida 11) se puede reproducir índice por índice**, y los
-  números de los dos experimentos se pueden comparar directamente. Falta comprobar que `optdigits.tes` sigue
-  el mismo orden que el `load_digits` de scikit-learn con el que se publicó el 8px (se espera que sí,
-  porque los dos son la copia del test de UCI). Es la primera comprobación del §5.
+  números de los dos experimentos se pueden comparar directamente. ✅ Y comprobado contra el dataset **publicado** (`uci-optdigits-8px-r20261002`, que salió de scikit-learn): los
+  1797 coinciden en imagen, etiqueta y orden, así que su reparto 180/1617 se copia índice por índice
+  (`nn/datos.py --comprobar`).
 - **Extra que a 8×8 no se usó:** 3823 dígitos 32×32 de **otros 30 escritores** (`tra`+`cv`+`wdep`). Sirven
   para la curva de datos (corrida 11 llegó a 0,99 con 900) sin tocar el test. Se usan sólo en un brazo
   aparte (§4, C5), para que el brazo principal siga siendo comparable.
@@ -34,9 +38,8 @@ al grosor (1↔8). Las dos cosas son de resolución: un arco de radio 4 px ocupa
   decisión, no por herencia**: si no, no se sabría si un cambio en el resultado viene de la resolución
   o del vocabulario.
 - **Publicación:** dos datasets nuevos en `foveal-vision-data/experimentos-cnn/` (que vive en el
-  almacén), nunca copiados aquí: `feat-ind32-sinteticas-32px-r<fecha>` (32.400 × 1 KB ≈ 33 MB sin
-  comprimir, ≈ 2–4 MB empaquetados en bits: *estimado*) y `uci-optdigits-orig-32px-r<fecha>` (5620 × 128 B
-  empaquetados ≈ 0,7 MB). ⚠ Antes de publicar, `/use almacen` → `estado`, porque se llenó el 2026-10-03.
+  almacén), nunca copiados aquí: `feat-ind32-sinteticas-32px-r<fecha>` (**2,2 MB** en disco, medido) y `uci-optdigits-orig-32px-r<fecha>` (**340 KB**, medido). ✅ Las sintéticas, reducidas 4×4, dan **bit a bit** `feat-ind-sinteticas-8px-r20261003`:
+  se generan con el mismo sorteo y sólo se omite la reducción. ⚠ Antes de publicar, `/use almacen` → `estado`, porque se llenó el 2026-10-03.
 
 ## Salidas
 
@@ -49,11 +52,12 @@ Pesos en `nn/pesos/<feature>/` (best/last, config, metrics, summary), igual de f
 | **A (propuesta)** | entrada 32×32, dos convoluciones con stride 2 → **mapa 8×8**; mismo objetivo gaussiano σ 0,6 celdas | el compositor es **idéntico** (832 entradas) y toda la cadena de `feat-ind` (compositor, curva, desplazamiento) se compara uno a uno: **sólo cambia lo que ve el detector** | la posición sigue a resolución de celda |
 | B | mapa 32×32, objetivo σ 2,4 px | posición 4× más fina | compositor de 13 × 1024 = 13.312 entradas con 180 dígitos de train: se compara contra otra cosa |
 
-Propongo **A** como brazo principal. B queda escrito y sin correr.
+**Elegida A** (el dueño, 2026-10-05). B queda escrito y sin correr.
 
-**Red de A** *(propuesta, se fija en un ensayo sobre `arco-E` y `recta-V`, como hizo la enmienda 3 de
-`feat-ind`)*: conv 3×3 16 → conv 3×3 s2 32 → conv 3×3 s2 32 → conv 3×3 32 → 1×1 → 1 canal 8×8, con
-padding. Pérdida: BCE por celda (objetivo ×8) + BCE sobre el máximo, umbral por detector elegido en
+**Red de A** (`nn/modelo.py`, 41.825 parámetros): conv 3×3 16 → conv 3×3/2 32 → conv 3×3/2 32 → 3 × conv 3×3 32 →
+1×1 → 1 canal 8×8, con padding. ⚠ **El ensayo C2 del plan NO se hizo**: la profundidad se fijó para que el campo
+receptivo (33 px) cubra lo mismo que el de `feat-ind` (7×7 celdas = 28 px), y así no hay que esperar a una
+corrida antes de lanzar las 13 en paralelo. Si C3 sale mal por capacidad, ese es el primer sospechoso. Pérdida: BCE por celda (objetivo ×8) + BCE sobre el máximo, umbral por detector elegido en
 train, mejor F1 de val. Las dos enmiendas de `feat-ind` (`CONTIENE` y umbral por detector) entran desde
 el principio, porque allí se midió que sin ellas el criterio mide otra cosa.
 
@@ -83,33 +87,36 @@ justo «¿cambia al subir la resolución?»):
 | # | qué | reproduce de `feat-ind` | coste *(estimado)* |
 |---|---|---|---|
 | C1 | generar y publicar los 2 datasets; rejilla de muestras; comprobar el §1 | — | minutos |
-| C2 | ensayo de red sobre `arco-E` y `recta-V` (fija canales y épocas) | enmienda 3 | ~30 min |
-| C3 | los 13 detectores, 1 semilla | corrida 2 | ~16× el cómputo de 8×8 por imagen → **~20 min por detector, ~4–5 h los 13** en el dev, en serie |
-| C4 | aplicar a los 1797 + compositores presencia/posicional (180/1617) + atribución del error | corrida 2 y atribución | minutos |
-| C5 | curva por N de train (900/717) y además con los 3823 de otros escritores | corrida 11 | minutos |
-| C6 | desplazamiento (máx 3×3) y generalización | corridas 12 y 13 | minutos |
+| ~~C2~~ | ~~ensayo de red~~: sustituido por el criterio del campo receptivo (§2) | — | — |
+| C3 | los 13 detectores, 1 semilla, **los 13 a la vez en una máquina de Vast** (`nn/vast.sh detectores`) | corrida 2 | medido en el dev: **11 s por época** con 1 hilo → ~15 min por detector; en Vast, 13 procesos a la vez ≈ 20–40 min, **≈ 0,1–0,3 $** *(estimado)* |
+| C4 | `nn/aplicar.py` (los 5620) + `nn/componer.py`: presencia/posicional 180/1617 y pares 6↔9, 1↔8, 4→1 | corrida 2 | 41 s + 72 s medidos (con pesos de prueba) |
+| C5 | curva por N (test fijo de 717) y con los 3823 de otros escritores — en `componer.py` | corrida 11 | ídem |
+| C6 | G1/G2/G3 con A y B (máx 3×3), y píxeles crudos 32×32 — en `componer.py` | corridas 12 y 13 | ídem |
 
 **Lo que NO se reproduce:** corrida 3 (contra-casos, no se adoptó), 4/5 (trazos gruesos: a 32×32 el grosor es
 otra cosa; se decide tras C3 por la lectura de grosor), 6–8 (grupos `dig`/`cae`: no aportaron, corrida 11),
 9–10 (sobreajuste y compositor combinante: no movieron nada). Si el dueño quiere alguna, se añade.
 
-**Dónde corre:** C3 es `entrena-local` en el dev, como unidad de systemd por un `nn/lanzar.sh` commiteado,
-con modo seco, `--estado` y que se niegue a lanzar dos veces (las reglas del 2026-09-07/08 de
-`telegram-coordinator/CLAUDE.md`). Los 13 son independientes: si 4–5 h es demasiado, se reparten en
-**una máquina de Vast con muchas CPU** (≈0,1–0,3 $ *estimado*) — eso cambia `gasta` a `alquila` y es
-decisión del dueño.
-
-### 5. Antes de escribir código
-
-1. Comprobar que `optdigits.tes` == `load_digits` (el orden), para que el reparto por índice valga.
-2. Decidir A/B (§2) y local/Vast (§4).
-3. Escribir `instrucciones/02-criterio.md` con el §3.
-4. Pasar `gasta` a `entrena-local` y `entrada` a `nn/entrenar_local.py` en el mismo commit que el código
-   (para que el freno lo vea desde el primer entrenamiento).
+**Dónde corre:** C3 en **Vast** (decisión del dueño), con el modo `trabajo` del lanzador: una unidad de systemd
+alquila, sube el repo y el dataset, corre los 13 procesos, trae los pesos y **destruye la máquina en un
+`finally`**, con tope de **3 h** (`--horas-max 3`). El libro (`resultados/vast/detectores/`) se commitea al alquilar.
+Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp-vast`. C4–C6 en el dev (minutos).
 
 ## Scripts
 
-Todavía ninguno: se copian de `feat-ind/nn/` y se adaptan a 32×32 al implementar (`features.py`, `datos.py`, `modelo.py`, `entrenar_local.py`, `lanzar.sh`, `aplicar.py`, `compositor.py`, `curva.py`, `desplazamiento.py`, `generalizacion.py`, `errores.py`).
+| script | qué hace | cómo se llama |
+|---|---|---|
+| `nn/features.py` | vocabulario + rasterizador (copiado de `feat-ind`; aquí la muestra es el bitmap 32×32) | `python nn/features.py [--muestras]` |
+| `nn/datos.py` | genera/publica las sintéticas y los dígitos; comprueba las dos igualdades con los de 8 px | `--generar [--publicar]` · `--digitos <dir> [--publicar]` · `--comprobar` |
+| `nn/modelo.py` | el detector (autocontenido) 32×32 → mapa 8×8 | `python nn/modelo.py` |
+| `nn/entrenar_local.py` | entrena UN detector; `--comprobar` el mecanismo (incluye 1 época real) | `--feature f [--semilla s] [--epocas n] [--hilos h]` · `--comprobar` |
+| `nn/vast.sh` | C3 en Vast; se niega si el dataset no está empujado o si `--comprobar` falla | `detectores` · `--estado` · `apagar` · `VAST_SECO=1 …` |
+| `nn/vast.json` | el descriptor del trabajo (máquina, qué se envía, qué se trae) | — |
+| `nn/aplicar.py` | los 13 sobre los 5620 dígitos → `resultados/mapas-digitos.npz`, firma, rejilla | `python nn/aplicar.py` |
+| `nn/componer.py` | C4, C5 y C6 de una vez | `python nn/componer.py` |
+
+- ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.
+- **Dependencias:** el `.venv` de la raíz (torch 2.14.1 CPU, numpy 2.5.3, Pillow 12.3.0); el de Vast, las mismas.
 
 ## Qué NO hereda
 

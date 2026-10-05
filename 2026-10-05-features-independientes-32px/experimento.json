@@ -4,11 +4,12 @@
   "pregunta": "Si los detectores independientes por feature y el compositor de feat-ind trabajan sobre el bitmap 32x32 sin reducir, ¿aprenden mejor su feature (sobre todo arcos y esquinas, que a 8x8 no aprendieron) y sube el resultado neto sobre los mismos digitos?",
   "creado": "2026-10-05",
   "estado": "abierto",
-  "dataset": null,
+  "dataset": "feat-ind32-sinteticas-32px-r20261005",
   "usa_fv": false,
-  "gasta": "no",
-  "entrada": null,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
   "reporte": null,
-  "plan": "SOLO PLAN (REGLAS.md). Sin codigo ni dataset. Al implementar pasa a gasta=entrena-local con entrada nn/entrenar_local.py",
-  "linaje": "feat-ind (de ahi sale la pregunta y contra sus numeros se compara, porque los digitos 32x32 son EXACTAMENTE los mismos 1797 que feat-ind vio a 8x8 — comprobado 2026-10-05). No importa codigo de el: se copia. Ver REGLAS.md § Que NO hereda"
+  "plan": "REGLAS.md (plan e implementacion) e instrucciones/02-criterio.md, escrito antes de entrenar",
+  "linaje": "feat-ind (de ahi sale la pregunta y contra sus numeros se compara, porque los digitos 32x32 son EXACTAMENTE los mismos 1797 que feat-ind vio a 8x8 — comprobado 2026-10-05). No importa codigo de el: se copia. Ver REGLAS.md § Que NO hereda",
+  "gasta_por_que": "Los 13 detectores en UNA maquina de Vast a la vez (nn/vast.sh detectores, tope 3 h, se destruye sola). Lo demas, minutos en el dev. El freno de Telegram es `/use exp-vast`."
 }
