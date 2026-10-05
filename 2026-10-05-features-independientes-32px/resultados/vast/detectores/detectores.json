@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-05T12:44:23+00:00"
+  }
+ ],
+ "id": "detectores",
+ "etiqueta": "expc-fi32-detectores",
+ "experimento": "feat-ind32",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast.json",
+ "oferta": 48453748,
+ "precio_hora": 0.05511,
+ "maquina": {
+  "vcpu": 18.0,
+  "cpu": "Xeon E5-2686 v4",
+  "ram_gb": 31.4,
+  "ghz": 3.0,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Nevada, US",
+  "host": 37055,
+  "fiabilidad": 0.9969
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.4
+}

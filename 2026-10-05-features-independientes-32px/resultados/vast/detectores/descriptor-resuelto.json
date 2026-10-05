@@ -1,0 +1,66 @@
+{
+ "experimento": "feat-ind32",
+ "descripcion": "C3 del plan: los 13 detectores de 32x32 A LA VEZ en UNA maquina (13 procesos de 1 hilo). Despues, aplicar.py y componer.py corren en el dev (minutos).",
+ "maquina": {
+  "cpus": 16,
+  "max_cpus": 33,
+  "min_ram": 24,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.4
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "detectores",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 13 detectores a la vez, 1 hilo cada uno\"\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos/$f\n  ../.venv/bin/python -u nn/entrenar_local.py --feature $f --hilos 1 > nn/pesos/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/arco-E",
+    "pesos/arco-W",
+    "pesos/arco-N",
+    "pesos/arco-S",
+    "pesos/recta-V",
+    "pesos/recta-H",
+    "pesos/recta-S",
+    "pesos/recta-B",
+    "pesos/lazo",
+    "pesos/esquina-NE",
+    "pesos/esquina-NW",
+    "pesos/esquina-SE",
+    "pesos/esquina-SW"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y `pesos/...`.",
+  "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas que fijó bor-ae).",
+  "13 procesos de 1 hilo y no 1 proceso con 13 hilos: los detectores son independientes (orden del dueño, 2026-10-05: lo paralelo, en paralelo). Medido en el dev: 1 época con 1 hilo = 11 s, 80 épocas ≈ 15 min por detector.",
+  "min_ram 24 GB: 13 procesos × (dataset en float32 + torch) ≈ 8–13 GB estimados por el revisor; 24 deja margen.",
+  "Cada detector deja su log en nn/pesos/<f>/log.txt y vuelve con sus pesos."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-05-features-independientes-32px/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast.json"
+}
