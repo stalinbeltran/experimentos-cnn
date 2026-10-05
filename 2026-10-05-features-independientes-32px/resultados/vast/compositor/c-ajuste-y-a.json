@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-05T19:31:37+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-05T19:31:39+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-05T19:32:26+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-05T19:32:30+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-05T19:33:09+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-05T19:33:12+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-05T19:36:24+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-05T19:36:24+00:00"
   }
  ],
  "id": "c-ajuste-y-a",
@@ -23,5 +51,18 @@
   "fiabilidad": 0.9966
  },
  "horas_max": 2.0,
- "tope_precio": 0.5
+ "tope_precio": 0.5,
+ "iid": 54370294,
+ "intentos_clave": 1,
+ "payload_mb": 4.37,
+ "sha256": "b1b7e8787ea7eadb",
+ "segundos_max": 6508,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/curvas-cnn/ajuste13",
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/curvas-cnn/cnn3pos"
+ ],
+ "apartado": [],
+ "minutos": 4.8,
+ "coste_usd": 0.0111
 }

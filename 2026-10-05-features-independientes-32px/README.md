@@ -248,6 +248,53 @@ lineal necesitan **unas 3 veces menos muestras** para el 90–95 % y ganan en to
 ⚠ **Lo que no está medido:** LeNet-5 con aumento de datos o con selección por validación (aquí, la red del último paso), y
 otros pasos de entrenamiento (los mismos 3996 para todo N: con N = 10 son ~4000 épocas, con N = 2000, 40).
 
+## CNN con el compositor de los detectores: A, B y C (2026-10-05)
+
+![compositor](resultados/compositor.png)
+
+Pregunta del dueño: ¿se puede entrenar la CNN de 3 capas con un compositor como el de los detectores? Sí: el compositor
+(σ de 13 mapas 8×8 → lineal) es derivable entero —el umbral y el argmax de la lectura de un detector no intervienen—. Tres
+variantes (`nn/cnn.py`), las mismas 60 particiones (comprobado por huella), 3996 pasos de 20, Adam, sin selección ni
+aumento. Dos máquinas de Vast a la vez (`nn/vast.sh compositor`), 2026-10-05 19:31 → 19:38 UTC: B en una (AMD EPYC 7502,
+32 vCPU, 6,8 min, 0,0157 $) y C + A en otra (EPYC 7763, 32 vCPU, 4,8 min, 0,0111 $) — **0,0268 $** en total, rc 0, destruidas.
+
+- **A · `cnn3pos`**: la CNN de 3 capas con padding, 13 mapas y el compositor en vez del promedio global (9.943 parámetros).
+- **B · `aprendidos13`**: la arquitectura de los 13 detectores + compositor, de punta a punta **desde cero**.
+- **C · `ajuste13`**: los **detectores sintéticos** de `feat-ind` + compositor: 1998 pasos sólo el compositor (fase
+  congelada, que se mide aparte) y 1998 todo, con los detectores a un lr 10× menor.
+
+| acierto (%) con N = | 10 | 40 | 100 | 200 | 500 | 1000 | 2000 | N(90 %) | N(95 %) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **C · sintéticos + ajuste fino** | **73,3** | **91,5** | **94,7** | **96,5** | **98,1** | **98,8** | **98,9** | **36** | **108** |
+| C · su fase congelada | 69,4 | 91,1 | 94,5 | 96,0 | 97,5 | 98,4 | 98,6 | 37 | 116 |
+| detectores 8×8 congelados (la ganancia) | 64,6 | 89,7 | 93,8 | 95,8 | 97,1 | 98,1 | 98,1 | 43 | 133 |
+| B · detectores aprendidos | 63,3 | 87,5 | 91,8 | 94,9 | 96,6 | 98,5 | 98,6 | 63 | 230 |
+| LeNet-5 32×32 | 60,1 | 80,9 | 88,8 | 91,5 | 95,4 | 97,8 | 98,5 | 123 | 412 |
+| A · CNN 3 capas + compositor | 60,7 | 86,0 | 90,1 | 92,4 | 94,5 | 97,2 | 97,6 | 98 | 560 |
+| CNN 3 capas (la del repo) | 53,0 | 70,8 | 81,3 | 87,4 | 93,1 | 95,0 | 95,6 | 348 | 1000 |
+
+**Contra el criterio (escrito antes): los cuatro se cumplen.**
+1. ✅ **A mejora a la CNN del repo en todo N**: +5,0 puntos en N = 160–200 (predicción +4 a +8), hasta +15 con 40–50
+   muestras, y supera a la mejor logística sobre píxeles desde N = 20 (se predijo ~80). El promedio global SÍ era buena
+   parte del problema. A gana incluso a LeNet-5 (6× más parámetros) hasta N ≈ 300.
+2. ✅ **B (aprender las features) queda por debajo de los detectores sintéticos hasta N ≈ 800** (entre 0,2 y 4,8 puntos) y
+   apenas por encima desde 1000 (+0,4): definir las features ayuda cuando faltan datos; con muchos, aprenderlas da lo
+   mismo. Para el 95 %, B necesita 230 muestras contra 133.
+3. ✅ **C es la mejor en todo N**: nunca por debajo de los detectores congelados, por encima de B con pocos datos (+10 puntos
+   con N = 10) y **por encima de LeNet-5 en todo el rango, también con 2000** (98,9 contra 98,5). Para el 95 %, 108 muestras:
+   **3,8× menos que LeNet-5**.
+4. ✅ **La fase congelada de C ya queda por encima de la curva de los detectores** (+0,3 a +4,8 puntos): es el **protocolo del
+   compositor** (Adam en minilotes, sin L2) frente al de siempre (L2 1e-3, 300 épocas a lote completo). El ajuste fino
+   propiamente dicho añade poco: +0,1 a +0,6 puntos con N ≥ 40, y +1,2 a +3,9 con 10–20 muestras.
+
+**Lectura:** las features definidas de antemano son el mejor **punto de partida**, no un techo: ajustarlas con los dígitos
+(C) las mantiene por delante de todo lo demás en cualquier N. Aprender la misma arquitectura desde cero (B) cuesta ~1,7×
+más muestras para el 95 %, y una CNN estándar (LeNet-5) ~3,8×. Y una parte de lo que se atribuía a los detectores era del
+compositor: entrenado de otra forma, el mismo banco congelado sube hasta 4,8 puntos con pocos datos.
+
+⚠ **Lo que no está medido:** C sin la fase congelada (su motivo es razonamiento, no medida); con aumento de datos o con
+selección por validación; y cuánto de la mejora del compositor viene de quitar el L2 y cuánto del minilote.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
@@ -256,3 +303,4 @@ otros pasos de entrenamiento (los mismos 3996 para todo N: con N = 10 son ~4000 
 - La opción B (mapa 32×32) del plan, sin correr.
 - N(ε) cerca del techo, con 3 semillas: rango de hasta ~1,5× al 95 %. Más semillas lo afinan (local, minutos, 0 $).
 - ~~Curvas completas de CNN~~: hechas (§ «Curvas de CNN»). Falta LeNet-5 con aumento de datos y con selección por validación.
+- C sin fase congelada; y separar en el compositor el efecto del L2 y el del minilote (la fase congelada de C subió hasta 4,8 puntos sobre el de siempre).

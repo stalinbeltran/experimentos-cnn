@@ -127,6 +127,7 @@ Apagar desde cualquier máquina: `nn/vast.sh apagar`, o desde Telegram `/use exp
 | `nn/cnn.py` | las redes de punta a punta, autocontenidas: la CNN de 3 capas de `ruido-nist` (copiada), LeNet-5 sobre 32×32, y A (`cnn3pos`), B y C (`Banco13`: los 13 detectores como convoluciones agrupadas + el compositor) | `python nn/cnn.py` |
 | `nn/curvas_cnn.py` | las curvas de las redes de punta a punta sobre las 60 particiones de la ganancia (comprobadas por huella); un json por entrenamiento, se salta lo hecho; exporta el punto de partida de C comprobando que el banco agrupado reproduce los detectores | `--comprobar` · `--exportar-init` · `--todas --modelos a,b [--procesos K]` · `--una m T p s` · `--resumen` |
 | `nn/figura_curvas_cnn.py` | las seis curvas (4 de la ganancia + 2 CNN) sobre las mismas particiones (comprobado por huella), N(ε) y la evaluación del criterio | `python nn/figura_curvas_cnn.py` → `resultados/curvas-cnn-comparacion.json` y `resultados/curvas-cnn.png` |
+| `nn/figura_compositor.py` | A, B y C contra los detectores congelados y las CNN (mismas particiones, comprobado), la fase congelada de C aparte, y la evaluación del criterio | `python nn/figura_compositor.py` → `resultados/compositor-comparacion.json` y `resultados/compositor.png` |
 
 - ⚠ El que entrena **se llama `entrenar_local.py`** (contrato con el freno), aunque aquí entrene en Vast.
 - **Dependencias:** el `.venv` de la raíz (torch 2.14.1 CPU, numpy 2.5.3, Pillow 12.3.0); el de Vast, las mismas.

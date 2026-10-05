@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-05T19:31:37+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-05T19:31:39+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-05T19:32:05+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-05T19:32:07+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-05T19:32:46+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-05T19:32:48+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-05T19:38:29+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-05T19:38:29+00:00"
   }
  ],
  "id": "b-aprendidos",
@@ -23,5 +51,17 @@
   "fiabilidad": 0.7837
  },
  "horas_max": 2.0,
- "tope_precio": 0.5
+ "tope_precio": 0.5,
+ "iid": 54370290,
+ "intentos_clave": 1,
+ "payload_mb": 4.37,
+ "sha256": "43dea562a93f16c1",
+ "segundos_max": 6532,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-05-features-independientes-32px/nn/curvas-cnn/aprendidos13"
+ ],
+ "apartado": [],
+ "minutos": 6.8,
+ "coste_usd": 0.0157
 }
