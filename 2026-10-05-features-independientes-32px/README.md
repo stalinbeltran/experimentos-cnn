@@ -209,6 +209,45 @@ así. Lo único calculado es la regresión logística sobre píxeles con ese mis
    de los 1797 de 13 escritores. En N = 180 los dos casi coinciden para los detectores 8×8 (95,9 % aquí, ~95,8 % en la
    curva), así que la cuenta es razonable, no exacta.
 
+## Curvas de CNN: detectores contra CNN entrenadas de punta a punta (2026-10-05)
+
+![curvas de CNN](resultados/curvas-cnn.png)
+
+Las dos CNN de `nn/cnn.py` —la **CNN de 3 capas** del repo (la de `ruido-nist`, 1.338 parámetros, 8×8) y una **LeNet-5**
+sobre 32×32 (61.706 parámetros)— entrenadas sobre **las mismas 60 particiones** que la ganancia (comprobado por huella):
+3996 pasos de 20, Adam, sin selección ni aumento. 120 entrenamientos a la vez en una máquina de Vast (`nn/vast.sh cnn`):
+2026-10-05 18:03 → 18:08 UTC, 1 instancia (Xeon E5-2680 v4, 28 vCPU), **5,1 min, 0,0056 $**, rc 0, destruida. Criterio en
+`instrucciones/02-criterio.md` § «Curvas de CNN», escrito antes. `nn/curvas_cnn.py --resumen` y `nn/figura_curvas_cnn.py`.
+
+| acierto (%) con N = | 10 | 40 | 100 | 200 | 500 | 1000 | 2000 | N(90 %) | N(95 %) | N(98 %) |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **detectores 8×8 (13)** | **64,6** | **89,7** | **93,8** | **95,8** | **97,1** | **98,1** | 98,1 | **43** | **133** | **894** |
+| LeNet-5 32×32 | 60,1 | 80,9 | 88,8 | 91,5 | 95,4 | 97,8 | **98,5** | 123 | 412 | 1260 |
+| detectores 32×32 (13) | 64,8 | 84,8 | 90,4 | 93,8 | 95,3 | 96,3 | 96,9 | 78 | 361 | > 2000 |
+| píxeles 32×32 (lineal) | 59,0 | 84,1 | 88,9 | 92,0 | 93,8 | 96,3 | 96,7 | 118 | 683 | > 2000 |
+| píxeles 8×8 (lineal) | 61,0 | 83,9 | 88,6 | 91,9 | 93,6 | 95,4 | 95,4 | 125 | 900 | > 2000 |
+| CNN 3 capas 8×8 (la del repo) | 53,0 | 70,8 | 81,3 | 87,4 | 93,1 | 95,0 | 95,6 | 348 | 1000 | > 2000 |
+
+**Contra el criterio (escrito antes):**
+1. ❌ **El cruce detectores 8×8 – LeNet-5 llega más tarde de lo previsto: en N ≈ 1440** (se predijo 200–1000). Hasta ahí
+   los detectores ganan en todo N; con 2000 muestras LeNet-5 los pasa (98,5 contra 98,1 %), porque sigue subiendo
+   mientras los detectores se quedan en el techo de su compositor lineal (98,1 % desde N = 1000).
+2. ✅ **N(95 %) de LeNet-5 = 412** (predicción 250–500): **3,1× las muestras** de los detectores (133). Para el 90 %, 2,9×
+   (123 contra 43); para el 98 %, 1,4× (1260 contra 894). La ventaja de los detectores es mayor con pocos datos.
+3. ❌ **La CNN de 3 capas queda por debajo de la logística sobre píxeles hasta N ≈ 1550** (se predijo ~500): entre 8 y 14
+   puntos por debajo con 10–100 muestras. Con 2000 apenas pasa a los píxeles de 8×8 (95,6 contra 95,4 %) y sigue por
+   debajo de los de 32×32 (96,7 %). Es la peor de las seis en todo el rango.
+4. ✅ **Coherente con lo medido en N = 180 / 1617**: la curva da 87,4 % en N = 160–200, contra 86,9 ± 2,4 % de `ruido-comb`
+   (0,5 puntos). El protocolo mezclado (43 escritores) no mueve la cifra.
+
+**Lectura:** frente a una CNN estándar entrenada de punta a punta (LeNet-5), los detectores sintéticos + un compositor
+lineal necesitan **unas 3 veces menos muestras** para el 90–95 % y ganan en todo N hasta ~1440; a partir de ahí, la CNN
+—que aprende toda su representación de los dígitos— los supera por poco. La CNN diminuta del repo no es una referencia
+útil: con 1.338 parámetros y sin aumento de datos, ni siquiera alcanza a una regresión logística sobre píxeles.
+
+⚠ **Lo que no está medido:** LeNet-5 con aumento de datos o con selección por validación (aquí, la red del último paso), y
+otros pasos de entrenamiento (los mismos 3996 para todo N: con N = 10 son ~4000 épocas, con N = 2000, 40).
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
@@ -216,4 +255,4 @@ así. Lo único calculado es la regresión logística sobre píxeles con ese mis
 - 1 semilla de detectores; el compositor sí lleva 3.
 - La opción B (mapa 32×32) del plan, sin correr.
 - N(ε) cerca del techo, con 3 semillas: rango de hasta ~1,5× al 95 %. Más semillas lo afinan (local, minutos, 0 $).
-- Curvas completas de CNN (la de 3 capas del repo y una estándar, p. ej. LeNet-5 sobre 32×32) sobre las mismas 60 particiones de la ganancia: hoy sólo hay su punto de N = 180.
+- ~~Curvas completas de CNN~~: hechas (§ «Curvas de CNN»). Falta LeNet-5 con aumento de datos y con selección por validación.
