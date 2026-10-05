@@ -1,0 +1,14 @@
+{
+  "id": "feat-ind32",
+  "titulo": "feat-ind a 32x32: los mismos detectores independientes por feature, pero viendo el bitmap 32x32 original en vez de su reduccion 8x8",
+  "pregunta": "Si los detectores independientes por feature y el compositor de feat-ind trabajan sobre el bitmap 32x32 sin reducir, ¿aprenden mejor su feature (sobre todo arcos y esquinas, que a 8x8 no aprendieron) y sube el resultado neto sobre los mismos digitos?",
+  "creado": "2026-10-05",
+  "estado": "abierto",
+  "dataset": null,
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": null,
+  "reporte": null,
+  "plan": "SOLO PLAN (REGLAS.md). Sin codigo ni dataset. Al implementar pasa a gasta=entrena-local con entrada nn/entrenar_local.py",
+  "linaje": "feat-ind (de ahi sale la pregunta y contra sus numeros se compara, porque los digitos 32x32 son EXACTAMENTE los mismos 1797 que feat-ind vio a 8x8 — comprobado 2026-10-05). No importa codigo de el: se copia. Ver REGLAS.md § Que NO hereda"
+}
