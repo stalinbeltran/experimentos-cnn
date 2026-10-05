@@ -61,6 +61,26 @@ de `feat-ind` (`resultados/curva-fino.json` allí), mismo test de 717 y mismo co
 conclusión de arriba se refuerza: a 32×32 los detectores son mejores en lo sintético y peores como entrada del
 compositor de dígitos.
 
+## Factor de generalización F(N) (2026-10-05)
+
+![factor](resultados/factor-generalizacion.png)
+
+**F(N) = dígitos NO vistos bien reconocidos ÷ N dígitos de train del compositor.** «No vistos» = los 717 de test +
+los 3823 de otros 30 escritores (4540; nunca entran en el train). Compositor posicional, 3 semillas.
+`nn/factor.py` aquí y en `feat-ind` (8×8; los de otros escritores reducidos 4×4), `nn/figura_factor.py` la figura.
+
+| N | 36 | 180 | 1080 |
+|---|---:|---:|---:|
+| detectores 8×8 (13) | **104,7** (83,0 %) | **24,1** (95,4 %) | **4,1** (97,3 %) |
+| detectores 32×32 (13) | 100,2 (79,5 %) | 23,4 (92,8 %) | 4,0 (96,0 %) |
+| píxeles 8×8 | 94,6 (75,0 %) | 22,9 (90,7 %) | 4,0 (94,3 %) |
+| píxeles 32×32 | 93,9 (74,4 %) | 23,0 (91,3 %) | 4,0 (95,1 %) |
+
+Con 36 dígitos de train (3,6 por clase), cada uno «sirve» para acertar ~105 nuevos con los detectores de 8×8, frente a
+~94 con los píxeles. F cae casi como 1/N (el acierto satura), así que las diferencias entre representaciones se leen
+en el panel derecho. ⚠ F depende del tamaño del conjunto de no vistos: compara representaciones entre sí, no es una
+propiedad absoluta.
+
 ## Lo que queda pendiente
 
 - Que el gap es de transferencia y no de capacidad del compositor, **no está medido**. Lo directo: entrenar los
