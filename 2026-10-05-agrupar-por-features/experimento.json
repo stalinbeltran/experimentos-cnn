@@ -1,0 +1,14 @@
+{
+  "id": "feat-agr",
+  "titulo": "Agrupar los digitos de NIST por las features que los componen (que detector se enciende y en que zona), SIN leer la etiqueta: variantes de un mismo digito y formas compartidas entre digitos",
+  "pregunta": "Si cada digito se describe por las features que lo componen —que detector se enciende y en que zona— y se agrupan los digitos por esa descripcion sin leer la etiqueta, ¿salen grupos de formas semejantes —variantes de un mismo digito (el 1 que es solo una recta vertical y el 1 con un trazo inclinado arriba) y formas que comparten digitos distintos— y cuanto coinciden esos grupos con las etiquetas de NIST?",
+  "creado": "2026-10-05",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": null,
+  "reporte": null,
+  "plan": "SOLO ESPECIFICACION (REGLAS.md) y criterio escrito antes de calcular ningun grupo (instrucciones/02-criterio.md). Sin codigo. Al implementar pasa a gasta=entrena-local con entrada nn/entrenar_local.py (k-means en el dev, ~10 min estimados, 0 $)",
+  "linaje": "feat-ind32 (sus 13 detectores de 32x32, congelados y COPIADOS con su huella; contra su firma por clase y los errores de C se leen los grupos) y feat-ind (su banco fino de 8x8, como contraste). La lectura por prototipos —varias formas por digito— es la de feat-pos §5. No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda"
+}
