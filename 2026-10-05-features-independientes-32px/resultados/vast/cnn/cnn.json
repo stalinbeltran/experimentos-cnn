@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-05T18:03:17+00:00"
+  }
+ ],
+ "id": "cnn",
+ "etiqueta": "expc-fi32-cnn",
+ "experimento": "feat-ind32",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-05-features-independientes-32px/nn/vast-cnn.json",
+ "oferta": 25468214,
+ "precio_hora": 0.06622,
+ "maquina": {
+  "vcpu": 28.0,
+  "cpu": "Xeon E5-2680 v4",
+  "ram_gb": 31.2,
+  "ghz": 3.3,
+  "gpu": "RTX 2060S",
+  "ubicacion": "Vietnam, VN",
+  "host": 35916,
+  "fiabilidad": 0.9956
+ },
+ "horas_max": 2.0,
+ "tope_precio": 0.4
+}
