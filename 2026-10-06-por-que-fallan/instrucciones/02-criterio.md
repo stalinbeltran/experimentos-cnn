@@ -226,3 +226,17 @@ Combinaciones, fijadas ahora: la referencia, S3' (`lineas-nada+norm3`), S2e, S6a
 
 **Lo que espero:** C1 sí y C2 sí, con menos ganancia que en val (+0,01–0,02): son otros escritores y el compositor sólo vio
 180 dígitos.
+
+## Resultados de S6c y S4b (03:48–03:50 UTC)
+
+**S6c ✅** — S6b con el compositor tolerante (`max3`): con 180, **0,9718** (+0,0002; S5b ✅); con **36**, **0,893** (+0,036;
+S5a ✅; la referencia con 36 da 0,792); curva 0,893 / 0,968 / 0,989. Pasa también los umbrales de S6a (≥ 0,966 y 36 ≥ 0,820).
+Con `media3`, 0,9722 y 0,888 (se mira, no decide).
+
+**S4b ✅ (por poco)** — con `desinc`, el error del tercil más inclinado baja de 0,061 a 0,045 (−26 %; pedía −25 %). Pero sube en
+los otros dos terciles (0,041 → 0,052 y 0,051 → 0,069) y los 8 pasan de 6 % a 17 % de error (aparece un 6 ↔ 8): desinclinar
+arregla los inclinados y estropea los demás. S4 queda ❌ en lo que decide (S4a, S4c).
+
+**Lo que queda en S6b** (`nn/pares.py`): 4 → 1 (30 % de los errores: 4 cerrados con el triángulo macizo, más gruesos) y 8 → 9
+(20 %: más gruesos). Con S6b el error ya no crece con la inclinación ni con el descentrado, y se concentra en el tercil de más
+relleno (0,051 contra 0,011).
