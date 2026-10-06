@@ -27,7 +27,12 @@ experimentos: `feat-bor` (bordes, 0,1098 $) y `feat-cortas` (rectas y curvas cor
    bordes, tampoco (0,805 / 0,865). Y entrenar sólo con gruesos arregla el síntoma pero lee peor (0,853).
 4. **Lo que funciona es dárselo TODO al compositor**: detectores finos + gruesos + cortos, sobre el dígito crudo y sobre el
    normalizado: **0,9716** (−44 % de errores), y además mucho más estable al cambiar el grosor (κ al adelgazar 0,706 contra
-   0,345). Cada versión ve lo que la otra no, y el compositor aprende de cuál fiarse en cada sitio.
+   0,345). Cada versión ve lo que la otra no, y el compositor aprende de cuál fiarse en cada sitio. Con sólo **36** dígitos
+   de entrenamiento y el compositor tolerante a la posición, **0,893** (la referencia, 0,792).
+5. **Y se sostiene a ciegas**: en 3823 dígitos de otros escritores que el estudio no usó para elegir, **0,966 contra 0,925**
+   (−54 % de errores).
+6. **Lo que queda** son los dígitos con **zonas macizas** (4 cerrados con el triángulo relleno, 8 gruesos): el grosor en su
+   forma más difícil.
 
 ## 1. Por qué fallan: las causas, medidas
 
@@ -103,7 +108,9 @@ lo que falla no es la idea, es el grosor.
 | 5 | **S6a** largas + cortas, crudo + 3 px (42 mapas) | **0,9678** · curva 0,852 / 0,971 / 0,989 · κ 0,349 / **0,707** | ✅ |
 | 5 | finos + gruesos, crudo + 3 px (52 mapas) | **0,9705** · curva 0,831 / 0,968 / 0,988 | (sin criterio propio) |
 | 5 | **S6b** finos + gruesos + cortas, crudo + 3 px (68 mapas) | **0,9716** · curva 0,857 / 0,965 / 0,992 · κ 0,340 / 0,706 | ✅ **la mejor** |
+| 5 | **S6c** S6b + compositor tolerante | 0,9718 · curva **0,893** / 0,968 / 0,989 | ✅ |
 | 6 | **S7** erosionar según el grosor de cada dígito | 0,689 · con las dos vistas 0,947 | ❌ |
+| 7 | **confirmación ciega**: S6b en 3823 dígitos de otros escritores | **0,966** contra 0,925 de la referencia | ✅ (−54 % de errores) |
 
 (compositor de 180 sobre los 1617 de val, 3 semillas · curva con 36 / 180 / 1080 de train sobre el test de 717 · κ al engrosar
 2 px / al adelgazar 1 px)
@@ -146,9 +153,23 @@ O sea que **la frontera sigue siendo el grosor**, ahora en su forma más difíci
 arriba se ve: con S6b el error **ya no crece** con la inclinación ni con el descentrado (baja), y se concentra en el tercil
 de más **relleno** (0,051, contra 0,011 del medio).
 
-### La confirmación ciega (iteración 7)
+### La confirmación ciega (iteración 7): ¿no será suerte de haber elegido sobre el mismo val?
 
-*(en curso)*
+![confirmación](resultados/confirmacion.png)
+
+Todas las combinaciones se compararon sobre los mismos 1617 dígitos, y S6b salió la más alta de entre muchas. Para
+descartar que fuese suerte, se escribió antes un criterio (`nn/confirmar.py`) y se midieron las seis finalistas en **3823
+dígitos de otros 30 escritores** (`origen` tra · cv · wdep), cuyo acierto **ningún** paso anterior había mirado, con el
+compositor entrenado igual (los mismos 180):
+
+| | val (1617) | **ciega (3823)** |
+|---|---:|---:|
+| referencia | 0,949 | **0,925** |
+| S6b (todo, dos vistas) | 0,972 | **0,966** |
+
+**Se sostiene, y con más margen**: +0,041 en vez de +0,023, y quita el **54 %** de los errores en vez del 44 % (C1 ✅ y C2 ✅).
+Y las **cortas** son lo que mejor aguanta el cambio de escritor: sin ellas, finos + gruesos en dos vistas cae de 0,971 a
+0,958; con ellas apenas se mueve (0,968 → 0,964 y 0,972 → 0,966).
 
 ## 4. Lo que quedó pendiente
 

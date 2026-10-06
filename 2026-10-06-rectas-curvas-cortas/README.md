@@ -76,12 +76,14 @@ pérdida.
 | **H3** cortas (3 px) + largas (crudas) ≥ largas en las dos vistas + 0,01 = 0,966 | ❌ 0,9606 | sí, 0,96–0,97 |
 
 H3 cae por 0,006, pero esa combinación es **la más alta medida hasta ese momento** en los dígitos (+0,0115 sobre la
-referencia, +0,004 sobre las largas en dos vistas). Lo que pasó al juntarla con más cosas está en `feat-fallos` (S6).
+referencia, +0,004 sobre las largas en dos vistas). Al juntarla con más cosas, en `feat-fallos`, llegó a **0,972** (S6b).
 
 ## Lo que quedó pendiente
 
-1. **Las cortas con el lazo y las esquinas, en las dos vistas** — y con todo lo demás: es la S6 de `feat-fallos`, que lee
-   estos detectores por su id y su huella (`resultados/huellas.json`).
+1. ~~Las cortas en las dos vistas y con todo lo demás~~ — **hecho en `feat-fallos`** (que lee estos detectores por su id y su
+   huella, `resultados/huellas.json`): largas + cortas en dos vistas, **0,968** (S6a ✅); con los gruesos, **0,972** (S6b ✅). Y
+   a ciegas, en 3823 dígitos de otros escritores, las cortas son **lo que mejor aguanta el cambio de escritor**: sin ellas, de
+   0,971 a 0,958; con ellas, de 0,972 a 0,966.
 2. **Cortas entrenadas con trazo grueso**: una recta gruesa enciende curvas cortas (lo de arriba). Es el mismo arreglo que
    S2 de `feat-fallos`, y allí salió que el grueso arregla el síntoma pero lee peor.
 3. **Una sola semilla** por detector.
