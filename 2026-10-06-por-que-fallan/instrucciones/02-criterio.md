@@ -127,7 +127,7 @@ Y de `feat-cortas` (02:42–02:47): las 8 cortas solas leen 0,880; con el lazo y
 (≈ las 13 largas, 0,949); y como vocabulario de trazos ganan a las largas (0,880 contra 0,843 de las 8 largas-trazo). Las
 cortas (`norm3`) **más** las 13 largas crudas dieron **0,9606**, lo mejor medido.
 
-## Iteración 5 (02:56 UTC, ANTES de ver S2e, S4 y S5) — S6: juntar lo que funcionó por separado
+## Iteración 5 (02:49 UTC, commit `78db3c0`, ANTES de ver S2e, S4 y S5) — S6: juntar lo que funcionó por separado
 
 La regla, escrita ahora para no elegir mirando: **se junta lo que haya pasado su propio criterio**, y nada más.
 
