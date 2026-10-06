@@ -144,7 +144,7 @@ con 3–4 candidatas el sesgo de selección es pequeño pero no nulo. Por eso el
 **Lo que espero:** S6a sí, por poco (0,962–0,970): las cortas aportaron +0,004 sobre las dos vistas de las largas en la
 combinación de feat-cortas, y añadir la vista `norm3` de las largas suma lo suyo.
 
-## Iteración 6 (02:54 UTC, ANTES de medirla) — S7: adelgazar cada dígito según SU grosor
+## Iteración 6 (02:52 UTC, commit `024d16c`, ANTES de medirla) — S7: adelgazar cada dígito según SU grosor
 
 **Por qué:** S3 (esqueleto + 3 px) quitó el grosor pero rompió lo relleno (el cuerpo macizo de un 4 se volvía un palo: 4→1).
 La corrección obvia es quitar tinta **sólo del borde** y **sólo a quien le sobra**: erosionar cada dígito k px, con
