@@ -37,5 +37,55 @@
    "cv": 0.956,
    "wdep": 0.9371
   }
+ },
+ "lineas+cortas-nada+norm3": {
+  "acierto_3823": 0.9642,
+  "por_semilla": [
+   0.9642,
+   0.9642,
+   0.9642
+  ],
+  "por_origen": {
+   "tra": 0.9659,
+   "cv": 0.9651,
+   "wdep": 0.9597
+  }
+ },
+ "lineas+lineas-grueso-nada+norm3": {
+  "acierto_3823": 0.9579,
+  "por_semilla": [
+   0.9576,
+   0.9579,
+   0.9581
+  ],
+  "por_origen": {
+   "tra": 0.9581,
+   "cv": 0.9619,
+   "wdep": 0.9533
+  }
+ },
+ "lineas+lineas-grueso+cortas-nada+norm3": {
+  "acierto_3823": 0.966,
+  "por_semilla": [
+   0.9657,
+   0.966,
+   0.9663
+  ],
+  "por_origen": {
+   "tra": 0.9662,
+   "cv": 0.9665,
+   "wdep": 0.965
+  }
+ },
+ "criterio": {
+  "C1": {
+   "veredicto": "confirmada",
+   "S6b": 0.966,
+   "referencia": 0.9254
+  },
+  "C2": {
+   "veredicto": "confirmada",
+   "errores_quitados": 0.5442
+  }
  }
 }

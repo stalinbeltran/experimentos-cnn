@@ -240,3 +240,19 @@ arregla los inclinados y estropea los demás. S4 queda ❌ en lo que decide (S4a
 **Lo que queda en S6b** (`nn/pares.py`): 4 → 1 (30 % de los errores: 4 cerrados con el triángulo macizo, más gruesos) y 8 → 9
 (20 %: más gruesos). Con S6b el error ya no crece con la inclinación ni con el descentrado, y se concentra en el tercil de más
 relleno (0,051 contra 0,011).
+
+## Resultado de la iteración 7 (03:57 UTC) — la confirmación ciega
+
+| compositor de 180 | val (1617, con los que se eligió) | **CIEGA** (3823 de otros escritores) |
+|---|---:|---:|
+| referencia | 0,949 | **0,925** |
+| S3' (crudo + 3 px) | 0,956 | 0,946 |
+| S2e (finos + gruesos) | 0,964 | 0,943 |
+| finos + gruesos, crudo + 3 px | 0,971 | 0,958 |
+| S6a (largas + cortas, dos vistas) | 0,968 | 0,964 |
+| **S6b** (todo, dos vistas) | **0,972** | **0,966** |
+
+**C1 ✅** (0,966 ≥ 0,925 + 0,01) · **C2 ✅** (quita el **54 %** de los errores; en val, el 44 %). Lo que esperaba (sí, con menos
+ganancia) salió al revés en lo segundo: con otros escritores la ganancia es **mayor** (+0,041 contra +0,023), porque la
+referencia cae más (0,949 → 0,925) que S6b (0,972 → 0,966). Y las **cortas** son lo que mejor aguanta el cambio de escritor:
+sin ellas, finos + gruesos en dos vistas baja de 0,971 a 0,958; con ellas (S6a, S6b) apenas se mueve.

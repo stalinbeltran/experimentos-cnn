@@ -5,6 +5,7 @@
   curvas-rectas.png    ¿se enciende un arco en una recta? fino, grueso y en los 1, por banco
   soluciones.png       cada solución probada: compositor (180), la curva con 36 de train y κ al engrosar/adelgazar
   errores.png          dónde se concentra el error: por tercil de grosor, relleno, inclinación y descentrado
+  confirmacion.png     la confirmación ciega (iteración 7): val contra los 3823 dígitos nunca mirados
 
     python nn/figuras.py
 """
@@ -191,8 +192,39 @@ def errores(combos: tuple = ("lineas-nada", "lineas+lineas-grueso+cortas-nada+no
     print("  errores.png")
 
 
+# ------------------------------------------------------------------------------------------------ 5. la confirmación ciega
+def confirmacion() -> None:
+    c = _json(RES / "confirmacion.json")
+    if not c:
+        return
+    nombres = {"lineas-nada": "referencia", "lineas-nada+norm3": "S3' crudo\n+ 3 px", "lineas+lineas-grueso-nada": "S2e finos\n+ gruesos",
+               "lineas+lineas-grueso-nada+norm3": "finos + gruesos,\ncrudo + 3 px", "lineas+cortas-nada+norm3": "S6a largas\n+ cortas, 2 vistas",
+               "lineas+lineas-grueso+cortas-nada+norm3": "S6b todo,\ncrudo + 3 px"}
+    filas = [k for k in nombres if k in c and (RES / "combos" / f"{k}.json").is_file()]
+    val = [_json(RES / "combos" / f"{k}.json")["compositor_180"]["media"] for k in filas]
+    ext = [c[k]["acierto_3823"] for k in filas]
+    plt = _plt()
+    fig, ax = plt.subplots(figsize=(9, 4), dpi=100, facecolor=SUP); _ejes(ax)
+    x = np.arange(len(filas))
+    ax.bar(x - 0.2, val, 0.38, color=AZUL, zorder=3, label="val: los 1617 con los que se eligió")
+    ax.bar(x + 0.2, ext, 0.38, color=VERDE, zorder=3, label="CIEGA: 3823 dígitos de otros escritores, que no se usaron para elegir")
+    for xx, v in zip(x, val):
+        ax.text(xx - 0.2, v + 0.002, f"{v:.3f}", ha="center", va="bottom", fontsize=7.5, color=T1)
+    for xx, v in zip(x, ext):
+        ax.text(xx + 0.2, v + 0.002, f"{v:.3f}", ha="center", va="bottom", fontsize=7.5, color=T1)
+    ax.set_ylim(0.9, 0.985); ax.set_xticks(x); ax.set_xticklabels([nombres[k] for k in filas], fontsize=8)
+    ax.set_ylabel("acierto (compositor de 180)", color=T2, fontsize=9)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper left", labelcolor=T1)
+    ax.set_title("¿Se sostiene en dígitos que el estudio no usó para elegir? Sí: la mejora es mayor, no menor",
+                 color=T1, fontsize=10.5, loc="left")
+    fig.tight_layout(); fig.savefig(RES / "confirmacion.png", facecolor=SUP); plt.close(fig)
+    print("  confirmacion.png")
+
+
 def main(argv: list[str]) -> int:
-    quiero = set(argv) or {"causa", "curvas", "soluciones", "errores"}
+    quiero = set(argv) or {"causa", "curvas", "soluciones", "errores", "confirmacion"}
+    if "confirmacion" in quiero:
+        confirmacion()
     if "causa" in quiero:
         causa_grosor()
     if "curvas" in quiero:
