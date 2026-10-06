@@ -59,6 +59,35 @@ def normalizar(x: np.ndarray, ancho: int = 3) -> np.ndarray:
     return engrosar(esqueleto(x), ancho)[:, None]
 
 
+def desinclinar(x: np.ndarray) -> np.ndarray:
+    """(N,1,32,32) o (N,32,32) 0/1 → (N,1,32,32) uint8, cizallado para que el eje de la tinta quede VERTICAL (la iteración 4).
+
+    α = cov(fila, columna) / var(fila) de la tinta: columnas que se corre por cada fila. La salida en (r, c) toma la entrada en
+    (r, c + α·(r − f0)), con f0 la fila del centro de masas, así que la cizalla pasa por él y el dígito no se desplaza en
+    vertical. Vecino más cercano: la imagen sigue siendo 0/1 (el esqueleto y los bordes lo necesitan). Lo que la cizalla saca
+    del lienzo se pierde; `perdida()` lo cuenta."""
+    t = (np.asarray(x).reshape(len(x), 32, 32) > 0.5)
+    fil, col = np.mgrid[:32, :32]
+    m = t.sum((1, 2)).clip(1)
+    f0 = (t * fil).sum((1, 2)) / m; c0 = (t * col).sum((1, 2)) / m
+    vf = (t * (fil - f0[:, None, None]) ** 2).sum((1, 2)) / m
+    cv = (t * (fil - f0[:, None, None]) * (col - c0[:, None, None])).sum((1, 2)) / m
+    a = cv / vf.clip(1e-9)
+    src = np.rint(col[None] + a[:, None, None] * (fil[None] - f0[:, None, None])).astype(np.int64)
+    ok = (src >= 0) & (src < 32)
+    n = np.broadcast_to(np.arange(len(t))[:, None, None], src.shape)
+    r = np.broadcast_to(fil[None], src.shape)
+    out = np.zeros(t.shape, np.uint8)
+    out[ok] = t[n[ok], r[ok], src[ok]]
+    return out[:, None]
+
+
+def perdida(x: np.ndarray, y: np.ndarray) -> np.ndarray:
+    """Fracción de la tinta de x que no está en y (la que la cizalla sacó del lienzo, o la que el vecino más cercano fundió)."""
+    a = np.asarray(x).reshape(len(x), -1).sum(1); b = np.asarray(y).reshape(len(y), -1).sum(1)
+    return 1 - b / np.maximum(1, a)
+
+
 def comprobar() -> int:
     ok = True
 
@@ -79,6 +108,15 @@ def comprobar() -> int:
     ea = esqueleto(anillo)[0]
     mira("un anillo grueso sigue siendo un lazo (su esqueleto no tiene extremos sueltos y no toca el centro)",
          ea.sum() > 20 and ea[14:19, 14:19].sum() == 0)
+    inclinada = np.zeros((1, 32, 32), np.uint8)
+    for f in range(4, 28):
+        c = int(round(16 + 0.4 * (f - 16))); inclinada[0, f, c - 1:c + 2] = 1      # «\»: 0,4 columnas por fila
+    d = desinclinar(inclinada)[0, 0]
+    cols = [np.flatnonzero(d[f]).mean() for f in range(6, 26)]
+    mira("una barra inclinada 0,4 col/fila queda vertical (sus columnas varían ≤ 1 px) y conserva la tinta",
+         max(cols) - min(cols) <= 1 and abs(int(d.sum()) - int(inclinada.sum())) <= 3)
+    recta = np.zeros((1, 32, 32), np.uint8); recta[0, 4:28, 14:17] = 1
+    mira("una barra ya vertical no cambia", np.array_equal(desinclinar(recta)[0, 0], recta[0]))
     return 0 if ok else 1
 
 

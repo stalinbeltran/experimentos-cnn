@@ -87,7 +87,7 @@ corrida 5 de feat-ind (0,972 a 8×8) a 32×32—.
 **bancos** juntos), que el código no hacía; y la máquina pasa a ≥ 26 vCPU para 13 procesos (en feat-bor, 26 procesos en 28
 vCPU fueron 4 veces más lentos por núcleo que el dev). Ningún umbral cambia.
 
-## Iteración 4 (02:24 UTC, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
+## Iteración 4 (02:19 UTC, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
 
 S2 sigue entrenando. Mientras, la pregunta es qué **más** falla, aparte del grosor. `nn/diagnostico.py` (D1–D3: confusiones,
 el mismo compositor sobre los **píxeles**, y el error por tercil de inclinación, descentrado, alto y ancho) es descriptivo y

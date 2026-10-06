@@ -86,11 +86,15 @@ def banco(nombre: str, familias=F.CON_TRAZO) -> dict:
 
 
 def preparar(x: np.ndarray, rep: str, prepro: str) -> np.ndarray:
-    """x (N,1,32,32) 0/1 → la entrada del banco: primero el preprocesado, después la representación."""
-    if prepro == "norm3":
-        x = N.normalizar(x, 3)
-    elif prepro != "nada":
-        raise ValueError(prepro)
+    """x (N,1,32,32) 0/1 → la entrada del banco: primero el preprocesado, después la representación. Un preprocesado es una
+    CADENA de pasos unidos por «_», que se aplican en orden: `nada` · `norm3` · `desinc` · `desinc_norm3` (la iteración 4)."""
+    for paso in prepro.split("_"):
+        if paso == "norm3":
+            x = N.normalizar(x, 3)
+        elif paso == "desinc":
+            x = N.desinclinar(x)
+        elif paso != "nada":
+            raise ValueError(prepro)
     return B.bordes(x, rep).astype(np.float32)
 
 
@@ -186,7 +190,8 @@ def evaluar(nombre: str, prepro: str, dg: dict | None = None) -> dict:
         c = float((M.asignar(z[t], C) == lab0).mean())
         out["kappa"][t] = {"c": r4(c), "kappa": r4(M.kappa(c, lab0, K0))}
     # la prueba gruesa (sintética), con el MISMO preprocesado (no aplica a dos vistas: es por detector)
-    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 else None
+    # (ni a dos bancos, ni a `desinc`: desinclinar una feature sintética suelta convierte una recta-S en una recta-V)
+    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 and "desinc" not in prepro else None
     out["segundos"] = round(time.time() - t0, 1)
     return out
 
