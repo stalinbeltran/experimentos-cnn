@@ -44,3 +44,24 @@ H2 y H3, tal como estaban, cambiaban **dos** cosas a la vez (el vocabulario y la
 - **H3:** cortas (`norm3`) + 13 largas (crudas) **≥ largas en las dos vistas + 0,01** (feat-fallos midió 0,956 → **≥ 0,966**):
   si no supera a lo que las largas solas ya dan con dos vistas, las cortas no aportan.
 - H1 queda como está, pero la prueba que de verdad dice algo es **H1-cv**.
+
+## Resultado (02:42 UTC) y un diagnóstico escrito ANTES de medirlo (02:47 UTC)
+
+H1 ✅ (8/8) · **H1-cv ✅** (curva sobre rectas cortas 0,012; recta sobre curvas 0,015: se distinguen, contra lo que esperaba)
+· **H2 pierde en las tres vistas** (crudo 0,880 contra 0,949; 3 px 0,837 contra 0,876; las dos 0,915 contra 0,956) · **H3 ❌**
+por poco (0,9606 contra 0,9663; aun así, la mejor combinación medida hasta hoy).
+
+**¿Por qué pierden?** Dos sospechas, y una prueba que las separa sin entrenar nada:
+
+1. **el LARGO** — un detector corto sólo ve un trozo y el compositor lineal no puede componer trozos; o
+2. **el VOCABULARIO** — a las 8 cortas les faltan las 5 features que no son trazos sueltos: el **lazo** (0, 6, 8, 9) y las
+   cuatro **esquinas** (4, 5, 7). Un compositor lineal no puede construir un lazo sumando arcos en posiciones fijas.
+
+Ya medido (`nn/firma.py` y una prueba con rectas dibujadas a mano): la recta corta **sí** se enciende sobre rectas largas
+(su puntuación baja de ~0,95 a ~0,8 pasados los 16 px), así que el largo, si cuenta, no es por no encenderse.
+
+**La prueba (`nn/vocabulario.py`, compositor de 180, crudo):** las 8 largas que son trazos (4 arcos + 4 rectas) contra las 8
+cortas, y las 8 cortas **más** el lazo y las 4 esquinas de las largas contra las 13 largas.
+- si **cortas + lazo + esquinas ≥ 13 largas − 0,01** → es el **vocabulario**: lo corto vale tanto como lo largo;
+- si no, y **8 largas-trazo > 8 cortas + 0,02** → es el **largo**;
+- si ninguna de las dos, no lo separa y se dice.

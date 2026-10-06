@@ -158,6 +158,11 @@ def main() -> int:
     return 0
 
 
+ETIQUETAS = {"cortas nada": "8 cortas\ncrudas", "cortas norm3": "8 cortas\na 3 px", "cortas nada+norm3": "8 cortas\ncrudas + 3 px",
+             "13 largas nada (referencia)": "13 largas\ncrudas (ref.)", "13 largas norm3": "13 largas\na 3 px",
+             "13 largas nada+norm3": "13 largas\ncrudas + 3 px", "cortas norm3 + 13 largas nada": "8 cortas a 3 px\n+ 13 largas crudas"}
+
+
 def figura(out: dict) -> None:
     import matplotlib                                                # noqa: PLC0415
     matplotlib.use("Agg")
@@ -165,12 +170,12 @@ def figura(out: dict) -> None:
     SUP, T1, T2, REJ = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e1"
     COL = ("#2a78d6", "#eb6834", "#1baf7a")
     nombres = list(out["B"]); tam = [str(n) for n in TAMANOS]
-    fig, ax = plt.subplots(figsize=(7.6, 4.2), dpi=100, facecolor=SUP); ax.set_facecolor(SUP)
+    fig, ax = plt.subplots(figsize=(9.6, 4.4), dpi=100, facecolor=SUP); ax.set_facecolor(SUP)
     ancho = 0.26
     for j, n in enumerate(tam):
         ax.bar(np.arange(len(nombres)) + (j - 1) * (ancho + 0.02), [out["B"][k]["curva_717"][n] for k in nombres], ancho,
                color=COL[j], label=f"{n} dígitos de train", zorder=3)
-    ax.set_xticks(range(len(nombres))); ax.set_xticklabels([k.replace(" + ", "\n+ ") for k in nombres], fontsize=8, color=T1)
+    ax.set_xticks(range(len(nombres))); ax.set_xticklabels([ETIQUETAS.get(k, k) for k in nombres], fontsize=8, color=T1)
     ax.set_ylim(0.6, 1.0); ax.set_ylabel("acierto en 717 dígitos nuevos", color=T2, fontsize=9)
     ax.tick_params(axis="y", colors=T2, labelsize=8); ax.tick_params(axis="x", length=0); ax.grid(axis="y", color=REJ, lw=1, zorder=0)
     for s in ("top", "right", "left"):
@@ -182,4 +187,6 @@ def figura(out: dict) -> None:
 
 
 if __name__ == "__main__":
+    if sys.argv[1:] == ["--figura"]:                                 # sólo redibuja, de resultados/evaluacion.json
+        figura(json.loads((RES / "evaluacion.json").read_text(encoding="utf-8"))); raise SystemExit(0)
     raise SystemExit(main())

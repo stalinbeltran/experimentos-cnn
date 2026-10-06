@@ -1,0 +1,241 @@
+{
+ "A": {
+  "corta-V": {
+   "f1": 0.8578,
+   "precision": 0.8345,
+   "recall": 0.8825,
+   "pos_ok": 0.9972,
+   "umbral": 0.55,
+   "veredicto": "a medias"
+  },
+  "corta-H": {
+   "f1": 0.8987,
+   "precision": 0.9351,
+   "recall": 0.865,
+   "pos_ok": 0.9971,
+   "umbral": 0.85,
+   "veredicto": "a medias"
+  },
+  "corta-S": {
+   "f1": 0.952,
+   "precision": 0.9617,
+   "recall": 0.9425,
+   "pos_ok": 1.0,
+   "umbral": 0.8,
+   "veredicto": "aprendió"
+  },
+  "corta-B": {
+   "f1": 0.9394,
+   "precision": 0.9707,
+   "recall": 0.91,
+   "pos_ok": 0.9973,
+   "umbral": 0.55,
+   "veredicto": "aprendió"
+  },
+  "curva-E": {
+   "f1": 0.856,
+   "precision": 0.8984,
+   "recall": 0.8175,
+   "pos_ok": 1.0,
+   "umbral": 0.75,
+   "veredicto": "a medias"
+  },
+  "curva-W": {
+   "f1": 0.8702,
+   "precision": 0.9146,
+   "recall": 0.83,
+   "pos_ok": 0.997,
+   "umbral": 0.8,
+   "veredicto": "a medias"
+  },
+  "curva-N": {
+   "f1": 0.8793,
+   "precision": 0.9254,
+   "recall": 0.8375,
+   "pos_ok": 1.0,
+   "umbral": 0.55,
+   "veredicto": "a medias"
+  },
+  "curva-S": {
+   "f1": 0.876,
+   "precision": 0.9064,
+   "recall": 0.8475,
+   "pos_ok": 0.9971,
+   "umbral": 0.85,
+   "veredicto": "a medias"
+  }
+ },
+ "H1_cv": {
+  "corta-V": {
+   "fp_sobre_el_otro_grupo": 0.0347,
+   "por_familia": {
+    "curva-E": 0.0667,
+    "curva-W": 0.056,
+    "curva-N": 0.0053,
+    "curva-S": 0.0106
+   }
+  },
+  "corta-H": {
+   "fp_sobre_el_otro_grupo": 0.0123,
+   "por_familia": {
+    "curva-E": 0.0027,
+    "curva-W": 0.0054,
+    "curva-N": 0.0107,
+    "curva-S": 0.0302
+   }
+  },
+  "corta-S": {
+   "fp_sobre_el_otro_grupo": 0.0075,
+   "por_familia": {
+    "curva-E": 0.011,
+    "curva-W": 0.0027,
+    "curva-N": 0.0162,
+    "curva-S": 0.0
+   }
+  },
+  "corta-B": {
+   "fp_sobre_el_otro_grupo": 0.0054,
+   "por_familia": {
+    "curva-E": 0.0054,
+    "curva-W": 0.0054,
+    "curva-N": 0.0027,
+    "curva-S": 0.0081
+   }
+  },
+  "curva-E": {
+   "fp_sobre_el_otro_grupo": 0.014,
+   "por_familia": {
+    "corta-V": 0.0158,
+    "corta-H": 0.0027,
+    "corta-S": 0.0134,
+    "corta-B": 0.0243
+   }
+  },
+  "curva-W": {
+   "fp_sobre_el_otro_grupo": 0.0128,
+   "por_familia": {
+    "corta-V": 0.0239,
+    "corta-H": 0.0027,
+    "corta-S": 0.0108,
+    "corta-B": 0.0139
+   }
+  },
+  "curva-N": {
+   "fp_sobre_el_otro_grupo": 0.0102,
+   "por_familia": {
+    "corta-V": 0.0054,
+    "corta-H": 0.0164,
+    "corta-S": 0.0109,
+    "corta-B": 0.0081
+   }
+  },
+  "curva-S": {
+   "fp_sobre_el_otro_grupo": 0.0121,
+   "por_familia": {
+    "corta-V": 0.0027,
+    "corta-H": 0.0215,
+    "corta-S": 0.0108,
+    "corta-B": 0.0133
+   }
+  }
+ },
+ "B": {
+  "cortas nada": {
+   "compositor_180": 0.8796,
+   "curva_717": {
+    "36": 0.682,
+    "180": 0.8722,
+    "1080": 0.9196
+   }
+  },
+  "cortas norm3": {
+   "compositor_180": 0.8367,
+   "curva_717": {
+    "36": 0.6457,
+    "180": 0.8391,
+    "1080": 0.8987
+   }
+  },
+  "cortas nada+norm3": {
+   "compositor_180": 0.9153,
+   "curva_717": {
+    "36": 0.7438,
+    "180": 0.9093,
+    "1080": 0.9582
+   }
+  },
+  "13 largas nada (referencia)": {
+   "compositor_180": 0.9491,
+   "curva_717": {
+    "36": 0.7922,
+    "180": 0.9419,
+    "1080": 0.9735
+   }
+  },
+  "13 largas norm3": {
+   "compositor_180": 0.8755,
+   "curva_717": {
+    "36": 0.6848,
+    "180": 0.8777,
+    "1080": 0.9279
+   }
+  },
+  "13 largas nada+norm3": {
+   "compositor_180": 0.9563,
+   "curva_717": {
+    "36": 0.8196,
+    "180": 0.9544,
+    "1080": 0.9861
+   }
+  },
+  "cortas norm3 + 13 largas nada": {
+   "compositor_180": 0.9606,
+   "curva_717": {
+    "36": 0.8289,
+    "180": 0.96,
+    "1080": 0.9828
+   }
+  }
+ },
+ "H1_cv_medias": {
+  "curva_sobre_rectas": 0.0123,
+  "recta_sobre_curvas": 0.015
+ },
+ "criterio": {
+  "H1": {
+   "veredicto": "confirmada",
+   "al_menos_a_medias": 8
+  },
+  "H1-cv": {
+   "veredicto": "confirmada",
+   "curva_sobre_rectas": 0.0123,
+   "recta_sobre_curvas": 0.015
+  },
+  "H2": {
+   "veredicto": "pierde",
+   "por_vista": {
+    "nada": {
+     "cortas": 0.8796,
+     "largas": 0.9491,
+     "veredicto": "pierde"
+    },
+    "norm3": {
+     "cortas": 0.8367,
+     "largas": 0.8755,
+     "veredicto": "pierde"
+    },
+    "nada+norm3": {
+     "cortas": 0.9153,
+     "largas": 0.9563,
+     "veredicto": "pierde"
+    }
+   }
+  },
+  "H3": {
+   "veredicto": "refutada",
+   "acc": 0.9606,
+   "umbral": 0.9663
+  }
+ },
+ "segundos": 631.4
+}
