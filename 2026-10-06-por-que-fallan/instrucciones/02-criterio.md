@@ -86,3 +86,31 @@ corrida 5 de feat-ind (0,972 a 8×8) a 32×32—.
 *Enmienda antes de lanzar (02:10 UTC), a raíz del revisor:* S2e se mide con `nn/evaluar.py lineas+lineas-grueso nada` (dos
 **bancos** juntos), que el código no hacía; y la máquina pasa a ≥ 26 vCPU para 13 procesos (en feat-bor, 26 procesos en 28
 vCPU fueron 4 veces más lentos por núcleo que el dev). Ningún umbral cambia.
+
+## Iteración 4 (02:24 UTC, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
+
+S2 sigue entrenando. Mientras, la pregunta es qué **más** falla, aparte del grosor. `nn/diagnostico.py` (D1–D3: confusiones,
+el mismo compositor sobre los **píxeles**, y el error por tercil de inclinación, descentrado, alto y ancho) es descriptivo y
+no lleva umbral. Las dos soluciones que siguen se escriben **antes** de verlo, porque atacan las dos causas clásicas que el
+grosor no explica:
+
+**S4 — desinclinar** (`desinc`): cizallar cada dígito para que su eje quede vertical (α = cov(fila, col) / var(fila) de su
+tinta; la cizalla pasa por su centro de masas y usa el vecino más cercano, así que la imagen sigue siendo 0/1). Un 1 inclinado
+es una `recta-S`/`recta-B` donde el compositor esperaba una `recta-V`, y cada escritor inclina distinto.
+
+| | se confirma si |
+|---|---|
+| **S4a** | `lineas` con `desinc` ≥ `lineas-nada` + 0,005 (≥ 0,954) |
+| **S4b** | el error del tercil MÁS inclinado baja ≥ 25 % (relativo) respecto de `lineas-nada` |
+| **S4c** | sumado a las dos vistas (`desinc+desinc_norm3`) ≥ `lineas-nada+norm3` + 0,005 (≥ 0,961) |
+
+**S5 — compositor tolerante a la posición**: los mapas 8×8 pasan por un máximo 3×3 (paso 1) antes del lineal, así que una
+feature corrida una celda sigue cayendo en el mismo peso. Sobre la combinación de referencia y sobre la mejor del momento.
+
+| | se confirma si |
+|---|---|
+| **S5a** | la curva con **36** de train sube ≥ 0,02 (es donde pesa la posición: pocos ejemplos por celda) |
+| **S5b** | el compositor de 180 no baja (≥ el mismo sin tolerancia − 0,002) |
+
+**Lo que espero:** S4a sí, con el grueso de la ganancia en 1, 7 y 4↔9; S4b sí; S4c a medias. S5a sí y S5b empata; con 1080
+de train, S5 perdería algo (la posición exacta es información cuando sobran ejemplos), y eso se mira pero no decide.
