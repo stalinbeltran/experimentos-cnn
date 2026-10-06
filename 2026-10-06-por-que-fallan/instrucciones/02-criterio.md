@@ -209,7 +209,7 @@ dan **los finos + los gruesos con las dos vistas**; las cortas suman +0,001 a 18
 La respuesta a la pregunta del dueño: **sí se distinguen, si el detector ha visto ese grosor**. Fina, todos; gruesa, sólo el
 que se entrenó con trazos gruesos. (Las cortas de `feat-cortas`, finas: 0,012 y 0,015.)
 
-## Iteración 7 (03:44 UTC, ANTES de medirla) — confirmación CIEGA, en dígitos que este estudio no ha usado para elegir
+## Iteración 7 (03:42 UTC, commit `17693fb`, ANTES de medirla) — confirmación CIEGA, en dígitos que este estudio no ha usado para elegir
 
 **Por qué:** todas las combinaciones se han comparado sobre los mismos 1617 de val, y S6b salió la más alta **de entre
 muchas**: parte de su ventaja puede ser suerte de selección. El dataset tiene **3823 dígitos más** (`origen` tra · cv · wdep:
