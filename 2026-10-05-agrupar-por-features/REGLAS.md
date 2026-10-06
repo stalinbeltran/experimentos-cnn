@@ -89,6 +89,10 @@ en cada uno.
   `cae*`: `dig`/`cae` no tienen nombre de feature y la lectura de un grupo se quedaría sin vocabulario. ⚠ Eso no impide
   medir con ellos si dos descripciones agrupan igual (un ARI no necesita nombres): queda como posible brazo extra, no
   incluido.
+- ⚠ **Tres resultados de otros experimentos se leen EN TIEMPO DE EJECUCIÓN, por su `id`** (no se copian): la firma por
+  clase de `feat-ind32` y de `feat-ind` (para comprobar las copias), la `huella_particiones` de `feat-ind32` y su
+  `errores-c.json` (L3). Si cambian, las comprobaciones **se niegan** en vez de dar otro número; para congelarlos, se
+  copian aquí. Los dos orígenes siguen abiertos.
 - ⚠ **Fuga leve, de diseño:** la forma de la descripción (las zonas, qué bancos) se eligió con lo que hoy midieron
   compositores **supervisados sobre estos mismos dígitos**. Ninguna etiqueta entra en el cálculo de los grupos, pero el
   diseño no es ciego a ellas.
@@ -149,7 +153,7 @@ la advertencia de la tabla de §2: el nombre es el del dibujo.
     ojo cuántos tienen bandera;
   - `consistencia.png` — L4 por brazo y transformación (la paleta, validada con la herramienta de la skill `dataviz`).
 - **Qué se commitea:** todo menos `*.npz` (las representaciones y las particiones secundarias se regeneran en minutos).
-- **Presupuesto de tamaño:** el tope del repo es ≈5 MB por experimento. **Medido al commitear: 3,97 MB** — pesos 3,05 MB,
+- **Presupuesto de tamaño:** el tope del repo es ≈5 MB por experimento. **Medido: 4,03 MB** (4.025.000 B, el `verificador`) — pesos 3,05 MB,
   10 figuras 578 KB (ninguna pasa de 90 KB), JSON 0,25 MB, y el código.
 - **Reporte en el central:** **no** — 0 $ y no cambia `ESTADO.md` (la misma decisión que `feat-ind`). Si el dueño lo
   quiere, se escribe.
@@ -220,8 +224,9 @@ cabecera de `nn/leer.py`):
   arranca a la derecha del tallo central y *b* la subestima. El grupo que a ojo son todos 1 con bandera (g15 de Z32) tiene
   *b* medio **−2,2**.
 - Se probó un **índice corregido b′** (`nn/leer.py`, `bandera_corregida`): la bandera contra el borde izquierdo del tallo
-  extrapolado. **Tampoco sirve**: una bandera larga baja hasta las filas del tallo y tuerce la recta ajustada. Sus «más
-  abanderados» son barras gruesas.
+  extrapolado. **Tampoco sirve como prueba**: separa a g15 (AUC 0,93 y 0,92, más que el grosor), pero en sentido contrario al de
+  una bandera (b′ medio −7,1 frente a +0,4): una bandera larga baja hasta las filas del tallo y tuerce la recta ajustada.
+  Sus «más abanderados» son barras gruesas.
 - Por eso, **una cuenta a ojo** (por Claude, aproximada) sobre `auditoria-1-Z32.png`, y lo que se enciende en cada grupo
   del 1 (`grupos-Z32-K30.json`). Las dos cosas están en el README, marcadas como lo que son.
 
@@ -247,7 +252,7 @@ cabecera de `nn/leer.py`):
 ### 7. Dónde corre y cuánto cuesta
 
 **0 $, en el dev, sin alquilar nada. Medido el 2026-10-05** (se estimaban ≤ 15 min): `representar.py` 127 s ·
-`entrenar_local.py` 33 s (los 190 k-means de los tres ajustes) · `leer.py` 72 s · `figuras.py` ~15 s. Unos 4 min en total.
+`entrenar_local.py` 33 s (los 190 k-means de los tres ajustes) · `leer.py` ~74 s · `figuras.py` ~15 s. Unos 4 min en total.
 
 `gasta` es `entrena-local` con la entrada en `nn/entrenar_local.py` —el contrato con el freno—. Como cada paso cabe de
 sobra en el turno, no hizo falta lanzarlo como unidad.
