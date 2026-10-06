@@ -164,7 +164,8 @@ de más **relleno** (0,051, contra 0,011 del medio).
 
 Todas las combinaciones se compararon sobre los mismos 1617 dígitos, y S6b salió la más alta de entre muchas. Para
 descartar que fuese suerte, se escribió antes un criterio (`nn/confirmar.py`) y se midieron las seis finalistas en **3823
-dígitos de otros 30 escritores** (`origen` tra · cv · wdep), cuyo acierto **ningún** paso anterior había mirado, con el
+dígitos de otros escritores** (`origen` tra · cv · wdep: los 30 del conjunto de entrenamiento de UCI, según su
+documentación; el dato no trae el id de escritor), cuyo acierto **ningún** paso anterior había mirado, con el
 compositor entrenado igual (los mismos 180):
 
 | | val (1617) | **ciega (3823)** |
@@ -189,6 +190,9 @@ Y las **cortas** son lo que mejor aguanta el cambio de escritor: sin ellas, fino
    de pasadas*, más el esqueleto). No se midió el tiempo de
    inferencia.
 5. **Finos + gruesos en dos vistas** (0,9705) estaba en la cuadrícula pero sin criterio propio: se reporta, no se declara.
+6. **Un solo sorteo de los 180 de entrenamiento**, también en la confirmación ciega: no hay intervalos. Las 3 semillas del
+   compositor dan la misma solución (es convexo), así que no miden varianza. Entre las mejores las diferencias no se
+   distinguen (0,9705 contra 0,9716 son 2 dígitos de 1617); lo que sí se sostiene es la distancia a la referencia, y a ciegas.
 
 ## Ficheros y scripts
 
