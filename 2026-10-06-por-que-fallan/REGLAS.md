@@ -67,7 +67,8 @@ y lo vuelves a poner a prueba»*.
   diagnósticos; cada una, escrita antes y commiteada, en `instrucciones/02-criterio.md`.
 - **Bancos combinables:** `nn/evaluar.py` acepta varios bancos con «+» (`lineas+lineas-grueso+cortas`) y preprocesados en
   cadena con «_» (`desinc_norm3`); lee también las cortas de `feat-cortas` por su id y su huella.
-- **S2 en Vast:** 28 vCPU (Xeon E5-2680 v4, 0,0956 $/h) para 13 procesos de 2 hilos, **19 min y 0,0303 $**.
+- **S2 en Vast:** 28 vCPU (Xeon E5-2680 v4, 0,0956 $/h) para 13 procesos de **1 hilo** (`--hilos 1`; se pidieron ≥ 26 vCPU,
+  2 por proceso), **19 min y 0,0303 $**.
 - **Scripts nuevos:** `nn/curvas_rectas.py` (la pregunta del dueño, por banco), `nn/errores.py` y `nn/diagnostico.py`
   (dónde se concentra el error), `nn/pares.py` (qué detector empuja cada confusión), `nn/tolerante.py` (S5),
   `nn/confirmar.py` (la iteración 7) y `nn/figuras.py`; y en `nn/normalizar.py`, `desinclinar` y `adelgazar_segun_grosor`.

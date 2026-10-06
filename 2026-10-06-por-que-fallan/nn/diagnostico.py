@@ -82,7 +82,7 @@ def main(combos: list[str]) -> int:
                 "confusion": conf.tolist()}
         for k in ("inclinacion", "descentrado", "alto", "ancho", "grosor", "relleno"):
             t = np.digitize(g[k], out["propiedades"][k]["terciles"])
-            fila[f"error_por_tercil_de_{k}"] = [round(float(err[t == i].mean()), 4) for i in range(3)]
+            fila[f"error_por_tercil_de_{k}"] = [round(float(err[t == i].mean()), 4) if (t == i).any() else None for i in range(3)]
         out["combos"][combo] = fila
         print(f"  {combo:<20} acierto {fila['acierto']:.4f} · pares " + ", ".join(f"{p['par']} {p['n']}" for p in fila["pares"][:5])
               + " · error por clase " + " ".join(f"{c}:{v:.3f}" for c, v in fila["error_por_clase"].items()), flush=True)
@@ -90,7 +90,7 @@ def main(combos: list[str]) -> int:
                                                          ("inclinacion", "descentrado", "grosor", "relleno")), flush=True)
     print("  terciles: " + " · ".join(f"{k} {v['terciles']} (mediana {v['mediana']})" for k, v in out["propiedades"].items()))
     RES.mkdir(parents=True, exist_ok=True)
-    (RES / "diagnostico.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    (RES / "diagnostico.json").write_text(json.dumps(out, indent=1, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     return 0
 
 

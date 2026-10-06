@@ -141,7 +141,7 @@ def soluciones(extra: list | None = None) -> None:
     ax.bar(x - 0.2, c180, 0.38, color=[AZUL if v >= ref else GRIS for v in c180], zorder=3, label="180 dígitos de train (1617 de val)")
     ax.bar(x + 0.2, c36, 0.38, color=NARANJA, alpha=0.8, zorder=3, label="sólo 36 de train (717 de test)")
     for xx, v in zip(x, c180):
-        ax.text(xx - 0.2, v + 0.004, f"{v:.3f}", ha="center", va="bottom", fontsize=7, color=T1)
+        ax.text(xx - 0.2, v + 0.004, f"{v + 1e-9:.3f}", ha="center", va="bottom", fontsize=7, color=T1)
     for xx, v in zip(x, c36):
         ax.text(xx + 0.2, v + 0.004, f"{v:.3f}", ha="center", va="bottom", fontsize=7, color=T2)
     ax.axhline(ref, color=AZUL, lw=0.8, ls="--", zorder=2)
@@ -214,9 +214,9 @@ def confirmacion() -> None:
         ax.text(xx + 0.2, v + 0.002, f"{v:.3f}", ha="center", va="bottom", fontsize=7.5, color=T1)
     ax.set_ylim(0.9, 0.985); ax.set_xticks(x); ax.set_xticklabels([nombres[k] for k in filas], fontsize=8)
     ax.set_ylabel("acierto (compositor de 180)", color=T2, fontsize=9)
-    ax.legend(frameon=False, fontsize=8.5, loc="upper left", labelcolor=T1)
+    ax.legend(frameon=False, fontsize=8.5, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, labelcolor=T1)
     ax.set_title("¿Se sostiene en dígitos que el estudio no usó para elegir? Sí: la mejora es mayor, no menor",
-                 color=T1, fontsize=10.5, loc="left")
+                 color=T1, fontsize=10.5, loc="left", pad=24)
     fig.tight_layout(); fig.savefig(RES / "confirmacion.png", facecolor=SUP); plt.close(fig)
     print("  confirmacion.png")
 

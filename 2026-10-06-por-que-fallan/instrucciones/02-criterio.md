@@ -87,7 +87,7 @@ corrida 5 de feat-ind (0,972 a 8×8) a 32×32—.
 **bancos** juntos), que el código no hacía; y la máquina pasa a ≥ 26 vCPU para 13 procesos (en feat-bor, 26 procesos en 28
 vCPU fueron 4 veces más lentos por núcleo que el dev). Ningún umbral cambia.
 
-## Iteración 4 (02:19 UTC, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
+## Iteración 4 (02:19 UTC, commit `29fa92d`, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
 
 S2 sigue entrenando. Mientras, la pregunta es qué **más** falla, aparte del grosor. `nn/diagnostico.py` (D1–D3: confusiones,
 el mismo compositor sobre los **píxeles**, y el error por tercil de inclinación, descentrado, alto y ancho) es descriptivo y
@@ -187,7 +187,7 @@ con **36** de train, 0,833 y 0,843 contra 0,792 — con pocos ejemplos, quitar l
 resta (0,968 contra 0,974). Lo que esperaba (S4a sí) no pasó. **Por la regla de la iteración 5, S6d no se activa.**
 
 **S5 (compositor tolerante, `max3`)** — sobre la referencia: con 36, **+0,025** (S5a ✅) y con 180, −0,009 (S5b ❌); sobre la
-mejor del momento (`lineas-nada+norm3`): +0,020 (S5a ✅, justo en el umbral) y +0,006 (S5b ✅). Con 1080, −0,003 y −0,007: la
+mejor del momento (`lineas-nada+norm3`): +0,020 (S5a ✅, justo en el umbral) y +0,006 (S5b ✅). Con 1080, −0,002 y −0,007: la
 posición exacta es información cuando sobran ejemplos, como esperaba. **S5a se confirma en las dos → S6c se activa.**
 
 **S6b ✅** — `lineas+lineas-grueso+cortas` en `nada+norm3` (68 mapas): **0,9716** (≥ 0,966) y curva con 36 **0,857** (≥ 0,820);
@@ -234,7 +234,7 @@ S5a ✅; la referencia con 36 da 0,792); curva 0,893 / 0,968 / 0,989. Pasa tambi
 Con `media3`, 0,9722 y 0,888 (se mira, no decide).
 
 **S4b ✅ (por poco)** — con `desinc`, el error del tercil más inclinado baja de 0,061 a 0,045 (−26 %; pedía −25 %). Pero sube en
-los otros dos terciles (0,041 → 0,052 y 0,051 → 0,069) y los 8 pasan de 6 % a 17 % de error (aparece un 6 ↔ 8): desinclinar
+los otros dos terciles (0,041 → 0,052 y 0,051 → 0,069) y los 8 pasan de 6 % a 16 % de error (aparece un 6 ↔ 8): desinclinar
 arregla los inclinados y estropea los demás. S4 queda ❌ en lo que decide (S4a, S4c).
 
 **Lo que queda en S6b** (`nn/pares.py`): 4 → 1 (30 % de los errores: 4 cerrados con el triángulo macizo, más gruesos) y 8 → 9
@@ -256,3 +256,12 @@ relleno (0,051 contra 0,011).
 ganancia) salió al revés en lo segundo: con otros escritores la ganancia es **mayor** (+0,041 contra +0,023), porque la
 referencia cae más (0,949 → 0,925) que S6b (0,972 → 0,966). Y las **cortas** son lo que mejor aguanta el cambio de escritor:
 sin ellas, finos + gruesos en dos vistas baja de 0,971 a 0,958; con ellas (S6a, S6b) apenas se mueve.
+
+## Correcciones de la verificación (04:25 UTC) — ninguna cambia un umbral ni un veredicto
+
+El `verificador` recalculó desde los pesos las cifras de cabecera (referencia 0,9491 / ciega 0,9254; S6b 0,9716 / 0,9660) y
+los 29 veredictos, y encontró erratas de texto, corregidas aquí y en el README: los 8 con `desinc` pasan al **16 %** (no 17);
+con 1080, S5 sobre la referencia es **−0,002** (no −0,003); la iteración 4 se commiteó en `29fa92d`. Y dos precisiones sobre la
+cabecera de este fichero: la **prueba gruesa** sólo se mide con un banco y una vista (13 de las 21 combinaciones la traen a
+`null`), y con varios bancos la **firma** es la del primero. Por último, lo que git **no** puede probar: las iteraciones 1 y 2
+entraron en git junto con su resultado (`444fdc1`); para ellas sólo hay la hora escrita a mano.

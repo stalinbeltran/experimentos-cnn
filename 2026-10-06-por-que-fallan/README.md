@@ -9,9 +9,14 @@ sintéticos de 2–4 px) leen los dígitos de NIST con un compositor lineal posi
 entrenamiento. Y tienen síntomas raros: encienden arcos en los 1 (76 %), y los grupos de `feat-agr` se rompen al cambiar el
 grosor del dígito.
 
-**Cómo se hizo:** por **iteraciones**. Cada una, con su criterio escrito **antes** de medirla y commiteado (el hash y la
-hora están en `instrucciones/02-criterio.md`); su resultado, debajo; y la siguiente, salida del diagnóstico de la anterior.
-Siete iteraciones, unas 25 combinaciones medidas siempre con las mismas cuatro métricas (`nn/evaluar.py`).
+**Cómo se hizo:** por **iteraciones**. Cada una, con su criterio escrito **antes** de medirla; su resultado, debajo; y la
+siguiente, salida del diagnóstico de la anterior (`instrucciones/02-criterio.md`). ⚠ **Desde la iteración 3 el criterio se
+commiteó antes de medirse** (el hash va en cada cabecera); la 1 y la 2 se escribieron antes pero entraron en git **junto**
+con su resultado (`444fdc1`, 01:46), así que para ellas sólo queda la hora escrita a mano. Y las horas de cabecera de la 3 a
+la 7 se escribieron **por delante** del commit y se corrigieron después a la del commit (los umbrales no se tocaron).
+Siete iteraciones y **21 combinaciones** banco × preprocesado (30 evaluaciones contando las 3 del compositor tolerante y las
+6 de la confirmación ciega), con las métricas de `nn/evaluar.py`: compositor, curva, firma y κ siempre; la prueba gruesa
+sintética, sólo con un banco y una vista; y con varios bancos, la firma es la del primero.
 
 **Coste:** 0,0303 $ (S2: 13 detectores en una máquina de Vast, 19 min, destruida sola). Más los bancos que se leen de otros
 experimentos: `feat-bor` (bordes, 0,1098 $) y `feat-cortas` (rectas y curvas cortas, 0,0145 $). Todo lo demás, en el dev.
@@ -127,7 +132,7 @@ lo que falla no es la idea, es el grosor.
   menos selectivo con la forma — la recta vertical gruesa se enciende en el cuerpo de **todos** los 4 que lee como 1
   (`resultados/pares-lineas-grueso-nada.png`).
 - **Desinclinar** (S4): **arregla los inclinados** —el error del tercil más inclinado baja de 0,061 a 0,045 (−26 %, S4b ✅)—
-  pero **estropea los demás**: los 8 pasan de 6 % a 17 % de error (aparece un 6 ↔ 8 que no estaba). Con pocos ejemplos (36)
+  pero **estropea los demás**: los 8 pasan de 6 % a 16 % de error (aparece un 6 ↔ 8 que no estaba). Con pocos ejemplos (36)
   compensa; con 180, no.
 
 ### Lo que funciona: dárselo todo al compositor
@@ -195,7 +200,7 @@ Y las **cortas** son lo que mejor aguanta el cambio de escritor: sin ellas, fino
 | `resultados/*.png` | las figuras de arriba |
 | `nn/pesos-lineas-grueso/<f>/` | los 13 detectores de S2 (`best.pt`, `config.json`, `summary.json`) |
 | `nn/evaluar.py` | una combinación: `python nn/evaluar.py lineas+lineas-grueso+cortas nada+norm3` |
-| `nn/normalizar.py` | esqueleto, `norm3`, `desinclinar`, `adelgazar_segun_grosor` (`python nn/normalizar.py` comprueba los seis casos) |
+| `nn/normalizar.py` | esqueleto, `norm3`, `desinclinar`, `adelgazar_segun_grosor` (`python nn/normalizar.py` comprueba los siete casos) |
 | `nn/diagnostico.py`, `errores.py`, `pares.py`, `curvas_rectas.py`, `tolerante.py`, `confirmar.py`, `figuras.py` | los diagnósticos y las figuras |
 
 Reporte en el repo central: [`estudios-redes-neuronales` #35](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/reportes/estudios/2026/10-octubre/2026-10-06-feat-fallos-por-que-fallan.md).
