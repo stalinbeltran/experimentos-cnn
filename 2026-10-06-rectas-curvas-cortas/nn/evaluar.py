@@ -131,19 +131,24 @@ def main() -> int:
     huellas = json.loads((org / "resultados" / "firma-por-clase.json").read_text(encoding="utf-8"))["huellas_best"]
     largas = cargar_banco(org / "nn" / "pesos", LARGAS, huellas)
     ml = mapas(largas, x).reshape(len(x), -1)
-    for nombre, xm in {"13 largas nada (referencia)": ml, "cortas norm3 + 13 largas nada": np.concatenate([m["norm3"], ml], 1)}.items():
+    mln = mapas(largas, vistas["norm3"]).reshape(len(x), -1)
+    for nombre, xm in {"13 largas nada (referencia)": ml, "13 largas norm3": mln, "13 largas nada+norm3": np.concatenate([ml, mln], 1),
+                       "cortas norm3 + 13 largas nada": np.concatenate([m["norm3"], ml], 1)}.items():
         out["B"][nombre] = medir(xm, y, tr)
         print(f"  {nombre:<22} compositor {out['B'][nombre]['compositor_180']:.4f} · curva "
               + "/".join(f"{out['B'][nombre]['curva_717'][str(n)]:.3f}" for n in TAMANOS), flush=True)
     n_ok = sum(v["veredicto"] in ("aprendió", "a medias") for v in out["A"].values())
-    ref = out["B"]["13 largas nada (referencia)"]["compositor_180"]
+    B_ = {k: v["compositor_180"] for k, v in out["B"].items()}
+    h2 = {v: {"cortas": B_[f"cortas {v}"], "largas": B_["13 largas nada (referencia)" if v == "nada" else f"13 largas {v}"]}
+          for v in ("nada", "norm3", "nada+norm3")}
+    for v in h2.values():
+        v["veredicto"] = "gana" if v["cortas"] >= v["largas"] + 0.01 else ("empata" if v["cortas"] >= v["largas"] - 0.01 else "pierde")
+    umbral_h3 = r4(B_["13 largas nada+norm3"] + 0.01)
     cri = {"H1": {"veredicto": "confirmada" if n_ok >= 6 else "refutada", "al_menos_a_medias": n_ok},
            "H1-cv": {"veredicto": "confirmada" if max(cv.values()) <= 0.10 else "refutada", **cv},
-           "H2": {"veredicto": ("gana" if out["B"]["cortas norm3"]["compositor_180"] >= ref + 0.01 else
-                                "confirmada" if out["B"]["cortas norm3"]["compositor_180"] >= ref else "refutada"),
-                  "acc": out["B"]["cortas norm3"]["compositor_180"], "referencia": ref},
-           "H3": {"veredicto": "confirmada" if out["B"]["cortas norm3 + 13 largas nada"]["compositor_180"] >= ref + 0.01 else "refutada",
-                  "acc": out["B"]["cortas norm3 + 13 largas nada"]["compositor_180"], "umbral": r4(ref + 0.01)}}
+           "H2": {"veredicto": h2["norm3"]["veredicto"], "por_vista": h2},
+           "H3": {"veredicto": "confirmada" if B_["cortas norm3 + 13 largas nada"] >= umbral_h3 else "refutada",
+                  "acc": B_["cortas norm3 + 13 largas nada"], "umbral": umbral_h3}}
     out["criterio"] = cri; out["segundos"] = round(time.time() - t0, 1)
     RES.mkdir(parents=True, exist_ok=True)
     (RES / "evaluacion.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

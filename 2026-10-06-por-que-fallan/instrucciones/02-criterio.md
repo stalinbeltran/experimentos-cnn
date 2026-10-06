@@ -66,7 +66,7 @@ son **los mismos 13 detectores sobre dos entradas** (26 mapas). Sin reentrenar.
 (**0,820 / 0,955 / 0,986** contra 0,792 / 0,942 / 0,974). **I2b ✅** κ adelgazar **0,562** (engrosar 0,303). Las dos vistas
 conservan la mayor parte de la robustez de S3 sin perder acierto.
 
-## Iteración 3 (01:50 UTC) — S2: entrenar las features con el grosor de los dígitos
+## Iteración 3 (escrita antes de 01:46 UTC; commit `444fdc1`) — S2: entrenar las features con el grosor de los dígitos
 
 **Por qué:** S3 quita el grosor del dígito y rompe las zonas rellenas; la otra salida es que el detector **vea gruesos al
 entrenar**. Los 13 detectores, misma receta, sobre `feat-fallos-sinteticas-grueso-32px-r20261006` (2–12 px). En `feat-ind`
@@ -82,3 +82,7 @@ entrenar**. Los 13 detectores, misma receta, sobre `feat-fallos-sinteticas-grues
 
 **Lo que espero:** S2d sí (es lo que vio); S2a sí; S2b a medias; **S2c pierde o empata** (vuelve el 4→1); **S2e sí** —es la
 corrida 5 de feat-ind (0,972 a 8×8) a 32×32—.
+
+*Enmienda antes de lanzar (02:10 UTC), a raíz del revisor:* S2e se mide con `nn/evaluar.py lineas+lineas-grueso nada` (dos
+**bancos** juntos), que el código no hacía; y la máquina pasa a ≥ 26 vCPU para 13 procesos (en feat-bor, 26 procesos en 28
+vCPU fueron 4 veces más lentos por núcleo que el dev). Ningún umbral cambia.

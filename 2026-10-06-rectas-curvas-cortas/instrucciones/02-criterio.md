@@ -1,4 +1,4 @@
-# Criterio — escrito el 2026-10-06 (01:50 UTC), ANTES de entrenar
+# Criterio — escrito el 2026-10-06 (antes de 01:46 UTC; commit `444fdc1`), ANTES de entrenar
 
 No existe ningún detector de este experimento. Lo único mirado: la rejilla de muestras (`resultados/muestras-features.png`),
 que enseña lo esperable: una curva corta y gruesa (radio 5, 4 px) se parece mucho a una recta corta.
@@ -32,3 +32,15 @@ Referencia (feat-ind32, las 13 features largas, crudo): **0,949**; curva **0,792
 - H3 sí (0,96–0,97): lo local y lo largo son informaciones distintas, como fino y grueso en feat-ind.
 
 Si sale al revés, eso es un resultado y se escribe tal cual.
+
+## Enmienda antes de lanzar (02:10 UTC) — a raíz del revisor; sigue sin existir ningún detector
+
+H2 y H3, tal como estaban, cambiaban **dos** cosas a la vez (el vocabulario y la vista: cortas en `norm3` contra largas en
+`nada`), y feat-fallos ya midió que `norm3` solo le cuesta −0,074 a las largas. Se miden ahora **en la misma vista**:
+
+- **H2** (por vista): cortas contra las 13 largas **en la misma vista** —`nada` contra 0,949; `norm3` contra las largas en
+  `norm3`; `nada+norm3` contra las largas en las dos vistas—. **Gana** si +0,01 o más, **empata** dentro de ±0,01,
+  **pierde** si no. El veredicto principal sigue siendo el de `norm3`.
+- **H3:** cortas (`norm3`) + 13 largas (crudas) **≥ largas en las dos vistas + 0,01** (feat-fallos midió 0,956 → **≥ 0,966**):
+  si no supera a lo que las largas solas ya dan con dos vistas, las cortas no aportan.
+- H1 queda como está, pero la prueba que de verdad dice algo es **H1-cv**.

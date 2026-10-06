@@ -159,12 +159,14 @@ def _digitos() -> dict:
 
 # ------------------------------------------------------------------------------------------------ una combinación
 def evaluar(nombre: str, prepro: str, dg: dict | None = None) -> dict:
+    """`nombre` puede juntar BANCOS con «+» (p. ej. `lineas+lineas-grueso`): sus mapas van juntos al compositor; la firma y
+    la prueba gruesa son del primero."""
     t0 = time.time(); torch.set_num_threads(2)
-    b = banco(nombre); dg = dg or _digitos(); y, w = dg["y"], dg["w"]
+    bancos = [banco(n) for n in nombre.split("+")]; b = bancos[0]; dg = dg or _digitos(); y, w = dg["y"], dg["w"]
     vers = {"limpio": dg["x"], "engrosar": transformar(dg["x"], "engrosar"), "adelgazar": transformar(dg["x"], "adelgazar")}
     vistas = prepro.split("+")
-    s = {v: np.concatenate([mapas(b, preparar(xv, b["rep"], vi)) for vi in vistas], 1) for v, xv in vers.items()}
-    out = {"banco": nombre, "representacion": b["rep"], "preprocesado": prepro, "huellas": b["huellas"]}
+    s = {v: np.concatenate([mapas(bb, preparar(xv, bb["rep"], vi)) for bb in bancos for vi in vistas], 1) for v, xv in vers.items()}
+    out = {"banco": nombre, "representacion": b["rep"], "preprocesado": prepro, "huellas": {bb["nombre"]: bb["huellas"] for bb in bancos}}
     # firma (de la PRIMERA vista)
     pres = s["limpio"][:, :13].reshape(len(y), 13, -1).max(2) >= b["umbrales"][None]
     out["firma"] = {str(c): {f: r4(pres[w & (y == c), j].mean()) for j, f in enumerate(b["familias"])} for c in range(10)}
@@ -184,7 +186,7 @@ def evaluar(nombre: str, prepro: str, dg: dict | None = None) -> dict:
         c = float((M.asignar(z[t], C) == lab0).mean())
         out["kappa"][t] = {"c": r4(c), "kappa": r4(M.kappa(c, lab0, K0))}
     # la prueba gruesa (sintética), con el MISMO preprocesado (no aplica a dos vistas: es por detector)
-    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 else None
+    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 else None
     out["segundos"] = round(time.time() - t0, 1)
     return out
 
@@ -238,7 +240,7 @@ def linea(o: dict) -> str:
 def main(argv: list[str]) -> int:
     if argv and argv[0] == "--todas":
         hechas = {p.stem for p in COMBOS.glob("*.json")}
-        for nombre in ("lineas", "contorno", "signo"):
+        for nombre in ("lineas", "contorno", "signo", "lineas-grueso", "lineas+lineas-grueso"):
             for prepro in PREPROCESADOS:
                 if f"{nombre}-{prepro}" not in hechas:
                     try:

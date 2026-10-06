@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-06T00:53:49+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-06T00:53:50+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-06T00:54:37+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-06T00:54:39+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-06T00:55:23+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-06T00:55:25+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-06T02:02:44+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-06T02:02:48+00:00"
   }
  ],
  "id": "detectores",
@@ -23,5 +51,42 @@
   "fiabilidad": 0.9455
  },
  "horas_max": 3.0,
- "tope_precio": 0.4
+ "tope_precio": 0.4,
+ "iid": 54406285,
+ "intentos_clave": 1,
+ "payload_mb": 3.2,
+ "sha256": "5129c2963512f288",
+ "segundos_max": 10106,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/arco-E",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/arco-W",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/arco-N",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/arco-S",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/recta-V",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/recta-H",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/recta-S",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/recta-B",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/lazo",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/esquina-NE",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/esquina-NW",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/esquina-SE",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-contorno/esquina-SW",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/arco-E",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/arco-W",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/arco-N",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/arco-S",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/recta-V",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/recta-H",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/recta-S",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/recta-B",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/lazo",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/esquina-NE",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/esquina-NW",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/esquina-SE",
+  "experimentos-cnn/2026-10-06-features-bordes/nn/pesos-signo/esquina-SW"
+ ],
+ "apartado": [],
+ "minutos": 69.0,
+ "coste_usd": 0.1098
 }

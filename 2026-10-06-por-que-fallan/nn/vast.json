@@ -2,8 +2,8 @@
  "experimento": "feat-fallos",
  "descripcion": "S2 del estudio: los 13 detectores de feat-ind32 entrenados con el dataset GRUESO (2–12 px, el rango de los dígitos), A LA VEZ en UNA máquina. Receta de feat-ind32 sin cambios. La evaluación, en el dev.",
  "maquina": {
-  "cpus": 14,
-  "max_cpus": 32,
+  "cpus": 26,
+  "max_cpus": 48,
   "min_ram": 32,
   "cpu": "",
   "disk_gb": 24,
@@ -72,6 +72,7 @@
   "13 procesos de 1 hilo. En feat-bor, 26 procesos en 28 vCPU tardaron más de 50 min: aquí 13 en ≥ 14 vCPU.",
   "min_ram 32 GB: 13 procesos × ≤ 1,3 GB de pico (medido en feat-bor el 2026-10-06) con margen.",
   "Se excluyen del envío las carpetas de pesos y resultados de TODO el repo (otros experimentos): no hacen falta allí y engordan el paquete.",
-  "Cada detector deja su log en nn/pesos-lineas-grueso/<f>/log.txt y vuelve con sus pesos."
+  "Cada detector deja su log en nn/pesos-lineas-grueso/<f>/log.txt y vuelve con sus pesos.",
+  "cpus 26 (2 por proceso, a raíz del revisor): en feat-bor, 26 procesos en 28 vCPU fueron ~4× más lentos por núcleo que el dev (1 h 07 min, 0,1098 $)."
  ]
 }

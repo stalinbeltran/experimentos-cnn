@@ -1,0 +1,84 @@
+{
+ "moda_de_huecos_por_clase": {
+  "0": 1,
+  "1": 0,
+  "2": 0,
+  "3": 0,
+  "4": 0,
+  "5": 0,
+  "6": 1,
+  "7": 0,
+  "8": 2,
+  "9": 1
+ },
+ "propiedades": {
+  "grosor": {
+   "terciles": [
+    5.181,
+    6.428
+   ]
+  },
+  "relleno": {
+   "terciles": [
+    0.481,
+    0.546
+   ]
+  },
+  "huecos": {
+   "frac_val_distintos_de_su_clase": 0.1082
+  }
+ },
+ "combos": {
+  "lineas-nada": {
+   "error_total": 0.0507,
+   "n_errores": 82,
+   "error_por_tercil_de_grosor": [
+    0.0482,
+    0.0353,
+    0.0686
+   ],
+   "error_por_tercil_de_relleno": [
+    0.0537,
+    0.0376,
+    0.0606
+   ],
+   "error_huecos_como_su_clase": 0.0423,
+   "error_huecos_distintos": 0.12,
+   "frac_de_errores_con_huecos_distintos": 0.2561
+  },
+  "lineas-norm3": {
+   "error_total": 0.1249,
+   "n_errores": 202,
+   "error_por_tercil_de_grosor": [
+    0.0853,
+    0.115,
+    0.1744
+   ],
+   "error_por_tercil_de_relleno": [
+    0.087,
+    0.1203,
+    0.167
+   ],
+   "error_huecos_como_su_clase": 0.1075,
+   "error_huecos_distintos": 0.2686,
+   "frac_de_errores_con_huecos_distintos": 0.2327
+  },
+  "lineas-nada+norm3": {
+   "error_total": 0.0439,
+   "n_errores": 71,
+   "error_por_tercil_de_grosor": [
+    0.0371,
+    0.0408,
+    0.0538
+   ],
+   "error_por_tercil_de_relleno": [
+    0.037,
+    0.0376,
+    0.0569
+   ],
+   "error_huecos_como_su_clase": 0.0361,
+   "error_huecos_distintos": 0.1086,
+   "frac_de_errores_con_huecos_distintos": 0.2676
+  }
+ }
+}
