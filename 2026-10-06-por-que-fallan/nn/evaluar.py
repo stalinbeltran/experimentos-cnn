@@ -55,26 +55,31 @@ def r4(v) -> float:
 
 
 # ------------------------------------------------------------------------------------------------ los bancos
-def _origen_banco(nombre: str) -> tuple[Path, str, dict | None]:
-    """(carpeta de pesos, representación de entrada, huellas esperadas o None)."""
+def _origen_banco(nombre: str) -> tuple[Path, str, dict | None, tuple]:
+    """(carpeta de pesos, representación de entrada, huellas esperadas o None, familias)."""
     if nombre == "lineas":
         org = por_id("feat-ind32").carpeta
         h = json.loads((org / "resultados" / "firma-por-clase.json").read_text(encoding="utf-8"))["huellas_best"]
-        return org / "nn" / "pesos", "lineas", h
+        return org / "nn" / "pesos", "lineas", h, F.CON_TRAZO
     if nombre in ("contorno", "signo"):
         org = por_id("feat-bor").carpeta
         ev = org / "resultados" / "evaluacion.json"
         h = json.loads(ev.read_text(encoding="utf-8"))["huellas"][nombre] if ev.is_file() else None
-        return org / "nn" / f"pesos-{nombre}", nombre, h
+        return org / "nn" / f"pesos-{nombre}", nombre, h, F.CON_TRAZO
+    if nombre == "cortas":                     # las 8 rectas y curvas cortas de feat-cortas, por su id y su huella
+        org = por_id("feat-cortas").carpeta
+        h = json.loads((org / "resultados" / "huellas.json").read_text(encoding="utf-8"))["huellas_best"]
+        return org / "nn" / "pesos", "lineas", h, tuple(h)
     propio = AQUI / f"pesos-{nombre}"
     if propio.is_dir():
         rep = json.loads((propio / "arco-E" / "config.json").read_text(encoding="utf-8")).get("representacion", "lineas")
-        return propio, rep, None
+        return propio, rep, None, F.CON_TRAZO
     raise SystemExit(f"✗ banco '{nombre}' desconocido")
 
 
-def banco(nombre: str, familias=F.CON_TRAZO) -> dict:
-    carpeta, rep, huellas = _origen_banco(nombre)
+def banco(nombre: str, familias=None) -> dict:
+    carpeta, rep, huellas, propias = _origen_banco(nombre)
+    familias = familias or propias
     reds, um, hs = [], np.zeros(len(familias), np.float32), {}
     for j, f in enumerate(familias):
         red, est = modelo.cargar(carpeta / f / "best.pt")
@@ -191,7 +196,8 @@ def evaluar(nombre: str, prepro: str, dg: dict | None = None) -> dict:
         out["kappa"][t] = {"c": r4(c), "kappa": r4(M.kappa(c, lab0, K0))}
     # la prueba gruesa (sintética), con el MISMO preprocesado (no aplica a dos vistas: es por detector)
     # (ni a dos bancos, ni a `desinc`: desinclinar una feature sintética suelta convierte una recta-S en una recta-V)
-    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 and "desinc" not in prepro else None
+    sueltas = all(f in F.FAMILIAS for f in b["familias"])      # la prueba gruesa sólo tiene las 13 largas
+    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 and "desinc" not in prepro and sueltas else None
     out["segundos"] = round(time.time() - t0, 1)
     return out
 
@@ -238,7 +244,8 @@ def linea(o: dict) -> str:
     return (f"{o['banco']:<10} {o['preprocesado']:<6} compositor {o['compositor_180']['media']:.4f} · curva "
             + "/".join(f"{o['curva_717'][str(n)]:.3f}" for n in TAMANOS)
             + f" · κ eng {o['kappa']['engrosar']['kappa']:.3f} adel {o['kappa']['adelgazar']['kappa']:.3f}"
-            + f" · arcos en 1 {f1['arco-E']:.2f}/{f1['arco-W']:.2f} · grueso F1 {g['f1_vistos']:.3f}→{g['f1_no_vistos']:.3f}"
+            + f" · arcos en 1 {f1.get('arco-E', float('nan')):.2f}/{f1.get('arco-W', float('nan')):.2f}"
+            + f" · grueso F1 {g['f1_vistos']:.3f}→{g['f1_no_vistos']:.3f}"
             + f" FP {g['fp_vistos']:.3f}→{g['fp_no_vistos']:.3f} [{o['segundos']} s]")
 
 

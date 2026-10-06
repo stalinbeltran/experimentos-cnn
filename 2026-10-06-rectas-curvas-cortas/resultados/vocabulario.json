@@ -1,0 +1,23 @@
+{
+ "8 cortas": {
+  "compositor_180": 0.8796,
+  "mapas": 8
+ },
+ "8 largas-trazo": {
+  "compositor_180": 0.8431,
+  "mapas": 8
+ },
+ "13 largas": {
+  "compositor_180": 0.9491,
+  "mapas": 13
+ },
+ "8 cortas + lazo + 4 esquinas": {
+  "compositor_180": 0.9448,
+  "mapas": 13
+ },
+ "5 sin trazo (lazo + esquinas) solas": {
+  "compositor_180": 0.7982,
+  "mapas": 5
+ },
+ "veredicto": "vocabulario"
+}

@@ -114,3 +114,32 @@ feature corrida una celda sigue cayendo en el mismo peso. Sobre la combinación 
 
 **Lo que espero:** S4a sí, con el grueso de la ganancia en 1, 7 y 4↔9; S4b sí; S4c a medias. S5a sí y S5b empata; con 1080
 de train, S5 perdería algo (la posición exacta es información cuando sobran ejemplos), y eso se mira pero no decide.
+
+## Resultado de la iteración 3 (S2, 02:45 UTC) — lo que se vio antes de escribir la 5
+
+S2 **arregla el síntoma y la prueba sintética, y lee PEOR los dígitos**: arcos en los 1 0,03/0,02 (**S2a ✅**), F1 en 6–12 px
+0,895 contra 0,852 en 2–4 px (**S2d ✅**), κ al adelgazar 0,320 (**S2b ❌**) y compositor **0,853** (**S2c ❌**; con `norm3`,
+0,843). Lo que se le rompe, medido con `nn/pares.py`: la recta vertical gruesa se enciende en el cuerpo de **todos** los 4 que
+lee como 1 (contra el 32 % de los 4 bien leídos), y los arcos dejan de encenderse en los 3 (3↔7). Es el 4→1 que ya había
+abierto `feat-ind` a 8×8. S2e (los dos bancos juntos) estaba en cola y **no** se había visto al escribir lo siguiente.
+
+Y de `feat-cortas` (02:42–02:47): las 8 cortas solas leen 0,880; con el lazo y las esquinas de las largas, **0,945**
+(≈ las 13 largas, 0,949); y como vocabulario de trazos ganan a las largas (0,880 contra 0,843 de las 8 largas-trazo). Las
+cortas (`norm3`) **más** las 13 largas crudas dieron **0,9606**, lo mejor medido.
+
+## Iteración 5 (02:56 UTC, ANTES de ver S2e, S4 y S5) — S6: juntar lo que funcionó por separado
+
+La regla, escrita ahora para no elegir mirando: **se junta lo que haya pasado su propio criterio**, y nada más.
+
+- **S6a** (fijo, no depende de nada pendiente): `lineas+cortas` en `nada+norm3` — las 13 largas y las 8 cortas, cada una en
+  las dos vistas (42 mapas). **Se confirma si ≥ 0,966** (lo mejor medido por un solo banco con dos vistas, 0,956, + 0,01) **y
+  la curva con 36 no baja de 0,820** (la de `lineas-nada+norm3`).
+- **S6b**: lo mismo **más** `lineas-grueso`, **sólo si S2e se confirma**.
+- **S6c**: la mejor de S6a/S6b con el compositor tolerante (`max3`), **sólo si S5a se confirma**.
+- **S6d**: la de S6a con `desinc` delante, **sólo si S4a se confirma**.
+
+**Aviso de sesgo, escrito antes:** todas se miden sobre el mismo val de 1617 con el que se han ido eligiendo las anteriores;
+con 3–4 candidatas el sesgo de selección es pequeño pero no nulo. Por eso el umbral es +0,01 sobre lo mejor y no «la más alta».
+
+**Lo que espero:** S6a sí, por poco (0,962–0,970): las cortas aportaron +0,004 sobre las dos vistas de las largas en la
+combinación de feat-cortas, y añadir la vista `norm3` de las largas suma lo suyo.
