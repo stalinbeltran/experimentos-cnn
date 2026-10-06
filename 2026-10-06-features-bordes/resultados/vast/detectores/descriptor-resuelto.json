@@ -1,0 +1,92 @@
+{
+ "experimento": "feat-bor",
+ "descripcion": "Los 26 detectores de borde (13 de contorno + 13 de borde con signo) A LA VEZ en UNA maquina: 26 procesos de 1 hilo. La receta es la de feat-ind32 C3 sin cambios; sólo cambia la representación (--repr). Después, nn/evaluar.py corre en el dev (minutos).",
+ "maquina": {
+  "cpus": 26,
+  "max_cpus": 48,
+  "min_ram": 48,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.4
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos",
+    "pesos-c3",
+    "pesos-c4",
+    "pesos-cae",
+    "pesos-cae3",
+    "pesos-cae5",
+    "pesos-dig",
+    "curvas-cnn",
+    "detectores-32px",
+    "detectores-8px",
+    "init-detectores-8px.pt"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "detectores",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 26 detectores a la vez, 1 hilo cada uno\"\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor r in contorno signo; do\n  for f in $FAMS; do\n    mkdir -p nn/pesos-$r/$f\n    ../.venv/bin/python -u nn/entrenar_local.py --repr $r --feature $f --hilos 1 > nn/pesos-$r/$f/log.txt 2>&1 &\n    eval \"p$i=$!\"; i=$((i + 1))\n  done\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos-contorno/arco-E",
+    "pesos-contorno/arco-W",
+    "pesos-contorno/arco-N",
+    "pesos-contorno/arco-S",
+    "pesos-contorno/recta-V",
+    "pesos-contorno/recta-H",
+    "pesos-contorno/recta-S",
+    "pesos-contorno/recta-B",
+    "pesos-contorno/lazo",
+    "pesos-contorno/esquina-NE",
+    "pesos-contorno/esquina-NW",
+    "pesos-contorno/esquina-SE",
+    "pesos-contorno/esquina-SW",
+    "pesos-signo/arco-E",
+    "pesos-signo/arco-W",
+    "pesos-signo/arco-N",
+    "pesos-signo/arco-S",
+    "pesos-signo/recta-V",
+    "pesos-signo/recta-H",
+    "pesos-signo/recta-S",
+    "pesos-signo/recta-B",
+    "pesos-signo/lazo",
+    "pesos-signo/esquina-NE",
+    "pesos-signo/esquina-NW",
+    "pesos-signo/esquina-SE",
+    "pesos-signo/esquina-SW"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y `pesos-<repr>/...`.",
+  "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas de feat-ind32).",
+  "26 procesos de 1 hilo: los detectores son independientes. Medido en el dev el 2026-10-06: 1 época con 2 hilos = 8,7 s (contorno) y 10,0 s (signo); con 1 hilo, ~11–13 s → 80 épocas ≈ 15–17 min por detector.",
+  "min_ram 48 GB, a raíz del revisor: medido en el dev el 2026-10-06, 1,29 GB de pico de RSS por proceso en el forward de 6000 negativos que elige el umbral (más 0,1–0,2 GB de datos en uint8). ~21 GB lo típico y ~36 GB si coinciden los 26; 32 GB no dejaban margen.",
+  "Se excluyen del envío las carpetas de pesos y resultados de TODO el repo (otros experimentos): no hacen falta allí y engordan el paquete.",
+  "Cada detector deja su log en nn/pesos-<repr>/<f>/log.txt y vuelve con sus pesos."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-06-features-bordes/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-06-features-bordes/nn/vast.json"
+}
