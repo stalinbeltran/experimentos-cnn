@@ -178,3 +178,33 @@ referencia); arcos en los 1, 0,04 / 0,04 (S7b ✅); κ al engrosar 0,120 (S7c �
 trazos finos de un dígito con partes gruesas (varios 2 se quedan en unos puntos). Junto con S3, cierra la vía de normalizar
 el grosor **en la imagen**: el esqueleto pierde lo relleno y la erosión pierde lo fino. Lo que funciona es que el detector
 vea las dos cosas (S2e) o que el compositor reciba las dos vistas (S3', S6a).
+
+## Resultados de las iteraciones 4 y 5 (03:24–03:38 UTC)
+
+**S4 (desinclinar) ❌** — `desinc` 0,9445 (S4a pedía ≥ 0,954; queda **por debajo** de la referencia); con las dos vistas
+`desinc+desinc_norm3`, 0,9491 (S4c ❌, ≥ 0,961). S4b (el tercil más inclinado) sale del diagnóstico final. Lo que sí hace:
+con **36** de train, 0,833 y 0,843 contra 0,792 — con pocos ejemplos, quitar la inclinación ayuda; con 180 ya no, y con 1080
+resta (0,968 contra 0,974). Lo que esperaba (S4a sí) no pasó. **Por la regla de la iteración 5, S6d no se activa.**
+
+**S5 (compositor tolerante, `max3`)** — sobre la referencia: con 36, **+0,025** (S5a ✅) y con 180, −0,009 (S5b ❌); sobre la
+mejor del momento (`lineas-nada+norm3`): +0,020 (S5a ✅, justo en el umbral) y +0,006 (S5b ✅). Con 1080, −0,003 y −0,007: la
+posición exacta es información cuando sobran ejemplos, como esperaba. **S5a se confirma en las dos → S6c se activa.**
+
+**S6b ✅** — `lineas+lineas-grueso+cortas` en `nada+norm3` (68 mapas): **0,9716** (≥ 0,966) y curva con 36 **0,857** (≥ 0,820);
+curva 0,857 / 0,965 / 0,992; κ 0,340 / 0,706. **Es la mejor medida**: los errores pasan de 5,1 % a 2,8 % (−44 %).
+
+**Fuera de la regla, y se dice:** `lineas+lineas-grueso` en `nada+norm3` (52 mapas), que estaba en la cuadrícula de S2 desde la
+iteración 3 pero sin criterio propio, dio **0,9705** (curva 0,831 / 0,968 / 0,988). O sea que el grueso del salto de S6b lo
+dan **los finos + los gruesos con las dos vistas**; las cortas suman +0,001 a 180 y +0,026 con 36.
+
+**Curva contra recta, en todos los bancos** (`nn/curvas_rectas.py`, en una recta se enciende algún arco · en los 1):
+
+| banco | fina (2–4 px) | gruesa (6–12 px) | arco en los 1 |
+|---|---:|---:|---:|
+| líneas (finas) | 0,000 | **0,447** | 0,89 |
+| contorno | 0,001 | 0,167 | 0,13 |
+| borde con signo | 0,004 | 0,270 | 0,13 |
+| **líneas entrenadas con 2–12 px (S2)** | 0,006 | **0,007** | **0,07** |
+
+La respuesta a la pregunta del dueño: **sí se distinguen, si el detector ha visto ese grosor**. Fina, todos; gruesa, sólo el
+que se entrenó con trazos gruesos. (Las cortas de `feat-cortas`, finas: 0,012 y 0,015.)

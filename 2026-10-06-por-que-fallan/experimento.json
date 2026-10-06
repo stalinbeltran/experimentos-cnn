@@ -8,7 +8,7 @@
   "usa_fv": false,
   "gasta": "alquila",
   "entrada": "nn/entrenar_local.py",
-  "reporte": null,
+  "reporte": "estudios-redes-neuronales #35 (S2 en Vast y el estudio entero)",
   "plan": "Por iteraciones: cada una con su criterio escrito antes en instrucciones/02-criterio.md y su resultado debajo; REGLAS.md describe las piezas",
   "linaje": "feat-ind32 (los detectores que fallan y su receta), feat-agr (la medida de grupos que lo destapo), feat-bor (los bordes) y feat-cortas (las primitivas cortas): sus pesos se leen por id con huella; el codigo se copia. Ver REGLAS.md § Que NO hereda",
   "gasta_por_que": "S2: los 13 detectores entrenados con el dataset grueso, a la vez en UNA maquina de Vast con nn/vast.sh detectores, tope 3 h, destruida sola (~0,02–0,04 $ estimados). Lo demas, minutos en el dev. El freno de Telegram es /use exp-vast (apagar expc-ffal-)."

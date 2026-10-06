@@ -8,7 +8,7 @@
   "usa_fv": false,
   "gasta": "alquila",
   "entrada": "nn/entrenar_local.py",
-  "reporte": null,
+  "reporte": "estudios-redes-neuronales #34 (detectores de borde)",
   "plan": "REGLAS.md e instrucciones/02-criterio.md, escrito antes de entrenar; la sonda de grosor (sin entrenar) en resultados/sonda-grosor.json",
   "linaje": "feat-ind32 (de ahi salen el vocabulario, el sorteo, la red, la receta y la referencia: sus detectores de lineas, leidos por id y comprobados por huella) y feat-agr (la medida de grupos que refuto H4, y su metricas.py). No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda",
   "gasta_por_que": "Los 26 detectores (13 de contorno + 13 de borde con signo) a la vez en UNA maquina de Vast con nn/vast.sh detectores, tope 3 h, destruida sola (~20–30 min, ~0,02–0,05 $ estimados). Lo demas, minutos en el dev. El freno de Telegram es /use exp-vast (apagar expc-fbor-)."

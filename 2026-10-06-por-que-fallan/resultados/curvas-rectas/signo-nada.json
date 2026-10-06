@@ -1,0 +1,96 @@
+{
+ "banco": "signo",
+ "preprocesado": "nada",
+ "fino_val": {
+  "todo": {
+   "n_rectas": 810,
+   "n_arcos": 822,
+   "arco_se_enciende_en_rectas": 0.0037,
+   "recta_se_enciende_en_arcos": 0.0049,
+   "recall_rectas": 0.9827,
+   "recall_arcos": 0.9416,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0012,
+    "arco-W": 0.0,
+    "arco-N": 0.0025,
+    "arco-S": 0.0
+   }
+  },
+  "arcos de radio chico": {
+   "n_rectas": 810,
+   "n_arcos": 272,
+   "arco_se_enciende_en_rectas": 0.0037,
+   "recta_se_enciende_en_arcos": 0.0,
+   "recall_rectas": 0.9827,
+   "recall_arcos": 0.9265,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0012,
+    "arco-W": 0.0,
+    "arco-N": 0.0025,
+    "arco-S": 0.0
+   }
+  },
+  "arcos de radio medio": {
+   "n_rectas": 810,
+   "n_arcos": 272,
+   "arco_se_enciende_en_rectas": 0.0037,
+   "recta_se_enciende_en_arcos": 0.0,
+   "recall_rectas": 0.9827,
+   "recall_arcos": 0.9559,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0012,
+    "arco-W": 0.0,
+    "arco-N": 0.0025,
+    "arco-S": 0.0
+   }
+  },
+  "arcos de radio grande": {
+   "n_rectas": 810,
+   "n_arcos": 278,
+   "arco_se_enciende_en_rectas": 0.0037,
+   "recta_se_enciende_en_arcos": 0.0144,
+   "recall_rectas": 0.9827,
+   "recall_arcos": 0.9424,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0012,
+    "arco-W": 0.0,
+    "arco-N": 0.0025,
+    "arco-S": 0.0
+   }
+  }
+ },
+ "grueso": {
+  "2–4 px": {
+   "n_rectas": 396,
+   "n_arcos": 596,
+   "arco_se_enciende_en_rectas": 0.0,
+   "recta_se_enciende_en_arcos": 0.0017,
+   "recall_rectas": 0.9747,
+   "recall_arcos": 0.948,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0,
+    "arco-W": 0.0,
+    "arco-N": 0.0,
+    "arco-S": 0.0
+   }
+  },
+  "6–12 px": {
+   "n_rectas": 407,
+   "n_arcos": 180,
+   "arco_se_enciende_en_rectas": 0.2703,
+   "recta_se_enciende_en_arcos": 0.0889,
+   "recall_rectas": 0.9779,
+   "recall_arcos": 0.9556,
+   "por_detector_de_arco_en_rectas": {
+    "arco-E": 0.0442,
+    "arco-W": 0.0811,
+    "arco-N": 0.1204,
+    "arco-S": 0.086
+   }
+  }
+ },
+ "digitos": {
+  "algun_arco_en_los_1": 0.1319,
+  "alguna_recta_en_los_0": 0.9101
+ }
+}
