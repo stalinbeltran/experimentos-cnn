@@ -1,0 +1,15 @@
+{
+  "id": "feat-fallos",
+  "titulo": "Por que fallan los detectores de features al reconocer digitos: causas medidas, soluciones puestas a prueba y corregidas por iteraciones",
+  "pregunta": "¿Por que los detectores de features sinteticas (feat-ind32) fallan sobre los digitos de NIST —encienden arcos en los 1, los grupos se rompen al cambiar el grosor, se confunden pares como 1/8 o 4/9—, y que soluciones lo arreglan sin perder acierto: normalizar el grosor del digito, entrenar con el grosor de los digitos, los bordes de feat-bor, las primitivas cortas de feat-cortas, o sus combinaciones?",
+  "creado": "2026-10-06",
+  "estado": "abierto",
+  "dataset": "feat-fallos-sinteticas-grueso-32px-r20261006",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "Por iteraciones: cada una con su criterio escrito antes en instrucciones/02-criterio.md y su resultado debajo; REGLAS.md describe las piezas",
+  "linaje": "feat-ind32 (los detectores que fallan y su receta), feat-agr (la medida de grupos que lo destapo), feat-bor (los bordes) y feat-cortas (las primitivas cortas): sus pesos se leen por id con huella; el codigo se copia. Ver REGLAS.md § Que NO hereda",
+  "gasta_por_que": "S2: los 13 detectores entrenados con el dataset grueso, a la vez en UNA maquina de Vast con nn/vast.sh detectores, tope 3 h, destruida sola (~0,02–0,04 $ estimados). Lo demas, minutos en el dev. El freno de Telegram es /use exp-vast (apagar expc-ffal-)."
+}

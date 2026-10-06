@@ -1,0 +1,15 @@
+{
+  "id": "feat-cortas",
+  "titulo": "Detectores de RECTAS y CURVAS CORTAS (primitivas de 6–17 px) entrenados como los de feat-ind32, y usados para predecir los digitos de NIST",
+  "pregunta": "Si en vez de las 13 features largas de feat-ind32 los detectores aprenden primitivas CORTAS —4 rectas de 6–12 px y 4 arcos cortos de radio 5–10 px—, ¿las aprenden, distinguen una curva corta de una recta corta, y predicen los digitos al menos tan bien como las 13 features?",
+  "creado": "2026-10-06",
+  "estado": "abierto",
+  "dataset": "feat-cortas-sinteticas-32px-r20261006",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, escrito antes de entrenar",
+  "linaje": "feat-ind32 (de ahi salen el generador, la red, la receta y la referencia de las 13 features largas, leida por id con huella) y feat-fallos (la normalizacion del grosor, copiada). No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda",
+  "gasta_por_que": "Los 8 detectores a la vez en UNA maquina de Vast con nn/vast.sh detectores, tope 3 h, destruida sola (~0,01–0,03 $ estimados). La evaluacion, minutos en el dev. El freno de Telegram es /use exp-vast (apagar expc-fcor-)."
+}
