@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-06T02:15:33+00:00"
+  }
+ ],
+ "id": "detectores",
+ "etiqueta": "expc-fcor-detectores",
+ "experimento": "feat-cortas",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/vast.json",
+ "oferta": 48453748,
+ "precio_hora": 0.05511,
+ "maquina": {
+  "vcpu": 18.0,
+  "cpu": "Xeon E5-2686 v4",
+  "ram_gb": 31.4,
+  "ghz": 3.0,
+  "gpu": "Quadro P4000",
+  "ubicacion": "Nevada, US",
+  "host": 37055,
+  "fiabilidad": 0.9969
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.4
+}

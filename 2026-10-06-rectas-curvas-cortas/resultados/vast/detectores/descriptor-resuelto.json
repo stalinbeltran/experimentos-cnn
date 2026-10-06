@@ -1,0 +1,75 @@
+{
+ "experimento": "feat-cortas",
+ "descripcion": "Los 8 detectores de rectas y curvas cortas, A LA VEZ en UNA máquina. Receta de feat-ind32 sin cambios. La evaluación, en el dev.",
+ "maquina": {
+  "cpus": 16,
+  "max_cpus": 32,
+  "min_ram": 16,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.4
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos",
+    "pesos-c3",
+    "pesos-c4",
+    "pesos-cae",
+    "pesos-cae3",
+    "pesos-cae5",
+    "pesos-dig",
+    "curvas-cnn",
+    "detectores-32px",
+    "detectores-8px",
+    "init-detectores-8px.pt"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/feat-cortas-sinteticas-32px-r20261006",
+   "destino": "foveal-vision-data/experimentos-cnn/feat-cortas-sinteticas-32px-r20261006"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "detectores",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\\\(s\\\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 8 detectores a la vez, 1 hilo cada uno\"\nFAMS=\"corta-V corta-H corta-S corta-B curva-E curva-W curva-N curva-S\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos/$f\n  ../.venv/bin/python -u nn/entrenar_local.py  --feature $f --hilos 1 > nn/pesos/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos/corta-V",
+    "pesos/corta-H",
+    "pesos/corta-S",
+    "pesos/corta-B",
+    "pesos/curva-E",
+    "pesos/curva-W",
+    "pesos/curva-N",
+    "pesos/curva-S"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y `pesos/...`.",
+  "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas de feat-ind32).",
+  "8 procesos de 1 hilo, uno por primitiva.",
+  "min_ram 16 GB: 8 procesos × ≤ 1,3 GB de pico (medido en feat-bor el 2026-10-06) con margen.",
+  "Se excluyen del envío las carpetas de pesos y resultados de TODO el repo (otros experimentos): no hacen falta allí y engordan el paquete.",
+  "Cada detector deja su log en nn/pesos/<f>/log.txt y vuelve con sus pesos.",
+  "cpus 16 (2 por proceso, a raíz del revisor): en feat-bor, 26 procesos en 28 vCPU fueron ~4× más lentos por núcleo que el dev (1 h 07 min, 0,1098 $)."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/vast.json"
+}
