@@ -96,5 +96,54 @@
    "cambio_180": 0.0064,
    "veredicto": "confirmada"
   }
+ },
+ "lineas+lineas-grueso+cortas-nada+norm3": {
+  "exacto": {
+   "compositor_180": 0.9716,
+   "por_semilla": [
+    0.9716,
+    0.9716,
+    0.9716
+   ],
+   "curva_717": {
+    "36": 0.8568,
+    "180": 0.9651,
+    "1080": 0.9916
+   }
+  },
+  "max3": {
+   "compositor_180": 0.9718,
+   "por_semilla": [
+    0.9722,
+    0.9716,
+    0.9716
+   ],
+   "curva_717": {
+    "36": 0.8926,
+    "180": 0.9679,
+    "1080": 0.9888
+   }
+  },
+  "media3": {
+   "compositor_180": 0.9722,
+   "por_semilla": [
+    0.9722,
+    0.9722,
+    0.9722
+   ],
+   "curva_717": {
+    "36": 0.8884,
+    "180": 0.9679,
+    "1080": 0.9833
+   }
+  },
+  "S5a": {
+   "subida_36": 0.0358,
+   "veredicto": "confirmada"
+  },
+  "S5b": {
+   "cambio_180": 0.0002,
+   "veredicto": "confirmada"
+  }
  }
 }

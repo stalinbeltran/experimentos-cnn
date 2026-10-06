@@ -1,0 +1,41 @@
+{
+ "lineas-nada": {
+  "acierto_3823": 0.9254,
+  "por_semilla": [
+   0.9255,
+   0.9252,
+   0.9255
+  ],
+  "por_origen": {
+   "tra": 0.9214,
+   "cv": 0.9327,
+   "wdep": 0.9261
+  }
+ },
+ "lineas-nada+norm3": {
+  "acierto_3823": 0.9457,
+  "por_semilla": [
+   0.9456,
+   0.9456,
+   0.9459
+  ],
+  "por_origen": {
+   "tra": 0.9407,
+   "cv": 0.9545,
+   "wdep": 0.947
+  }
+ },
+ "lineas+lineas-grueso-nada": {
+  "acierto_3823": 0.9427,
+  "por_semilla": [
+   0.943,
+   0.9425,
+   0.9427
+  ],
+  "por_origen": {
+   "tra": 0.939,
+   "cv": 0.956,
+   "wdep": 0.9371
+  }
+ }
+}

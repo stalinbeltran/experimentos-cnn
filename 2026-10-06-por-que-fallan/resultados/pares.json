@@ -394,5 +394,203 @@
     ]
    }
   ]
+ },
+ "lineas+lineas-grueso+cortas-nada+norm3": {
+  "combo": "lineas+lineas-grueso+cortas-nada+norm3",
+  "errores": 46,
+  "pares": [
+   {
+    "par": "4→1",
+    "n": 14,
+    "frac_de_errores": 0.304,
+    "grosor": {
+     "mal": 7.43,
+     "bien": 6.31,
+     "los 1": 10.053
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "recta-V·lineas·nada",
+      "empuje_extra": 1.384,
+      "encendido": {
+       "mal": 0.929,
+       "bien": 0.248,
+       "los 1": 0.994
+      }
+     },
+     {
+      "detector": "curva-E·cortas·nada",
+      "empuje_extra": 0.836,
+      "encendido": {
+       "mal": 0.786,
+       "bien": 0.886,
+       "los 1": 0.722
+      }
+     },
+     {
+      "detector": "curva-E·cortas·norm3",
+      "empuje_extra": 0.75,
+      "encendido": {
+       "mal": 0.429,
+       "bien": 0.899,
+       "los 1": 0.278
+      }
+     },
+     {
+      "detector": "recta-V·lineas-grueso·nada",
+      "empuje_extra": 0.741,
+      "encendido": {
+       "mal": 1.0,
+       "bien": 0.336,
+       "los 1": 1.0
+      }
+     }
+    ]
+   },
+   {
+    "par": "8→9",
+    "n": 9,
+    "frac_de_errores": 0.196,
+    "grosor": {
+     "mal": 5.303,
+     "bien": 4.428,
+     "los 9": 4.833
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "curva-E·cortas·norm3",
+      "empuje_extra": 0.669,
+      "encendido": {
+       "mal": 0.556,
+       "bien": 0.944,
+       "los 9": 0.849
+      }
+     },
+     {
+      "detector": "curva-E·cortas·nada",
+      "empuje_extra": 0.626,
+      "encendido": {
+       "mal": 1.0,
+       "bien": 0.84,
+       "los 9": 0.786
+      }
+     },
+     {
+      "detector": "lazo·lineas·norm3",
+      "empuje_extra": 0.442,
+      "encendido": {
+       "mal": 0.778,
+       "bien": 0.944,
+       "los 9": 0.843
+      }
+     },
+     {
+      "detector": "curva-W·cortas·norm3",
+      "empuje_extra": 0.338,
+      "encendido": {
+       "mal": 0.556,
+       "bien": 0.826,
+       "los 9": 0.579
+      }
+     }
+    ]
+   },
+   {
+    "par": "2→1",
+    "n": 4,
+    "frac_de_errores": 0.087,
+    "grosor": {
+     "mal": 5.848,
+     "bien": 6.621,
+     "los 1": 10.053
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "curva-S·cortas·norm3",
+      "empuje_extra": 0.515,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.597,
+       "los 1": 0.123
+      }
+     },
+     {
+      "detector": "curva-E·cortas·norm3",
+      "empuje_extra": 0.433,
+      "encendido": {
+       "mal": 0.75,
+       "bien": 0.688,
+       "los 1": 0.278
+      }
+     },
+     {
+      "detector": "esquina-NE·lineas-grueso·norm3",
+      "empuje_extra": 0.405,
+      "encendido": {
+       "mal": 0.25,
+       "bien": 0.656,
+       "los 1": 0.049
+      }
+     },
+     {
+      "detector": "arco-S·lineas-grueso·norm3",
+      "empuje_extra": 0.39,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.396,
+       "los 1": 0.012
+      }
+     }
+    ]
+   },
+   {
+    "par": "7→2",
+    "n": 3,
+    "frac_de_errores": 0.065,
+    "grosor": {
+     "mal": 7.287,
+     "bien": 6.303,
+     "los 2": 6.621
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "curva-S·cortas·nada",
+      "empuje_extra": 0.597,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.627,
+       "los 2": 0.448
+      }
+     },
+     {
+      "detector": "curva-E·cortas·nada",
+      "empuje_extra": 0.508,
+      "encendido": {
+       "mal": 0.667,
+       "bien": 0.589,
+       "los 2": 0.773
+      }
+     },
+     {
+      "detector": "arco-W·lineas·nada",
+      "empuje_extra": 0.502,
+      "encendido": {
+       "mal": 0.667,
+       "bien": 0.481,
+       "los 2": 0.636
+      }
+     },
+     {
+      "detector": "esquina-SW·lineas·nada",
+      "empuje_extra": 0.378,
+      "encendido": {
+       "mal": 0.333,
+       "bien": 0.456,
+       "los 2": 0.175
+      }
+     }
+    ]
+   }
+  ]
  }
 }

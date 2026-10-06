@@ -59,3 +59,18 @@ y lo vuelves a poner a prueba»*.
 - **Qué se cambió a propósito:** cada iteración cambia UNA cosa respecto de la referencia, y la dice.
 - **Contra qué se compara:** siempre con `lineas-nada`, medido aquí con el mismo código.
 - **Restricciones que NO aplican:** el banco de 8×8 (feat-ind); la etiqueta como objetivo de los detectores.
+
+## Lo que cambió al correr (2026-10-06)
+
+- **Siete iteraciones en vez de tres.** La 4 (desinclinar, compositor tolerante), la 5 (juntar lo que funcionó), la 6
+  (erosionar según el grosor) y la 7 (confirmación ciega en los 3823 dígitos que no son de `windep`) salieron de los
+  diagnósticos; cada una, escrita antes y commiteada, en `instrucciones/02-criterio.md`.
+- **Bancos combinables:** `nn/evaluar.py` acepta varios bancos con «+» (`lineas+lineas-grueso+cortas`) y preprocesados en
+  cadena con «_» (`desinc_norm3`); lee también las cortas de `feat-cortas` por su id y su huella.
+- **S2 en Vast:** 28 vCPU (Xeon E5-2680 v4, 0,0956 $/h) para 13 procesos de 2 hilos, **19 min y 0,0303 $**.
+- **Scripts nuevos:** `nn/curvas_rectas.py` (la pregunta del dueño, por banco), `nn/errores.py` y `nn/diagnostico.py`
+  (dónde se concentra el error), `nn/pares.py` (qué detector empuja cada confusión), `nn/tolerante.py` (S5),
+  `nn/confirmar.py` (la iteración 7) y `nn/figuras.py`; y en `nn/normalizar.py`, `desinclinar` y `adelgazar_segun_grosor`.
+- **Ojo con las evaluaciones largas en el dev**: con 2 vCPU, una combinación de 68 mapas tarda ~20 min si corre a la vez que
+  otra. Se lanzaron con `nohup` en colas (`/tmp/cola-*.sh`): un `Bash(run_in_background)` del arnés se cortó a los 30 min a
+  mitad de `--todas` (medido el 2026-10-06 a las 02:46).

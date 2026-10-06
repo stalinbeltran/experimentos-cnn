@@ -69,6 +69,8 @@ def causa_grosor() -> None:
 
 
 # ------------------------------------------------------------------------------------------------ 2. curvas y rectas
+NOMBRE_BANCO = {"lineas": "líneas (entrenadas finas)", "contorno": "contorno (feat-bor)", "signo": "borde con signo (feat-bor)",
+                "lineas-grueso": "líneas entrenadas con 2–12 px (S2)"}
 def curvas_rectas() -> None:
     bancos = [b for b in ("lineas", "contorno", "signo", "lineas-grueso") if (RES / "curvas-rectas" / f"{b}-nada.json").is_file()]
     if not bancos:
@@ -85,7 +87,7 @@ def curvas_rectas() -> None:
             d = _json(RES / "curvas-rectas" / f"{b}-nada.json")
             v = [d[g][t][que] for g, t, _ in grupos]
             xs = np.arange(len(grupos)) + (j - (len(bancos) - 1) / 2) * ancho
-            ax.bar(xs, v, ancho * 0.92, color=cols[j], label=b, zorder=3)
+            ax.bar(xs, v, ancho * 0.92, color=cols[j], label=NOMBRE_BANCO.get(b, b), zorder=3)
             for xx, vv in zip(xs, v):
                 ax.text(xx, vv + 0.01, f"{vv:.0%}", ha="center", va="bottom", fontsize=7, color=T2)
         ax.set_xticks(range(len(grupos))); ax.set_xticklabels([g[2] for g in grupos])
@@ -96,9 +98,11 @@ def curvas_rectas() -> None:
     ax.bar(range(len(bancos)), v, 0.7, color=cols[:len(bancos)], zorder=3)
     for i, vv in enumerate(v):
         ax.text(i, vv + 0.01, f"{vv:.0%}", ha="center", va="bottom", fontsize=7, color=T2)
-    ax.set_xticks(range(len(bancos))); ax.set_xticklabels(bancos, rotation=20)
+    corto = {"lineas": "líneas\nfinas", "contorno": "contorno", "signo": "borde\ncon signo", "lineas-grueso": "líneas\n2–12 px"}
+    ax.set_xticks(range(len(bancos))); ax.set_xticklabels([corto.get(b, b) for b in bancos], fontsize=8)
     ax.set_ylim(0, 1); ax.set_title("algún arco en los 1 (dígitos)", color=T1, fontsize=9.5, loc="left")
-    fig.suptitle("¿Se distingue una curva de una recta? Fina sí; gruesa, no", color=T1, fontsize=11, x=0.01, ha="left")
+    fig.suptitle("¿Se distingue una curva de una recta? Fina, sí; gruesa, sólo si el detector vio trazos gruesos",
+                 color=T1, fontsize=11, x=0.01, ha="left")
     fig.tight_layout(); fig.savefig(RES / "curvas-rectas.png", facecolor=SUP); plt.close(fig)
     print("  curvas-rectas.png")
 
@@ -158,6 +162,9 @@ def soluciones(extra: list | None = None) -> None:
 
 
 # ------------------------------------------------------------------------------------------------ 4. dónde está el error
+ETIQ = {"lineas-nada": "referencia (líneas, crudo)", "lineas+lineas-grueso+cortas-nada+norm3": "S6b (la mejor: todo, crudo + 3 px)"}
+
+
 def errores(combos: tuple = ("lineas-nada", "lineas+lineas-grueso+cortas-nada+norm3")) -> None:
     g = _json(RES / "diagnostico.json")
     if not g:
@@ -166,19 +173,21 @@ def errores(combos: tuple = ("lineas-nada", "lineas+lineas-grueso+cortas-nada+no
     props = [("grosor", "grosor del trazo", g, "diag"), ("relleno", "relleno (zonas macizas)", g, "diag"),
              ("inclinacion", "inclinación", g, "diag"), ("descentrado", "descentrado", g, "diag")]
     plt = _plt()
-    fig, axs = plt.subplots(1, len(props), figsize=(11, 3.4), dpi=100, facecolor=SUP, sharey=True)
+    fig, axs = plt.subplots(1, len(props), figsize=(11, 3.8), dpi=100, facecolor=SUP, sharey=True)
     cols = (AZUL, VERDE, NARANJA, MORADO)
     for ax, (k, tit, src, _) in zip(axs, props):
         _ejes(ax)
         for j, c in enumerate(combos):
             v = src["combos"][c][f"error_por_tercil_de_{k}"]
-            ax.plot(range(3), v, "o-", color=cols[j], lw=2, ms=5, label=c, zorder=3)
+            ax.plot(range(3), v, "o-", color=cols[j], lw=2, ms=5, label=ETIQ.get(c, c), zorder=3)
         ax.set_xticks(range(3)); ax.set_xticklabels(["bajo", "medio", "alto"])
         ax.set_title(f"por tercil de {tit}", color=T1, fontsize=9, loc="left")
     axs[0].set_ylabel("error leyendo dígitos (val)", color=T2, fontsize=9)
-    axs[0].legend(frameon=False, fontsize=8, loc="upper left", labelcolor=T1)
-    fig.suptitle("¿Dónde se concentran los fallos?", color=T1, fontsize=11, x=0.01, ha="left")
-    fig.tight_layout(); fig.savefig(RES / "errores.png", facecolor=SUP); plt.close(fig)
+    h, lab = axs[0].get_legend_handles_labels()
+    fig.legend(h, lab, frameon=False, fontsize=8.5, loc="upper left", bbox_to_anchor=(0.01, 0.91), ncol=2, labelcolor=T1)
+    fig.suptitle("¿Dónde se concentran los fallos? (error leyendo los 1617 dígitos de val, por tercil de cada propiedad)",
+                 color=T1, fontsize=11, x=0.01, ha="left")
+    fig.tight_layout(rect=(0, 0, 1, 0.84)); fig.savefig(RES / "errores.png", facecolor=SUP); plt.close(fig)
     print("  errores.png")
 
 
