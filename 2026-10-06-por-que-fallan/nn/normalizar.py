@@ -82,6 +82,26 @@ def desinclinar(x: np.ndarray) -> np.ndarray:
     return out[:, None]
 
 
+def adelgazar_segun_grosor(x: np.ndarray, objetivo: float = 3.0, maximo: int = 3) -> np.ndarray:
+    """(N,1,32,32) 0/1 → (N,1,32,32) uint8: cada dígito ERO­SIONADO k px, con k = round((g − objetivo) / 2) entre 0 y `maximo`,
+    y g su grosor (tinta ÷ esqueleto). La iteración 6: lo que S3 hacía con el esqueleto, pero sin destruir las zonas rellenas
+    —sólo quita tinta del borde, y a un dígito fino no le toca—. Una erosión de 1 px (mínimo 3×3) adelgaza ~2 px."""
+    t = (np.asarray(x).reshape(len(x), 32, 32) > 0.5).astype(np.uint8)
+    e = esqueleto(t)
+    g = t.reshape(len(t), -1).sum(1) / np.maximum(1, e.reshape(len(e), -1).sum(1))
+    k = np.clip(np.round((g - objetivo) / 2), 0, maximo).astype(int)
+    out, cur = t.copy(), t.copy()
+    for paso in range(1, maximo + 1):
+        p = np.pad(cur, ((0, 0), (1, 1), (1, 1)))
+        er = np.ones_like(cur)
+        for di in (0, 1, 2):
+            for dj in (0, 1, 2):
+                er &= p[:, di:di + 32, dj:dj + 32]
+        cur = er
+        out[k == paso] = cur[k == paso]
+    return out[:, None]
+
+
 def perdida(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Fracción de la tinta de x que no está en y (la que la cizalla sacó del lienzo, o la que el vecino más cercano fundió)."""
     a = np.asarray(x).reshape(len(x), -1).sum(1); b = np.asarray(y).reshape(len(y), -1).sum(1)
@@ -117,6 +137,9 @@ def comprobar() -> int:
          max(cols) - min(cols) <= 1 and abs(int(d.sum()) - int(inclinada.sum())) <= 3)
     recta = np.zeros((1, 32, 32), np.uint8); recta[0, 4:28, 14:17] = 1
     mira("una barra ya vertical no cambia", np.array_equal(desinclinar(recta)[0, 0], recta[0]))
+    gruesa = np.zeros((2, 32, 32), np.uint8); gruesa[0, 4:28, 11:20] = 1; gruesa[1, 4:28, 14:17] = 1     # 9 px y 3 px
+    a = adelgazar_segun_grosor(gruesa)[:, 0]
+    mira("una barra de 9 px queda en 3 px y una de 3 px no se toca", a[0, 16].sum() == 3 and np.array_equal(a[1], gruesa[1]))
     return 0 if ok else 1
 
 

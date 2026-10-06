@@ -143,3 +143,21 @@ con 3–4 candidatas el sesgo de selección es pequeño pero no nulo. Por eso el
 
 **Lo que espero:** S6a sí, por poco (0,962–0,970): las cortas aportaron +0,004 sobre las dos vistas de las largas en la
 combinación de feat-cortas, y añadir la vista `norm3` de las largas suma lo suyo.
+
+## Iteración 6 (02:54 UTC, ANTES de medirla) — S7: adelgazar cada dígito según SU grosor
+
+**Por qué:** S3 (esqueleto + 3 px) quitó el grosor pero rompió lo relleno (el cuerpo macizo de un 4 se volvía un palo: 4→1).
+La corrección obvia es quitar tinta **sólo del borde** y **sólo a quien le sobra**: erosionar cada dígito k px, con
+k = round((g − 3) / 2) entre 0 y 3, siendo g su grosor (`adapt`, `nn/normalizar.py`). Medido antes de evaluar nada: la mediana
+del grosor pasa de 5,8 a 2,27 (la de las sintéticas de entrenamiento es 2,07); los 1, de 9,45 a 2,4; se pierde el 63 % de la
+tinta y un dígito de 1797 queda vacío.
+
+| | se confirma si |
+|---|---|
+| **S7a** no perder | `lineas` con `adapt` ≥ 0,954 (referencia + 0,005) |
+| **S7b** síntoma | arcos en los 1 ≤ 0,50 (eran 0,76 / 0,70) |
+| **S7c** robustez | κ al engrosar ≥ 0,20 (era 0,114) |
+| **S7d** dos vistas | `nada+adapt` ≥ `nada+norm3` + 0,005 (≥ 0,961) |
+
+**Lo que espero:** S7b y S7c sí (es lo que hace por construcción); S7a dudoso —la erosión parte trazos finos que se tocan con
+gruesos y abre huecos—; S7d sí, por poco.

@@ -92,12 +92,14 @@ def banco(nombre: str, familias=None) -> dict:
 
 def preparar(x: np.ndarray, rep: str, prepro: str) -> np.ndarray:
     """x (N,1,32,32) 0/1 → la entrada del banco: primero el preprocesado, después la representación. Un preprocesado es una
-    CADENA de pasos unidos por «_», que se aplican en orden: `nada` · `norm3` · `desinc` · `desinc_norm3` (la iteración 4)."""
+    CADENA de pasos unidos por «_», que se aplican en orden: `nada` · `norm3` · `desinc` · `desinc_norm3` (la iteración 4) · `adapt` (la 6)."""
     for paso in prepro.split("_"):
         if paso == "norm3":
             x = N.normalizar(x, 3)
         elif paso == "desinc":
             x = N.desinclinar(x)
+        elif paso == "adapt":
+            x = N.adelgazar_segun_grosor(x)
         elif paso != "nada":
             raise ValueError(prepro)
     return B.bordes(x, rep).astype(np.float32)
@@ -197,7 +199,7 @@ def evaluar(nombre: str, prepro: str, dg: dict | None = None) -> dict:
     # la prueba gruesa (sintética), con el MISMO preprocesado (no aplica a dos vistas: es por detector)
     # (ni a dos bancos, ni a `desinc`: desinclinar una feature sintética suelta convierte una recta-S en una recta-V)
     sueltas = all(f in F.FAMILIAS for f in b["familias"])      # la prueba gruesa sólo tiene las 13 largas
-    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 and "desinc" not in prepro and sueltas else None
+    out["grueso"] = grueso(b, prepro) if len(vistas) == 1 and len(bancos) == 1 and "desinc" not in prepro and "adapt" not in prepro and sueltas else None
     out["segundos"] = round(time.time() - t0, 1)
     return out
 
