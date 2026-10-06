@@ -1,0 +1,400 @@
+{
+ "feature": "arco-N",
+ "semilla": 1,
+ "epocas": 80,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.002,
+ "huella_init": "60e283d8cc003e53",
+ "n_train_pos": 2000,
+ "n_train_neg": 21146,
+ "n_val_pos": 400,
+ "n_val_neg": 4252,
+ "canales": [
+  16,
+  32,
+  32,
+  32,
+  32,
+  32
+ ],
+ "strides": [
+  1,
+  2,
+  2,
+  1,
+  1,
+  1
+ ],
+ "representacion": "lineas",
+ "entrada": 1,
+ "dataset_corto": "grueso",
+ "parametros": 41825,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1; ver best.umbral",
+ "dataset": "feat-fallos-sinteticas-grueso-32px-r20261006",
+ "negativos_excluidos_por_contener": [
+  "lazo"
+ ],
+ "huella_imagenes": "5b8ae9c56e669464",
+ "segundos": 1038.7,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4252,
+  "tp": 303,
+  "fp": 70,
+  "fn": 97,
+  "precision": 0.8123,
+  "recall": 0.7575,
+  "f1": 0.784,
+  "pos_ok": 0.9505,
+  "pos_exacta": 0.604,
+  "recall_por_radio": {
+   "chico": {
+    "n": 149,
+    "recall": 0.6711
+   },
+   "medio": {
+    "n": 149,
+    "recall": 0.8188
+   },
+   "grande": {
+    "n": 102,
+    "recall": 0.7941
+   }
+  },
+  "recall_por_grosor": {
+   "2": {
+    "n": 113,
+    "recall": 0.6726
+   },
+   "3": {
+    "n": 116,
+    "recall": 0.7931
+   },
+   "4": {
+    "n": 88,
+    "recall": 0.7955
+   },
+   "6": {
+    "n": 51,
+    "recall": 0.8431
+   },
+   "8": {
+    "n": 30,
+    "recall": 0.7
+   },
+   "10": {
+    "n": 2,
+    "recall": 0.5
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 368,
+    "fp": 14,
+    "tasa": 0.038
+   },
+   "arco-W": {
+    "n": 363,
+    "fp": 23,
+    "tasa": 0.0634
+   },
+   "arco-S": {
+    "n": 373,
+    "fp": 2,
+    "tasa": 0.0054
+   },
+   "recta-V": {
+    "n": 378,
+    "fp": 2,
+    "tasa": 0.0053
+   },
+   "recta-H": {
+    "n": 375,
+    "fp": 2,
+    "tasa": 0.0053
+   },
+   "recta-S": {
+    "n": 367,
+    "fp": 5,
+    "tasa": 0.0136
+   },
+   "recta-B": {
+    "n": 366,
+    "fp": 4,
+    "tasa": 0.0109
+   },
+   "esquina-NE": {
+    "n": 357,
+    "fp": 5,
+    "tasa": 0.014
+   },
+   "esquina-NW": {
+    "n": 369,
+    "fp": 10,
+    "tasa": 0.0271
+   },
+   "esquina-SE": {
+    "n": 361,
+    "fp": 2,
+    "tasa": 0.0055
+   },
+   "esquina-SW": {
+    "n": 375,
+    "fp": 1,
+    "tasa": 0.0027
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.5665,
+  "recall_sola": 0.9543,
+  "conf_pos_media": 0.8598,
+  "conf_neg_media": 0.0657,
+  "umbral": 0.9
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4252,
+  "tp": 315,
+  "fp": 58,
+  "fn": 85,
+  "precision": 0.8445,
+  "recall": 0.7875,
+  "f1": 0.815,
+  "pos_ok": 0.9206,
+  "pos_exacta": 0.5619,
+  "recall_por_radio": {
+   "chico": {
+    "n": 149,
+    "recall": 0.698
+   },
+   "medio": {
+    "n": 149,
+    "recall": 0.8792
+   },
+   "grande": {
+    "n": 102,
+    "recall": 0.7843
+   }
+  },
+  "recall_por_grosor": {
+   "2": {
+    "n": 113,
+    "recall": 0.7345
+   },
+   "3": {
+    "n": 116,
+    "recall": 0.8017
+   },
+   "4": {
+    "n": 88,
+    "recall": 0.8295
+   },
+   "6": {
+    "n": 51,
+    "recall": 0.8235
+   },
+   "8": {
+    "n": 30,
+    "recall": 0.7333
+   },
+   "10": {
+    "n": 2,
+    "recall": 1.0
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 368,
+    "fp": 11,
+    "tasa": 0.0299
+   },
+   "arco-W": {
+    "n": 363,
+    "fp": 20,
+    "tasa": 0.0551
+   },
+   "arco-S": {
+    "n": 373,
+    "fp": 4,
+    "tasa": 0.0107
+   },
+   "recta-V": {
+    "n": 378,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "recta-H": {
+    "n": 375,
+    "fp": 1,
+    "tasa": 0.0027
+   },
+   "recta-S": {
+    "n": 367,
+    "fp": 6,
+    "tasa": 0.0163
+   },
+   "recta-B": {
+    "n": 366,
+    "fp": 2,
+    "tasa": 0.0055
+   },
+   "esquina-NE": {
+    "n": 357,
+    "fp": 6,
+    "tasa": 0.0168
+   },
+   "esquina-NW": {
+    "n": 369,
+    "fp": 5,
+    "tasa": 0.0136
+   },
+   "esquina-SE": {
+    "n": 361,
+    "fp": 1,
+    "tasa": 0.0028
+   },
+   "esquina-SW": {
+    "n": 375,
+    "fp": 1,
+    "tasa": 0.0027
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.6108,
+  "recall_sola": 0.9695,
+  "conf_pos_media": 0.7935,
+  "conf_neg_media": 0.0382,
+  "umbral": 0.65,
+  "epoca": 45
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.5363,
+   "recall": 0.905,
+   "f1": 0.6735
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.6092,
+   "recall": 0.8925,
+   "f1": 0.7241
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.6512,
+   "recall": 0.8775,
+   "f1": 0.7476
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.6816,
+   "recall": 0.8775,
+   "f1": 0.7672
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.7208,
+   "recall": 0.865,
+   "f1": 0.7864
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.7407,
+   "recall": 0.85,
+   "f1": 0.7916
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.7701,
+   "recall": 0.8375,
+   "f1": 0.8024
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.7895,
+   "recall": 0.825,
+   "f1": 0.8068
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.8103,
+   "recall": 0.8225,
+   "f1": 0.8164
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.8182,
+   "recall": 0.81,
+   "f1": 0.8141
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.832,
+   "recall": 0.805,
+   "f1": 0.8183
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.8445,
+   "recall": 0.7875,
+   "f1": 0.815
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.8474,
+   "recall": 0.7775,
+   "f1": 0.811
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.864,
+   "recall": 0.7625,
+   "f1": 0.8101
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.8724,
+   "recall": 0.735,
+   "f1": 0.7978
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.8914,
+   "recall": 0.6975,
+   "f1": 0.7826
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.9158,
+   "recall": 0.6525,
+   "f1": 0.762
+  }
+ ],
+ "huella_final": "7506f035222c998c",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+  "nproc": 56,
+  "hilos_torch": 1,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "d0984f5a1a82"
+ },
+ "terminado": "2026-10-06T02:33:44+00:00"
+}

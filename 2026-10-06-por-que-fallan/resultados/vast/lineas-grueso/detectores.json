@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-06T02:14:52+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-06T02:14:54+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-06T02:15:31+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-06T02:15:33+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-06T02:16:17+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-06T02:16:19+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-06T02:33:56+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-06T02:33:57+00:00"
   }
  ],
  "id": "detectores",
@@ -23,5 +51,29 @@
   "fiabilidad": 0.9464
  },
  "horas_max": 3.0,
- "tope_precio": 0.4
+ "tope_precio": 0.4,
+ "iid": 54416049,
+ "intentos_clave": 1,
+ "payload_mb": 11.87,
+ "sha256": "d36ca96048e904bc",
+ "segundos_max": 10116,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/arco-E",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/arco-W",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/arco-N",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/arco-S",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/recta-V",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/recta-H",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/recta-S",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/recta-B",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/lazo",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/esquina-NE",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/esquina-NW",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/esquina-SE",
+  "experimentos-cnn/2026-10-06-por-que-fallan/nn/pesos-lineas-grueso/esquina-SW"
+ ],
+ "apartado": [],
+ "minutos": 19.0,
+ "coste_usd": 0.0303
 }

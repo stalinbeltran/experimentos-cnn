@@ -49,8 +49,8 @@ def main() -> int:
     x = xd[idx].astype(np.float32)[:, None]
     t = torch.from_numpy(x)
     filas = {"original": x[:, 0], "normalizado (3 px)": N.normalizar(x)[:, 0],
-             "engrosado 2 px → normalizado": N.normalizar(Fn.max_pool2d(t, 5, 1, 2).numpy())[:, 0],
-             "adelgazado 1 px → normalizado": N.normalizar((-Fn.max_pool2d(-t, 3, 1, 1)).numpy())[:, 0]}
+             "engrosado 2 px y normalizado": N.normalizar(Fn.max_pool2d(t, 5, 1, 2).numpy())[:, 0],
+             "adelgazado 1 px y normalizado": N.normalizar((-Fn.max_pool2d(-t, 3, 1, 1)).numpy())[:, 0]}
     lado, sep, txt = 64, 4, 230
     im = Image.new("L", (txt + 12 * (lado + sep), len(filas) * (lado + sep) + sep), 255); dr = ImageDraw.Draw(im)
     for r, (nombre, a) in enumerate(filas.items()):

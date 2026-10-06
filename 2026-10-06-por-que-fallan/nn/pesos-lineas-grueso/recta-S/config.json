@@ -1,0 +1,42 @@
+{
+ "feature": "recta-S",
+ "semilla": 1,
+ "epocas": 80,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.002,
+ "huella_init": "60e283d8cc003e53",
+ "n_train_pos": 2000,
+ "n_train_neg": 24013,
+ "n_val_pos": 400,
+ "n_val_neg": 4775,
+ "canales": [
+  16,
+  32,
+  32,
+  32,
+  32,
+  32
+ ],
+ "strides": [
+  1,
+  2,
+  2,
+  1,
+  1,
+  1
+ ],
+ "representacion": "lineas",
+ "entrada": 1,
+ "dataset_corto": "grueso",
+ "parametros": 41825,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1; ver best.umbral",
+ "dataset": "feat-fallos-sinteticas-grueso-32px-r20261006",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "5b8ae9c56e669464"
+}

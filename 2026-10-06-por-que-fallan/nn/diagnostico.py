@@ -9,6 +9,7 @@
         inclinación   |α| = |cov(fila, columna) / var(fila)|: columnas que se desplaza la tinta por cada fila (0 = derecho)
         descentrado   distancia del centro de masas al centro del lienzo (px)
         alto, ancho   de la caja que encierra la tinta (px)
+        grosor, relleno   los de nn/errores.py, aquí con las 3 semillas (allí, la 1)
 
     python nn/diagnostico.py lineas-nada lineas-nada+norm3     → resultados/diagnostico.json
 """
@@ -24,6 +25,7 @@ import torch.nn.functional as Fn
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI.parent.parent)); sys.path.insert(0, str(AQUI))
+import errores as E                               # noqa: E402
 import evaluar as V                               # noqa: E402
 
 RES = AQUI.parent / "resultados"
@@ -57,7 +59,7 @@ def vectores(combo: str, x: np.ndarray) -> np.ndarray:
 def main(combos: list[str]) -> int:
     torch.set_num_threads(2)
     dg = V._digitos(); w = dg["w"]; x = dg["x"][w]; y = dg["y"][w]; tr = dg["train"][w]; yv = y[~tr]
-    g = {k: v[~tr] for k, v in geometria(x).items()}
+    g = {k: v[~tr] for k, v in (geometria(x) | {k: v for k, v in E.propiedades(x).items() if k != "huecos"}).items()}
     out = {"propiedades": {k: {"terciles": [round(float(q), 3) for q in np.percentile(v, [33.3, 66.7])],
                                "mediana": round(float(np.median(v)), 3)} for k, v in g.items() if k != "alfa"},
            "combos": {}}
@@ -78,14 +80,14 @@ def main(combos: list[str]) -> int:
                 "pares": [{"par": k, "n": n, "frac": round(n / max(1, tot), 3)} for k, n in top],
                 "error_por_clase": {str(c): round(float(err[yv == c].mean()), 4) for c in range(10)},
                 "confusion": conf.tolist()}
-        for k in ("inclinacion", "descentrado", "alto", "ancho"):
+        for k in ("inclinacion", "descentrado", "alto", "ancho", "grosor", "relleno"):
             t = np.digitize(g[k], out["propiedades"][k]["terciles"])
             fila[f"error_por_tercil_de_{k}"] = [round(float(err[t == i].mean()), 4) for i in range(3)]
         out["combos"][combo] = fila
         print(f"  {combo:<20} acierto {fila['acierto']:.4f} · pares " + ", ".join(f"{p['par']} {p['n']}" for p in fila["pares"][:5])
               + " · error por clase " + " ".join(f"{c}:{v:.3f}" for c, v in fila["error_por_clase"].items()), flush=True)
         print("  " + " " * 20 + " por tercil: " + " · ".join(f"{k} {fila[f'error_por_tercil_de_{k}']}" for k in
-                                                         ("inclinacion", "descentrado", "alto", "ancho")), flush=True)
+                                                         ("inclinacion", "descentrado", "grosor", "relleno")), flush=True)
     print("  terciles: " + " · ".join(f"{k} {v['terciles']} (mediana {v['mediana']})" for k, v in out["propiedades"].items()))
     RES.mkdir(parents=True, exist_ok=True)
     (RES / "diagnostico.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")

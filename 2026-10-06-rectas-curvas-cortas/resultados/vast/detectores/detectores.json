@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-06T02:15:33+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-06T02:15:37+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-06T02:24:32+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-06T02:24:41+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-06T02:26:13+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-06T02:26:19+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-06T02:31:24+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-06T02:31:24+00:00"
   }
  ],
  "id": "detectores",
@@ -23,5 +51,24 @@
   "fiabilidad": 0.9969
  },
  "horas_max": 3.0,
- "tope_precio": 0.4
+ "tope_precio": 0.4,
+ "iid": 54416145,
+ "intentos_clave": 1,
+ "payload_mb": 10.57,
+ "sha256": "545e73442162fc8f",
+ "segundos_max": 9560,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/corta-V",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/corta-H",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/corta-S",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/corta-B",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/curva-E",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/curva-W",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/curva-N",
+  "experimentos-cnn/2026-10-06-rectas-curvas-cortas/nn/pesos/curva-S"
+ ],
+ "apartado": [],
+ "minutos": 15.8,
+ "coste_usd": 0.0145
 }

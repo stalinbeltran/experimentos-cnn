@@ -1,0 +1,390 @@
+{
+ "feature": "esquina-NW",
+ "semilla": 1,
+ "epocas": 80,
+ "lote": [
+  32,
+  32
+ ],
+ "lr": 0.002,
+ "huella_init": "60e283d8cc003e53",
+ "n_train_pos": 2000,
+ "n_train_neg": 23959,
+ "n_val_pos": 400,
+ "n_val_neg": 4792,
+ "canales": [
+  16,
+  32,
+  32,
+  32,
+  32,
+  32
+ ],
+ "strides": [
+  1,
+  2,
+  2,
+  1,
+  1,
+  1
+ ],
+ "representacion": "lineas",
+ "entrada": 1,
+ "dataset_corto": "grueso",
+ "parametros": 41825,
+ "sigma": 0.6,
+ "peso_objetivo": 8.0,
+ "peso_presencia": 1.0,
+ "umbral": "elegido sobre train por F1; ver best.umbral",
+ "dataset": "feat-fallos-sinteticas-grueso-32px-r20261006",
+ "negativos_excluidos_por_contener": [],
+ "huella_imagenes": "5b8ae9c56e669464",
+ "segundos": 1011.0,
+ "last": {
+  "n_pos": 400,
+  "n_neg": 4792,
+  "tp": 333,
+  "fp": 51,
+  "fn": 67,
+  "precision": 0.8672,
+  "recall": 0.8325,
+  "f1": 0.8495,
+  "pos_ok": 1.0,
+  "pos_exacta": 0.8949,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 51,
+    "recall": 0.7255
+   },
+   "3": {
+    "n": 48,
+    "recall": 0.6667
+   },
+   "4": {
+    "n": 64,
+    "recall": 0.7188
+   },
+   "6": {
+    "n": 50,
+    "recall": 0.82
+   },
+   "8": {
+    "n": 56,
+    "recall": 0.9464
+   },
+   "10": {
+    "n": 66,
+    "recall": 0.9394
+   },
+   "12": {
+    "n": 65,
+    "recall": 0.9538
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 383,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "arco-W": {
+    "n": 382,
+    "fp": 7,
+    "tasa": 0.0183
+   },
+   "arco-N": {
+    "n": 381,
+    "fp": 9,
+    "tasa": 0.0236
+   },
+   "arco-S": {
+    "n": 381,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "recta-V": {
+    "n": 382,
+    "fp": 7,
+    "tasa": 0.0183
+   },
+   "recta-H": {
+    "n": 382,
+    "fp": 4,
+    "tasa": 0.0105
+   },
+   "recta-S": {
+    "n": 381,
+    "fp": 6,
+    "tasa": 0.0157
+   },
+   "recta-B": {
+    "n": 379,
+    "fp": 3,
+    "tasa": 0.0079
+   },
+   "lazo": {
+    "n": 388,
+    "fp": 1,
+    "tasa": 0.0026
+   },
+   "esquina-NE": {
+    "n": 388,
+    "fp": 5,
+    "tasa": 0.0129
+   },
+   "esquina-SE": {
+    "n": 382,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "esquina-SW": {
+    "n": 383,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.698,
+  "recall_sola": 0.9697,
+  "conf_pos_media": 0.8441,
+  "conf_neg_media": 0.0175,
+  "umbral": 0.6
+ },
+ "best": {
+  "n_pos": 400,
+  "n_neg": 4792,
+  "tp": 344,
+  "fp": 41,
+  "fn": 56,
+  "precision": 0.8935,
+  "recall": 0.86,
+  "f1": 0.8764,
+  "pos_ok": 0.9971,
+  "pos_exacta": 0.8837,
+  "recall_por_radio": {},
+  "recall_por_grosor": {
+   "2": {
+    "n": 51,
+    "recall": 0.8039
+   },
+   "3": {
+    "n": 48,
+    "recall": 0.6458
+   },
+   "4": {
+    "n": 64,
+    "recall": 0.7812
+   },
+   "6": {
+    "n": 50,
+    "recall": 0.88
+   },
+   "8": {
+    "n": 56,
+    "recall": 0.9464
+   },
+   "10": {
+    "n": 66,
+    "recall": 0.9394
+   },
+   "12": {
+    "n": 65,
+    "recall": 0.9692
+   }
+  },
+  "fp_por_familia": {
+   "arco-E": {
+    "n": 383,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "arco-W": {
+    "n": 382,
+    "fp": 4,
+    "tasa": 0.0105
+   },
+   "arco-N": {
+    "n": 381,
+    "fp": 8,
+    "tasa": 0.021
+   },
+   "arco-S": {
+    "n": 381,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "recta-V": {
+    "n": 382,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "recta-H": {
+    "n": 382,
+    "fp": 3,
+    "tasa": 0.0079
+   },
+   "recta-S": {
+    "n": 381,
+    "fp": 5,
+    "tasa": 0.0131
+   },
+   "recta-B": {
+    "n": 379,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "lazo": {
+    "n": 388,
+    "fp": 0,
+    "tasa": 0.0
+   },
+   "esquina-NE": {
+    "n": 388,
+    "fp": 3,
+    "tasa": 0.0077
+   },
+   "esquina-SE": {
+    "n": 382,
+    "fp": 7,
+    "tasa": 0.0183
+   },
+   "esquina-SW": {
+    "n": 383,
+    "fp": 2,
+    "tasa": 0.0052
+   },
+   "vacio": {
+    "n": 200,
+    "fp": 0,
+    "tasa": 0.0
+   }
+  },
+  "recall_con_secundaria": 0.7376,
+  "recall_sola": 0.9848,
+  "conf_pos_media": 0.8448,
+  "conf_neg_media": 0.0135,
+  "umbral": 0.4,
+  "epoca": 50
+ },
+ "curva_pr_best": [
+  {
+   "umbral": 0.1,
+   "precision": 0.7094,
+   "recall": 0.9275,
+   "f1": 0.8039
+  },
+  {
+   "umbral": 0.15,
+   "precision": 0.7614,
+   "recall": 0.9175,
+   "f1": 0.8322
+  },
+  {
+   "umbral": 0.2,
+   "precision": 0.8117,
+   "recall": 0.905,
+   "f1": 0.8558
+  },
+  {
+   "umbral": 0.25,
+   "precision": 0.8353,
+   "recall": 0.8875,
+   "f1": 0.8606
+  },
+  {
+   "umbral": 0.3,
+   "precision": 0.8652,
+   "recall": 0.8825,
+   "f1": 0.8738
+  },
+  {
+   "umbral": 0.35,
+   "precision": 0.8838,
+   "recall": 0.875,
+   "f1": 0.8794
+  },
+  {
+   "umbral": 0.4,
+   "precision": 0.8935,
+   "recall": 0.86,
+   "f1": 0.8764
+  },
+  {
+   "umbral": 0.45,
+   "precision": 0.8976,
+   "recall": 0.855,
+   "f1": 0.8758
+  },
+  {
+   "umbral": 0.5,
+   "precision": 0.9037,
+   "recall": 0.845,
+   "f1": 0.8734
+  },
+  {
+   "umbral": 0.55,
+   "precision": 0.9057,
+   "recall": 0.84,
+   "f1": 0.8716
+  },
+  {
+   "umbral": 0.6,
+   "precision": 0.9151,
+   "recall": 0.835,
+   "f1": 0.8732
+  },
+  {
+   "umbral": 0.65,
+   "precision": 0.9224,
+   "recall": 0.8325,
+   "f1": 0.8752
+  },
+  {
+   "umbral": 0.7,
+   "precision": 0.9272,
+   "recall": 0.8275,
+   "f1": 0.8745
+  },
+  {
+   "umbral": 0.75,
+   "precision": 0.94,
+   "recall": 0.8225,
+   "f1": 0.8773
+  },
+  {
+   "umbral": 0.8,
+   "precision": 0.9446,
+   "recall": 0.81,
+   "f1": 0.8721
+  },
+  {
+   "umbral": 0.85,
+   "precision": 0.952,
+   "recall": 0.7925,
+   "f1": 0.8649
+  },
+  {
+   "umbral": 0.9,
+   "precision": 0.9652,
+   "recall": 0.7625,
+   "f1": 0.852
+  }
+ ],
+ "huella_final": "7794fdf418cf7eb0",
+ "veredicto": "a medias",
+ "maquina": {
+  "cpu": "Intel(R) Xeon(R) CPU E5-2680 v4 @ 2.40GHz",
+  "nproc": 56,
+  "hilos_torch": 1,
+  "torch": "2.14.1+cpu",
+  "numpy": "2.5.3",
+  "python": "3.12.3",
+  "host": "d0984f5a1a82"
+ },
+ "terminado": "2026-10-06T02:33:19+00:00"
+}
