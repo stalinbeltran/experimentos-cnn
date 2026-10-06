@@ -208,3 +208,21 @@ dan **los finos + los gruesos con las dos vistas**; las cortas suman +0,001 a 18
 
 La respuesta a la pregunta del dueño: **sí se distinguen, si el detector ha visto ese grosor**. Fina, todos; gruesa, sólo el
 que se entrenó con trazos gruesos. (Las cortas de `feat-cortas`, finas: 0,012 y 0,015.)
+
+## Iteración 7 (03:44 UTC, ANTES de medirla) — confirmación CIEGA, en dígitos que este estudio no ha usado para elegir
+
+**Por qué:** todas las combinaciones se han comparado sobre los mismos 1617 de val, y S6b salió la más alta **de entre
+muchas**: parte de su ventaja puede ser suerte de selección. El dataset tiene **3823 dígitos más** (`origen` tra · cv · wdep:
+los 30 escritores del conjunto de entrenamiento de UCI, distintos de los de `windep`) cuyo acierto **ningún** paso de este
+estudio ha mirado (κ sí los usa, pero sin etiquetas). El compositor se entrena **igual** (los mismos 180 de `windep`, 3
+semillas) y se mide **en esos 3823** (`nn/confirmar.py`).
+
+Combinaciones, fijadas ahora: la referencia, S3' (`lineas-nada+norm3`), S2e, S6a, finos + gruesos en dos vistas, y S6b.
+
+| | se confirma si |
+|---|---|
+| **C1** | S6b ≥ referencia + 0,01 en los 3823 |
+| **C2** | S6b quita ≥ 25 % de los errores de la referencia (en val quitó el 44 %) |
+
+**Lo que espero:** C1 sí y C2 sí, con menos ganancia que en val (+0,01–0,02): son otros escritores y el compositor sólo vio
+180 dígitos.

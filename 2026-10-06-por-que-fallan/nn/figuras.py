@@ -105,15 +105,18 @@ def curvas_rectas() -> None:
 
 # ------------------------------------------------------------------------------------------------ 3. las soluciones
 ORDEN = [  # (combo, etiqueta, iteración)
-    ("lineas-nada", "líneas, sin tocar\n(la referencia)", 0),
-    ("lineas-norm3", "S3 normalizar\nel trazo a 3 px", 1),
-    ("lineas-nada+norm3", "S3' las dos vistas\n(cruda + 3 px)", 2),
-    ("contorno-nada", "borde: contorno\n(feat-bor)", 2),
-    ("signo-nada", "borde con signo\n(feat-bor)", 2),
-    ("lineas-grueso-nada", "S2 entrenar con\ntrazos de 2–12 px", 3),
-    ("lineas+lineas-grueso-nada", "S2e finos + gruesos\n(26 mapas)", 3),
-    ("lineas-desinc", "S4 desinclinar", 4),
-    ("lineas-desinc+desinc_norm3", "S4c desinclinar\n+ dos vistas", 4),
+    ("lineas-nada", "referencia:\nlíneas, crudo", 0),
+    ("lineas-norm3", "S3 esqueleto\n+ 3 px", 1),
+    ("lineas-adapt", "S7 erosión\nsegún grosor", 6),
+    ("contorno-nada", "bordes:\ncontorno", 2),
+    ("signo-nada", "bordes:\ncon signo", 2),
+    ("lineas-grueso-nada", "S2 entrenados\ncon 2–12 px", 3),
+    ("lineas-desinc", "S4\ndesinclinar", 4),
+    ("lineas-nada+norm3", "S3' crudo\n+ 3 px", 2),
+    ("lineas+lineas-grueso-nada", "S2e finos\n+ gruesos", 3),
+    ("lineas+cortas-nada+norm3", "S6a largas\n+ cortas,\ncrudo + 3 px", 5),
+    ("lineas+lineas-grueso-nada+norm3", "finos\n+ gruesos,\ncrudo + 3 px", 5),
+    ("lineas+lineas-grueso+cortas-nada+norm3", "S6b finos\n+ gruesos\n+ cortas,\ncrudo + 3 px", 5),
 ]
 
 
@@ -122,8 +125,9 @@ def soluciones(extra: list | None = None) -> None:
     if not filas:
         return
     d = {c: _json(RES / "combos" / f"{c}.json") for c, _, _ in filas}
+    filas = filas[:1] + sorted(filas[1:], key=lambda r: d[r[0]]["compositor_180"]["media"])     # la referencia, y de peor a mejor
     plt = _plt()
-    fig, axs = plt.subplots(2, 1, figsize=(10, 7.2), dpi=100, facecolor=SUP, sharex=True)
+    fig, axs = plt.subplots(2, 1, figsize=(12.5, 7.8), dpi=100, facecolor=SUP, sharex=True)
     x = np.arange(len(filas))
     ax = axs[0]; _ejes(ax)
     c180 = [d[c]["compositor_180"]["media"] for c, _, _ in filas]
@@ -136,9 +140,10 @@ def soluciones(extra: list | None = None) -> None:
     for xx, v in zip(x, c36):
         ax.text(xx + 0.2, v + 0.004, f"{v:.3f}", ha="center", va="bottom", fontsize=7, color=T2)
     ax.axhline(ref, color=AZUL, lw=0.8, ls="--", zorder=2)
-    ax.set_ylim(0.6, 1.0); ax.set_ylabel("acierto leyendo dígitos", color=T2, fontsize=9)
-    ax.legend(frameon=False, fontsize=8.5, loc="lower right", labelcolor=T1)
-    ax.set_title("Cada solución probada: ¿lee mejor los dígitos? (gris = peor que la referencia)", color=T1, fontsize=10, loc="left")
+    ax.set_ylim(0.4, 1.0); ax.set_ylabel("acierto leyendo dígitos", color=T2, fontsize=9)
+    ax.legend(frameon=False, fontsize=8.5, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, labelcolor=T1)
+    ax.set_title("Cada solución probada: ¿lee mejor los dígitos? (la referencia primero; las demás, de peor a mejor; gris = peor que ella)",
+                 color=T1, fontsize=10, loc="left", pad=24)
     ax = axs[1]; _ejes(ax)
     ke = [d[c]["kappa"]["engrosar"]["kappa"] for c, _, _ in filas]
     ka = [d[c]["kappa"]["adelgazar"]["kappa"] for c, _, _ in filas]
@@ -147,13 +152,13 @@ def soluciones(extra: list | None = None) -> None:
     ax.set_ylim(0, 1); ax.set_ylabel("κ: el mismo dígito,\n¿cae en su grupo?", color=T2, fontsize=9)
     ax.legend(frameon=False, fontsize=8.5, loc="upper left", labelcolor=T1)
     ax.set_title("¿Y es robusto al grosor? (κ = 1: el grupo no cambia; 0: como al azar)", color=T1, fontsize=10, loc="left")
-    ax.set_xticks(x); ax.set_xticklabels([e for _, e, _ in filas], fontsize=7.5)
+    ax.set_xticks(x); ax.set_xticklabels([e for _, e, _ in filas], fontsize=7.5, linespacing=1.1)
     fig.tight_layout(); fig.savefig(RES / "soluciones.png", facecolor=SUP); plt.close(fig)
     print("  soluciones.png")
 
 
 # ------------------------------------------------------------------------------------------------ 4. dónde está el error
-def errores(combos: tuple = ("lineas-nada", "lineas-nada+norm3")) -> None:
+def errores(combos: tuple = ("lineas-nada", "lineas+lineas-grueso+cortas-nada+norm3")) -> None:
     g = _json(RES / "diagnostico.json")
     if not g:
         return
