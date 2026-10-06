@@ -1,0 +1,215 @@
+{
+ "banco": "lineas+lineas-grueso",
+ "representacion": "lineas",
+ "preprocesado": "norm3",
+ "huellas": {
+  "lineas": {
+   "arco-E": "110ee726045e1621",
+   "arco-W": "93b2e3bb788451fc",
+   "arco-N": "6b156a8eaad7ec7b",
+   "arco-S": "64ca7817bb44e611",
+   "recta-V": "f1c01f8f8763e63c",
+   "recta-H": "5ffbfbaa21b39541",
+   "recta-S": "844b7d4c85b4ad2a",
+   "recta-B": "4cd67d9da2f34ac6",
+   "lazo": "32456548f74fcd05",
+   "esquina-NE": "f720e17c67d2dbf3",
+   "esquina-NW": "9932ae7137879b64",
+   "esquina-SE": "faf812f5531e9524",
+   "esquina-SW": "31d410466bcf5318"
+  },
+  "lineas-grueso": {
+   "arco-E": "d99c5a7df7759f0e",
+   "arco-W": "5fc17bd0838672e1",
+   "arco-N": "f7683d2a245d1c1e",
+   "arco-S": "e1292557b4fb3e25",
+   "recta-V": "f41aaa922ae34c1b",
+   "recta-H": "39c301f64654e2b6",
+   "recta-S": "4b20ce696f4204e2",
+   "recta-B": "795975a56324e4c9",
+   "lazo": "59f93d6855783f0d",
+   "esquina-NE": "0d5abeccec4091ad",
+   "esquina-NW": "5b8f86cbfcb88e71",
+   "esquina-SE": "56f0b25266bcedba",
+   "esquina-SW": "8c8763b965cd0b01"
+  }
+ },
+ "firma": {
+  "0": {
+   "arco-E": 0.6854,
+   "arco-W": 0.8708,
+   "arco-N": 0.0393,
+   "arco-S": 0.0337,
+   "recta-V": 0.573,
+   "recta-H": 0.0,
+   "recta-S": 0.0056,
+   "recta-B": 0.0,
+   "lazo": 0.2247,
+   "esquina-NE": 0.0056,
+   "esquina-NW": 0.0,
+   "esquina-SE": 0.0337,
+   "esquina-SW": 0.0225
+  },
+  "1": {
+   "arco-E": 0.1209,
+   "arco-W": 0.0549,
+   "arco-N": 0.0,
+   "arco-S": 0.0,
+   "recta-V": 0.9011,
+   "recta-H": 0.1484,
+   "recta-S": 0.011,
+   "recta-B": 0.0,
+   "lazo": 0.0055,
+   "esquina-NE": 0.0495,
+   "esquina-NW": 0.011,
+   "esquina-SE": 0.0275,
+   "esquina-SW": 0.1648
+  },
+  "2": {
+   "arco-E": 0.0395,
+   "arco-W": 0.435,
+   "arco-N": 0.0113,
+   "arco-S": 0.3616,
+   "recta-V": 0.4802,
+   "recta-H": 0.3785,
+   "recta-S": 0.0226,
+   "recta-B": 0.0,
+   "lazo": 0.0056,
+   "esquina-NE": 0.4633,
+   "esquina-NW": 0.0056,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.2203
+  },
+  "3": {
+   "arco-E": 0.0492,
+   "arco-W": 0.541,
+   "arco-N": 0.0,
+   "arco-S": 0.2842,
+   "recta-V": 0.1038,
+   "recta-H": 0.071,
+   "recta-S": 0.0055,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.1093,
+   "esquina-NW": 0.1311,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.5027
+  },
+  "4": {
+   "arco-E": 0.1381,
+   "arco-W": 0.0166,
+   "arco-N": 0.1215,
+   "arco-S": 0.0055,
+   "recta-V": 0.2707,
+   "recta-H": 0.2099,
+   "recta-S": 0.1823,
+   "recta-B": 0.0,
+   "lazo": 0.0221,
+   "esquina-NE": 0.337,
+   "esquina-NW": 0.0331,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.2431
+  },
+  "5": {
+   "arco-E": 0.3077,
+   "arco-W": 0.7637,
+   "arco-N": 0.0,
+   "arco-S": 0.0165,
+   "recta-V": 0.0385,
+   "recta-H": 0.2033,
+   "recta-S": 0.022,
+   "recta-B": 0.0055,
+   "lazo": 0.0055,
+   "esquina-NE": 0.2088,
+   "esquina-NW": 0.0385,
+   "esquina-SE": 0.2582,
+   "esquina-SW": 0.1703
+  },
+  "6": {
+   "arco-E": 0.6575,
+   "arco-W": 0.3315,
+   "arco-N": 0.011,
+   "arco-S": 0.2818,
+   "recta-V": 0.326,
+   "recta-H": 0.0552,
+   "recta-S": 0.0,
+   "recta-B": 0.0,
+   "lazo": 0.7182,
+   "esquina-NE": 0.1271,
+   "esquina-NW": 0.0055,
+   "esquina-SE": 0.011,
+   "esquina-SW": 0.0939
+  },
+  "7": {
+   "arco-E": 0.0168,
+   "arco-W": 0.2737,
+   "arco-N": 0.0,
+   "arco-S": 0.1061,
+   "recta-V": 0.3631,
+   "recta-H": 0.3017,
+   "recta-S": 0.0223,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.0168,
+   "esquina-NW": 0.1061,
+   "esquina-SE": 0.1788,
+   "esquina-SW": 0.5419
+  },
+  "8": {
+   "arco-E": 0.7356,
+   "arco-W": 0.6782,
+   "arco-N": 0.023,
+   "arco-S": 0.0517,
+   "recta-V": 0.0977,
+   "recta-H": 0.0,
+   "recta-S": 0.1322,
+   "recta-B": 0.0632,
+   "lazo": 0.9138,
+   "esquina-NE": 0.023,
+   "esquina-NW": 0.023,
+   "esquina-SE": 0.0575,
+   "esquina-SW": 0.0345
+  },
+  "9": {
+   "arco-E": 0.3889,
+   "arco-W": 0.6389,
+   "arco-N": 0.1611,
+   "arco-S": 0.1167,
+   "recta-V": 0.3944,
+   "recta-H": 0.0611,
+   "recta-S": 0.0056,
+   "recta-B": 0.0222,
+   "lazo": 0.8333,
+   "esquina-NE": 0.0167,
+   "esquina-NW": 0.1278,
+   "esquina-SE": 0.0111,
+   "esquina-SW": 0.1889
+  }
+ },
+ "compositor_180": {
+  "por_semilla": [
+   0.9041,
+   0.9029,
+   0.9029
+  ],
+  "media": 0.9033
+ },
+ "curva_717": {
+  "36": 0.7341,
+  "180": 0.9019,
+  "1080": 0.947
+ },
+ "kappa": {
+  "semilla": 4,
+  "engrosar": {
+   "c": 0.3299,
+   "kappa": 0.3028
+  },
+  "adelgazar": {
+   "c": 0.7071,
+   "kappa": 0.6953
+  }
+ },
+ "grueso": null,
+ "segundos": 482.8
+}

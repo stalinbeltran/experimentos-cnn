@@ -1,0 +1,200 @@
+{
+ "banco": "lineas-grueso",
+ "representacion": "lineas",
+ "preprocesado": "nada+norm3",
+ "huellas": {
+  "lineas-grueso": {
+   "arco-E": "d99c5a7df7759f0e",
+   "arco-W": "5fc17bd0838672e1",
+   "arco-N": "f7683d2a245d1c1e",
+   "arco-S": "e1292557b4fb3e25",
+   "recta-V": "f41aaa922ae34c1b",
+   "recta-H": "39c301f64654e2b6",
+   "recta-S": "4b20ce696f4204e2",
+   "recta-B": "795975a56324e4c9",
+   "lazo": "59f93d6855783f0d",
+   "esquina-NE": "0d5abeccec4091ad",
+   "esquina-NW": "5b8f86cbfcb88e71",
+   "esquina-SE": "56f0b25266bcedba",
+   "esquina-SW": "8c8763b965cd0b01"
+  }
+ },
+ "firma": {
+  "0": {
+   "arco-E": 0.5562,
+   "arco-W": 0.427,
+   "arco-N": 0.0,
+   "arco-S": 0.1517,
+   "recta-V": 0.7247,
+   "recta-H": 0.0,
+   "recta-S": 0.1292,
+   "recta-B": 0.0506,
+   "lazo": 0.1348,
+   "esquina-NE": 0.0225,
+   "esquina-NW": 0.0169,
+   "esquina-SE": 0.0449,
+   "esquina-SW": 0.0393
+  },
+  "1": {
+   "arco-E": 0.0275,
+   "arco-W": 0.0165,
+   "arco-N": 0.0055,
+   "arco-S": 0.0165,
+   "recta-V": 0.9945,
+   "recta-H": 0.1209,
+   "recta-S": 0.1923,
+   "recta-B": 0.0549,
+   "lazo": 0.0,
+   "esquina-NE": 0.0275,
+   "esquina-NW": 0.011,
+   "esquina-SE": 0.033,
+   "esquina-SW": 0.0275
+  },
+  "2": {
+   "arco-E": 0.0,
+   "arco-W": 0.548,
+   "arco-N": 0.0056,
+   "arco-S": 0.1186,
+   "recta-V": 0.4972,
+   "recta-H": 0.4181,
+   "recta-S": 0.2712,
+   "recta-B": 0.0113,
+   "lazo": 0.0,
+   "esquina-NE": 0.2994,
+   "esquina-NW": 0.0,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.2938
+  },
+  "3": {
+   "arco-E": 0.0546,
+   "arco-W": 0.5246,
+   "arco-N": 0.0,
+   "arco-S": 0.3169,
+   "recta-V": 0.1202,
+   "recta-H": 0.0656,
+   "recta-S": 0.0874,
+   "recta-B": 0.071,
+   "lazo": 0.0,
+   "esquina-NE": 0.0546,
+   "esquina-NW": 0.0765,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.2459
+  },
+  "4": {
+   "arco-E": 0.1436,
+   "arco-W": 0.0166,
+   "arco-N": 0.0442,
+   "arco-S": 0.0,
+   "recta-V": 0.3978,
+   "recta-H": 0.0829,
+   "recta-S": 0.6961,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.4696,
+   "esquina-NW": 0.0221,
+   "esquina-SE": 0.0055,
+   "esquina-SW": 0.0055
+  },
+  "5": {
+   "arco-E": 0.1044,
+   "arco-W": 0.6593,
+   "arco-N": 0.0055,
+   "arco-S": 0.0385,
+   "recta-V": 0.0824,
+   "recta-H": 0.1429,
+   "recta-S": 0.1319,
+   "recta-B": 0.044,
+   "lazo": 0.0,
+   "esquina-NE": 0.3187,
+   "esquina-NW": 0.011,
+   "esquina-SE": 0.544,
+   "esquina-SW": 0.1044
+  },
+  "6": {
+   "arco-E": 0.5691,
+   "arco-W": 0.3591,
+   "arco-N": 0.0,
+   "arco-S": 0.1878,
+   "recta-V": 0.2928,
+   "recta-H": 0.0276,
+   "recta-S": 0.1381,
+   "recta-B": 0.0884,
+   "lazo": 0.442,
+   "esquina-NE": 0.221,
+   "esquina-NW": 0.0055,
+   "esquina-SE": 0.0166,
+   "esquina-SW": 0.0276
+  },
+  "7": {
+   "arco-E": 0.0056,
+   "arco-W": 0.162,
+   "arco-N": 0.0,
+   "arco-S": 0.0391,
+   "recta-V": 0.257,
+   "recta-H": 0.1453,
+   "recta-S": 0.1899,
+   "recta-B": 0.0056,
+   "lazo": 0.0,
+   "esquina-NE": 0.0168,
+   "esquina-NW": 0.0335,
+   "esquina-SE": 0.1173,
+   "esquina-SW": 0.2626
+  },
+  "8": {
+   "arco-E": 0.3908,
+   "arco-W": 0.3736,
+   "arco-N": 0.0805,
+   "arco-S": 0.0287,
+   "recta-V": 0.1782,
+   "recta-H": 0.0,
+   "recta-S": 0.2644,
+   "recta-B": 0.1264,
+   "lazo": 0.3046,
+   "esquina-NE": 0.0632,
+   "esquina-NW": 0.0057,
+   "esquina-SE": 0.0575,
+   "esquina-SW": 0.046
+  },
+  "9": {
+   "arco-E": 0.4722,
+   "arco-W": 0.4333,
+   "arco-N": 0.1833,
+   "arco-S": 0.0833,
+   "recta-V": 0.6222,
+   "recta-H": 0.0333,
+   "recta-S": 0.0778,
+   "recta-B": 0.0667,
+   "lazo": 0.3111,
+   "esquina-NE": 0.0056,
+   "esquina-NW": 0.1389,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.1278
+  }
+ },
+ "compositor_180": {
+  "por_semilla": [
+   0.9054,
+   0.9048,
+   0.9048
+  ],
+  "media": 0.905
+ },
+ "curva_717": {
+  "36": 0.7699,
+  "180": 0.9149,
+  "1080": 0.94
+ },
+ "kappa": {
+  "semilla": 1,
+  "engrosar": {
+   "c": 0.2802,
+   "kappa": 0.2522
+  },
+  "adelgazar": {
+   "c": 0.5486,
+   "kappa": 0.531
+  }
+ },
+ "grueso": null,
+ "segundos": 385.9
+}

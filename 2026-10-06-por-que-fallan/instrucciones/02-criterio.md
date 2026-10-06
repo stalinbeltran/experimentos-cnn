@@ -161,3 +161,20 @@ tinta y un dígito de 1797 queda vacío.
 
 **Lo que espero:** S7b y S7c sí (es lo que hace por construcción); S7a dudoso —la erosión parte trazos finos que se tocan con
 gruesos y abre huecos—; S7d sí, por poco.
+
+## Resultados que llegaron después (03:01–03:15 UTC)
+
+**S2e ✅** — `lineas+lineas-grueso` crudos (26 mapas): **0,9635** (umbral 0,959); curva 0,813 / 0,969 / 0,978. Lo que esperaba.
+Los gruesos solos leen peor (0,853), pero **junto a los finos aportan**: cada banco ve lo que el otro no. Con `norm3`, 0,903;
+con las dos vistas, en cola. Por la regla de la iteración 5, **S6b se activa**.
+
+**S6a ✅** — `lineas+cortas` en `nada+norm3` (42 mapas): **0,9678** (umbral 0,966) y curva con 36 **0,852** (≥ 0,820); curva
+0,852 / 0,971 / 0,989. Y además es **la más robusta al grosor** de todas las que leen bien: κ 0,349 al engrosar y 0,707 al
+adelgazar (la referencia, 0,114 y 0,345).
+
+**Iteración 6 (S7) ❌ en lo que importa** — `adapt` lee **0,689** (S7a ❌), con las dos vistas 0,947 (S7d ❌, por debajo de la
+referencia); arcos en los 1, 0,04 / 0,04 (S7b ✅); κ al engrosar 0,120 (S7c ❌). Lo que se ve en
+`resultados/preprocesados.png`: el grosor **no es uniforme dentro de un dígito**, y erosionar según el grosor medio borra los
+trazos finos de un dígito con partes gruesas (varios 2 se quedan en unos puntos). Junto con S3, cierra la vía de normalizar
+el grosor **en la imagen**: el esqueleto pierde lo relleno y la erosión pierde lo fino. Lo que funciona es que el detector
+vea las dos cosas (S2e) o que el compositor reciba las dos vistas (S3', S6a).

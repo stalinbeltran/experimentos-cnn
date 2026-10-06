@@ -1,0 +1,200 @@
+{
+ "banco": "lineas",
+ "representacion": "lineas",
+ "preprocesado": "adapt",
+ "huellas": {
+  "lineas": {
+   "arco-E": "110ee726045e1621",
+   "arco-W": "93b2e3bb788451fc",
+   "arco-N": "6b156a8eaad7ec7b",
+   "arco-S": "64ca7817bb44e611",
+   "recta-V": "f1c01f8f8763e63c",
+   "recta-H": "5ffbfbaa21b39541",
+   "recta-S": "844b7d4c85b4ad2a",
+   "recta-B": "4cd67d9da2f34ac6",
+   "lazo": "32456548f74fcd05",
+   "esquina-NE": "f720e17c67d2dbf3",
+   "esquina-NW": "9932ae7137879b64",
+   "esquina-SE": "faf812f5531e9524",
+   "esquina-SW": "31d410466bcf5318"
+  }
+ },
+ "firma": {
+  "0": {
+   "arco-E": 0.382,
+   "arco-W": 0.4607,
+   "arco-N": 0.0393,
+   "arco-S": 0.2022,
+   "recta-V": 0.7303,
+   "recta-H": 0.0056,
+   "recta-S": 0.0169,
+   "recta-B": 0.0169,
+   "lazo": 0.073,
+   "esquina-NE": 0.0056,
+   "esquina-NW": 0.0,
+   "esquina-SE": 0.0843,
+   "esquina-SW": 0.0
+  },
+  "1": {
+   "arco-E": 0.0385,
+   "arco-W": 0.0385,
+   "arco-N": 0.0055,
+   "arco-S": 0.0,
+   "recta-V": 0.8626,
+   "recta-H": 0.0714,
+   "recta-S": 0.0,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.0055,
+   "esquina-NW": 0.0055,
+   "esquina-SE": 0.011,
+   "esquina-SW": 0.033
+  },
+  "2": {
+   "arco-E": 0.0113,
+   "arco-W": 0.1582,
+   "arco-N": 0.0169,
+   "arco-S": 0.2429,
+   "recta-V": 0.3107,
+   "recta-H": 0.339,
+   "recta-S": 0.0395,
+   "recta-B": 0.0056,
+   "lazo": 0.0,
+   "esquina-NE": 0.1243,
+   "esquina-NW": 0.0,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.0678
+  },
+  "3": {
+   "arco-E": 0.0219,
+   "arco-W": 0.2459,
+   "arco-N": 0.0,
+   "arco-S": 0.3169,
+   "recta-V": 0.1093,
+   "recta-H": 0.071,
+   "recta-S": 0.0,
+   "recta-B": 0.0328,
+   "lazo": 0.0,
+   "esquina-NE": 0.0273,
+   "esquina-NW": 0.0328,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.2077
+  },
+  "4": {
+   "arco-E": 0.0442,
+   "arco-W": 0.0,
+   "arco-N": 0.1713,
+   "arco-S": 0.0055,
+   "recta-V": 0.2928,
+   "recta-H": 0.3315,
+   "recta-S": 0.0994,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.2983,
+   "esquina-NW": 0.0442,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.221
+  },
+  "5": {
+   "arco-E": 0.1429,
+   "arco-W": 0.2198,
+   "arco-N": 0.0055,
+   "arco-S": 0.0714,
+   "recta-V": 0.1813,
+   "recta-H": 0.3187,
+   "recta-S": 0.022,
+   "recta-B": 0.011,
+   "lazo": 0.0,
+   "esquina-NE": 0.2033,
+   "esquina-NW": 0.0,
+   "esquina-SE": 0.2527,
+   "esquina-SW": 0.0659
+  },
+  "6": {
+   "arco-E": 0.4199,
+   "arco-W": 0.0939,
+   "arco-N": 0.011,
+   "arco-S": 0.1934,
+   "recta-V": 0.5359,
+   "recta-H": 0.2376,
+   "recta-S": 0.0,
+   "recta-B": 0.0,
+   "lazo": 0.2652,
+   "esquina-NE": 0.1492,
+   "esquina-NW": 0.0055,
+   "esquina-SE": 0.011,
+   "esquina-SW": 0.0331
+  },
+  "7": {
+   "arco-E": 0.0112,
+   "arco-W": 0.1844,
+   "arco-N": 0.0168,
+   "arco-S": 0.1899,
+   "recta-V": 0.1788,
+   "recta-H": 0.4134,
+   "recta-S": 0.0112,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.0056,
+   "esquina-NW": 0.0503,
+   "esquina-SE": 0.1006,
+   "esquina-SW": 0.3073
+  },
+  "8": {
+   "arco-E": 0.5172,
+   "arco-W": 0.4483,
+   "arco-N": 0.0115,
+   "arco-S": 0.1839,
+   "recta-V": 0.1782,
+   "recta-H": 0.0057,
+   "recta-S": 0.2356,
+   "recta-B": 0.1437,
+   "lazo": 0.4598,
+   "esquina-NE": 0.023,
+   "esquina-NW": 0.0345,
+   "esquina-SE": 0.0402,
+   "esquina-SW": 0.0402
+  },
+  "9": {
+   "arco-E": 0.2222,
+   "arco-W": 0.4333,
+   "arco-N": 0.2778,
+   "arco-S": 0.1444,
+   "recta-V": 0.6056,
+   "recta-H": 0.0611,
+   "recta-S": 0.0111,
+   "recta-B": 0.0389,
+   "lazo": 0.4444,
+   "esquina-NE": 0.0111,
+   "esquina-NW": 0.0833,
+   "esquina-SE": 0.0056,
+   "esquina-SW": 0.2889
+  }
+ },
+ "compositor_180": {
+  "por_semilla": [
+   0.6883,
+   0.6883,
+   0.6889
+  ],
+  "media": 0.6885
+ },
+ "curva_717": {
+  "36": 0.4505,
+  "180": 0.663,
+  "1080": 0.755
+ },
+ "kappa": {
+  "semilla": 1,
+  "engrosar": {
+   "c": 0.1746,
+   "kappa": 0.1199
+  },
+  "adelgazar": {
+   "c": 0.6429,
+   "kappa": 0.6192
+  }
+ },
+ "grueso": null,
+ "segundos": 290.7
+}

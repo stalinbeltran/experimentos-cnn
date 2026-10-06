@@ -1,0 +1,405 @@
+{
+ "banco": "contorno",
+ "representacion": "contorno",
+ "preprocesado": "norm3",
+ "huellas": {
+  "contorno": {
+   "arco-E": "68c0297d8cb82401",
+   "arco-W": "2c5056c2e89e457c",
+   "arco-N": "9f398d0043de94b8",
+   "arco-S": "ffc7673c626f81c8",
+   "recta-V": "9e1679bd0fc77899",
+   "recta-H": "918c27f879d1f158",
+   "recta-S": "870b64c5e6e2d82a",
+   "recta-B": "1ffb71b40281a3aa",
+   "lazo": "3fe644e18ee472f9",
+   "esquina-NE": "a8a156e626ee51de",
+   "esquina-NW": "c57a5eab8da341c0",
+   "esquina-SE": "68d02707605b093c",
+   "esquina-SW": "9978b1da8906f978"
+  }
+ },
+ "firma": {
+  "0": {
+   "arco-E": 0.309,
+   "arco-W": 0.691,
+   "arco-N": 0.0281,
+   "arco-S": 0.2022,
+   "recta-V": 0.6629,
+   "recta-H": 0.0,
+   "recta-S": 0.0169,
+   "recta-B": 0.0,
+   "lazo": 0.4663,
+   "esquina-NE": 0.1292,
+   "esquina-NW": 0.0281,
+   "esquina-SE": 0.0955,
+   "esquina-SW": 0.0449
+  },
+  "1": {
+   "arco-E": 0.1154,
+   "arco-W": 0.0385,
+   "arco-N": 0.0,
+   "arco-S": 0.0,
+   "recta-V": 0.9176,
+   "recta-H": 0.2033,
+   "recta-S": 0.0,
+   "recta-B": 0.0055,
+   "lazo": 0.0,
+   "esquina-NE": 0.0879,
+   "esquina-NW": 0.044,
+   "esquina-SE": 0.0275,
+   "esquina-SW": 0.1978
+  },
+  "2": {
+   "arco-E": 0.1412,
+   "arco-W": 0.2429,
+   "arco-N": 0.0,
+   "arco-S": 0.2034,
+   "recta-V": 0.5819,
+   "recta-H": 0.548,
+   "recta-S": 0.0395,
+   "recta-B": 0.0056,
+   "lazo": 0.0056,
+   "esquina-NE": 0.5311,
+   "esquina-NW": 0.0056,
+   "esquina-SE": 0.0056,
+   "esquina-SW": 0.339
+  },
+  "3": {
+   "arco-E": 0.3115,
+   "arco-W": 0.541,
+   "arco-N": 0.0109,
+   "arco-S": 0.1093,
+   "recta-V": 0.1967,
+   "recta-H": 0.224,
+   "recta-S": 0.0109,
+   "recta-B": 0.0055,
+   "lazo": 0.0,
+   "esquina-NE": 0.1475,
+   "esquina-NW": 0.2077,
+   "esquina-SE": 0.0055,
+   "esquina-SW": 0.5027
+  },
+  "4": {
+   "arco-E": 0.1768,
+   "arco-W": 0.0055,
+   "arco-N": 0.0221,
+   "arco-S": 0.0055,
+   "recta-V": 0.2762,
+   "recta-H": 0.2376,
+   "recta-S": 0.1436,
+   "recta-B": 0.0,
+   "lazo": 0.0055,
+   "esquina-NE": 0.5967,
+   "esquina-NW": 0.0939,
+   "esquina-SE": 0.0055,
+   "esquina-SW": 0.2099
+  },
+  "5": {
+   "arco-E": 0.3352,
+   "arco-W": 0.5769,
+   "arco-N": 0.0,
+   "arco-S": 0.033,
+   "recta-V": 0.1703,
+   "recta-H": 0.4066,
+   "recta-S": 0.0055,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.3187,
+   "esquina-NW": 0.0604,
+   "esquina-SE": 0.2747,
+   "esquina-SW": 0.2033
+  },
+  "6": {
+   "arco-E": 0.6906,
+   "arco-W": 0.3591,
+   "arco-N": 0.0552,
+   "arco-S": 0.2597,
+   "recta-V": 0.5912,
+   "recta-H": 0.1547,
+   "recta-S": 0.0,
+   "recta-B": 0.0055,
+   "lazo": 0.7624,
+   "esquina-NE": 0.4586,
+   "esquina-NW": 0.0055,
+   "esquina-SE": 0.0,
+   "esquina-SW": 0.0608
+  },
+  "7": {
+   "arco-E": 0.0335,
+   "arco-W": 0.162,
+   "arco-N": 0.0,
+   "arco-S": 0.0726,
+   "recta-V": 0.3464,
+   "recta-H": 0.4413,
+   "recta-S": 0.0391,
+   "recta-B": 0.0,
+   "lazo": 0.0,
+   "esquina-NE": 0.0056,
+   "esquina-NW": 0.1732,
+   "esquina-SE": 0.2067,
+   "esquina-SW": 0.5587
+  },
+  "8": {
+   "arco-E": 0.8333,
+   "arco-W": 0.5057,
+   "arco-N": 0.0,
+   "arco-S": 0.0517,
+   "recta-V": 0.2414,
+   "recta-H": 0.0345,
+   "recta-S": 0.1379,
+   "recta-B": 0.0517,
+   "lazo": 0.6034,
+   "esquina-NE": 0.0747,
+   "esquina-NW": 0.046,
+   "esquina-SE": 0.1322,
+   "esquina-SW": 0.0402
+  },
+  "9": {
+   "arco-E": 0.3389,
+   "arco-W": 0.4167,
+   "arco-N": 0.1167,
+   "arco-S": 0.1889,
+   "recta-V": 0.5333,
+   "recta-H": 0.1778,
+   "recta-S": 0.0056,
+   "recta-B": 0.0056,
+   "lazo": 0.5722,
+   "esquina-NE": 0.0833,
+   "esquina-NW": 0.1611,
+   "esquina-SE": 0.0278,
+   "esquina-SW": 0.4
+  }
+ },
+ "compositor_180": {
+  "por_semilla": [
+   0.8386,
+   0.8392,
+   0.8386
+  ],
+  "media": 0.8388
+ },
+ "curva_717": {
+  "36": 0.6899,
+  "180": 0.8317,
+  "1080": 0.9024
+ },
+ "kappa": {
+  "semilla": 1,
+  "engrosar": {
+   "c": 0.2808,
+   "kappa": 0.2511
+  },
+  "adelgazar": {
+   "c": 0.642,
+   "kappa": 0.6272
+  }
+ },
+ "grueso": {
+  "detectores": {
+   "arco-E": {
+    "vistos": {
+     "n_pos": 289,
+     "recall": 0.481,
+     "fp": 0.0464,
+     "f1": 0.5235
+    },
+    "no_vistos": {
+     "n_pos": 111,
+     "recall": 0.4234,
+     "fp": 0.0771,
+     "f1": 0.3165
+    }
+   },
+   "arco-W": {
+    "vistos": {
+     "n_pos": 304,
+     "recall": 0.4079,
+     "fp": 0.0422,
+     "f1": 0.476
+    },
+    "no_vistos": {
+     "n_pos": 96,
+     "recall": 0.3333,
+     "fp": 0.0551,
+     "f1": 0.2807
+    }
+   },
+   "arco-N": {
+    "vistos": {
+     "n_pos": 314,
+     "recall": 0.3822,
+     "fp": 0.0249,
+     "f1": 0.4908
+    },
+    "no_vistos": {
+     "n_pos": 86,
+     "recall": 0.186,
+     "fp": 0.0347,
+     "f1": 0.1939
+    }
+   },
+   "arco-S": {
+    "vistos": {
+     "n_pos": 315,
+     "recall": 0.4508,
+     "fp": 0.0308,
+     "f1": 0.541
+    },
+    "no_vistos": {
+     "n_pos": 85,
+     "recall": 0.2235,
+     "fp": 0.0529,
+     "f1": 0.1891
+    }
+   },
+   "recta-V": {
+    "vistos": {
+     "n_pos": 184,
+     "recall": 0.8641,
+     "fp": 0.1696,
+     "f1": 0.4915
+    },
+    "no_vistos": {
+     "n_pos": 216,
+     "recall": 0.7685,
+     "fp": 0.1962,
+     "f1": 0.6206
+    }
+   },
+   "recta-H": {
+    "vistos": {
+     "n_pos": 200,
+     "recall": 0.93,
+     "fp": 0.2084,
+     "f1": 0.4927
+    },
+    "no_vistos": {
+     "n_pos": 200,
+     "recall": 0.91,
+     "fp": 0.3218,
+     "f1": 0.5759
+    }
+   },
+   "recta-S": {
+    "vistos": {
+     "n_pos": 196,
+     "recall": 0.4898,
+     "fp": 0.0011,
+     "f1": 0.6508
+    },
+    "no_vistos": {
+     "n_pos": 204,
+     "recall": 0.1324,
+     "fp": 0.0039,
+     "f1": 0.2269
+    }
+   },
+   "recta-B": {
+    "vistos": {
+     "n_pos": 209,
+     "recall": 0.4163,
+     "fp": 0.0029,
+     "f1": 0.5724
+    },
+    "no_vistos": {
+     "n_pos": 191,
+     "recall": 0.1466,
+     "fp": 0.0049,
+     "f1": 0.2456
+    }
+   },
+   "lazo": {
+    "vistos": {
+     "n_pos": 400,
+     "recall": 0.7425,
+     "fp": 0.0146,
+     "f1": 0.8082
+    },
+    "no_vistos": {
+     "n_pos": 0,
+     "recall": 0.0,
+     "fp": 0.0156,
+     "f1": 0.0
+    }
+   },
+   "esquina-NE": {
+    "vistos": {
+     "n_pos": 169,
+     "recall": 0.6272,
+     "fp": 0.0456,
+     "f1": 0.5248
+    },
+    "no_vistos": {
+     "n_pos": 231,
+     "recall": 0.2814,
+     "fp": 0.079,
+     "f1": 0.2989
+    }
+   },
+   "esquina-NW": {
+    "vistos": {
+     "n_pos": 172,
+     "recall": 0.4884,
+     "fp": 0.0504,
+     "f1": 0.4211
+    },
+    "no_vistos": {
+     "n_pos": 228,
+     "recall": 0.2412,
+     "fp": 0.0893,
+     "f1": 0.2489
+    }
+   },
+   "esquina-SE": {
+    "vistos": {
+     "n_pos": 171,
+     "recall": 0.5614,
+     "fp": 0.038,
+     "f1": 0.5134
+    },
+    "no_vistos": {
+     "n_pos": 229,
+     "recall": 0.2227,
+     "fp": 0.0704,
+     "f1": 0.2512
+    }
+   },
+   "esquina-SW": {
+    "vistos": {
+     "n_pos": 189,
+     "recall": 0.5926,
+     "fp": 0.041,
+     "f1": 0.5385
+    },
+    "no_vistos": {
+     "n_pos": 211,
+     "recall": 0.2275,
+     "fp": 0.0582,
+     "f1": 0.2645
+    }
+   }
+  },
+  "con_los_dos_tramos": [
+   "arco-E",
+   "arco-W",
+   "arco-N",
+   "arco-S",
+   "recta-V",
+   "recta-H",
+   "recta-S",
+   "recta-B",
+   "esquina-NE",
+   "esquina-NW",
+   "esquina-SE",
+   "esquina-SW"
+  ],
+  "f1_vistos": 0.5197,
+  "recall_vistos": 0.5576,
+  "fp_vistos": 0.0584,
+  "f1_no_vistos": 0.3094,
+  "recall_no_vistos": 0.3414,
+  "fp_no_vistos": 0.087
+ },
+ "segundos": 196.0
+}

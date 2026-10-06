@@ -53,7 +53,7 @@ def causa_grosor() -> None:
     m = (s["principal"] != 13) & (s["secundaria"] < 0)
     gd, gs, y = G.grosor(d["imagenes"]), G.grosor(s["imagenes"][m]), d["etiquetas"]
     plt = _plt()
-    fig, ax = plt.subplots(figsize=(7.6, 3.8), dpi=100, facecolor=SUP); _ejes(ax)
+    fig, ax = plt.subplots(figsize=(7.6, 4.1), dpi=100, facecolor=SUP); _ejes(ax)
     bins = np.arange(0.5, 16.01, 0.5)
     for v, col, lab in ((gs, AZUL, f"features sintéticas con las que se entrenó (mediana {np.median(gs):.1f} px)"),
                         (gd[y != 1], NARANJA, f"dígitos de NIST salvo el 1 (mediana {np.median(gd[y != 1]):.1f} px)"),
@@ -62,7 +62,7 @@ def causa_grosor() -> None:
     ax.set_xlabel("grosor del trazo (px, en el lienzo de 32×32): tinta ÷ esqueleto", color=T2, fontsize=9)
     ax.set_ylabel("densidad", color=T2, fontsize=9); ax.set_yticks([])
     ax.legend(frameon=False, fontsize=8.5, loc="upper right", labelcolor=T1)
-    ax.set_title("La causa principal: los dígitos tienen el trazo ~3 veces más grueso que lo que vieron los detectores",
+    ax.set_title("La causa principal: el trazo de los dígitos es ~3 veces más grueso\nque el de las features con las que se entrenaron los detectores",
                  color=T1, fontsize=10.5, loc="left")
     fig.tight_layout(); fig.savefig(RES / "causa-grosor.png", facecolor=SUP); plt.close(fig)
     print("  causa-grosor.png")

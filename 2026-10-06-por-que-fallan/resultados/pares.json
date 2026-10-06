@@ -1,0 +1,398 @@
+{
+ "lineas-nada": {
+  "combo": "lineas-nada",
+  "errores": 82,
+  "pares": [
+   {
+    "par": "7→2",
+    "n": 14,
+    "frac_de_errores": 0.171,
+    "grosor": {
+     "mal": 6.573,
+     "bien": 6.316,
+     "los 2": 6.572
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "esquina-SW",
+      "empuje_extra": 1.267,
+      "encendido": {
+       "mal": 0.286,
+       "bien": 0.472,
+       "los 2": 0.184
+      }
+     },
+     {
+      "detector": "arco-W",
+      "empuje_extra": 1.012,
+      "encendido": {
+       "mal": 0.786,
+       "bien": 0.465,
+       "los 2": 0.638
+      }
+     },
+     {
+      "detector": "esquina-SE",
+      "empuje_extra": 0.646,
+      "encendido": {
+       "mal": 0.071,
+       "bien": 0.317,
+       "los 2": 0.0
+      }
+     },
+     {
+      "detector": "esquina-NW",
+      "empuje_extra": 0.532,
+      "encendido": {
+       "mal": 0.071,
+       "bien": 0.204,
+       "los 2": 0.02
+      }
+     }
+    ]
+   },
+   {
+    "par": "9→8",
+    "n": 6,
+    "frac_de_errores": 0.073,
+    "grosor": {
+     "mal": 4.267,
+     "bien": 4.857,
+     "los 8": 4.478
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "arco-W",
+      "empuje_extra": 1.562,
+      "encendido": {
+       "mal": 0.5,
+       "bien": 0.745,
+       "los 8": 0.603
+      }
+     },
+     {
+      "detector": "recta-V",
+      "empuje_extra": 1.254,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.497,
+       "los 8": 0.089
+      }
+     },
+     {
+      "detector": "esquina-SW",
+      "empuje_extra": 0.52,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.294,
+       "los 8": 0.041
+      }
+     },
+     {
+      "detector": "esquina-NW",
+      "empuje_extra": 0.358,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.124,
+       "los 8": 0.048
+      }
+     }
+    ]
+   },
+   {
+    "par": "3→2",
+    "n": 5,
+    "frac_de_errores": 0.061,
+    "grosor": {
+     "mal": 5.122,
+     "bien": 6.094,
+     "los 2": 6.572
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "arco-W",
+      "empuje_extra": 2.305,
+      "encendido": {
+       "mal": 0.6,
+       "bien": 0.523,
+       "los 2": 0.638
+      }
+     },
+     {
+      "detector": "arco-S",
+      "empuje_extra": 0.697,
+      "encendido": {
+       "mal": 0.2,
+       "bien": 0.68,
+       "los 2": 0.408
+      }
+     },
+     {
+      "detector": "esquina-NW",
+      "empuje_extra": 0.697,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.353,
+       "los 2": 0.02
+      }
+     },
+     {
+      "detector": "esquina-SW",
+      "empuje_extra": 0.143,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.34,
+       "los 2": 0.184
+      }
+     }
+    ]
+   },
+   {
+    "par": "1→8",
+    "n": 5,
+    "frac_de_errores": 0.061,
+    "grosor": {
+     "mal": 13.61,
+     "bien": 10.034,
+     "los 8": 4.478
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "recta-V",
+      "empuje_extra": 2.343,
+      "encendido": {
+       "mal": 1.0,
+       "bien": 1.0,
+       "los 8": 0.089
+      }
+     },
+     {
+      "detector": "lazo",
+      "empuje_extra": 1.887,
+      "encendido": {
+       "mal": 0.6,
+       "bien": 0.172,
+       "los 8": 0.911
+      }
+     },
+     {
+      "detector": "arco-E",
+      "empuje_extra": 1.324,
+      "encendido": {
+       "mal": 1.0,
+       "bien": 0.762,
+       "los 8": 0.829
+      }
+     },
+     {
+      "detector": "recta-S",
+      "empuje_extra": 0.31,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.285,
+       "los 8": 0.267
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "lineas-grueso-nada": {
+  "combo": "lineas-grueso-nada",
+  "errores": 238,
+  "pares": [
+   {
+    "par": "7→3",
+    "n": 18,
+    "frac_de_errores": 0.076,
+    "grosor": {
+     "mal": 6.304,
+     "bien": 6.298,
+     "los 3": 5.987
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "esquina-SW",
+      "empuje_extra": 0.889,
+      "encendido": {
+       "mal": 0.556,
+       "bien": 0.219,
+       "los 3": 0.255
+      }
+     },
+     {
+      "detector": "arco-S",
+      "empuje_extra": 0.444,
+      "encendido": {
+       "mal": 0.222,
+       "bien": 0.016,
+       "los 3": 0.376
+      }
+     },
+     {
+      "detector": "esquina-SE",
+      "empuje_extra": 0.38,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.117,
+       "los 3": 0.0
+      }
+     },
+     {
+      "detector": "recta-S",
+      "empuje_extra": 0.195,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.172,
+       "los 3": 0.05
+      }
+     }
+    ]
+   },
+   {
+    "par": "8→9",
+    "n": 15,
+    "frac_de_errores": 0.063,
+    "grosor": {
+     "mal": 4.486,
+     "bien": 4.428,
+     "los 9": 4.761
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "arco-E",
+      "empuje_extra": 1.603,
+      "encendido": {
+       "mal": 0.467,
+       "bien": 0.4,
+       "los 9": 0.542
+      }
+     },
+     {
+      "detector": "arco-W",
+      "empuje_extra": 0.747,
+      "encendido": {
+       "mal": 0.467,
+       "bien": 0.375,
+       "los 9": 0.45
+      }
+     },
+     {
+      "detector": "lazo",
+      "empuje_extra": 0.573,
+      "encendido": {
+       "mal": 0.533,
+       "bien": 0.35,
+       "los 9": 0.359
+      }
+     },
+     {
+      "detector": "recta-S",
+      "empuje_extra": 0.522,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.3,
+       "los 9": 0.053
+      }
+     }
+    ]
+   },
+   {
+    "par": "4→1",
+    "n": 15,
+    "frac_de_errores": 0.063,
+    "grosor": {
+     "mal": 6.974,
+     "bien": 6.34,
+     "los 1": 10.192
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "recta-V",
+      "empuje_extra": 4.637,
+      "encendido": {
+       "mal": 1.0,
+       "bien": 0.324,
+       "los 1": 1.0
+      }
+     },
+     {
+      "detector": "esquina-NE",
+      "empuje_extra": 1.042,
+      "encendido": {
+       "mal": 0.2,
+       "bien": 0.532,
+       "los 1": 0.014
+      }
+     },
+     {
+      "detector": "arco-E",
+      "empuje_extra": 0.243,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.165,
+       "los 1": 0.014
+      }
+     },
+     {
+      "detector": "arco-N",
+      "empuje_extra": 0.219,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.058,
+       "los 1": 0.0
+      }
+     }
+    ]
+   },
+   {
+    "par": "3→7",
+    "n": 14,
+    "frac_de_errores": 0.059,
+    "grosor": {
+     "mal": 6.183,
+     "bien": 5.987,
+     "los 7": 6.298
+    },
+    "detectores_que_empujan": [
+     {
+      "detector": "arco-W",
+      "empuje_extra": 1.521,
+      "encendido": {
+       "mal": 0.214,
+       "bien": 0.553,
+       "los 7": 0.156
+      }
+     },
+     {
+      "detector": "arco-S",
+      "empuje_extra": 0.903,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.376,
+       "los 7": 0.016
+      }
+     },
+     {
+      "detector": "esquina-SW",
+      "empuje_extra": 0.494,
+      "encendido": {
+       "mal": 0.0,
+       "bien": 0.255,
+       "los 7": 0.219
+      }
+     },
+     {
+      "detector": "recta-S",
+      "empuje_extra": 0.232,
+      "encendido": {
+       "mal": 0.286,
+       "bien": 0.05,
+       "los 7": 0.172
+      }
+     }
+    ]
+   }
+  ]
+ }
+}
