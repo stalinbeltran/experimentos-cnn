@@ -64,3 +64,13 @@
   sea el vocabulario.
 - **Contra qué se compara:** las 13 features largas de feat-ind32 (por id y huella).
 - **Restricciones de otros experimentos que NO aplican aquí:** la relación `CONTIENE` y los tramos de radio de feat-ind32.
+
+## Lo que cambió al correr (2026-10-06)
+
+- **La máquina:** 18 vCPU (Xeon E5-2686 v4, 0,0551 $/h) en vez de 8–24 de la primera versión: el revisor pidió 2 vCPU por
+  proceso (≥ 16). **15,8 min y 0,0145 $**; 9 de esos minutos, esperando a que la máquina arrancase.
+- **El criterio se enmendó antes de lanzar** (H2 y H3 en la misma vista; H3 ≥ 0,966), y después de ver H2 se escribió y midió
+  un diagnóstico (largo contra vocabulario, `nn/vocabulario.py`); los dos, fechados en `instrucciones/02-criterio.md`.
+- **Scripts nuevos:** `nn/firma.py` (en qué clases se enciende cada detector), `nn/vocabulario.py` (el diagnóstico),
+  `nn/huellas.py` (para que `feat-fallos` lea estos pesos por id y huella). `nn/evaluar.py --figura` redibuja sin recalcular.
+- **Tamaño:** 1,5 MB commiteados (8 `best.pt` de 174 KB + resúmenes y resultados).
