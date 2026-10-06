@@ -6,8 +6,8 @@ en `REGLAS.md`, criterio escrito antes de entrenar en `instrucciones/02-criterio
 `instrucciones/01-encargo.md`.
 
 **Vast, medido:** una máquina de 28 vCPU (Xeon E5-2680 v4, 0,0956 $/h), 26 procesos a la vez, **69 min y 0,1098 $**, y se
-destruyó sola (`resultados/vast/detectores/detectores.json`). La estimación era 20–30 min y 0,02–0,05 $: 26 procesos en 28 vCPU
-fueron unas 4 veces más lentos por núcleo que el dev. La evaluación, en el dev (~6 min).
+destruyó sola (`resultados/vast/detectores/detectores.json`). La estimación era 20–30 min y 0,02–0,05 $: cada proceso (1 hilo) tardó 46–50 s por época, contra 8,7–10 s de uno de 2 hilos en el dev: ~5 veces más lento por proceso y ~2,5 por hilo
+(de los `summary.json`). La evaluación, en el dev (~6 min).
 
 ## La respuesta corta: el borde NO quita el problema del grosor
 
@@ -18,7 +18,7 @@ dos líneas sueltas, y **deja de encenderse**.
 
 ![recall por grosor](resultados/grosor.png)
 
-| prueba sintética (2–4 px vistos → 6–12 px no vistos) | líneas (lo de antes) | contorno | borde con signo |
+| prueba sintética (2–4 px vistos → 6–12 px no vistos; media de los 12 detectores con positivos en los dos tramos: el lazo no tiene trazos de 6–12 px) | líneas (lo de antes) | contorno | borde con signo |
 |---|---:|---:|---:|
 | recall | 0,863 → **0,865** | 0,824 → **0,634** | 0,842 → **0,733** |
 | falsos positivos | 0,030 → **0,126** | 0,016 → 0,067 | 0,019 → 0,074 |
@@ -84,4 +84,4 @@ README de `feat-fallos`.
 | `resultados/referencia-lineas.json` | las líneas por esta misma evaluación, antes de entrenar |
 | `resultados/vast/detectores/` | el libro de la máquina alquilada |
 
-Reporte en el repo central: [`estudios-redes-neuronales` #34](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/reportes/estudios/2026/10-octubre/2026-10-06-features-bordes.md).
+Reporte en el repo central: [`estudios-redes-neuronales` #34](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/reportes/estudios/2026/10-octubre/2026-10-06-feat-bor-detectores-de-borde.md).

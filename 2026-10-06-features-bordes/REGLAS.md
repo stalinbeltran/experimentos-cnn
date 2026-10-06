@@ -126,8 +126,8 @@ procesos, 15,5 min, 0,0172 $)*. En el dev serían ~3,5 h (2 vCPU). **El freno**:
 ## Lo que cambió al correr (2026-10-06)
 
 - **La máquina:** 28 vCPU (Xeon E5-2680 v4, 62,8 GB, 0,0956 $/h). **69 min y 0,1098 $**, contra 20–30 min y 0,02–0,05 $
-  estimados: 26 procesos de 1 hilo en 28 vCPU fueron ~4× más lentos por núcleo que el dev. Para los siguientes
+  estimados: cada proceso (1 hilo) tardó 46–50 s por época, contra 8,7–10 s de uno de 2 hilos en el dev: ~5 veces más lento por proceso y ~2,5 por hilo. Para los siguientes
   (`feat-fallos`, `feat-cortas`) se pidió 2 vCPU por proceso.
-- **El tamaño:** lo commiteado de este experimento ocupa **4,96 MB** (4.959.893 B, medido con `git ls-files | xargs du -cb`
-  antes del README), dentro del tope de ≈5 MB; los `best.pt` son 26 × 174 KB.
+- **El tamaño:** lo commiteado de este experimento ocupa **4,97 MB** (4.966.236 B con el README, medido con `git ls-files |
+  xargs du -cb`; 4.959.893 B antes de él), dentro del tope de ≈5 MB pero con sólo ~34 KB de margen; los `best.pt` son 26 × 174 KB.
 - **El pendiente que pidió el dueño** (curvas contra rectas) se anotó en el README y se mide en `feat-fallos`.

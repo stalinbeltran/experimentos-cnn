@@ -30,8 +30,9 @@ y 60° casi no tiene flecha). **Sí**: los detectores de curva se encienden en e
 en el **1,5 %** de las curvas cortas. El que más se confunde es `corta-V`, que se enciende en el 6,7 % de las `curva-E` y el
 5,6 % de las `curva-W` (un arco que se abre hacia un lado es casi vertical). Esperaba lo contrario (0,10–0,25): me equivoqué.
 
-⚠ Esto es con trazo **fino** (2–4 px, el del entrenamiento). Con trazo grueso la respuesta cambia: dibujando a mano una recta
-de 8 px, `curva-N` y `curva-W` **sí** se encienden. Es el mismo problema de grosor que estudia `feat-fallos`.
+⚠ Esto es con trazo **fino** (2–4 px, el del entrenamiento). Con trazo grueso la respuesta cambia (`nn/prueba_rectas.py`):
+una recta horizontal de 8 px enciende `curva-N`, y una vertical de 8 × 20 px, `curva-W`. Es el mismo problema de grosor que
+estudia `feat-fallos`.
 
 ## 2. Para predecir dígitos, solas pierden; junto a las largas, suman
 
@@ -46,7 +47,7 @@ de 8 px, `curva-N` y `curva-W` **sí** se encienden. Es el mismo problema de gro
 
 ## 3. Por qué pierden solas: no es el largo, es el VOCABULARIO
 
-Escrito antes de medirlo (criterio, 02:47 UTC) y medido con `nn/vocabulario.py` (compositor de 180, crudo):
+Escrito antes de medirlo (criterio, commit `a72db38`, 02:46 UTC) y medido con `nn/vocabulario.py` (compositor de 180, crudo):
 
 | banco | mapas | compositor |
 |---|---:|---:|
@@ -61,8 +62,9 @@ Como piezas de trazo, **las cortas valen más que las largas** (+0,037). Lo que 
 construir un lazo **juntando** arcos (eso sería un «y», y un lineal no lo hace). Con el lazo y las esquinas prestados de las
 largas, las cortas quedan a 0,004 de las 13 largas.
 
-Y una cosa que se descartó por el camino: la recta corta horizontal **sí** se enciende sobre rectas largas, aunque con menos
-fuerza (~0,95 con 10 px, ~0,8 con 20 px, contra un umbral de 0,85 elegido en el entrenamiento). Por eso en `nn/firma.py` sale
+Y una cosa que se descartó por el camino (`nn/prueba_rectas.py`, rectas dibujadas sin ruido de 2–4 px de grosor): la recta
+corta horizontal **sí** se enciende sobre rectas largas, aunque con menos fuerza (0,92–1,00 con 10 px, 0,73–0,84 con 20 px,
+contra un umbral de 0,85 elegido en el entrenamiento). Por eso en `nn/firma.py` sale
 «encendida» sólo en el 4 % de los dígitos; pero el compositor lee el mapa continuo, no el umbral, así que eso no explica la
 pérdida.
 

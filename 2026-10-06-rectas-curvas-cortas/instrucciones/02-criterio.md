@@ -1,4 +1,4 @@
-# Criterio — escrito el 2026-10-06 (antes de 01:46 UTC; commit `444fdc1`), ANTES de entrenar
+# Criterio — escrito el 2026-10-06, ANTES de entrenar (commit `444fdc1`, 01:46:52 UTC)
 
 No existe ningún detector de este experimento. Lo único mirado: la rejilla de muestras (`resultados/muestras-features.png`),
 que enseña lo esperable: una curva corta y gruesa (radio 5, 4 px) se parece mucho a una recta corta.
@@ -45,7 +45,7 @@ H2 y H3, tal como estaban, cambiaban **dos** cosas a la vez (el vocabulario y la
   si no supera a lo que las largas solas ya dan con dos vistas, las cortas no aportan.
 - H1 queda como está, pero la prueba que de verdad dice algo es **H1-cv**.
 
-## Resultado (02:42 UTC) y un diagnóstico escrito ANTES de medirlo (02:47 UTC)
+## Resultado (02:42 UTC) y un diagnóstico escrito ANTES de medirlo (commit `a72db38`, 02:46:01 UTC)
 
 H1 ✅ (8/8) · **H1-cv ✅** (curva sobre rectas cortas 0,012; recta sobre curvas 0,015: se distinguen, contra lo que esperaba)
 · **H2 pierde en las tres vistas** (crudo 0,880 contra 0,949; 3 px 0,837 contra 0,876; las dos 0,915 contra 0,956) · **H3 ❌**
@@ -57,8 +57,9 @@ por poco (0,9606 contra 0,9663; aun así, la mejor combinación medida hasta hoy
 2. **el VOCABULARIO** — a las 8 cortas les faltan las 5 features que no son trazos sueltos: el **lazo** (0, 6, 8, 9) y las
    cuatro **esquinas** (4, 5, 7). Un compositor lineal no puede construir un lazo sumando arcos en posiciones fijas.
 
-Ya medido (`nn/firma.py` y una prueba con rectas dibujadas a mano): la recta corta **sí** se enciende sobre rectas largas
-(su puntuación baja de ~0,95 a ~0,8 pasados los 16 px), así que el largo, si cuenta, no es por no encenderse.
+Ya medido (`nn/firma.py` y una prueba con rectas dibujadas a mano, convertida después en `nn/prueba_rectas.py`): la recta
+corta **sí** se enciende sobre rectas largas (su puntuación baja de 0,92–1,00 con 10 px a 0,73–0,84 con 20 px), así que el
+largo, si cuenta, no es por no encenderse.
 
 **La prueba (`nn/vocabulario.py`, compositor de 180, crudo):** las 8 largas que son trazos (4 arcos + 4 rectas) contra las 8
 cortas, y las 8 cortas **más** el lazo y las 4 esquinas de las largas contra las 13 largas.

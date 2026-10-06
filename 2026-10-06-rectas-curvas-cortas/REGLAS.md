@@ -72,5 +72,6 @@
 - **El criterio se enmendó antes de lanzar** (H2 y H3 en la misma vista; H3 ≥ 0,966), y después de ver H2 se escribió y midió
   un diagnóstico (largo contra vocabulario, `nn/vocabulario.py`); los dos, fechados en `instrucciones/02-criterio.md`.
 - **Scripts nuevos:** `nn/firma.py` (en qué clases se enciende cada detector), `nn/vocabulario.py` (el diagnóstico),
-  `nn/huellas.py` (para que `feat-fallos` lea estos pesos por id y huella). `nn/evaluar.py --figura` redibuja sin recalcular.
-- **Tamaño:** 1,5 MB commiteados (8 `best.pt` de 174 KB + resúmenes y resultados).
+  `nn/huellas.py` (para que `feat-fallos` lea estos pesos por id y huella) y `nn/prueba_rectas.py` (la prueba «a mano» del
+  README, para que sea reproducible). `nn/evaluar.py --figura` redibuja sin recalcular.
+- **Tamaño:** ≈1,6 MB commiteados (1.580.651 B antes de `nn/prueba_rectas.py`; 8 `best.pt` de 174 KB + resúmenes y resultados).

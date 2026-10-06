@@ -85,7 +85,8 @@ corrida 5 de feat-ind (0,972 a 8×8) a 32×32—.
 
 *Enmienda antes de lanzar (02:10 UTC), a raíz del revisor:* S2e se mide con `nn/evaluar.py lineas+lineas-grueso nada` (dos
 **bancos** juntos), que el código no hacía; y la máquina pasa a ≥ 26 vCPU para 13 procesos (en feat-bor, 26 procesos en 28
-vCPU fueron 4 veces más lentos por núcleo que el dev). Ningún umbral cambia.
+vCPU fueron ~5 veces más lentos **por proceso** que el dev —~2,5 por hilo; precisado el 2026-10-06 a las 04:39—). Ningún
+umbral cambia.
 
 ## Iteración 4 (02:19 UTC, commit `29fa92d`, ANTES de ver el diagnóstico) — más allá del grosor: inclinación y posición
 
