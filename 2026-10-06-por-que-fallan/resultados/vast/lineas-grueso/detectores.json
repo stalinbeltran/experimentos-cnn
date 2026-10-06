@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-06T02:14:52+00:00"
+  }
+ ],
+ "id": "detectores",
+ "etiqueta": "expc-ffal-detectores",
+ "experimento": "feat-fallos",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-06-por-que-fallan/nn/vast.json",
+ "oferta": 54111204,
+ "precio_hora": 0.09556,
+ "maquina": {
+  "vcpu": 28.0,
+  "cpu": "Xeon E5-2680 v4",
+  "ram_gb": 62.8,
+  "ghz": 3.3,
+  "gpu": "RTX 3070",
+  "ubicacion": "Texas, US",
+  "host": 145461,
+  "fiabilidad": 0.9464
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.4
+}
