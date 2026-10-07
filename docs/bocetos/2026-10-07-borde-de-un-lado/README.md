@@ -213,14 +213,45 @@ sí**: sólo los compositores dentro de una columna.
   desplazar. Creo que **no** es un segundo pre-proceso en el sentido de la regla «un solo pre-proceso, igual para
   todos los dígitos», pero la regla es suya y lo tiene que decir él.
 
-## ⏳ PENDIENTE (escrito 2026-10-07; puntos 1 y 2 cerrados esa tarde, § «Cuarta parte»)
+## Quinta parte: la CURVA de desplazamiento (medido 2026-10-07, 0 $, en el dev)
+
+`prueba_desplazamiento.py` → `resultados-desplazamiento.txt` / `.json`. Pedido del dueño: entrenar el compositor con varios
+desplazamientos de su entrada, **cada uno por separado** y **añadiéndolos gradualmente**, y ver que resiste un desplazamiento
+ligero y pierde capacidad cuando el dígito sale de su campo de visión. Kernels fijos, regresión logística, 3823 de
+entrenamiento; prueba: los 1617 de `val` desplazados *d* px, media de las 8 direcciones. 8 vistas (la tinta, en el txt):
+
+| entrenado con | d=0 | d=1 | d=2 | d=3 | d=4 | d=6 | d=8 | d=12 | d=16 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| sin desplazar | 0,974 | 0,958 | 0,863 | 0,588 | 0,336 | 0,154 | 0,104 | 0,114 | 0,118 |
+| sólo 2 px | 0,986 | 0,984 | 0,974 | 0,927 | 0,719 | 0,310 | 0,165 | 0,110 | 0,105 |
+| sólo 8 px | 0,147 | 0,155 | 0,180 | 0,229 | 0,314 | 0,636 | **0,877** | 0,261 | 0,118 |
+| sólo 12 px | 0,101 | 0,106 | 0,112 | 0,120 | 0,115 | 0,134 | 0,224 | **0,846** | 0,216 |
+| sólo 16 px | 0,189 | 0,193 | 0,158 | 0,122 | 0,092 | 0,095 | 0,123 | 0,225 | **0,773** |
+| 0–2 px | **0,989** | 0,984 | 0,973 | 0,919 | 0,704 | 0,298 | 0,163 | 0,109 | 0,106 |
+| 0–4 px | 0,980 | 0,980 | 0,976 | 0,965 | 0,935 | 0,605 | 0,240 | 0,107 | 0,106 |
+| 0–8 px | 0,933 | 0,939 | 0,938 | 0,931 | 0,915 | 0,868 | 0,778 | 0,175 | 0,102 |
+
+1. **Gradual: resistente hasta donde se entrenó**, y cuanto más rango, más cuesta en el centro (0,989 → 0,933 de 0–2 a 0–8).
+2. **Por separado: aprende ESE desplazamiento**, no a resistirlo (sólo 8 px: 0,877 en d = 8, 0,147 en el centro).
+3. **El campo de visión pesa mucho menos que la posición no vista.** Un dígito UCI mide ~20 px de ancho con ~6 px de margen
+   (medido en `val`): con d = 16 media cifra está fuera, y aun así «sólo 16 px» acierta 0,773. El compositor sin desplazar
+   está en el azar ya en d = 8, con el dígito casi entero dentro.
+
+⚠ Se cortó una vez: el OOM killer lo mató en «0–6» (tres trabajos a la vez en un dev de 3,9 GB) y systemd lo relanzó desde
+cero. Se paró y se terminó por planes (`--planes`), con los mapas en float32. Los números de los planes repetidos coinciden
+al bit (es determinista).
+
+**Con detectores ENTRENADOS** (`feat-1lado`, 180 de entrenamiento) la curva tiene la misma forma; ver su README.
+
+## ⏳ PENDIENTE (escrito 2026-10-07; puntos 1–3 cerrados ese día: el 3 es `feat-1lado`)
 
 Estado: **nada lanzado en Vast, nada pagado**. Todo es boceto con kernels fijos y regresión logística.
 
 1. ✅ **Qué es «grueso»**: los gruesos reales de UCI para los dígitos, y el sintético `…-grueso-32px-r20261006` para
    los detectores. El +2 px por dilatación se deja de usar.
 2. ✅ **Compositor**: 8 vistas juntas, posición tal cual, entrenado con la entrada desplazada 1–2 px. Sin max5.
-3. **Montar el experimento de verdad** (con su `experimento.json`, `REGLAS.md` y criterio escrito ANTES de entrenar):
+3. ✅ **Hecho: `feat-1lado`** (0,197 $; resultado en su README y en `estudios-redes-neuronales` #37). Lo que se planeó:
+   **montar el experimento de verdad** (con su `experimento.json`, `REGLAS.md` y criterio escrito ANTES de entrenar):
    detectores de features entrenados por vista (mismos pesos para todas), etiquetas definidas por vista, el compositor
    del punto 2, y comparar contra 0,949 (tinta, `feat-ind32`) y 0,865 (`feat-bor signo`). Estimado ~0,1 $ / ~1 h en
    Vast (por comparación con `feat-bor`, no medido). **Pedir permiso antes de alquilar.**
