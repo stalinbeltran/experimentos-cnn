@@ -86,3 +86,32 @@ probablemente haya que redefinirlo **por canal** («curva vista desde la izquier
 3. Medidas: recall en la prueba gruesa (6–12 px no vistos) y el compositor en los dígitos, contra 0,949 (tinta) y
    0,865 (`signo`).
 4. Coste: del orden de `feat-bor` (1 máquina Vast, ~1 h, ~0,1 $) — estimado por comparación, no medido.
+
+## Tercera parte: prueba rápida de vistas y «compositor de compositores» (medido 2026-10-07, 0 $, 1 min en el dev)
+
+`prueba_vistas.py` → `resultados-vistas.txt` / `.json`. Detectores = los kernels FIJOS (no los de features);
+compositor = regresión logística sobre cada vista reducida a 8×8. Mide la información que queda en cada vista, no lo
+que haría la red de verdad. Prueba: los 1617 dígitos de `val`, tal cual, engrosados artificialmente (+1/+2 px de
+dilatación, estímulo de prueba) y el cuartil con más tinta de cada clase («gruesos reales»).
+
+Lo que sale (entrenado con 3823 dígitos de otros escritores; con 180, el mismo patrón un escalón más abajo):
+
+| | normal | +1 px | +2 px | gruesos reales |
+|---|---:|---:|---:|---:|
+| tinta | 0,951 | **0,913** | **0,740** | 0,959 |
+| 1 vista (rango de las 8) | 0,889–0,910 | 0,71–0,79 | 0,29–0,43 | 0,89–0,93 |
+| 2 vistas → ↓ juntas | 0,958 | 0,868 | 0,425 | 0,964 |
+| 8 vistas juntas | **0,973** | 0,892 | 0,416 | **0,971** |
+| 8 vistas, compositor de compositores | 0,964 | 0,907 | 0,480 | 0,966 |
+
+1. **Una vista sola pierde**: 4–6 puntos por debajo de la tinta con trazo normal.
+2. **Dos vistas ya igualan a la tinta** y ocho la superan (0,973 contra 0,951): juntas tienen más información útil.
+3. **El compositor de compositores no mejora al que ve todo junto** con trazo normal (0,964 contra 0,973), pero
+   **resiste algo mejor el engrosamiento** (+1 px: 0,907 contra 0,892; +2 px: 0,480 contra 0,416). Con pocos datos
+   (180) empata con el de todo junto en normal.
+4. ⚠ **Contra la hipótesis: con engrosamiento ARTIFICIAL, los bordes caen MUCHO más que la tinta** (+2 px: 0,42
+   contra 0,74). Los gruesos REALES no muestran esa caída (las vistas empatan o ganan a la tinta). Lo más probable
+   *(no comprobado)*: al dilatar, el contorno se mueve 2 px hacia fuera —media celda del 8×8— y el compositor lineal
+   es posicional; la tinta media cambia menos. O sea que **la invariancia al grosor de cada vista no llega al
+   compositor si éste compara posiciones finas**, que es el problema 1 de antes visto desde el otro lado. Pide
+   pooling (máximo 3×3) o un compositor menos posicional antes de cualquier experimento de pago.

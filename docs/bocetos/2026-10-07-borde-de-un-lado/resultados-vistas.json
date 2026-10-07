@@ -1,0 +1,226 @@
+{
+ "cuando": "2026-10-07T01:46:43Z",
+ "n_gruesos_reales": 415,
+ "acierto": {
+  "3823 de otros escritores": {
+   "tinta": {
+    "normal": 0.9505,
+    "+1px": 0.9128,
+    "+2px": 0.7396,
+    "gruesos-reales": 0.959
+   },
+   "1 vista →": {
+    "normal": 0.8961,
+    "+1px": 0.7409,
+    "+2px": 0.2931,
+    "gruesos-reales": 0.8964
+   },
+   "1 vista ↘": {
+    "normal": 0.9097,
+    "+1px": 0.7526,
+    "+2px": 0.3457,
+    "gruesos-reales": 0.9325
+   },
+   "1 vista ↓": {
+    "normal": 0.9066,
+    "+1px": 0.7848,
+    "+2px": 0.4341,
+    "gruesos-reales": 0.9229
+   },
+   "1 vista ↙": {
+    "normal": 0.8955,
+    "+1px": 0.7359,
+    "+2px": 0.3729,
+    "gruesos-reales": 0.8916
+   },
+   "1 vista ←": {
+    "normal": 0.8887,
+    "+1px": 0.7075,
+    "+2px": 0.308,
+    "gruesos-reales": 0.8916
+   },
+   "1 vista ↖": {
+    "normal": 0.9041,
+    "+1px": 0.744,
+    "+2px": 0.3067,
+    "gruesos-reales": 0.9229
+   },
+   "1 vista ↑": {
+    "normal": 0.9054,
+    "+1px": 0.765,
+    "+2px": 0.3741,
+    "gruesos-reales": 0.9012
+   },
+   "1 vista ↗": {
+    "normal": 0.9103,
+    "+1px": 0.7675,
+    "+2px": 0.3346,
+    "gruesos-reales": 0.9084
+   },
+   "2 vistas → ↓ (juntas)": {
+    "normal": 0.9579,
+    "+1px": 0.8677,
+    "+2px": 0.4249,
+    "gruesos-reales": 0.9639
+   },
+   "4 vistas → ↓ ← ↑ (juntas)": {
+    "normal": 0.9654,
+    "+1px": 0.8912,
+    "+2px": 0.4181,
+    "gruesos-reales": 0.9639
+   },
+   "8 vistas (juntas)": {
+    "normal": 0.9734,
+    "+1px": 0.8924,
+    "+2px": 0.4162,
+    "gruesos-reales": 0.9711
+   },
+   "2 vistas → ↓ (compositor de compositores)": {
+    "normal": 0.9468,
+    "+1px": 0.8429,
+    "+2px": 0.397,
+    "gruesos-reales": 0.959
+   },
+   "2 vistas → ↓ (media de compositores)": {
+    "normal": 0.94,
+    "+1px": 0.8367,
+    "+2px": 0.4131,
+    "gruesos-reales": 0.959
+   },
+   "4 vistas → ↓ ← ↑ (compositor de compositores)": {
+    "normal": 0.9586,
+    "+1px": 0.9011,
+    "+2px": 0.4477,
+    "gruesos-reales": 0.9566
+   },
+   "4 vistas → ↓ ← ↑ (media de compositores)": {
+    "normal": 0.9493,
+    "+1px": 0.8936,
+    "+2px": 0.4675,
+    "gruesos-reales": 0.9518
+   },
+   "8 vistas (compositor de compositores)": {
+    "normal": 0.9635,
+    "+1px": 0.9072,
+    "+2px": 0.4799,
+    "gruesos-reales": 0.9663
+   },
+   "8 vistas (media de compositores)": {
+    "normal": 0.9542,
+    "+1px": 0.8893,
+    "+2px": 0.4768,
+    "gruesos-reales": 0.9614
+   }
+  },
+  "180 de train": {
+   "tinta": {
+    "normal": 0.9072,
+    "+1px": 0.8701,
+    "+2px": 0.6877,
+    "gruesos-reales": 0.9157
+   },
+   "1 vista →": {
+    "normal": 0.8237,
+    "+1px": 0.585,
+    "+2px": 0.2146,
+    "gruesos-reales": 0.8313
+   },
+   "1 vista ↘": {
+    "normal": 0.8318,
+    "+1px": 0.6444,
+    "+2px": 0.2771,
+    "gruesos-reales": 0.8361
+   },
+   "1 vista ↓": {
+    "normal": 0.8145,
+    "+1px": 0.6518,
+    "+2px": 0.3247,
+    "gruesos-reales": 0.8361
+   },
+   "1 vista ↙": {
+    "normal": 0.799,
+    "+1px": 0.6518,
+    "+2px": 0.3383,
+    "gruesos-reales": 0.8072
+   },
+   "1 vista ←": {
+    "normal": 0.7959,
+    "+1px": 0.6351,
+    "+2px": 0.3123,
+    "gruesos-reales": 0.8313
+   },
+   "1 vista ↖": {
+    "normal": 0.8306,
+    "+1px": 0.6648,
+    "+2px": 0.2993,
+    "gruesos-reales": 0.853
+   },
+   "1 vista ↑": {
+    "normal": 0.8547,
+    "+1px": 0.6945,
+    "+2px": 0.3216,
+    "gruesos-reales": 0.8506
+   },
+   "1 vista ↗": {
+    "normal": 0.8491,
+    "+1px": 0.6679,
+    "+2px": 0.274,
+    "gruesos-reales": 0.8554
+   },
+   "2 vistas → ↓ (juntas)": {
+    "normal": 0.9097,
+    "+1px": 0.7737,
+    "+2px": 0.3692,
+    "gruesos-reales": 0.9205
+   },
+   "4 vistas → ↓ ← ↑ (juntas)": {
+    "normal": 0.9227,
+    "+1px": 0.8299,
+    "+2px": 0.4168,
+    "gruesos-reales": 0.9398
+   },
+   "8 vistas (juntas)": {
+    "normal": 0.9301,
+    "+1px": 0.8275,
+    "+2px": 0.3871,
+    "gruesos-reales": 0.9373
+   },
+   "2 vistas → ↓ (compositor de compositores)": {
+    "normal": 0.9184,
+    "+1px": 0.7495,
+    "+2px": 0.329,
+    "gruesos-reales": 0.9398
+   },
+   "2 vistas → ↓ (media de compositores)": {
+    "normal": 0.8986,
+    "+1px": 0.7545,
+    "+2px": 0.3451,
+    "gruesos-reales": 0.9253
+   },
+   "4 vistas → ↓ ← ↑ (compositor de compositores)": {
+    "normal": 0.9227,
+    "+1px": 0.8534,
+    "+2px": 0.4249,
+    "gruesos-reales": 0.9422
+   },
+   "4 vistas → ↓ ← ↑ (media de compositores)": {
+    "normal": 0.9171,
+    "+1px": 0.8584,
+    "+2px": 0.4879,
+    "gruesos-reales": 0.9301
+   },
+   "8 vistas (compositor de compositores)": {
+    "normal": 0.9258,
+    "+1px": 0.8423,
+    "+2px": 0.4063,
+    "gruesos-reales": 0.9349
+   },
+   "8 vistas (media de compositores)": {
+    "normal": 0.9184,
+    "+1px": 0.8627,
+    "+2px": 0.4997,
+    "gruesos-reales": 0.9349
+   }
+  }
+ }
+}
