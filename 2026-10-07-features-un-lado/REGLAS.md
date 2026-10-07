@@ -58,7 +58,7 @@ del repo); si hace falta, se mira al componer.
    `nn/probar_vast.sh` y `VAST_SECO=1 nn/vast.sh <b>`.
 2. **Referencia** sin entrenar nada: `nn/evaluar.py --solo-lineas` y `nn/entrenar_local.py --componer --bancos lineas`.
 3. **Entrenar en Vast**, con permiso del dueño y una máquina por brazo: `nn/vast.sh control` (13 procesos × 2 hilos, tope
-   3 h) y `nn/vast.sh compartido` (13 × 4 hilos, tope 8 h). Traen los pesos y **destruyen la máquina**. Receta abajo.
+   3 h) y `nn/vast.sh compartido` (13 × 2 hilos, tope 3 h; ver «Lo que cambió al correr»). Traen los pesos y **destruyen la máquina**. Receta abajo.
 4. **Componer** en el dev, como unidad: `nn/entrenar_local.py --componer --bancos control,compartido`.
 5. **Evaluar** en el dev: `nn/evaluar.py` (lee `componer.json` para H5–H7).
 6. README con lo que salió, reporte en el central, commit y push.
@@ -81,7 +81,7 @@ desplazada 0–2 px en 8 direcciones (el elegido en el boceto). La curva: «sól
 | | medido en el dev (2026-10-07, 2 hilos, CPU compartida con otra prueba) | Vast, estimado |
 |---|---|---|
 | control | 12,8 s/época | 13 × 2 hilos, ≥26 vCPU a ~0,10–0,15 $/h, ~1–2 h → **~0,1–0,3 $** (tope 3 h) |
-| compartido | 54–58 s/época + ~66 s de evaluación cada 5; **1,09 GB** de pico por proceso | 13 × 4 hilos, ≥52 vCPU a ~0,18–0,35 $/h, **≈3–6 h** → **~0,6–2,1 $** (tope 8 h) |
+| compartido | 54–58 s/época + ~66 s de evaluación cada 5; **1,09 GB** de pico por proceso | 13 × 4 hilos, ≥52 vCPU a ~0,18–0,35 $/h, **≈3–6 h** → **~0,6–2,1 $** (tope 8 h) — **estimación previa, superada: ver «Lo que cambió al correr»** |
 
 La conversión dev → Vast sale de `feat-bor`. ⚠ **Corregida por el revisor antes de alquilar**: la primera versión de este
 fichero decía «un hilo de Vast ~2,5 veces más lento que uno del dev», que sale de dividir por 2 el «~5× por proceso» y
@@ -125,3 +125,16 @@ las unidades de Vast son de systemd (padre PID 1) y destruyen solas al terminar 
 - **Contra qué se compara:** las líneas de `feat-ind32` (por id y huella), con este mismo código.
 - **Restricciones de otros experimentos que NO aplican aquí:** las medidas de grupos de `feat-agr` (κ, zonas, K = 30);
   el pre-proceso `bordes.py` de `feat-bor`; las transformaciones artificiales de C6 de `feat-ind32`.
+
+## Lo que cambió al correr (2026-10-07)
+
+- **El control, medido en Vast:** 28 vCPU (Xeon E5-2660 v4, 31 GB, Vietnam, 0,0948 $/h), 13 procesos × 2 hilos, **8,1 s
+  por época**, ~13 min por detector, **16,3 min y 0,0257 $** de alquiler, destruida sola (`resultados/vast/control/control.json`).
+  Contra la estimación de ~1–2 h y ~0,1–0,3 $: **en Vast fue más RÁPIDO que en el dev** (8,1 contra 12,8 s/época), porque la
+  medida del dev se hizo con la CPU compartida con otras dos pruebas y esta máquina tenía núcleos de sobra (26 hilos en 28
+  vCPU). La corrección «hilo con hilo, Vast ~4 veces más lento» que el revisor sacó de `feat-bor` no valió para esta máquina.
+- **El compartido, recalculado con ese factor (~0,63):** 54–58 s/época del dev → ~35 s en Vast con 2 hilos → ~1 h con la
+  evaluación, ~0,1 $. Por eso pasa de 13 × 4 hilos (≥52 vCPU, ≤0,35 $/h, tope 8 h) a **13 × 2 hilos (≥26 vCPU, ≤0,2 $/h,
+  tope 3 h)**: la misma máquina que el control, y dentro de lo que el dueño aprobó (~0,1 $ / ~1 h). Peor caso: 3 h × 0,2 = 0,6 $.
+- **El compositor de referencia** (las líneas de `feat-ind32` con el compositor de aquí) da **0,9491**, el 0,949 de
+  `feat-ind32`, con sus tres semillas idénticas: el compositor copiado mide igual.

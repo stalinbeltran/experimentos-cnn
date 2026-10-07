@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-07T16:53:36+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-07T16:53:38+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-07T16:54:30+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-07T16:54:41+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-07T16:55:52+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-07T16:56:01+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-07T17:09:55+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-07T17:09:55+00:00"
   }
  ],
  "id": "control",
@@ -23,5 +51,29 @@
   "fiabilidad": 0.9963
  },
  "horas_max": 3.0,
- "tope_precio": 0.2
+ "tope_precio": 0.2,
+ "iid": 54677117,
+ "intentos_clave": 1,
+ "payload_mb": 5.73,
+ "sha256": "c6a696976f08f1d0",
+ "segundos_max": 10061,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/arco-E",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/arco-W",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/arco-N",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/arco-S",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/recta-V",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/recta-H",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/recta-S",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/recta-B",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/lazo",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/esquina-NE",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/esquina-NW",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/esquina-SE",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-control/esquina-SW"
+ ],
+ "apartado": [],
+ "minutos": 16.3,
+ "coste_usd": 0.0257
 }

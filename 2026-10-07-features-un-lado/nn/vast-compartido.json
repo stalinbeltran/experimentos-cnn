@@ -1,13 +1,13 @@
 {
  "experimento": "feat-1lado",
- "descripcion": "Los 13 detectores del brazo 'compartido' A LA VEZ en UNA maquina: 13 procesos de 4 hilo(s). La receta es la de feat-bor / feat-ind32 C3 (REGLAS.md); la evaluacion y el compositor, en el dev.",
+ "descripcion": "Los 13 detectores del brazo 'compartido' A LA VEZ en UNA maquina: 13 procesos de 2 hilo(s). La receta es la de feat-bor / feat-ind32 C3 (REGLAS.md); la evaluacion y el compositor, en el dev.",
  "maquina": {
-  "cpus": 52,
-  "max_cpus": 72,
-  "min_ram": 32,
+  "cpus": 26,
+  "max_cpus": 48,
+  "min_ram": 24,
   "cpu": "",
   "disk_gb": 24,
-  "max_price": 0.35
+  "max_price": 0.2
  },
  "envia": [
   {
@@ -53,7 +53,7 @@
  "trabajos": [
   {
    "id": "compartido",
-   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 13 detectores 'compartido' a la vez, 4 hilo(s) cada uno\"\nif [ -z \"$TRABAJO_VCPU\" ]; then echo \"✗ no me pasaron TRABAJO_VCPU: no sé cuántas vCPU efectivas hay (nproc cuenta las del HOST). No entreno.\"; exit 3; fi\nif [ \"${TRABAJO_VCPU%.*}\" -lt 52 ]; then echo \"✗ TRABAJO_VCPU $TRABAJO_VCPU < 52 (13 procesos × hilos): el tope de horas cortaría. No entreno.\"; exit 3; fi\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos-compartido/$f\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo compartido --feature $f --hilos 4 > nn/pesos-compartido/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 13 detectores 'compartido' a la vez, 2 hilo(s) cada uno\"\nif [ -z \"$TRABAJO_VCPU\" ]; then echo \"✗ no me pasaron TRABAJO_VCPU: no sé cuántas vCPU efectivas hay (nproc cuenta las del HOST). No entreno.\"; exit 3; fi\nif [ \"${TRABAJO_VCPU%.*}\" -lt 26 ]; then echo \"✗ TRABAJO_VCPU $TRABAJO_VCPU < 26 (13 procesos × hilos): el tope de horas cortaría. No entreno.\"; exit 3; fi\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos-compartido/$f\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo compartido --feature $f --hilos 2 > nn/pesos-compartido/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
    "trae": [
     "pesos-compartido/arco-E",
     "pesos-compartido/arco-W",
@@ -75,7 +75,7 @@
   "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..`.",
   "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas de feat-ind32 y feat-bor).",
   "Memoria medida en el dev el 2026-10-07 con el brazo compartido: 1,09 GB de pico de RSS por proceso (/usr/bin/time -v, 5 épocas, evaluación a trozos). 13 procesos ≈ 14 GB.",
-  "Tiempo: 54–58 s/época con 2 hilos en el dev (2026-10-07, CPU compartida; 4,5 veces el control: 8 pasadas por imagen) más ~66 s de evaluación cada 5 épocas. Hilo con hilo, Vast fue ~4 veces más lento que el dev en feat-bor (46–50 s contra 11–13 s): estimado ≈3–6 h con 4 hilos (revisor, 2026-10-07). Tope 8 h.",
+  "Tiempo: el control MIDIÓ en Vast 8,1 s/época con 2 hilos (Xeon E5-2660 v4, 28 vCPU, 2026-10-07), contra 12,8 s en el dev con la CPU compartida: factor ~0,63. El compartido midió 54–58 s/época en el dev → ~35 s en Vast con 2 hilos: ~1 h con la evaluación. Por eso pasó de 13 × 4 hilos (≥52 vCPU, tope 8 h) a 13 × 2 (≥26 vCPU, tope 3 h).",
   "La comprobación de vCPU usa TRABAJO_VCPU (las efectivas, las pasa el lanzador), no nproc: dentro del contenedor nproc cuenta las del HOST (medido en el lanzador el 2026-10-01). A raíz del revisor, 2026-10-07."
  ]
 }

@@ -17,7 +17,7 @@ caso() {   # caso <modo> <texto que TIENE que salir en la orden>...
 }
 
 caso control "/vast-control.json" "resultados/vast/control" "--horas-max 3" "--prefijo expc-f1l-"
-caso compartido "/vast-compartido.json" "resultados/vast/compartido" "--horas-max 8" "--prefijo expc-f1l-"
+caso compartido "/vast-compartido.json" "resultados/vast/compartido" "--horas-max 3" "--prefijo expc-f1l-"
 
 if "$AQUI/vast.sh" lo-que-sea >/dev/null 2>&1; then echo "  [FALLA] un modo desconocido NO se negó"; fallos=$((fallos + 1))
 else echo "  [   ok] un modo desconocido se niega"; fi

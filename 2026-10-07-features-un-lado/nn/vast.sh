@@ -2,7 +2,7 @@
 # `feat-1lado` en Vast, con el modo `trabajo` del lanzador. UN MODO = UN BRAZO = UNA MÁQUINA:
 #
 #   nn/vast.sh control       los 13 detectores del brazo control (vast-control.json): 13 procesos × 2 hilos, tope 3 h
-#   nn/vast.sh compartido    los 13 del brazo compartido (vast-compartido.json): 13 procesos × 4 hilos, tope 8 h
+#   nn/vast.sh compartido    los 13 del brazo compartido (vast-compartido.json): 13 procesos × 2 hilos, tope 3 h
 #                            Cada uno alquila, entrena, trae los pesos (nn/pesos-<brazo>/) y DESTRUYE la máquina.
 #   nn/vast.sh --estado      lee los libros del DISCO
 #   nn/vast.sh apagar        para las unidades y destruye TODAS las máquinas expc-f1l-*
@@ -39,7 +39,7 @@ case "$MODO" in
     control)
         DESC="$AQUI/vast-control.json"; LIBRO="$EXP/resultados/vast/control"; HORAS=3 ;;
     compartido)
-        DESC="$AQUI/vast-compartido.json"; LIBRO="$EXP/resultados/vast/compartido"; HORAS=8 ;;
+        DESC="$AQUI/vast-compartido.json"; LIBRO="$EXP/resultados/vast/compartido"; HORAS=3 ;;
     --estado)
         hay=0
         for b in control compartido; do
