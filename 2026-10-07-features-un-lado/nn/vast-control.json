@@ -1,0 +1,81 @@
+{
+ "experimento": "feat-1lado",
+ "descripcion": "Los 13 detectores del brazo 'control' A LA VEZ en UNA maquina: 13 procesos de 2 hilo(s). La receta es la de feat-bor / feat-ind32 C3 (REGLAS.md); la evaluacion y el compositor, en el dev.",
+ "maquina": {
+  "cpus": 26,
+  "max_cpus": 48,
+  "min_ram": 24,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.2
+ },
+ "envia": [
+  {
+   "origen": "../..",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos",
+    "pesos-c3",
+    "pesos-c4",
+    "pesos-cae",
+    "pesos-cae3",
+    "pesos-cae5",
+    "pesos-dig",
+    "curvas-cnn",
+    "detectores-32px",
+    "detectores-8px",
+    "init-detectores-8px.pt",
+    "pesos-contorno",
+    "pesos-signo",
+    "pesos-control",
+    "pesos-compartido",
+    "mapas"
+   ]
+  },
+  {
+   "origen": "$EXPCNN_DATOS/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "control",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 13 detectores 'control' a la vez, 2 hilo(s) cada uno\"\nif [ -z \"$TRABAJO_VCPU\" ]; then echo \"✗ no me pasaron TRABAJO_VCPU: no sé cuántas vCPU efectivas hay (nproc cuenta las del HOST). No entreno.\"; exit 3; fi\nif [ \"${TRABAJO_VCPU%.*}\" -lt 26 ]; then echo \"✗ TRABAJO_VCPU $TRABAJO_VCPU < 26 (13 procesos × hilos): el tope de horas cortaría. No entreno.\"; exit 3; fi\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos-control/$f\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo control --feature $f --hilos 2 > nn/pesos-control/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos-control/arco-E",
+    "pesos-control/arco-W",
+    "pesos-control/arco-N",
+    "pesos-control/arco-S",
+    "pesos-control/recta-V",
+    "pesos-control/recta-H",
+    "pesos-control/recta-S",
+    "pesos-control/recta-B",
+    "pesos-control/lazo",
+    "pesos-control/esquina-NE",
+    "pesos-control/esquina-NW",
+    "pesos-control/esquina-SE",
+    "pesos-control/esquina-SW"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..`.",
+  "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas de feat-ind32 y feat-bor).",
+  "Memoria medida en el dev el 2026-10-07 con el brazo compartido: 1,09 GB de pico de RSS por proceso (/usr/bin/time -v, 5 épocas, evaluación a trozos). 13 procesos ≈ 14 GB.",
+  "Tiempo: 12,8 s/época con 2 hilos en el dev (2026-10-07, CPU compartida con otra prueba); feat-bor midió que 1 hilo en Vast va ~5 veces más lento que 2 en el dev. Estimado ~1–1,5 h. Tope 3 h.",
+  "La comprobación de vCPU usa TRABAJO_VCPU (las efectivas, las pasa el lanzador), no nproc: dentro del contenedor nproc cuenta las del HOST (medido en el lanzador el 2026-10-01). A raíz del revisor, 2026-10-07."
+ ]
+}

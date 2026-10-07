@@ -1,0 +1,81 @@
+{
+ "experimento": "feat-1lado",
+ "descripcion": "Los 13 detectores del brazo 'compartido' A LA VEZ en UNA maquina: 13 procesos de 4 hilo(s). La receta es la de feat-bor / feat-ind32 C3 (REGLAS.md); la evaluacion y el compositor, en el dev.",
+ "maquina": {
+  "cpus": 52,
+  "max_cpus": 72,
+  "min_ram": 32,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.35
+ },
+ "envia": [
+  {
+   "origen": "../..",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos",
+    "pesos-c3",
+    "pesos-c4",
+    "pesos-cae",
+    "pesos-cae3",
+    "pesos-cae5",
+    "pesos-dig",
+    "curvas-cnn",
+    "detectores-32px",
+    "detectores-8px",
+    "init-detectores-8px.pt",
+    "pesos-contorno",
+    "pesos-signo",
+    "pesos-control",
+    "pesos-compartido",
+    "mapas"
+   ]
+  },
+  {
+   "origen": "$EXPCNN_DATOS/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005",
+   "destino": "foveal-vision-data/experimentos-cnn/feat-ind32-sinteticas-32px-r20261005"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3 pillow==12.3.0\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__, 'hilos', torch.get_num_threads())\"",
+ "trabajos": [
+  {
+   "id": "compartido",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 13 detectores 'compartido' a la vez, 4 hilo(s) cada uno\"\nif [ -z \"$TRABAJO_VCPU\" ]; then echo \"✗ no me pasaron TRABAJO_VCPU: no sé cuántas vCPU efectivas hay (nproc cuenta las del HOST). No entreno.\"; exit 3; fi\nif [ \"${TRABAJO_VCPU%.*}\" -lt 52 ]; then echo \"✗ TRABAJO_VCPU $TRABAJO_VCPU < 52 (13 procesos × hilos): el tope de horas cortaría. No entreno.\"; exit 3; fi\nFAMS=\"arco-E arco-W arco-N arco-S recta-V recta-H recta-S recta-B lazo esquina-NE esquina-NW esquina-SE esquina-SW\"\ni=0\nfor f in $FAMS; do\n  mkdir -p nn/pesos-compartido/$f\n  ../.venv/bin/python -u nn/entrenar_local.py --brazo compartido --feature $f --hilos 4 > nn/pesos-compartido/$f/log.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=0\nwhile [ $j -lt $i ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"detectores con fallo: $fallos\"\nexit $fallos",
+   "trae": [
+    "pesos-compartido/arco-E",
+    "pesos-compartido/arco-W",
+    "pesos-compartido/arco-N",
+    "pesos-compartido/arco-S",
+    "pesos-compartido/recta-V",
+    "pesos-compartido/recta-H",
+    "pesos-compartido/recta-S",
+    "pesos-compartido/recta-B",
+    "pesos-compartido/lazo",
+    "pesos-compartido/esquina-NE",
+    "pesos-compartido/esquina-NW",
+    "pesos-compartido/esquina-SE",
+    "pesos-compartido/esquina-SW"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..`.",
+  "torch 2.14.1, numpy 2.5.3, pillow 12.3.0: las del venv del dev (las mismas de feat-ind32 y feat-bor).",
+  "Memoria medida en el dev el 2026-10-07 con el brazo compartido: 1,09 GB de pico de RSS por proceso (/usr/bin/time -v, 5 épocas, evaluación a trozos). 13 procesos ≈ 14 GB.",
+  "Tiempo: 54–58 s/época con 2 hilos en el dev (2026-10-07, CPU compartida; 4,5 veces el control: 8 pasadas por imagen) más ~66 s de evaluación cada 5 épocas. Hilo con hilo, Vast fue ~4 veces más lento que el dev en feat-bor (46–50 s contra 11–13 s): estimado ≈3–6 h con 4 hilos (revisor, 2026-10-07). Tope 8 h.",
+  "La comprobación de vCPU usa TRABAJO_VCPU (las efectivas, las pasa el lanzador), no nproc: dentro del contenedor nproc cuenta las del HOST (medido en el lanzador el 2026-10-01). A raíz del revisor, 2026-10-07."
+ ]
+}

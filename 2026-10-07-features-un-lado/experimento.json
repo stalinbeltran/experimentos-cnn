@@ -1,0 +1,15 @@
+{
+  "id": "feat-1lado",
+  "titulo": "Detectores de features sobre 8 bordes de UN SOLO LADO (capa fija), mirando los 8 canales a la vez (control) o UNO cada vez con pesos compartidos (compartido); y un compositor de digitos entrenado con la entrada desplazada",
+  "pregunta": "Si el unico pre-proceso son 8 bordes de un solo lado y cada detector mira UN canal cada vez (mismos pesos para los 8, y maximo), ¿deja el grosor del trazo de confundir a los detectores —lo que feat-bor no consiguio mirando los canales juntos—, sin perder lo que el compositor de digitos acertaba? Y el compositor entrenado con su entrada desplazada, ¿resiste un desplazamiento ligero y pierde capacidad solo cuando el digito sale de su campo de vision?",
+  "creado": "2026-10-07",
+  "estado": "abierto",
+  "dataset": "feat-ind32-sinteticas-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, escrito antes de entrenar; la referencia de las lineas (sin entrenar nada) en resultados/referencia-lineas.json y resultados/componer.json",
+  "linaje": "el boceto docs/bocetos/2026-10-07-borde-de-un-lado (la idea, los kernels y las pruebas rapidas a 0 $ que eligieron el compositor) y feat-bor (de ahi se COPIAN el vocabulario, los datos, la red, la receta, el lanzador y §B). Compara con feat-ind32 (las lineas, leidas por id y huella). No importa codigo de ninguno: se copia. Ver REGLAS.md § Que NO hereda",
+  "gasta_por_que": "Dos maquinas de Vast, una por brazo, con nn/vast.sh control|compartido: control 13 procesos x 2 hilos (~26 vCPU, tope 3 h), compartido 13 x 4 hilos (~52 vCPU, tope 8 h); se destruyen solas. Estimado ~0,7-2,4 $ y 3-6 h (NO medido en Vast: ver REGLAS.md; peor caso con los topes ~3,4 $). Primero el control, y con su tiempo real se recalcula el compartido. El compositor y la curva, en el dev (horas, 0 $). El freno de Telegram es /use exp-vast (apagar expc-f1l-)."
+}

@@ -27,7 +27,7 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
 Línea de trabajo abierta con el dueño: bordes de un lado como único pre-proceso, una «vista» por dirección, y qué
 compositor usar. Todo lo hecho (figuras, pruebas rápidas a 0 $, resultados) y la lista de lo que falta están en
 `docs/bocetos/2026-10-07-borde-de-un-lado/README.md` § «PENDIENTE». Nada lanzado ni pagado. Grosor y compositor
-ya decididos (§ «Cuarta parte»); falta montar el experimento, con una pregunta abierta para el dueño.
+ya decididos (§ «Cuarta parte»). El experimento está montado: `feat-1lado` (su README dice en qué paso va).
 
 ## ⚠ Regla del dueño (2026-10-07): UN SOLO pre-proceso, y el mismo para TODOS los dígitos
 
@@ -38,7 +38,7 @@ ya decididos (§ «Cuarta parte»); falta montar el experimento, con una pregunt
    pruebas y dígitos. Nada de transformar sólo los dígitos al evaluar (que es lo que hizo `por-que-fallan` con el
    esqueleto y la erosión).
 2. El candidato vigente es el de **bordes de un solo lado** (`docs/bocetos/2026-10-07-borde-de-un-lado/`). El código
-   viejo (`2026-10-06-features-bordes/nn/bordes.py`, esqueleto, erosión) se queda y **no se usa** salvo que el dueño
+   viejo (`nn/bordes.py` de `feat-bor`, esqueleto, erosión) se queda y **no se usa** salvo que el dueño
    lo elija.
 3. Un experimento declara en su `REGLAS.md` qué pre-proceso usa (o «ninguno»). Es una regla de esta línea de trabajo;
    no hereda la Regla 0: un experimento que quiera saltársela lo pregunta.
