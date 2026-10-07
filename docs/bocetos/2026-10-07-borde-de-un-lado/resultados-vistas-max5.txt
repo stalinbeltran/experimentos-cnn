@@ -1,0 +1,42 @@
+
+== entrenado con 3823 de otros escritores · acierto en val (1617) ==
+brazo                                                         normal            +1px            +2px  gruesos-reales
+tinta                                                          0.907           0.783           0.440           0.887
+1 vista →                                                      0.900           0.746           0.302           0.889
+1 vista ↘                                                      0.928           0.782           0.358           0.945
+1 vista ↓                                                      0.921           0.793           0.475           0.911
+1 vista ↙                                                      0.911           0.785           0.455           0.916
+1 vista ←                                                      0.916           0.750           0.330           0.923
+1 vista ↖                                                      0.924           0.768           0.363           0.935
+1 vista ↑                                                      0.903           0.765           0.387           0.916
+1 vista ↗                                                      0.914           0.795           0.405           0.906
+2 vistas → ↓ (juntas)                                          0.963           0.894           0.510           0.959
+4 vistas → ↓ ← ↑ (juntas)                                      0.971           0.909           0.435           0.974
+8 vistas (juntas)                                              0.977           0.919           0.448           0.983
+2 vistas → ↓ (compositor de compositores)                      0.947           0.849           0.452           0.937
+2 vistas → ↓ (media de compositores)                           0.941           0.833           0.438           0.937
+4 vistas → ↓ ← ↑ (compositor de compositores)                  0.952           0.886           0.475           0.945
+4 vistas → ↓ ← ↑ (media de compositores)                       0.951           0.864           0.457           0.949
+8 vistas (compositor de compositores)                          0.963           0.906           0.480           0.964
+8 vistas (media de compositores)                               0.955           0.873           0.479           0.954
+
+== entrenado con 180 de train · acierto en val (1617) ==
+brazo                                                         normal            +1px            +2px  gruesos-reales
+tinta                                                          0.870           0.798           0.545           0.855
+1 vista →                                                      0.860           0.673           0.305           0.843
+1 vista ↘                                                      0.878           0.724           0.370           0.870
+1 vista ↓                                                      0.884           0.740           0.411           0.889
+1 vista ↙                                                      0.879           0.709           0.417           0.884
+1 vista ←                                                      0.884           0.696           0.365           0.892
+1 vista ↖                                                      0.903           0.715           0.327           0.911
+1 vista ↑                                                      0.907           0.712           0.344           0.923
+1 vista ↗                                                      0.892           0.754           0.359           0.894
+2 vistas → ↓ (juntas)                                          0.929           0.823           0.486           0.935
+4 vistas → ↓ ← ↑ (juntas)                                      0.944           0.857           0.486           0.942
+8 vistas (juntas)                                              0.951           0.863           0.441           0.947
+2 vistas → ↓ (compositor de compositores)                      0.928           0.802           0.419           0.940
+2 vistas → ↓ (media de compositores)                           0.919           0.792           0.418           0.925
+4 vistas → ↓ ← ↑ (compositor de compositores)                  0.938           0.853           0.447           0.932
+4 vistas → ↓ ← ↑ (media de compositores)                       0.934           0.858           0.494           0.935
+8 vistas (compositor de compositores)                          0.948           0.854           0.445           0.940
+8 vistas (media de compositores)                               0.942           0.872           0.526           0.940

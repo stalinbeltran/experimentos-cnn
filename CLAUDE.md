@@ -22,6 +22,12 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
+## ⏳ PENDIENTE (2026-10-07): detectores de borde de un solo lado — empieza aquí
+
+Línea de trabajo abierta con el dueño: bordes de un lado como único pre-proceso, una «vista» por dirección, y qué
+compositor usar. Todo lo hecho (figuras, pruebas rápidas a 0 $, resultados) y la lista de lo que falta están en
+`docs/bocetos/2026-10-07-borde-de-un-lado/README.md` § «PENDIENTE para la próxima sesión». Nada lanzado ni pagado.
+
 ## ⚠ Regla del dueño (2026-10-07): UN SOLO pre-proceso, y el mismo para TODOS los dígitos
 
 > Primera versión (2026-10-07): «no se aplica pre-proceso a ningún dígito antes del detector de features».

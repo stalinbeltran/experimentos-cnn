@@ -11,12 +11,12 @@ Datos: uci-optdigits-orig-32px-r20261005. Dos regímenes de entrenamiento: 3823 
 ENGROSADOS artificialmente (dilatación de 1 y 2 px: un estímulo de prueba, no un pre-proceso de la cadena), y el cuartil
 de dígitos con más tinta de cada clase (gruesos de verdad).
 
-    /tmp/vizenv/bin/python prueba_vistas.py --datos <dir con datos.npz>     # escribe resultados-vistas.json
+    /tmp/vizenv/bin/python prueba_vistas.py --datos <dir> [--pool media|max5|max-bloque]   # resultados-vistas[-pool].json
 """
 import argparse, json, time
 from pathlib import Path
 import numpy as np
-from scipy.ndimage import binary_dilation
+from scipy.ndimage import binary_dilation, maximum_filter
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix
@@ -26,7 +26,14 @@ AQUI = Path(__file__).resolve().parent
 NOMBRE = {g: f for f, g in DIRS}
 
 
-def pool8(m):                                   # 32×32 → 8×8 (media por bloques 4×4)
+POOL = "media"
+
+
+def pool8(m):                                   # 32×32 → 8×8
+    if POOL == "max5":                          # tolera desplazamientos de ±2 px antes de reducir
+        m = maximum_filter(m, size=5)
+    if POOL == "max-bloque":                    # el máximo de cada bloque 4×4, no la media
+        return m.reshape(8, 4, 8, 4).max((1, 3)).ravel()
     return m.reshape(8, 4, 8, 4).mean((1, 3)).ravel()
 
 
@@ -54,7 +61,9 @@ def peores_pares(y, p, k=3):
 
 
 def main():
-    a = argparse.ArgumentParser(); a.add_argument("--datos", required=True); a = a.parse_args()
+    a = argparse.ArgumentParser(); a.add_argument("--datos", required=True)
+    a.add_argument("--pool", choices=("media", "max5", "max-bloque"), default="media"); a = a.parse_args()
+    global POOL; POOL = a.pool
     d = np.load(Path(a.datos) / "datos.npz"); X, y, part = d["imagenes"], d["etiquetas"], d["particion"]
     te = part == "val"
     tinta = X.reshape(len(X), -1).sum(1)
@@ -89,8 +98,8 @@ def main():
         print(f"\n== entrenado con {reg} · acierto en val (1617) ==")
         print(f"{'brazo':52s}" + "".join(f"{n:>16s}" for n in pruebas))
         for b, v in r.items(): print(f"{b:52s}" + "".join(f"{v[n]:>16.3f}" for n in pruebas))
-    (AQUI / "resultados-vistas.json").write_text(json.dumps(
-        {"cuando": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "n_gruesos_reales": int(gruesos.sum()), "acierto": res},
+    (AQUI / f"resultados-vistas{'' if POOL == 'media' else '-' + POOL}.json").write_text(json.dumps(
+        {"pool": POOL, "cuando": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "n_gruesos_reales": int(gruesos.sum()), "acierto": res},
         ensure_ascii=False, indent=1))
 
 

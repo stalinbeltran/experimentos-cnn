@@ -115,3 +115,40 @@ Lo que sale (entrenado con 3823 dígitos de otros escritores; con 180, el mismo 
    es posicional; la tinta media cambia menos. O sea que **la invariancia al grosor de cada vista no llega al
    compositor si éste compara posiciones finas**, que es el problema 1 de antes visto desde el otro lado. Pide
    pooling (máximo 3×3) o un compositor menos posicional antes de cualquier experimento de pago.
+
+### Y con pooling tolerante al desplazamiento (medido 2026-10-07, mismo guion, `--pool max5` y `--pool max-bloque`)
+
+| entrenado con 3823 | normal | +1 px | +2 px | gruesos reales |
+|---|---:|---:|---:|---:|
+| tinta · media (lo de arriba) | 0,951 | 0,913 | 0,740 | 0,959 |
+| tinta · max5 | 0,907 | 0,783 | 0,440 | 0,887 |
+| 8 vistas juntas · media | 0,973 | 0,892 | 0,416 | 0,971 |
+| 8 vistas juntas · max5 | **0,977** | **0,919** | 0,448 | **0,983** |
+| 8 vistas juntas · max-bloque | 0,967 | 0,900 | 0,503 | 0,978 |
+| 8 vistas compositor de compositores · max5 | 0,963 | 0,906 | 0,480 | 0,964 |
+
+**La explicación de arriba («es el desplazamiento») NO queda confirmada.** El pooling mejora un poco las vistas
+(lo mejor medido: 8 vistas + max5, 0,977 normal y 0,983 en gruesos reales), pero **no rescata el +2 px** (0,45–0,50),
+y a la tinta la hunde. Otra explicación, también sin comprobar: una dilatación de 5×5 cierra huecos y funde trazos
+vecinos —cambia la forma, no sólo el grosor—, y la tinta media la tolera porque sólo se oscurece. Los gruesos
+**reales** no muestran nada de eso: ahí las vistas ganan. O sea que el +2 px artificial puede no ser un buen modelo
+de un trazo grueso real; hace falta una prueba de grosor mejor antes de concluir nada.
+
+## ⏳ PENDIENTE para la próxima sesión (escrito 2026-10-07)
+
+Estado: **nada lanzado, nada pagado**. Todo es boceto con kernels fijos y regresión logística.
+
+1. **Decidir qué es «grueso»** para medir: el +2 px por dilatación cierra huecos y quizá no representa trazos
+   gruesos reales. Opciones: el cuartil más grueso de UCI (ya está, y ahí las vistas ganan), o el dataset
+   sintético `feat-bor-sinteticas-grueso-32px-r20261006` (2–12 px, generado con grosor de verdad).
+2. **Elegir el compositor**: con kernels fijos gana «8 vistas juntas + max5» (0,977 / 0,983). El compositor de
+   compositores no gana con trazo normal y sólo resiste un poco mejor el engrosamiento artificial; con 180 de
+   entrenamiento empata.
+3. **Montar el experimento de verdad** (con su `experimento.json`, `REGLAS.md` y criterio escrito ANTES de entrenar):
+   detectores de features entrenados por vista (mismos pesos para todas), etiquetas definidas por vista, y comparar
+   contra 0,949 (tinta, `feat-ind32`) y 0,865 (`feat-bor signo`). Estimado ~0,1 $ / ~1 h en Vast (por comparación
+   con `feat-bor`, no medido). **Pedir permiso antes de alquilar.**
+4. Regla vigente: un solo pre-proceso, el mismo para todos los dígitos (`CLAUDE.md` de la raíz).
+5. Para repetir esta prueba: el dataset de dígitos sale del almacén
+   (`git show origin/main:experimentos-cnn/uci-optdigits-orig-32px-r20261005/datos.npz` en `foveal-vision-data`),
+   y el entorno es `uv venv /tmp/vizenv && uv pip install --python /tmp/vizenv numpy scipy matplotlib scikit-learn`.
