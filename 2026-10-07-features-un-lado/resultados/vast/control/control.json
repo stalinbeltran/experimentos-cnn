@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-07T16:53:36+00:00"
+  }
+ ],
+ "id": "control",
+ "etiqueta": "expc-f1l-control",
+ "experimento": "feat-1lado",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-07-features-un-lado/nn/vast-control.json",
+ "oferta": 54585358,
+ "precio_hora": 0.09481,
+ "maquina": {
+  "vcpu": 28.0,
+  "cpu": "Xeon E5-2660 v4",
+  "ram_gb": 31.2,
+  "ghz": 2.0,
+  "gpu": "RTX 3070",
+  "ubicacion": "Vietnam, VN",
+  "host": 147777,
+  "fiabilidad": 0.9963
+ },
+ "horas_max": 3.0,
+ "tope_precio": 0.2
+}
