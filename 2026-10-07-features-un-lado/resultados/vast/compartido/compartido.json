@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-07T17:42:37+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-07T17:42:39+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-07T17:43:35+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-07T17:43:46+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-07T17:44:57+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-07T17:45:06+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-07T19:31:12+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-07T19:31:12+00:00"
   }
  ],
  "id": "compartido",
@@ -23,5 +51,29 @@
   "fiabilidad": 0.9963
  },
  "horas_max": 3.0,
- "tope_precio": 0.2
+ "tope_precio": 0.2,
+ "iid": 54684803,
+ "intentos_clave": 1,
+ "payload_mb": 5.73,
+ "sha256": "f8269a3864575637",
+ "segundos_max": 10056,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/arco-E",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/arco-W",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/arco-N",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/arco-S",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/recta-V",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/recta-H",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/recta-S",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/recta-B",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/lazo",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/esquina-NE",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/esquina-NW",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/esquina-SE",
+  "experimentos-cnn/2026-10-07-features-un-lado/nn/pesos-compartido/esquina-SW"
+ ],
+ "apartado": [],
+ "minutos": 108.6,
+ "coste_usd": 0.1716
 }
