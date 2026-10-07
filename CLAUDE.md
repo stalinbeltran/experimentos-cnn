@@ -26,7 +26,8 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
 
 Línea de trabajo abierta con el dueño: bordes de un lado como único pre-proceso, una «vista» por dirección, y qué
 compositor usar. Todo lo hecho (figuras, pruebas rápidas a 0 $, resultados) y la lista de lo que falta están en
-`docs/bocetos/2026-10-07-borde-de-un-lado/README.md` § «PENDIENTE para la próxima sesión». Nada lanzado ni pagado.
+`docs/bocetos/2026-10-07-borde-de-un-lado/README.md` § «PENDIENTE». Nada lanzado ni pagado. Grosor y compositor
+ya decididos (§ «Cuarta parte»); falta montar el experimento, con una pregunta abierta para el dueño.
 
 ## ⚠ Regla del dueño (2026-10-07): UN SOLO pre-proceso, y el mismo para TODOS los dígitos
 

@@ -134,21 +134,102 @@ vecinos —cambia la forma, no sólo el grosor—, y la tinta media la tolera po
 **reales** no muestran nada de eso: ahí las vistas ganan. O sea que el +2 px artificial puede no ser un buen modelo
 de un trazo grueso real; hace falta una prueba de grosor mejor antes de concluir nada.
 
-## ⏳ PENDIENTE para la próxima sesión (escrito 2026-10-07)
+## Cuarta parte: qué compositor aguanta grosor y desplazamiento (medido 2026-10-07 por la tarde, 0 $, ~50 min en el dev)
 
-Estado: **nada lanzado, nada pagado**. Todo es boceto con kernels fijos y regresión logística.
+`prueba_compositores.py` → `resultados-compositores.txt` / `.json`. Mismos kernels fijos y misma regresión logística
+que la tercera parte; lo único que cambia es **cómo ve la posición el compositor**. Pedido del dueño: un compositor
+**sin máximo** (la posición tal cual) y otro entrenado con **su misma entrada desplazada 1, 2, 3 y 4**, para que sea
+«ligeramente resistente al desplazamiento». Se midió en las dos unidades posibles:
 
-1. **Decidir qué es «grueso»** para medir: el +2 px por dilatación cierra huecos y quizá no representa trazos
-   gruesos reales. Opciones: el cuartil más grueso de UCI (ya está, y ahí las vistas ganan), o el dataset
-   sintético `feat-bor-sinteticas-grueso-32px-r20261006` (2–12 px, generado con grosor de verdad).
-2. **Elegir el compositor**: con kernels fijos gana «8 vistas juntas + max5» (0,977 / 0,983). El compositor de
-   compositores no gana con trazo normal y sólo resiste un poco mejor el engrosamiento artificial; con 180 de
-   entrenamiento empata.
+- `desp≤k`: la entrada **8×8** desplazada 1..k **celdas** (una celda = **4 px** de la imagen);
+- `px≤k`: la **imagen** desplazada 1..k **píxeles** antes de detectar (por la equivariancia de la convolución, es
+  desplazar los mapas de las vistas antes de reducir: el detector no cambia, sólo lo que aprende el compositor).
+
+En los dos casos, 8 direcciones por desplazamiento (1 + 8k copias) y prueba **sin** desplazar. Corrió como unidad
+`borde-compositores` (`Result=success`, `NRestarts=0`). Se añadió una prueba más: `val` **desplazado 2 px** en una
+dirección al azar por dígito, que es lo que un compositor resistente debería aguantar.
+
+### A · dígitos UCI, entrenado con 3823 (los 1617 de `val`; «gruesos reales» = el cuartil con más tinta, 415)
+
+| compositor | normal | +1 px | +2 px | gruesos reales | desplazado 2 px |
+|---|---:|---:|---:|---:|---:|
+| tinta · pos | 0,950 | 0,913 | **0,741** | 0,957 | 0,806 |
+| tinta · pos + px≤1 | 0,959 | 0,921 | **0,798** | 0,964 | 0,858 |
+| 8 vistas · pos (el de ayer) | 0,974 | 0,891 | 0,413 | 0,971 | 0,873 |
+| 8 vistas · max5 (el candidato de ayer) | 0,978 | 0,918 | 0,430 | 0,983 | 0,903 |
+| 8 vistas · pos + desp≤1 celda | 0,968 | 0,865 | 0,525 | 0,966 | 0,962 |
+| 8 vistas · pos + desp≤2 celdas | 0,887 | 0,755 | 0,399 | 0,896 | 0,897 |
+| 8 vistas · pos + desp≤4 celdas | 0,802 | 0,641 | 0,325 | 0,829 | 0,812 |
+| **8 vistas · pos + px≤2** | **0,989** | 0,931 | 0,587 | 0,986 | 0,969 |
+| 8 vistas · pos + px≤3 | 0,983 | 0,925 | 0,588 | 0,986 | **0,978** |
+| 8 vistas · max5 + px≤2 | **0,989** | 0,943 | 0,595 | 0,988 | 0,975 |
+| 8 vistas · max5 + px≤3 | 0,985 | **0,951** | 0,576 | **0,990** | 0,976 |
+
+Con **180** de entrenamiento, el mismo orden y más ganancia: 8 vistas · pos 0,930 → **0,970** con px≤2 (normal) y
+0,759 → 0,928 desplazado 2 px; max5 + px≤2, 0,969.
+
+1. **La idea del dueño funciona, en píxeles.** Entrenar el compositor con su entrada desplazada 1–2 px es lo mejor
+   medido en todo el boceto: **0,989** con trazo normal (ayer, 0,974 sin desplazar y 0,978 con max5) y 0,986 en los
+   gruesos reales, contra 0,950/0,957 de la tinta. Y aguanta un dígito desplazado 2 px: 0,873 → 0,969.
+2. **En celdas del 8×8, no: es demasiado grueso.** Una celda ya son 4 px. Con `desp≤1` gana resistencia (0,962 desplazado)
+   pero pierde en normal (0,968), y desde 2 celdas se hunde (0,887 → 0,802). Para un compositor lineal, desplazar
+   media cara del dígito es borrar la posición, que es justo lo que distingue un 6 de un 9.
+3. **El máximo 5×5 ya sobra.** Sobre `px≤2` aporta poco (+1 px: 0,943 contra 0,931; normal, igual). El compositor más
+   simple —**posición tal cual + aumentación de 1–2 px**— hace casi todo el trabajo.
+4. **El +2 px artificial sigue sin rescatarse** (0,64 como mucho, con 2 vistas; la tinta, 0,80). Que la aumentación mejore el
+   desplazamiento y no esto es otra señal de que dilatar 2 px **cambia la forma** y no sólo el grosor: con los gruesos
+   reales las vistas ganan siempre. **Se deja de usar como prueba de grosor.**
+
+### B · trazos sintéticos `feat-bor-sinteticas-grueso-32px-r20261006` (entrena con 2318 de 2–4 px)
+
+⚠ **No son dígitos**: es clasificar la FAMILIA de una feature (13 + vacío) **en cualquier posición** del 32×32, y para
+un compositor lineal es una tarea mucho más difícil (≈0,5 con el grosor visto). ⚠ Y **la mezcla de familias cambia con
+el grosor** (a 10 px casi no quedan arcos; a 12 px **sólo hay esquinas**), así que **las columnas no se comparan entre
+sí**: sólo los compositores dentro de una columna.
+
+| compositor | 2–4 px (val) | 6 px | 8 px | 10 px | 12 px |
+|---|---:|---:|---:|---:|---:|
+| tinta · pos | 0,265 | 0,208 | 0,249 | 0,282 | 0,108 |
+| 8 vistas · pos | 0,502 | 0,446 | 0,381 | 0,289 | 0,004 |
+| 8 vistas · pos + px≤2 | 0,566 | 0,512 | 0,439 | 0,285 | 0,004 |
+| 8 vistas · pos + px≤4 | 0,618 | 0,567 | 0,480 | 0,324 | 0,009 |
+| 8 vistas · pos + desp≤1 celda | **0,622** | **0,594** | 0,504 | 0,346 | 0,004 |
+| 8 vistas · pos + desp≤4 celdas | 0,541 | 0,576 | **0,548** | **0,454** | 0,086 |
+
+5. **Aquí las vistas doblan a la tinta** en el grosor visto (0,50 contra 0,27) y siguen por delante a 6 y 8 px.
+6. **Aquí sí ayuda desplazar celdas enteras**, al revés que con los dígitos, y es lo esperable: la feature puede estar
+   en cualquier sitio, así que la posición no informa. La aumentación hay que elegirla según si la posición es parte
+   de la clase (dígito: sí) o no (feature: no).
+7. **12 px no lo clasifica nadie** (todo ≈0). Con sólo esquinas, a ese grosor en 32 px son manchas. No se lee más.
+
+### Qué decide esto para el experimento
+
+- **Prueba de grosor:** los **gruesos reales de UCI** para el acierto en dígitos, y el sintético `…-grueso-32px` para
+  los **detectores** (que es para lo que se generó en `feat-bor`). El +2 px por dilatación, fuera.
+- **Compositor:** 8 vistas juntas, **posición tal cual**, entrenado con la entrada desplazada **1–2 px**
+  (8 direcciones). El max5 no se lleva: lo que añade no paga la pieza extra.
+- ⚠ **Pregunta para el dueño antes de escribir el `REGLAS.md`:** la aumentación por desplazamiento toca sólo el
+  **entrenamiento del compositor**; los detectores ven lo mismo (la convolución es equivariante) y la prueba va sin
+  desplazar. Creo que **no** es un segundo pre-proceso en el sentido de la regla «un solo pre-proceso, igual para
+  todos los dígitos», pero la regla es suya y lo tiene que decir él.
+
+## ⏳ PENDIENTE (escrito 2026-10-07; puntos 1 y 2 cerrados esa tarde, § «Cuarta parte»)
+
+Estado: **nada lanzado en Vast, nada pagado**. Todo es boceto con kernels fijos y regresión logística.
+
+1. ✅ **Qué es «grueso»**: los gruesos reales de UCI para los dígitos, y el sintético `…-grueso-32px-r20261006` para
+   los detectores. El +2 px por dilatación se deja de usar.
+2. ✅ **Compositor**: 8 vistas juntas, posición tal cual, entrenado con la entrada desplazada 1–2 px. Sin max5.
 3. **Montar el experimento de verdad** (con su `experimento.json`, `REGLAS.md` y criterio escrito ANTES de entrenar):
-   detectores de features entrenados por vista (mismos pesos para todas), etiquetas definidas por vista, y comparar
-   contra 0,949 (tinta, `feat-ind32`) y 0,865 (`feat-bor signo`). Estimado ~0,1 $ / ~1 h en Vast (por comparación
-   con `feat-bor`, no medido). **Pedir permiso antes de alquilar.**
+   detectores de features entrenados por vista (mismos pesos para todas), etiquetas definidas por vista, el compositor
+   del punto 2, y comparar contra 0,949 (tinta, `feat-ind32`) y 0,865 (`feat-bor signo`). Estimado ~0,1 $ / ~1 h en
+   Vast (por comparación con `feat-bor`, no medido). **Pedir permiso antes de alquilar.**
+   ⚠ Antes, el dueño decide si la aumentación por desplazamiento del compositor cuenta como pre-proceso (§ «Qué decide
+   esto para el experimento»).
 4. Regla vigente: un solo pre-proceso, el mismo para todos los dígitos (`CLAUDE.md` de la raíz).
-5. Para repetir esta prueba: el dataset de dígitos sale del almacén
-   (`git show origin/main:experimentos-cnn/uci-optdigits-orig-32px-r20261005/datos.npz` en `foveal-vision-data`),
-   y el entorno es `uv venv /tmp/vizenv && uv pip install --python /tmp/vizenv numpy scipy matplotlib scikit-learn`.
+5. Para repetir estas pruebas: los datasets salen del almacén (en `foveal-vision-data`,
+   `git show origin/main:experimentos-cnn/uci-optdigits-orig-32px-r20261005/datos.npz` y
+   `…/feat-bor-sinteticas-grueso-32px-r20261006/datos.npz`, cada uno a su directorio), y el entorno es
+   `uv venv /tmp/vizenv && uv pip install --python /tmp/vizenv numpy scipy matplotlib scikit-learn`.
+   `prueba_compositores.py` tarda ~50 min en un dev de 2 vCPU: **lánzalo como unidad**
+   (`desacoplar-persistente.sh`), no en segundo plano del harness, que lo corta a los 10 min (pasó).
