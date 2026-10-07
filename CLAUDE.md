@@ -22,16 +22,19 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
-## ⚠ Regla del dueño (2026-10-07): sin pre-proceso antes del detector de features
+## ⚠ Regla del dueño (2026-10-07): UN SOLO pre-proceso, y el mismo para TODOS los dígitos
 
-> «Apliquemos, al menos por ahora, la regla de que no se aplica pre-proceso a ningún dígito antes del detector de
-> features. Puedes dejar ese código ahí, pero no lo vamos a usar.»
+> Primera versión (2026-10-07): «no se aplica pre-proceso a ningún dígito antes del detector de features».
+> Reescrita el mismo día: «si se aplica un pre-proceso debe aplicarse a todos los dígitos antes de los detectores».
 
-El código que ya existe (`2026-10-06-features-bordes/nn/bordes.py`, el esqueleto y la erosión de
-`2026-10-06-por-que-fallan`) se queda y **no se usa** en experimentos nuevos. Si hace falta resaltar bordes, se hace
-DENTRO de la red (una capa de kernels), con la tinta tal cual de entrada. Boceto en
-`docs/bocetos/2026-10-07-borde-de-un-lado/`. Es una regla de esta línea de trabajo, no hereda la Regla 0: un
-experimento que quiera saltársela lo pregunta.
+1. **Como mucho UN pre-proceso**, y se aplica **igual a todo** lo que vean los detectores: entrenamiento sintético,
+   pruebas y dígitos. Nada de transformar sólo los dígitos al evaluar (que es lo que hizo `por-que-fallan` con el
+   esqueleto y la erosión).
+2. El candidato vigente es el de **bordes de un solo lado** (`docs/bocetos/2026-10-07-borde-de-un-lado/`). El código
+   viejo (`2026-10-06-features-bordes/nn/bordes.py`, esqueleto, erosión) se queda y **no se usa** salvo que el dueño
+   lo elija.
+3. Un experimento declara en su `REGLAS.md` qué pre-proceso usa (o «ninguno»). Es una regla de esta línea de trabajo;
+   no hereda la Regla 0: un experimento que quiera saltársela lo pregunta.
 
 ## ⚠⚠ Regla 0 — cada experimento es INDEPENDIENTE de los demás
 
