@@ -1,0 +1,13 @@
+12 brazos, 0 ya hechos, 12 por hacer
+[1/12] contorno k=9 N=1000 s=2: fino 0.9519 grueso-largo 0.5778 fp 0.0067  (220.8 s)
+[2/12] sobel k=9 N=256 s=0: fino 0.9657 grueso-largo 0.7583 fp 0.0011  (42.7 s)
+[3/12] contorno k=7 N=256 s=2: fino 0.938 grueso-largo 0.3028 fp 0.0411  (25.6 s)
+[4/12] sobel k=7 N=128 s=0: fino 0.9 grueso-largo 0.5778 fp 0.0533  (10.8 s)
+[5/12] contorno k=5 N=256 s=2: fino 0.788 grueso-largo 0.2556 fp 0.1656  (16.3 s)
+[6/12] sobel k=9 N=16 s=0: fino 0.6167 grueso-largo 0.4597 fp 0.0656  (2.7 s)
+[7/12] contorno k=9 N=8 s=2: fino 0.3204 grueso-largo 0.3153 fp 0.0033  (1.7 s)
+[8/12] sobel k=7 N=32 s=0: fino 0.7389 grueso-largo 0.5333 fp 0.1467  (2.5 s)
+[9/12] contorno k=7 N=16 s=2: fino 0.5935 grueso-largo 0.3056 fp 0.0733  (1.4 s)
+[10/12] sobel k=7 N=4 s=0: fino 0.2889 grueso-largo 0.3194 fp 0.3111  (0.7 s)
+[11/12] contorno k=5 N=32 s=2: fino 0.7519 grueso-largo 0.4319 fp 0.2644  (1.7 s)
+[12/12] sobel k=5 N=4 s=0: fino 0.4602 grueso-largo 0.3403 fp 0.35  (0.6 s)
