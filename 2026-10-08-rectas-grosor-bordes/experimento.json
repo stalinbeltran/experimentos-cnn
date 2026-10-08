@@ -1,0 +1,15 @@
+{
+  "id": "rect-bor",
+  "titulo": "El grosor de las rectas resuelto con un FILTRO DE BORDES antes del kernel lineal de rect-lin: contorno (x - erosion) o magnitud de Sobel, aplicado igual a todo",
+  "pregunta": "Si un filtro de bordes convierte el trazo grueso en dos bordes finos, ¿el kernel lineal de rect-lin entrenado con rectas finas detecta tambien las gruesas, sin perder las finas, sin subir los falsos positivos y sin necesitar mas muestras?",
+  "creado": "2026-10-08",
+  "estado": "abierto",
+  "dataset": "rect-lin-entreno-r20261008",
+  "usa_fv": false,
+  "gasta": "alquila",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, commiteado antes de medir",
+  "linaje": "rect-lin (de ahi salen los dos datasets, el detector, las metricas y el control sin filtro: se copia el codigo, no se importa). Pendiente 2 de rect-lin, pedido por el dueño.",
+  "gasta_por_que": "La rejilla (144 brazos) en UNA maquina de Vast con nn/vast.sh rejilla (12 trozos x 2 hilos, tope 1 h, destruida sola; ~0,02-0,05 $ estimados). Freno: /use exp-vast (apagar expc-rbor-)."
+}
