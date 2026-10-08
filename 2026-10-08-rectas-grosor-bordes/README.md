@@ -55,6 +55,20 @@ Con Sobel, el 9×9 detecta como recta el **100 %** de las curvas de 8 px de gros
 O sea: el filtro trae las gruesas **todas**, curvas incluidas. Para «recta más fuerte que curva» (H8 de `rect-lin`) esto no
 mejora nada.
 
+### Un ejemplo, paso a paso (añadido después, a pedido del dueño)
+
+![ejemplo](resultados/ejemplo-curva.png)
+
+`python nn/ejemplo_curva.py`: una curva del banco (radio 9, grosor 8) y una recta del mismo grosor, por el brazo Sobel ·
+9×9 · N = 1000 · semilla 0. **Tres cosas que se ven, y ninguna estaba en el criterio:**
+
+1. **El detector sólo mira el MAX de cada mapa**, o sea la mejor ventana 9×9 (recuadro naranja). En la curva, esa ventana
+   cae sobre el **lomo de arriba**, la parte más plana de su borde, y eso basta para «recta 0°».
+2. **La curva responde MÁS que la recta**: logit +3,5 contra +1,0. O sea que aquí no hay ni «recta débil en la curva».
+3. ⚠ **La «curva» de radio 9 y grosor 8 del banco es casi una mancha** (un creciente macizo; el hueco del arco queda
+   tapado por el grosor). Es el mismo defecto de diseño que la «recta» de 10 × 14 px: con trazo grueso, la figura deja de
+   ser lo que dice su etiqueta. Parte del «100 % de curvas gruesas detectadas» es esto, y no se ha separado cuánto.
+
 ## Los kernels
 
 ![kernels](resultados/kernels.png)
