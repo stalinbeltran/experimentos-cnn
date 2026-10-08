@@ -1,0 +1,14 @@
+{
+  "id": "rect-lin",
+  "titulo": "Detector de RECTAS como kernel LINEAL aprendido (celula simple de V1): 2 kernels k×k + rot90 = 4 orientaciones, piramide de 1-3 escalas",
+  "pregunta": "¿Un detector de rectas que es un kernel lineal aprendido —unos 50-160 parametros— aprende con POCAS muestras, generaliza al grosor, a rectas punteadas y distingue (por fuerza de respuesta) una recta de una curva, y como se compara con el detector CNN de feat-ind32?",
+  "creado": "2026-10-08",
+  "estado": "abierto",
+  "dataset": "rect-lin-entreno-r20261008",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, commiteado antes de medir",
+  "linaje": "Responde a los pendientes 1 y 4 de feat-1lado (rectas de cualquier angulo y grosor; que forma dar al detector). Compara con los 4 detectores de recta de feat-ind32, leidos por id y huella. No importa codigo de nadie: la arquitectura de referencia se copia."
+}
