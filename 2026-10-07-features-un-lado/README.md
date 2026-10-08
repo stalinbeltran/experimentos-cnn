@@ -127,6 +127,23 @@ Un «2» de prueba. Con la tinta se encienden arco ⊂, recta / y **lazo** (el r
 la esquina ┘ de abajo. Los dos compositores aciertan, con poca seguridad (49 % y 34 %). Por lado (B), los detectores del
 brazo compartido apenas se encienden mirando un lado solo: por eso sus compositores por lado leen tan poco.
 
+### Por qué no se detectan las rectas del «2» (pregunta del dueño, 2026-10-08; medido en el dev)
+
+La base de ese «2» mide **16,6°** de inclinación, **6,8 px** de grosor y 19,5 px de largo (PCA de sus píxeles). Con una recta
+dibujada a medida en ese sitio, el detector `recta —` (tinta y control dan lo mismo):
+
+| recta dibujada (largo 18) | grosor 3 px | grosor 6 px |
+|---|---:|---:|
+| 0° | 100 ✓ | 100 ✓ |
+| 12° | 100 ✓ | **4** |
+| 25° | **0** | **0** |
+| 45° (la ve `recta \`) | 100 ✓ | 98 ✓ |
+
+y la base del «2» **aislada** (sin el resto del dígito) tampoco la enciende (1 y 5): no es el contexto. **Es el vocabulario**:
+`features.py` define cuatro rectas a 0°, 45°, 90° y 135° con ±12° de margen, así que entre 12° y 33° **no hay ninguna
+clase**, y en el borde del margen el grosor que no vio (6 px contra 2–4) la acaba de apagar. En toda la prueba, `recta —` se
+enciende en el 6 % de los «2», el 19 % de los «7» y el 20 % de los «5» (tinta).
+
 ## Contra el criterio (escrito antes)
 
 | | control | compartido |
