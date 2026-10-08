@@ -1,0 +1,117 @@
+#!/usr/bin/env python3
+"""La rejilla de `rect-bor`: pre-proceso × k × N × semilla (1 escala, trazo continuo). COPIA de la de `rect-lin` con el
+eje de pre-proceso en vez de escalas y entrenamiento. Reanudable: salta lo que ya está en su fichero de salida.
+
+⚠ Se llama `entrenar_local.py` a propósito: es el nombre que casa el freno (`cerrable.mjs`).
+
+    python nn/entrenar_local.py                       la rejilla entera (144)
+    python nn/entrenar_local.py --solo contorno,9,1000,0    un brazo (para medir el tiempo)
+    python nn/entrenar_local.py --parte 3/12 --salida resultados/trozos/rejilla-3.jsonl --hilos 2
+                                                      el trozo 3 de 12 (reparto determinista y equilibrado por coste)
+"""
+from __future__ import annotations
+
+import argparse
+import itertools
+import json
+import sys
+import time
+from pathlib import Path
+
+import numpy as np
+import torch
+import torch.nn.functional as F
+
+AQUI = Path(__file__).resolve().parent
+sys.path.insert(0, str(AQUI))
+import datos as D  # noqa: E402
+import evaluar as E  # noqa: E402
+import modelo as M  # noqa: E402
+import prepro  # noqa: E402
+
+PRES = ("contorno", "sobel")
+KS = (5, 7, 9)
+ESCALAS = 1
+MODO = "continua"
+NS = (4, 8, 16, 32, 64, 128, 256, 1000)
+SEMILLAS = (0, 1, 2)
+EPOCAS, LR = 400, 0.03
+SALIDA = E.RES / "rejilla.jsonl"
+
+
+def coste(br) -> float:
+    """Coste relativo estimado de un brazo: ∝ N · k² · (1 + ¼ + 1/16 … según escalas). Sólo para repartir."""
+    _, k, n, _ = br
+    return (n + 50) * k * k
+
+
+def parte(brazos: list, i: int, n: int) -> list:
+    """Trozo i (1..n): ordena por coste descendente y reparte en zigzag → trozos de coste parecido, siempre los mismos."""
+    orden = sorted(brazos, key=lambda b: (-coste(b), b))
+    return [b for j, b in enumerate(orden) if (j // n) % 2 == 0 and j % n == i - 1 or (j // n) % 2 == 1 and n - 1 - j % n == i - 1]
+
+
+def entrenar(x: np.ndarray, y: np.ndarray, k: int, nv: int, sem: int) -> tuple[M.Lineal, float]:
+    torch.manual_seed(sem)
+    m = M.Lineal(k, nv, sem)
+    opt = torch.optim.Adam(m.parameters(), lr=LR)
+    xt = torch.from_numpy(x)
+    # 5 clases: las 4 orientaciones y «nada», con el logit de «nada» fijo en 0 → «detecta» sigue siendo logit > 0.
+    # (Con BCE sobre 4 salidas, 7 de cada 8 objetivos son 0 y el modelo colapsaba a «nunca»: medido 2026-10-08.)
+    cls = torch.from_numpy(np.where(y.sum(1) > 0, y.argmax(1), 4))
+    cero = torch.zeros(len(xt), 1)
+    for _ in range(EPOCAS):
+        opt.zero_grad(); perdida = F.cross_entropy(torch.cat([m(xt), cero], 1), cls); perdida.backward(); opt.step()
+    m.eval()
+    return m, float(perdida.detach())
+
+
+def hechos(salida: Path) -> set:
+    if not salida.exists():
+        return set()
+    return {(r["pre"], r["k"], r["n"], r["semilla"]) for r in map(json.loads, salida.read_text().splitlines())}
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("--solo", help="pre,k,N,semilla")
+    p.add_argument("--no-guardar", action="store_true")
+    p.add_argument("--parte", help="i/n: sólo el trozo i de n")
+    p.add_argument("--salida", type=Path, default=SALIDA)
+    p.add_argument("--hilos", type=int, default=2)
+    a = p.parse_args()
+    torch.set_num_threads(a.hilos)
+    e = D.cargar(D.ENTRENO)
+    bancos = {}
+    if a.solo:
+        pre, k, n, s = a.solo.split(","); brazos = [(pre, int(k), int(n), int(s))]
+    else:
+        brazos = list(itertools.product(PRES, KS, NS, SEMILLAS))
+    if a.parte:
+        i, n = map(int, a.parte.split("/")); brazos = parte(brazos, i, n)
+    ya = hechos(a.salida)
+    pendientes = [br for br in brazos if br not in ya]
+    print(f"{len(brazos)} brazos, {len(brazos) - len(pendientes)} ya hechos, {len(pendientes)} por hacer", flush=True)
+    a.salida.parent.mkdir(parents=True, exist_ok=True)
+    for i, (pre, k, n, s) in enumerate(pendientes, 1):
+        t0 = time.time()
+        if pre not in bancos:
+            bancos[pre] = E.banco(pre)
+        xb, b = bancos[pre]
+        x, y = D.entreno(e, MODO, n)
+        m, perdida = entrenar(prepro.aplicar(x, pre), y, k, ESCALAS, s)
+        met = E.metricas(E.logits(m, xb), b)
+        fila = {"pre": pre, "k": k, "escalas": ESCALAS, "entreno": MODO, "n": n, "semilla": s, "epocas": EPOCAS, "lr": LR,
+                "perdida_final": E.r4(perdida), "segundos": round(time.time() - t0, 1), "hilos": a.hilos, "parametros": m.n_parametros(),
+                **met, "a": E.r4(m.a.detach()), "c": E.r4(m.c.detach()),
+                "K0": m.K[0, 0].detach().numpy().round(4).tolist(), "K45": m.K[1, 0].detach().numpy().round(4).tolist()}
+        if not a.no_guardar:
+            with a.salida.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(fila, ensure_ascii=False) + "\n")
+        print(f"[{i}/{len(pendientes)}] {pre} k={k} N={n} s={s}: fino {met['recall_fino']} grueso-largo "
+              f"{met['recall_grueso_largo']} fp {met['fp_total']}  ({fila['segundos']} s)", flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
