@@ -33,7 +33,8 @@ import modelo                                                     # noqa: E402
 RES = AQUI.parent / "resultados"
 SUP, T1, T2, BORDE = "#fcfcfb", "#0b0b0b", "#52514e", "#eb6834"
 CMAP = LinearSegmentedColormap.from_list("azul", ["#fcfcfb", "#cde2fb", "#6da7ec", "#256abf", "#0d366b"])
-NOMBRES = {"arco-E": "arco ⊃", "arco-W": "arco ⊂", "arco-N": "arco ∩", "arco-S": "arco ∪", "recta-V": "recta |",
+# ⚠ arco-E tiene el CENTRO al Este, o sea forma de ⊂ (corregido el 2026-10-08: la primera versión los tenía al revés)
+NOMBRES = {"arco-E": "arco ⊂", "arco-W": "arco ⊃", "arco-N": "arco ∪", "arco-S": "arco ∩", "recta-V": "recta |",
            "recta-H": "recta —", "recta-S": "recta /", "recta-B": "recta \\", "lazo": "lazo ○", "esquina-NE": "esq. └",
            "esquina-NW": "esq. ┘", "esquina-SE": "esq. ┌", "esquina-SW": "esq. ┐"}
 

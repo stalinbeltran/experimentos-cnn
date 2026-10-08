@@ -123,8 +123,9 @@ compositor de siempre (180 de train, 1617 de val, 3 semillas), y con dos fuentes
 ![entradas de los detectores](resultados/entradas-1-detectores.png)
 ![entradas por lado](resultados/entradas-1-lados.png)
 
-Un «2» de prueba. Con la tinta se encienden arco ⊂, recta / y **lazo** (el rizo de arriba); con el control, los dos arcos y
-la esquina ┘ de abajo. Los dos compositores aciertan, con poca seguridad (49 % y 34 %). Por lado (B), los detectores del
+Un «2» de prueba. Con la tinta se encienden arco ⊃ (la panza), recta / y **lazo** (el rizo de arriba); con el control, los
+dos arcos (⊂ arriba, ⊃ en la panza) y la esquina ┘ de abajo. ⚠ La primera versión de la figura nombraba los arcos al revés
+(`arco-E` es ⊂: su centro queda al Este); corregido el 2026-10-08. Los dos compositores aciertan, con poca seguridad (49 % y 34 %). Por lado (B), los detectores del
 brazo compartido apenas se encienden mirando un lado solo: por eso sus compositores por lado leen tan poco.
 
 ### Por qué no se detectan las rectas del «2» (pregunta del dueño, 2026-10-08; medido en el dev)
@@ -170,6 +171,38 @@ no es confiable»*. Sin entrenar nada (0 $, minutos en el dev).
    la galería —16 casos— son rectas de verdad a ojo, pero no se revisaron los 1354. Y sólo se auditaron las **rectas**:
    arcos, lazos y esquinas siguen sin auditar.
 
+### ¿Y los arcos? Auditoría de los detectores de arco (`nn/arcos_ciegos.py`, 2026-10-08)
+
+Pedida por el dueño: *«haz lo mismo para arcos; concentrémonos en arcos cortos, de varios radios. Asumo que por tener más
+parámetros el problema es aún peor»*. Arcos dibujados con el mismo rasterizador del entrenamiento, con su punto medio en el
+centro: apertura 30–180°, radio 3–14 px, grosor 3 y 6 px, orientación cada 15°. El vocabulario sólo vio apertura 100–200°,
+radio 4–14 y las cuatro formas ⊂ ⊃ ∪ ∩ con ±40°.
+
+![mapa de arcos](resultados/arcos-mapa.png)
+![arcos cortos](resultados/arcos-galeria.png)
+![arcos en diagonal](resultados/arcos-diagonales-galeria.png)
+
+| de cada 100 arcos, cuántos ve SU detector | tinta | control |
+|---|---:|---:|
+| como los del entrenamiento (apertura ≥ 100°, radio ≥ 4) | 97 % | 97 % |
+| cortos (≤ 90°), todos | 30 % | 34 % |
+| … con la curva VISIBLE a 32 × 32 (flecha ≥ 2 px y largo ≥ 8 px; 160 casos) | **91 %** | **96 %** |
+| … sin curva visible (a esta resolución son una barra o un punto) | 20 % | 23 % |
+| en DIAGONAL (centro al NE/SE/SW/NW), largos | 70 % | 80 % |
+| en DIAGONAL, cortos con curva visible | **25 %** | **38 %** |
+
+1. **Lo corto no es el problema en sí.** Un arco corto cuya curva se VE lo detecta su detector el 91 % (tinta) y 96 %
+   (control). Los que «fallan» son en su mayoría arcos que a 32 × 32 no tienen curva visible: uno de 45° y radio 12 se separa
+   menos de 1 px de la recta. Ahí no hay nada que detectar como arco, y que se encienda «recta» es correcto.
+2. **El punto ciego es la ORIENTACIÓN, como en las rectas.** El vocabulario tiene 4 arcos (⊂ ⊃ ∪ ∩); un arco girado 45°
+   (como la curva de arriba a la derecha de un «2» o de un «3») queda entre dos y lo ve uno de los dos vecinos sólo el 70 %
+   si es largo, y el **25 % si es corto**.
+3. **La hipótesis del dueño, a medias:** más parámetros sí dan más huecos (orientación × apertura × radio), pero dentro de
+   la región entrenada los arcos aguantan bien; el agujero grave es el mismo que el de las rectas: los ángulos entre clases.
+4. ⚠ **Sintético, no dígitos reales.** Aquí no se buscaron arcos en los dígitos (es más difícil que con rectas); el umbral
+   «curva visible» (flecha ≥ 2 px, largo ≥ 8 px) es un criterio mío, no medido. Y una errata corregida de paso: en la figura
+   del «2» los arcos tenían los nombres al revés (`arco-E` es ⊂).
+
 ## ⏳ PENDIENTE para mañana (anotado el 2026-10-08, pedido por el dueño)
 
 1. **Rectas de cualquier ángulo y grosor.** Reentrenar los detectores de recta con el ángulo continuo (0–180°, o más clases)
@@ -177,8 +210,10 @@ no es confiable»*. Sin entrenar nada (0 $, minutos en el dev).
    el dev: ~15 min, 0 $; los cuatro, o una sola «recta» con su ángulo como salida, es una decisión de diseño a hablar.
 2. **Por qué se escapan rectas con ángulo de su clase** (41 % con la tinta): hipótesis sin comprobar — el contexto (trazos
    pegados: la barra del «7» es una esquina) y que en el sintético la recta va casi siempre suelta. Se mira aislando tramos.
-3. **Auditar igual los arcos, el lazo y las esquinas**: si las rectas se escapan la mitad de las veces, nada asegura que
-   los demás detectores sí hagan su trabajo.
+3. **Arcos: auditados en sintético (arriba)** — mismo hueco que las rectas: la orientación entre clases. Falta buscarlos
+   en dígitos reales, y auditar el lazo y las esquinas.
+4. **Una sola decisión para rectas y arcos:** ¿más clases, orientación continua, o un detector que diga su ángulo? Se decide
+   con el dueño antes de reentrenar.
 
 ## Contra el criterio (escrito antes)
 
