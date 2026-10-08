@@ -14,6 +14,7 @@ venga en la copia: así la única diferencia con feat-bor y feat-ind32 es lo que
     python nn/entrenar_local.py --brazo compartido --feature arco-E [--semilla 1] [--epocas 80] [--hilos N]
     python nn/entrenar_local.py --comprobar [--brazo B --hilos N]   el mecanismo, y cuánto tarda UNA época
     python nn/entrenar_local.py --componer                          el compositor y la curva de desplazamiento (nn/componer.py)
+    python nn/entrenar_local.py --lados                             compositores por lado, solos y gradual (nn/lados.py)
 
 ⚠ EL NOMBRE DEL FICHERO ES UN CONTRATO con el freno (`cerrable.mjs` -> TRABAJOS): por eso `componer`, que tarda, se
 lanza a través de él.
@@ -271,9 +272,13 @@ def main() -> int:
     p.add_argument("--salida", type=Path, help="por defecto nn/pesos-<brazo>")
     p.add_argument("--comprobar", action="store_true")
     p.add_argument("--componer", action="store_true", help="nn/componer.py: el compositor y la curva de desplazamiento")
+    p.add_argument("--lados", action="store_true", help="nn/lados.py: compositores por lado, solos y gradual (2026-10-08)")
     a, resto = p.parse_known_args()
     if a.hilos:
         torch.set_num_threads(a.hilos)
+    if a.lados:
+        import lados                                                    # noqa: PLC0415
+        return lados.main()
     if a.componer:
         import componer                                                 # noqa: PLC0415
         return componer.main(resto)

@@ -144,11 +144,57 @@ def g3(comp: dict) -> None:
     fig.savefig(RES / "g3-curva-gradual.png", facecolor=SUP); plt.close(fig)
 
 
+def g4_g5(lados: dict, comp: dict) -> None:
+    """Compositores por lado (nn/lados.py): cada lado solo, y añadiendo lados de uno en uno. 180 de train, como el 0,949."""
+    flechas = lados["lados"]; reg = "180"
+    A, B = lados["A bordes"][reg], lados["B detectores"][reg]
+    fig, ax = lienzo(7.2, 4.4)
+    x = range(8); w = 0.38
+    b1 = ax.bar([i - w / 2 - 0.01 for i in x], [A["uno"][f]["val"] for f in flechas], w, color="#2a78d6", zorder=3,
+                label="A: el borde de ese lado, tal cual")
+    b2 = ax.bar([i + w / 2 + 0.01 for i in x], [B["uno"][f]["val"] for f in flechas], w, color="#eb6834", zorder=3,
+                label="B: los 13 detectores mirando ese lado")
+    for bars in (b1, b2):
+        for r in bars:
+            ax.text(r.get_x() + r.get_width() / 2, r.get_height() + 0.003, f"{r.get_height() * 100:.0f}", ha="center",
+                    va="bottom", color=T1, fontsize=8)
+    ax.axhline(comp["bancos"]["lineas"]["C1"]["normal"], color=MUT, lw=1.2, ls="--", zorder=2)
+    ax.text(7.6, comp["bancos"]["lineas"]["C1"]["normal"] + 0.004, "tinta (95)", color=T2, fontsize=8.5, ha="right", va="bottom")
+    ax.set_xticks(list(x)); ax.set_xticklabels([f"lado {f}" for f in flechas], color=T1, fontsize=9)
+    ax.set_ylim(0, 1.0)
+    ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v * 100:.0f}"))
+    ax.set_ylabel("dígitos acertados de cada 100", color=T2, fontsize=9)
+    ax.legend(frameon=False, fontsize=8.5, loc="upper center", labelcolor=T1, bbox_to_anchor=(0.5, -0.1), ncol=2)
+    titulo(ax, "Un compositor por lado: ¿cuánto lee cada lado SOLO?", "1617 dígitos de prueba, 180 de entrenamiento.")
+    fig.subplots_adjust(top=0.84, bottom=0.2)
+    fig.savefig(RES / "g4-un-lado.png", facecolor=SUP); plt.close(fig)
+
+    fig, ax = lienzo()
+    n = list(range(1, 9))
+    for nombre, F, c in (("A: bordes", A, "#2a78d6"), ("B: detectores", B, "#eb6834")):
+        for orden, ls in (("por ángulo", "-"), ("por parejas opuestas", "--")):
+            ax.plot(n, [v["val"] for v in F[orden]], color=c, lw=2, ls=ls, marker="o", ms=5, zorder=3,
+                    markeredgecolor=SUP, markeredgewidth=1.5, label=f"{nombre}, {orden}")
+    ax.axhline(comp["bancos"]["lineas"]["C1"]["normal"], color=MUT, lw=1.2, ls=":", zorder=2)
+    ax.text(1, comp["bancos"]["lineas"]["C1"]["normal"] + 0.004, "tinta (95)", color=T2, fontsize=8.5, va="bottom")
+    ax.set_xticks(n); ax.set_ylim(0.3, 1.0)
+    ax.yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda v, _: f"{v * 100:.0f}"))
+    ax.set_xlabel("cuántos lados ve el compositor (añadidos de uno en uno)", color=T2, fontsize=9)
+    ax.set_ylabel("dígitos acertados de cada 100", color=T2, fontsize=9)
+    ax.legend(frameon=False, fontsize=8.5, loc="lower right", labelcolor=T1)
+    titulo(ax, "Añadir lados: ¿mejora o empeora?",
+           "Ángulo: → ↘ ↓ ↙ ← ↖ ↑ ↗ · Parejas: → ← ↓ ↑ ↘ ↖ ↙ ↗. 180 de entrenamiento.")
+    fig.subplots_adjust(top=0.84, bottom=0.15)
+    fig.savefig(RES / "g5-lados-gradual.png", facecolor=SUP); plt.close(fig)
+
+
 def main() -> int:
     ev = json.loads((RES / "evaluacion.json").read_text(encoding="utf-8"))
     comp = json.loads((RES / "componer.json").read_text(encoding="utf-8"))
     signo = json.loads((por_id("feat-bor").carpeta / "resultados" / "evaluacion.json").read_text(encoding="utf-8"))["B"]["signo"]
     g1(ev, signo); g1b(ev, signo); g2(comp); g3(comp)
+    if (RES / "lados.json").is_file():
+        g4_g5(json.loads((RES / "lados.json").read_text(encoding="utf-8")), comp)
     print("→ resultados/g1-recall-por-grosor.png, g1b-falsas-alarmas.png, g2-digitos.png, g3-curva-gradual.png")
     return 0
 

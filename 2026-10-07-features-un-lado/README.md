@@ -85,6 +85,39 @@ son el mejor banco (la tabla entera de los tres, en `resultados/componer.txt`):
    detectores, más gruesos que los Sobel. Con 0–4 px las líneas sí cumplirían el umbral (−0,026 en d = 2); con 0–3, todavía
    no (−0,033).
 
+## Compositores POR LADO (`nn/lados.py`, 2026-10-08) — lo que el dueño pidió de verdad
+
+El dueño aclaró el 2026-10-08 que el brazo `compartido` (un detector que mira cada lado y se queda con el MÁXIMO) **no era lo
+pedido**: era una lectura mía de la propuesta del boceto. Lo pedido son **compositores** entrenados con cada lado por
+separado, con los 8, y gradualmente con 1, 2, 3 … 8 lados. Se midió sin entrenar nada nuevo (0 $, ~10 min en el dev), con el
+compositor de siempre (180 de train, 1617 de val, 3 semillas), y con dos fuentes de «lado»:
+
+- **A, bordes:** el borde de ese lado tal cual (la capa fija), reducido a 8×8 — 64 números por lado.
+- **B, detectores:** los 13 detectores ya entrenados del brazo `compartido`, aplicados a ese lado solo (sin el máximo) — 832
+  números por lado.
+
+![cada lado solo](resultados/g4-un-lado.png)
+![añadir lados](resultados/g5-lados-gradual.png)
+
+| | un lado solo (rango de los 8) | 2 lados | 4 lados | 8 lados |
+|---|---:|---:|---:|---:|
+| A bordes, por ángulo (→ ↘ ↓ ↙ ← ↖ ↑ ↗) | 0,815–0,874 | 0,874 | 0,916 | **0,929** |
+| A bordes, por parejas opuestas (→ ← ↓ ↑ …) | | 0,896 | 0,917 | 0,929 |
+| B detectores, por ángulo | 0,346–0,558 | 0,672 | 0,744 | 0,815 |
+| B detectores, por parejas opuestas | | 0,675 | 0,728 | 0,815 |
+| con 3823 de train: A / B, 8 lados | | | | 0,964 / 0,894 |
+
+1. **Añadir lados SIEMPRE mejora**, en las dos fuentes y en los dos órdenes, y con rendimiento decreciente: en A, de 1 a 3
+   lados se ganan 7–8 puntos y de 4 a 8 sólo 1. Nunca empeora.
+2. **Un lado solo ya lee mucho** (A: 82–87 de cada 100), y los mejores son los de arriba/abajo y diagonales (↗ 0,874, ↓ y ↑
+   0,865); los más flojos, → y ← (0,815–0,831).
+3. **El orden importa poco al final** y algo al principio: con 2 lados, la pareja opuesta (→ ←) lee mejor que dos vecinos
+   (→ ↘): 0,896 contra 0,874. Ver los dos lados de un trazo aporta más que dos ángulos parecidos.
+4. **Con ningún número de lados se llega a la tinta** (0,949 con 180; con 3823, A llega a 0,964 contra 0,968 de la tinta).
+5. ⚠ **B es más bajo por cómo se entrenaron esos detectores, no por los lados**: aprendieron con el MÁXIMO de los 8, o sea
+   nunca a funcionar con un lado solo. La prueba limpia de «detectores por lado» pide entrenar detectores con UN lado cada
+   uno — eso ya es Vast, y no se ha hecho.
+
 ## Contra el criterio (escrito antes)
 
 | | control | compartido |
