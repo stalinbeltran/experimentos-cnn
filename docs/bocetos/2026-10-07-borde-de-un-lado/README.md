@@ -241,6 +241,8 @@ entrenamiento; prueba: los 1617 de `val` desplazados *d* px, media de las 8 dire
 cero. Se paró y se terminó por planes (`--planes`), con los mapas en float32. Los números de los planes repetidos coinciden
 al bit (es determinista).
 
+![por separado y campo de visión](imagenes/6-por-separado-y-campo-de-vision.png) (`graficas_desplazamiento.py`)
+
 **Con detectores ENTRENADOS** (`feat-1lado`, 180 de entrenamiento) la curva tiene la misma forma; ver su README.
 
 ## ⏳ PENDIENTE (escrito 2026-10-07; puntos 1–3 cerrados ese día: el 3 es `feat-1lado`)

@@ -17,6 +17,13 @@ escrito antes de entrenar en `instrucciones/02-criterio.md`, encargo literal en 
 
 El compositor y la evaluación, en el dev (0 $; el compositor del compartido, ~2 h).
 
+## Las gráficas (`nn/graficas.py`, pedidas por el dueño el 2026-10-08)
+
+![recall por grosor](resultados/g1-recall-por-grosor.png)
+![falsas alarmas](resultados/g1b-falsas-alarmas.png)
+![dígitos](resultados/g2-digitos.png)
+![curva gradual](resultados/g3-curva-gradual.png)
+
 ## La respuesta corta: mirar un canal cada vez NO arregla el grosor, y cuesta acierto
 
 El compartido era la hipótesis: si cada detector ve un lado del trazo cada vez, la distancia entre lados (el grosor) no
