@@ -27,7 +27,7 @@ es parte del **detector**, no un pre-proceso: el mismo kernel aplicado a la imag
 
 ## Salidas
 
-- **Pesos:** no se guardan `.pt`; los kernels aprendidos van en `resultados/kernels.npz` (≈432 × 2 × k² floats, < 1 MB).
+- **Pesos:** no se guardan `.pt`; los 2 kernels aprendidos (K0, K45), `a` y `c` van en cada línea de `rejilla.jsonl`.
 - **Métricas:** `resultados/rejilla.jsonl`, una línea por (k, escalas, entrenamiento, N, semilla) con todas las métricas
   del banco; `resultados/referencias.json` (Gabor y CNN).
 - **Figuras:** `resultados/*.png` con `nn/evaluar.py --figuras`.
@@ -44,7 +44,12 @@ es parte del **detector**, no un pre-proceso: el mismo kernel aplicado a la imag
 
 - **Rejilla:** k ∈ {5, 7, 9} × escalas ∈ {1, 2, 3} × entrenamiento ∈ {continua, punteada} × N ∈ {4, 8, 16, 32, 64, 128,
   256, 1000} × 3 semillas = **432 entrenamientos**. N = número de rectas; se añaden otros N negativos.
-- **Entrenamiento:** Adam, lr 0,05, 400 épocas a lote completo, BCE con logits sobre las 4 salidas. Semilla = inicialización.
+- **Entrenamiento:** Adam, lr 0,03, 400 épocas a lote completo, entropía cruzada de **5 clases** (las 4 orientaciones +
+  «nada», con el logit de «nada» fijo en 0). Semilla = inicialización.
+  ⚠ Cambiado tras comprobar el MECANISMO (antes de correr la rejilla, 2026-10-08): con un umbral aprendido dentro de la
+  ReLU el umbral apagaba todas las respuestas (gradiente 0), y con BCE sobre 4 salidas el modelo colapsaba a decir siempre
+  «nada» (pérdida 0,3768 = la de predecir 1/8). El criterio NO se tocó. En esas pruebas se vieron algunos números (k=7,
+  1 escala: recall fino 0,99 con N=128; Gabor 0,98), y van anotados en el README.
 - **Qué se mide y con qué umbral:** en `instrucciones/02-criterio.md`, escrito antes de mirar.
 - **Qué se llama ganar:** no se declara un ganador único; se reporta la rejilla contra las hipótesis del criterio.
 
@@ -53,7 +58,7 @@ es parte del **detector**, no un pre-proceso: el mismo kernel aplicado a la imag
 | script | qué hace | cómo se llama |
 |---|---|---|
 | `nn/datos.py` | genera y publica entrenamiento y banco; los carga con su huella | `--generar [--publicar]` · `--comprobar` |
-| `nn/modelo.py` | el detector lineal (2 kernels + rot90, pirámide, ReLU, max) y el Gabor a mano | `--comprobar` |
+| `nn/modelo.py` | el detector lineal (2 kernels + rot90, pirámide, max) y el Gabor a mano | `--comprobar` |
 | `nn/referencia_cnn.py` | COPIA de la arquitectura del detector de `feat-ind32`; lee sus 4 rectas por id + huella de su firma | `--comprobar` |
 | `nn/entrenar_local.py` | la rejilla; reanudable (salta lo que ya está en `rejilla.jsonl`) | `[--solo k,escalas,entreno,N,semilla]` |
 | `nn/evaluar.py` | banco de prueba, referencias, tablas y figuras | `--referencias` · `--tablas` · `--figuras` |
