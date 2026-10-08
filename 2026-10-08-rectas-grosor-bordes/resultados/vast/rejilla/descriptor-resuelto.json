@@ -1,0 +1,73 @@
+{
+ "experimento": "rect-bor",
+ "descripcion": "La rejilla de rect-bor (144 brazos: contorno/sobel x k 5/7/9 x N x 3 semillas) en 12 trozos equilibrados, a la vez en UNA maquina: 12 procesos x 2 hilos.",
+ "maquina": {
+  "cpus": 24,
+  "max_cpus": 48,
+  "min_ram": 16,
+  "cpu": "",
+  "disk_gb": 24,
+  "max_price": 0.2
+ },
+ "envia": [
+  {
+   "origen": "/home/deploy/src/experimentos-cnn",
+   "destino": "experimentos-cnn",
+   "excluye": [
+    ".git",
+    ".venv",
+    "datos",
+    "__pycache__",
+    "experimentos_cnn.egg-info",
+    "node_modules",
+    "muestras",
+    "resultados",
+    "pesos",
+    "pesos-c3",
+    "pesos-c4",
+    "pesos-cae",
+    "pesos-cae3",
+    "pesos-cae5",
+    "pesos-dig",
+    "curvas-cnn",
+    "detectores-32px",
+    "detectores-8px",
+    "init-detectores-8px.pt",
+    "pesos-contorno",
+    "pesos-signo",
+    "pesos-control",
+    "pesos-compartido",
+    "mapas"
+   ]
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/rect-lin-entreno-r20261008",
+   "destino": "foveal-vision-data/experimentos-cnn/rect-lin-entreno-r20261008"
+  },
+  {
+   "origen": "/home/deploy/src/foveal-vision-data/experimentos-cnn/rect-lin-banco-r20261008",
+   "destino": "foveal-vision-data/experimentos-cnn/rect-lin-banco-r20261008"
+  }
+ ],
+ "entorno": {
+  "EXPCNN_DATOS": "/root/trabajo/foveal-vision-data",
+  "PYTHONUNBUFFERED": "1"
+ },
+ "install": "apt-get update -qq\nDEBIAN_FRONTEND=noninteractive apt-get install -y -qq python3-venv python3-pip >/dev/null\npython3 -m venv experimentos-cnn/.venv\nexperimentos-cnn/.venv/bin/pip install -q --upgrade pip\nexperimentos-cnn/.venv/bin/pip install -q numpy==2.5.3\nexperimentos-cnn/.venv/bin/pip install -q torch==2.14.1 --index-url https://download.pytorch.org/whl/cpu\nexperimentos-cnn/.venv/bin/python -c \"import torch, numpy; print('torch', torch.__version__, 'numpy', numpy.__version__)\"",
+ "trabajos": [
+  {
+   "id": "rejilla",
+   "run": "cd ..\nlscpu | grep -E '^(Model name|CPU\\(s\\))'\necho \"vCPU pagadas: ${TRABAJO_VCPU:-?} · nproc: $(nproc) · 12 trozos de la rejilla a la vez, 2 hilos cada uno\"\nif [ -z \"$TRABAJO_VCPU\" ]; then echo \"✗ no me pasaron TRABAJO_VCPU. No entreno.\"; exit 3; fi\nif [ \"${TRABAJO_VCPU%.*}\" -lt 24 ]; then echo \"✗ TRABAJO_VCPU $TRABAJO_VCPU < 24 (12 × 2 hilos). No entreno.\"; exit 3; fi\nmkdir -p resultados/trozos\nT0=$(date +%s)\ni=1\nwhile [ $i -le 12 ]; do\n  ../.venv/bin/python -u nn/entrenar_local.py --parte $i/12 --hilos 2 --salida resultados/trozos/rejilla-$i.jsonl > resultados/trozos/log-$i.txt 2>&1 &\n  eval \"p$i=$!\"; i=$((i + 1))\ndone\nfallos=0\nj=1\nwhile [ $j -le 12 ]; do eval \"wait \\$p$j\" || fallos=$((fallos + 1)); j=$((j + 1)); done\necho \"reloj de la rejilla: $(( $(date +%s) - T0 )) s · trozos con fallo: $fallos\"\ncat resultados/trozos/rejilla-*.jsonl | wc -l\nexit $fallos",
+   "trae": [
+    "../resultados/trozos"
+   ]
+  }
+ ],
+ "notas": [
+  "`run` y `trae` son relativos a ESTE fichero en la maquina (`nn/`): por eso el `cd ..` y el `../resultados`.",
+  "torch 2.14.1 y numpy 2.5.3: las del venv del dev.",
+  "Tiempo: de rect-lin en Vast (2026-10-08), los brazos de 1 escala y trazo continuo suman 2898 s (~48 min) de proceso por filtro; 2 filtros en 12 trozos ≈ 8 min de reloj + ~7 min de arranque. Tope 1 h."
+ ],
+ "base_remota": "experimentos-cnn/2026-10-08-rectas-grosor-bordes/nn",
+ "descriptor_original": "/home/deploy/src/experimentos-cnn/2026-10-08-rectas-grosor-bordes/nn/vast.json"
+}

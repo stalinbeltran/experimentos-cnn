@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-08T18:31:39+00:00"
+  }
+ ],
+ "id": "rejilla",
+ "etiqueta": "expc-rbor-rejilla",
+ "experimento": "rect-bor",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-08-rectas-grosor-bordes/nn/vast.json",
+ "oferta": 51941431,
+ "precio_hora": 0.11037,
+ "maquina": {
+  "vcpu": 32.0,
+  "cpu": "AMD EPYC 7702 64-Core Processor",
+  "ram_gb": 31.5,
+  "ghz": 2.1835929999999997,
+  "gpu": "RTX 3060",
+  "ubicacion": "Norway, NO",
+  "host": 150667,
+  "fiabilidad": 0.9937
+ },
+ "horas_max": 1.0,
+ "tope_precio": 0.2
+}
