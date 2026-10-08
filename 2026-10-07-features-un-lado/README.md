@@ -144,6 +144,42 @@ y la base del «2» **aislada** (sin el resto del dígito) tampoco la enciende (
 clase**, y en el borde del margen el grosor que no vio (6 px contra 2–4) la acaba de apagar. En toda la prueba, `recta —` se
 enciende en el 6 % de los «2», el 19 % de los «7» y el 20 % de los «5» (tinta).
 
+### ¿Cuántas rectas se escapan? Auditoría de los detectores de recta (`nn/rectas_ciegas.py`, 2026-10-08)
+
+Pedida por el dueño tras el «2»: *«busca más casos de estos, porque si los detectores no hacen bien su trabajo, su resultado
+no es confiable»*. Sin entrenar nada (0 $, minutos en el dev).
+
+![zonas ciegas](resultados/rectas-zonas-ciegas.png)
+![rectas reales](resultados/rectas-reales.png)
+![galería](resultados/rectas-galeria.png)
+
+1. **Zonas ciegas (sintético):** una recta de 18 px en el centro, a cada ángulo y grosor. Los detectores de recta ven sus
+   ±12° y algo más, y **ninguno ve los ángulos de en medio** (≈15–30°, 60–75°, 105–120°, 150–165°): a 2 px, 15 de los 60
+   ángulos probados (cada 3°) no los ve nadie con la tinta, y con el control, a 10–12 px, 22–25.
+2. **Rectas reales:** el esqueleto de los 1617 dígitos de val da **1354 tramos rectos de ≥ 12 px**
+   (Hough). **Ningún detector de recta ve el 52 %** con la tinta (60 % con el control):
+   - con un ángulo en el hueco del vocabulario: **64 %** sin ver;
+   - **con un ángulo que sí es de una clase: 41 %** sin ver — o sea que el ángulo
+     no lo explica todo: la barra de arriba de un «7» a 173° y 5 px, o el lado vertical de un «9», tampoco se encienden;
+   - el grosor no empeora la tinta (los tramos gruesos se escapan MENOS); al control sí.
+   - por dígito (tinta): el «1» casi siempre se ve (11 % sin ver); el «3», casi nunca (76 %).
+3. ⚠ **Lo que esto significa:** el compositor recibe mapas donde las rectas del dígito faltan la mitad de las veces. Sus
+   aciertos (0,949 con tinta) salen de lo que SÍ encienden los detectores —arcos, lazos, rectas casuales—, no de una
+   descripción fiel del trazo. Las conclusiones sobre «qué features ve» deben leerse con esto delante.
+4. ⚠ **Límites de la auditoría:** el buscador de tramos (esqueleto + Hough) puede tomar por recta una curva muy abierta;
+   la galería —16 casos— son rectas de verdad a ojo, pero no se revisaron los 1354. Y sólo se auditaron las **rectas**:
+   arcos, lazos y esquinas siguen sin auditar.
+
+## ⏳ PENDIENTE para mañana (anotado el 2026-10-08, pedido por el dueño)
+
+1. **Rectas de cualquier ángulo y grosor.** Reentrenar los detectores de recta con el ángulo continuo (0–180°, o más clases)
+   y trazos de 2–12 px, y repetir `nn/rectas_ciegas.py` antes/después. Criterio a escribir ANTES de entrenar. Un detector en
+   el dev: ~15 min, 0 $; los cuatro, o una sola «recta» con su ángulo como salida, es una decisión de diseño a hablar.
+2. **Por qué se escapan rectas con ángulo de su clase** (41 % con la tinta): hipótesis sin comprobar — el contexto (trazos
+   pegados: la barra del «7» es una esquina) y que en el sintético la recta va casi siempre suelta. Se mira aislando tramos.
+3. **Auditar igual los arcos, el lazo y las esquinas**: si las rectas se escapan la mitad de las veces, nada asegura que
+   los demás detectores sí hagan su trabajo.
+
 ## Contra el criterio (escrito antes)
 
 | | control | compartido |
