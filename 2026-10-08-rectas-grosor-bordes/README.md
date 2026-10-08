@@ -78,6 +78,24 @@ mejora nada.
    tapado por el grosor). Es el mismo defecto de diseño que la «recta» de 10 × 14 px: con trazo grueso, la figura deja de
    ser lo que dice su etiqueta. Parte del «100 % de curvas gruesas detectadas» es esto, y no se ha separado cuánto.
 
+### Las mismas dos imágenes con detectores FIJOS (añadido después, a pedido del dueño)
+
+![fijos](resultados/ejemplo-fijos.png)
+
+`python nn/ejemplo_fijos.py`: Gabor 9×9 a mano y Sobel 3×3 orientado (en valor absoluto), SIN entrenar, sobre la imagen
+original; umbral a 5 % de FP sobre los negativos de entrenamiento.
+
+- **Los mapas de los dos filtros fijos están donde deben**: pegados a la tinta, y cada orientación sobre su borde (en el
+  rectángulo, 0° en los lados largos y 90° en los cortos). No hay bandas desplazadas como en el kernel aprendido: **el
+  desplazamiento era del aprendizaje, no de la convolución**.
+- **Gabor ordena bien**: con el kernel de 0°, la recta (1,89) da más que la curva (1,67). Pero ninguno pasa el umbral
+  (1,99): está hecho para un trazo de ~3 px, y en uno de 8 px sólo encaja con un borde a la vez.
+- **Sobel 3×3 se SATURA**: en una imagen binaria, cualquier píxel de borde (recto, curvo o esquina) da el máximo posible,
+  4,0, en las cuatro orientaciones, y el umbral también es 4,0 (lo alcanzan las manchas y los puntos). Su MAPA es correcto,
+  pero su MAX no dice nada: con 3×3 no hay largo de recta que medir.
+- La lección común: **la información está en el mapa, y el max de la imagen la tira**. Es el pendiente «el mapa, no el
+  max» de `rect-lin`.
+
 ## Los kernels
 
 ![kernels](resultados/kernels.png)
