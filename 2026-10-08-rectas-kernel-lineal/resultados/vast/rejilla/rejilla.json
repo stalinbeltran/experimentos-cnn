@@ -1,0 +1,27 @@
+{
+ "estado": "pendiente",
+ "pasos": [
+  {
+   "paso": "pendiente",
+   "hora": "2026-10-08T14:25:42+00:00"
+  }
+ ],
+ "id": "rejilla",
+ "etiqueta": "expc-rlin-rejilla",
+ "experimento": "rect-lin",
+ "descriptor": "/home/deploy/src/experimentos-cnn/2026-10-08-rectas-kernel-lineal/nn/vast.json",
+ "oferta": 54328113,
+ "precio_hora": 0.12978,
+ "maquina": {
+  "vcpu": 32.0,
+  "cpu": "Xeon E5-2682 v4",
+  "ram_gb": 62.6,
+  "ghz": 3.0,
+  "gpu": "RTX 5060 Ti",
+  "ubicacion": "Norway, NO",
+  "host": 153336,
+  "fiabilidad": 0.942
+ },
+ "horas_max": 2.0,
+ "tope_precio": 0.2
+}
