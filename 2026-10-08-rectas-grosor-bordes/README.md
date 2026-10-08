@@ -60,12 +60,21 @@ mejora nada.
 ![ejemplo](resultados/ejemplo-curva.png)
 
 `python nn/ejemplo_curva.py`: una curva del banco (radio 9, grosor 8) y una recta del mismo grosor, por el brazo Sobel ·
-9×9 · N = 1000 · semilla 0. **Tres cosas que se ven, y ninguna estaba en el criterio:**
+9×9 · N = 1000 · semilla 0. **Cuatro cosas que se ven, y ninguna estaba en el criterio:**
 
 1. **El detector sólo mira el MAX de cada mapa**, o sea la mejor ventana 9×9 (recuadro naranja). En la curva, esa ventana
    cae sobre el **lomo de arriba**, la parte más plana de su borde, y eso basta para «recta 0°».
 2. **La curva responde MÁS que la recta**: logit +3,5 contra +1,0. O sea que aquí no hay ni «recta débil en la curva».
-3. ⚠ **La «curva» de radio 9 y grosor 8 del banco es casi una mancha** (un creciente macizo; el hueco del arco queda
+3. ⚠ **El kernel responde DESPLAZADO del borde, en zonas sin tinta** (visto por el dueño en la figura; medido después). En
+   el rectángulo, el mapa de 0° no se enciende SOBRE los bordes de arriba y abajo sino en bandas paralelas a 1–3 px de
+   ellos, también dentro del rectángulo, donde no hay nada. Fuera de ±4 px de un borde el mapa vale exactamente 0 (es una
+   convolución 9×9), así que no hay respuesta «de la nada»; lo que falla es DÓNDE dentro de la ventana. Y el kernel de 0°
+   da más en la esquina (1,67) y en la curva (2,21) que a lo largo del borde recto (1,49). La causa más probable, **sin
+   comprobar**: el entrenamiento sólo dice «hay una recta EN ALGUNA PARTE de la imagen» (se toma el max), nunca DÓNDE, así
+   que nada obliga al kernel a centrar su respuesta en la línea.
+   (La primera versión de esta figura pintaba los valores negativos en azul y estiraba los ejes con los recuadros del
+   margen, y eso exageraba la «nube»: está corregida.)
+4. ⚠ **La «curva» de radio 9 y grosor 8 del banco es casi una mancha** (un creciente macizo; el hueco del arco queda
    tapado por el grosor). Es el mismo defecto de diseño que la «recta» de 10 × 14 px: con trazo grueso, la figura deja de
    ser lo que dice su etiqueta. Parte del «100 % de curvas gruesas detectadas» es esto, y no se ha separado cuánto.
 

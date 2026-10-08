@@ -83,13 +83,16 @@ def main() -> int:
             axh = fig.add_subplot(gs[3, :]); axh.axis("off")
         a1 = fig.add_subplot(fila[0, 0]); a1.imshow(x, cmap="gray_r", vmin=0, vmax=1); a1.set_title("1 · imagen"); a1.set_ylabel(nombre.replace(" · ", "\n", 1), fontsize=9, color=T1)
         a2 = fig.add_subplot(fila[0, 1]); a2.imshow(xs, cmap="gray_r", vmin=0, vmax=1); a2.set_title("2 · tras Sobel")
-        mx = max(abs(mapas).max(), 1e-6)
+        mx = max(mapas.max(), 1e-6)
         for j in range(4):
             aj = fig.add_subplot(fila[0, 2 + j]); M_ = mapas[j]
-            aj.imshow(M_, cmap="RdBu_r", norm=TwoSlopeNorm(0, -mx, mx))
+            # sólo la parte POSITIVA (la que puede ganar el max), en una escala común a los 4; el borde de Sobel en gris
+            aj.imshow(np.clip(M_, 0, None), cmap="Oranges", vmin=0, vmax=mx)
+            aj.contour(xs, levels=[0.3], colors=[T2], linewidths=0.6)
+            aj.set_xlim(-0.5, 31.5); aj.set_ylim(31.5, -0.5)
             yx = np.unravel_index(M_.argmax(), M_.shape)
-            aj.add_patch(mp.Rectangle((yx[1] - 4.5, yx[0] - 4.5), 9, 9, fill=False, ec=NAR, lw=1.5))
-            aj.plot(yx[1], yx[0], "o", color=NAR, ms=3)
+            aj.add_patch(mp.Rectangle((yx[1] - 4.5, yx[0] - 4.5), 9, 9, fill=False, ec="#2a78d6", lw=1.5))
+            aj.plot(yx[1], yx[0], "o", color="#2a78d6", ms=3)
             aj.set_title(f"4 · respuesta {ORI[j]}\n5 · max = {M_.max():.2f}")
             aj.set_xticks([]); aj.set_yticks([])
         for axx in (a1, a2):
@@ -97,6 +100,7 @@ def main() -> int:
         # superponer la ventana ganadora sobre la imagen de Sobel
         jg = int(logit.argmax()); yx = np.unravel_index(mapas[jg].argmax(), mapas[jg].shape)
         a2.add_patch(mp.Rectangle((yx[1] - 4.5, yx[0] - 4.5), 9, 9, fill=False, ec=NAR, lw=1.5))
+        a2.set_xlim(-0.5, 31.5); a2.set_ylim(31.5, -0.5)
         a6 = fig.add_subplot(fila[0, 7:9])
         cols = [NAR if j == jg and logit[j] > 0 else "#2a78d6" for j in range(4)]
         a6.barh(range(4), logit, color=cols, height=0.6); a6.axvline(0, color=T2, lw=1)
@@ -106,8 +110,9 @@ def main() -> int:
         veredicto = (f"DETECTA recta {ORI[jg]}" if logit.max() > 0 else "no detecta nada")
         a6.set_title(f"6 · logit = {a:.2f}·max {c:+.2f}\n→ {veredicto}", color=NAR if logit.max() > 0 else T1, loc="left")
         a6.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("Por qué una curva gruesa sale como RECTA: el detector sólo mira el MAX de cada mapa, o sea la mejor ventana 9×9 "
-                 "(recuadro naranja).\nDentro de esa ventana, un trozo del borde de la curva se parece lo bastante a un borde recto.",
+    fig.suptitle("Paso 4: sólo la parte POSITIVA de cada mapa (naranja; escala común por fila), con el borde de Sobel en gris. "
+                 "Paso 5: el MAX (recuadro azul = su ventana 9×9).\nFuera de ±4 px de un borde el mapa vale exactamente 0. "
+                 "El fallo real: el kernel de 0° responde MÁS a la esquina (1,67) y a la curva (2,21) que al borde recto (1,49).",
                  color=T1, fontsize=11)
     RES.mkdir(exist_ok=True); fig.savefig(RES / "ejemplo-curva.png", dpi=120, bbox_inches="tight"); plt.close(fig)
     print("→", RES / "ejemplo-curva.png")
