@@ -6,6 +6,8 @@ resultados/rejilla.jsonl. Cada línea lleva las métricas del banco y los 2 kern
 
     python nn/entrenar_local.py                       la rejilla entera (432)
     python nn/entrenar_local.py --solo 7,3,continua,32,0    un brazo (para medir el tiempo)
+    python nn/entrenar_local.py --parte 3/14 --salida resultados/vast/rejilla-03.jsonl --hilos 2
+                                                      el trozo 3 de 14 (reparto determinista y equilibrado por coste)
 """
 from __future__ import annotations
 
@@ -35,6 +37,18 @@ EPOCAS, LR = 400, 0.03
 SALIDA = E.RES / "rejilla.jsonl"
 
 
+def coste(br) -> float:
+    """Coste relativo estimado de un brazo: ∝ N · k² · (1 + ¼ + 1/16 … según escalas). Sólo para repartir."""
+    k, nv, _, n, _ = br
+    return (n + 50) * k * k * sum(0.25 ** l for l in range(nv))
+
+
+def parte(brazos: list, i: int, n: int) -> list:
+    """Trozo i (1..n): ordena por coste descendente y reparte en zigzag → trozos de coste parecido, siempre los mismos."""
+    orden = sorted(brazos, key=lambda b: (-coste(b), b))
+    return [b for j, b in enumerate(orden) if (j // n) % 2 == 0 and j % n == i - 1 or (j // n) % 2 == 1 and n - 1 - j % n == i - 1]
+
+
 def entrenar(x: np.ndarray, y: np.ndarray, k: int, nv: int, sem: int) -> tuple[M.Lineal, float]:
     torch.manual_seed(sem)
     m = M.Lineal(k, nv, sem)
@@ -50,39 +64,44 @@ def entrenar(x: np.ndarray, y: np.ndarray, k: int, nv: int, sem: int) -> tuple[M
     return m, float(perdida.detach())
 
 
-def hechos() -> set:
-    if not SALIDA.exists():
+def hechos(salida: Path) -> set:
+    if not salida.exists():
         return set()
-    return {(r["k"], r["escalas"], r["entreno"], r["n"], r["semilla"]) for r in map(json.loads, SALIDA.read_text().splitlines())}
+    return {(r["k"], r["escalas"], r["entreno"], r["n"], r["semilla"]) for r in map(json.loads, salida.read_text().splitlines())}
 
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--solo", help="k,escalas,entreno,N,semilla")
     p.add_argument("--no-guardar", action="store_true")
+    p.add_argument("--parte", help="i/n: sólo el trozo i de n")
+    p.add_argument("--salida", type=Path, default=SALIDA)
+    p.add_argument("--hilos", type=int, default=2)
     a = p.parse_args()
-    torch.set_num_threads(2)
+    torch.set_num_threads(a.hilos)
     e = D.cargar(D.ENTRENO)
     xb, b = E.banco()
     if a.solo:
         k, nv, modo, n, s = a.solo.split(","); brazos = [(int(k), int(nv), modo, int(n), int(s))]
     else:
         brazos = list(itertools.product(KS, ESCALAS, MODOS, NS, SEMILLAS))
-    ya = hechos()
+    if a.parte:
+        i, n = map(int, a.parte.split("/")); brazos = parte(brazos, i, n)
+    ya = hechos(a.salida)
     pendientes = [br for br in brazos if br not in ya]
     print(f"{len(brazos)} brazos, {len(brazos) - len(pendientes)} ya hechos, {len(pendientes)} por hacer", flush=True)
-    E.RES.mkdir(exist_ok=True)
+    a.salida.parent.mkdir(parents=True, exist_ok=True)
     for i, (k, nv, modo, n, s) in enumerate(pendientes, 1):
         t0 = time.time()
         x, y = D.entreno(e, modo, n)
         m, perdida = entrenar(x, y, k, nv, s)
         met = E.metricas(E.logits(m, xb), b)
         fila = {"k": k, "escalas": nv, "entreno": modo, "n": n, "semilla": s, "epocas": EPOCAS, "lr": LR,
-                "perdida_final": E.r4(perdida), "segundos": round(time.time() - t0, 1), "parametros": m.n_parametros(),
-                **met, "a": E.r4(m.a), "c": E.r4(m.c),
+                "perdida_final": E.r4(perdida), "segundos": round(time.time() - t0, 1), "hilos": a.hilos, "parametros": m.n_parametros(),
+                **met, "a": E.r4(m.a.detach()), "c": E.r4(m.c.detach()),
                 "K0": m.K[0, 0].detach().numpy().round(4).tolist(), "K45": m.K[1, 0].detach().numpy().round(4).tolist()}
         if not a.no_guardar:
-            with SALIDA.open("a", encoding="utf-8") as fh:
+            with a.salida.open("a", encoding="utf-8") as fh:
                 fh.write(json.dumps(fila, ensure_ascii=False) + "\n")
         print(f"[{i}/{len(pendientes)}] k={k} esc={nv} {modo} N={n} s={s}: fino {met['recall_fino']} grueso "
               f"{met['recall_grueso']} fp {met['fp_total']}  ({fila['segundos']} s)", flush=True)

@@ -60,12 +60,20 @@ es parte del **detector**, no un pre-proceso: el mismo kernel aplicado a la imag
 | `nn/datos.py` | genera y publica entrenamiento y banco; los carga con su huella | `--generar [--publicar]` · `--comprobar` |
 | `nn/modelo.py` | el detector lineal (2 kernels + rot90, pirámide, max) y el Gabor a mano | `--comprobar` |
 | `nn/referencia_cnn.py` | COPIA de la arquitectura del detector de `feat-ind32`; lee sus 4 rectas por id + huella de su firma | `--comprobar` |
-| `nn/entrenar_local.py` | la rejilla; reanudable (salta lo que ya está en `rejilla.jsonl`) | `[--solo k,escalas,entreno,N,semilla]` |
+| `nn/entrenar_local.py` | la rejilla; reanudable (salta lo que ya está en su fichero de salida) | `[--solo k,escalas,entreno,N,semilla]` · `[--parte i/n] [--salida f] [--hilos h]` |
+| `nn/vast.sh` | la rejilla entera en UNA máquina de Vast (14 trozos × 2 hilos), libro en `resultados/vast/rejilla/`, trae `resultados/trozos/` | `rejilla` · `--estado` · `apagar` · `VAST_SECO=1 …` |
+| `nn/lanzar.sh` | la rejilla en el dev como unidad `rect-lin-rejilla` | `(sin args)` · `--estado` · `SECO=1 …` |
 | `nn/evaluar.py` | banco de prueba, referencias, tablas y figuras | `--referencias` · `--tablas` · `--figuras` |
 
 - **Dependencias:** el `.venv` de la raíz del repo (torch CPU, numpy, scipy, matplotlib).
 - **De dónde sale el código:** escrito aquí. Lo único copiado es la clase del detector de `feat-ind32` (en
   `referencia_cnn.py`), porque hace falta para cargar sus pesos.
+
+- **Dos sitios a la vez (2026-10-08, pedido del dueño: medir si alquilar acelera).** El dev escribe
+  `resultados/rejilla.jsonl`; Vast trae los suyos a `resultados/vast/rejilla/…/trozos/`. **Nadie fusiona escribiendo en el
+  fichero del dev mientras su unidad corre** (dos escritores; aviso del revisor): la fusión la hace `evaluar.py` al LEER,
+  por clave (k, escalas, entreno, N, semilla). Los brazos medidos en los dos sitios comprueban si el resultado es el mismo
+  en otra CPU.
 
 ## Qué NO hereda
 
@@ -87,3 +95,9 @@ es parte del **detector**, no un pre-proceso: el mismo kernel aplicado a la imag
   poco (co-circularidad / campo de asociación). Si este detector da varias detecciones débiles a lo largo de una curva,
   una segunda etapa podría construir el detector de curvas encima. Lo mismo para la agrupación de puntos MUY separados
   (más que el kernel), que un solo kernel no puede integrar.
+- **Las rectas GRUESAS pueden quedar fuera del detector** (el dueño, 2026-10-08): «las líneas gruesas no me preocupan
+  mientras el sistema detecte líneas delgadas hasta cierto punto, pues las gruesas pueden eliminarse mediante filtros de
+  bordes». O sea: un trazo grueso se convierte en dos bordes finos con un filtro de bordes y es ESO lo que ve el detector.
+  Se ve después. Para leer este experimento significa que el recall grueso (H4, y la mitad «grueso» de H9) pesa menos
+  que el fino; el criterio no se reescribe, se lee con esto delante.
+
