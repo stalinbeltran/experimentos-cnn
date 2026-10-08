@@ -118,6 +118,15 @@ compositor de siempre (180 de train, 1617 de val, 3 semillas), y con dos fuentes
    nunca a funcionar con un lado solo. La prueba limpia de «detectores por lado» pide entrenar detectores con UN lado cada
    uno — eso ya es Vast, y no se ha hecho.
 
+### Lo que ve el compositor, para un dígito (`nn/ver_entradas.py`, 2026-10-08)
+
+![entradas de los detectores](resultados/entradas-1-detectores.png)
+![entradas por lado](resultados/entradas-1-lados.png)
+
+Un «2» de prueba. Con la tinta se encienden arco ⊂, recta / y **lazo** (el rizo de arriba); con el control, los dos arcos y
+la esquina ┘ de abajo. Los dos compositores aciertan, con poca seguridad (49 % y 34 %). Por lado (B), los detectores del
+brazo compartido apenas se encienden mirando un lado solo: por eso sus compositores por lado leen tan poco.
+
 ## Contra el criterio (escrito antes)
 
 | | control | compartido |
