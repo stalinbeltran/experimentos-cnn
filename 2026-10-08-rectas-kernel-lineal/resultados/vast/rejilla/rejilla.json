@@ -1,9 +1,37 @@
 {
- "estado": "pendiente",
+ "estado": "destruida",
  "pasos": [
   {
    "paso": "pendiente",
    "hora": "2026-10-08T14:25:42+00:00"
+  },
+  {
+   "paso": "alquilada",
+   "hora": "2026-10-08T14:25:44+00:00"
+  },
+  {
+   "paso": "sellada",
+   "hora": "2026-10-08T14:31:43+00:00"
+  },
+  {
+   "paso": "subida",
+   "hora": "2026-10-08T14:31:48+00:00"
+  },
+  {
+   "paso": "instalada",
+   "hora": "2026-10-08T14:32:37+00:00"
+  },
+  {
+   "paso": "corriendo",
+   "hora": "2026-10-08T14:32:41+00:00"
+  },
+  {
+   "paso": "traida",
+   "hora": "2026-10-08T14:57:31+00:00"
+  },
+  {
+   "paso": "destruida",
+   "hora": "2026-10-08T14:57:32+00:00"
   }
  ],
  "id": "rejilla",
@@ -23,5 +51,17 @@
   "fiabilidad": 0.942
  },
  "horas_max": 2.0,
- "tope_precio": 0.2
+ "tope_precio": 0.2,
+ "iid": 54860371,
+ "intentos_clave": 1,
+ "payload_mb": 3.8,
+ "sha256": "55980f2b70fc8b1f",
+ "segundos_max": 6185,
+ "rc": 0,
+ "traido": [
+  "experimentos-cnn/2026-10-08-rectas-kernel-lineal/resultados/trozos"
+ ],
+ "apartado": [],
+ "minutos": 31.8,
+ "coste_usd": 0.0688
 }
