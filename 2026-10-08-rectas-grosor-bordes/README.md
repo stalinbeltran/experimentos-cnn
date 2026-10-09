@@ -89,7 +89,10 @@ original; umbral a 5 % de FP sobre los negativos de entrenamiento.
   rectángulo, 0° en los lados largos y 90° en los cortos). No hay bandas desplazadas como en el kernel aprendido: **el
   desplazamiento era del aprendizaje, no de la convolución**.
 - **Gabor ordena bien**: con el kernel de 0°, la recta (1,89) da más que la curva (1,67). Pero ninguno pasa el umbral
-  (1,99): está hecho para un trazo de ~3 px, y en uno de 8 px sólo encaja con un borde a la vez.
+  (1,99): está hecho para un trazo de ~3 px, y en uno de 8 px sólo encaja con un borde a la vez. ⚠ «No detecta» quiere
+  decir sólo eso: el MAX no pasa el umbral, aunque el MAPA sí muestra la recta. El umbral lo fijan las **manchas** del
+  entrenamiento (discos de radio 2–5: mediana 1,55, p95 2,09), y el 31 % de ellas da más que este rectángulo (1,89). Las
+  rectas finas dan 2,8–3,3, muy por encima.
 - **Sobel 3×3 se SATURA**: en una imagen binaria, cualquier píxel de borde (recto, curvo o esquina) da el máximo posible,
   4,0, en las cuatro orientaciones, y el umbral también es 4,0 (lo alcanzan las manchas y los puntos). Su MAPA es correcto,
   pero su MAX no dice nada: con 3×3 no hay largo de recta que medir.
