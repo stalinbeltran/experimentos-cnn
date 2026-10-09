@@ -327,3 +327,32 @@ en los dos niveles que pide la regla: [**la figura**](imagenes/9-desplazamientos
 componente, sin rejilla fija, y una convolución es equivariante a desplazamientos enteros (κ idéntico en 194 de 200
 figuras movidas 3 px; las 6 restantes tocan el borde). **El detector no pierde nada al moverse; lo pierde el
 compositor**, que lee sus mapas en celdas fijas.
+
+### Feature a feature: cuáles deciden (2026-10-09, pedido del dueño)
+
+[**La figura**](imagenes/7-cinco-6-features.png). El compositor recibe 704 números y cada uno vota con **peso × valor
+estandarizado**. Arriba, el voto a la diferencia 9 − 5 (lo que decide 9 contra 5); abajo, el voto al logit del 9 a
+secas. A la derecha, cada feature dibujada en **su celda** sobre el dígito.
+
+| # | feature (canal · celda fila,col) | voto 9 − 5 | peso | z |
+|---:|---|---:|---:|---:|
+| 1 | horizontal 0°, escala 1 · (2,4) | **+0,73** | +0,13 | 5,5 |
+| 2 | curvas: recto · (0,4) | **−0,55** | −0,17 | 3,2 |
+| 3 | horizontal 0°, escala 1 · (2,3) | +0,44 | +0,08 | 5,4 |
+| 4 | horizontal 0°, escala 1 · (2,5) | +0,36 | +0,08 | 4,8 |
+| 5 | curvas: golpe · (3,1) | −0,30 | −0,13 | 2,3 |
+| 6 | curvas: golpe · (1,4) | +0,29 | +0,10 | 3,0 |
+| 7 | horizontal 0°, escala 1 · (2,2) | +0,27 | +0,06 | 4,4 |
+
+Lo que se lee:
+
+- **La decisión la llevan cuatro celdas de la fila 2 del canal horizontal** (px 8–11, columnas 2–5): #1, #3, #4 y #7
+  suman +1,80 de un margen de +2,36. Son la barra media, que en este 5 cae una fila de celdas más arriba que en sus
+  gemelos. Su valor z es de 4,4 a 5,5 desviaciones: para el compositor es una horizontal **fuera de lo normal** en esa
+  altura, y el peso de esa celda es positivo hacia el 9 (el fondo del lazo).
+- **La que más tira hacia el 5 es del detector de curvas**: el canal «recto» en la celda (0,4), la barra de arriba
+  leída como tramo recto. Vale −0,55. Y las dos de «golpe» (#5, #6) van en sentidos contrarios y casi se anulan.
+- **El voto está muy repartido**: 642 de las 704 features votan algo, hacen falta **91** para sumar la mitad del voto
+  absoluto y 238 para el 80 %. Las 20 de la figura explican +2,18 del margen porque el resto se cancela entre sí.
+- **Lo que sube el logit del 9 es el mismo bloque**: 16 de las 20 primeras son del canal horizontal (filas 2 y 3 de
+  celdas, las dos escalas). El 9 se reconoce casi sólo por horizontales en la mitad superior.

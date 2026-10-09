@@ -10,6 +10,8 @@ fallos de la semilla 0. Se reproduce el MISMO compositor (misma semilla, mismo e
     7-cinco-3-borrar.png     qué tinta empuja al 9 (borrando parches 4×4) y qué hay que borrar para que diga 5
     7-cinco-4-ejemplos.png   con qué aprendió: los 18 cincos y 18 nueves de entrenamiento, y los vecinos de este
     7-cinco-5-rasgos.png     los dos rasgos (barra media alta, lado derecho recto), contra los 5 y 9 de entrenamiento
+    7-cinco-6-features.png   feature a feature: las 704 entradas ordenadas por su voto (peso × valor), las 20 que más
+                             deciden 9 contra 5 y las 20 que más suben el logit del 9, cada una dibujada en su celda
 
     python por_que_5.py [--k 36]   → imagenes/7-cinco-*.png · resultados-cinco.json
 """
@@ -289,6 +291,71 @@ def figura_perfil(x, X, img, y, tr, i):
                                           "media_9": [round(float(v), 2) for v in rej(X[t9], 6)[:, :, 5:].max(2).mean(0)]}}
 
 
+# ─── 6 · feature a feature ────────────────────────────────────────────────────────────────────────────────────────
+def _nombre(k: int) -> tuple[str, int, int]:
+    canal, celda = divmod(k, 64); fila, col = divmod(celda, 8)
+    return CANALES[canal].replace("rectas ", "").replace(" · ", " "), fila, col
+
+
+def _bloque(fig, gs_fila, titulo, contrib, x, n_barras=20, n_tiles=12, etiqueta_pos="→ 9", etiqueta_neg="→ 5"):
+    orden = np.argsort(-np.abs(contrib)); top = orden[:n_barras]
+    total = contrib.sum(); explicado = contrib[top].sum()
+    a = fig.add_subplot(gs_fila[0, 0:2])
+    a.barh(range(n_barras), contrib[top], color=[NAR if contrib[k] > 0 else AZU for k in top], height=0.7)
+    a.set_yticks(range(n_barras))
+    a.set_yticklabels([f"#{r + 1}  {_nombre(k)[0]}  celda ({_nombre(k)[1]},{_nombre(k)[2]})" for r, k in enumerate(top)], fontsize=7)
+    a.invert_yaxis(); a.axvline(0, color=T2, lw=0.8); a.spines[["top", "right"]].set_visible(False)
+    lo, hi = min(contrib[top].min(), 0), max(contrib[top].max(), 0); a.set_xlim(lo - 0.3 * (hi - lo), hi + 0.2 * (hi - lo))
+    for r, k in enumerate(top):
+        a.text(contrib[k] + (0.01 if contrib[k] >= 0 else -0.01) * abs(contrib[top]).max() * 3, r, f"{contrib[k]:+.2f}",
+               va="center", ha="left" if contrib[k] >= 0 else "right", fontsize=6.5, color=T2)
+    a.set_title(f"{titulo}\nlas {n_barras} de 704 con más |voto|: suman {explicado:+.2f} de {total:+.2f}  "
+                f"(naranja {etiqueta_pos} · azul {etiqueta_neg})", loc="left", fontsize=8.5)
+    a.set_xlabel("voto = peso × valor estandarizado", fontsize=8)
+    # tiles: cada feature en su celda sobre el dígito
+    sub = gs_fila[0, 2:].subgridspec(2, n_tiles // 2, wspace=0.12, hspace=0.45)
+    for r, k in enumerate(top[:n_tiles]):
+        t = fig.add_subplot(sub[r // (n_tiles // 2), r % (n_tiles // 2)])
+        canal, fila, col = _nombre(k)
+        t.imshow(x, cmap="gray_r", vmin=0, vmax=2.2); limpio(t)
+        t.contour(x.astype(float), levels=[0.5], colors=[T2], linewidths=0.4)
+        c = NAR if contrib[k] > 0 else AZU
+        t.add_patch(plt.Rectangle((col * 4 - 0.5, fila * 4 - 0.5), 4, 4, facecolor=c, alpha=0.55, edgecolor=c, lw=1.5))
+        t.set_xlim(-0.5, 31.5); t.set_ylim(31.5, -0.5)
+        t.set_title(f"#{r + 1} {canal}\n{contrib[k]:+.2f}", fontsize=7, color=c)
+    return [{"rango": r + 1, "feature": int(k), "canal": _nombre(k)[0], "celda": [int(_nombre(k)[1]), int(_nombre(k)[2])],
+             "voto": round(float(contrib[k]), 3), "peso": None, "z": None} for r, k in enumerate(top)]
+
+
+def figura_features(x, z, W, b, logits):
+    estilo()
+    fig = plt.figure(figsize=(17, 13.5))
+    gs = fig.add_gridspec(2, 1, hspace=0.3)
+    out = {}
+    margen = (W[B] - W[A]) * z
+    fila = gs[0].subgridspec(1, 5, wspace=0.5, width_ratios=[1.2, 1.2, 1, 1, 1])
+    out["margen_9_menos_5"] = _bloque(fig, fila, f"QUÉ DECIDE 9 CONTRA 5 · voto = (W₉ − W₅)·z · logit₉ − logit₅ = {logits[B] - logits[A]:+.2f}",
+                                      margen, x)
+    for e in out["margen_9_menos_5"]:
+        k = e["feature"]; e["peso"] = round(float(W[B, k] - W[A, k]), 3); e["z"] = round(float(z[k]), 2)
+    solo9 = W[B] * z
+    fila = gs[1].subgridspec(1, 5, wspace=0.5, width_ratios=[1.2, 1.2, 1, 1, 1])
+    out["logit_9"] = _bloque(fig, fila, f"QUÉ SUBE EL LOGIT DEL 9 · voto = W₉·z · logit₉ = {logits[B]:.2f} (sesgo {b[B]:+.2f})",
+                             solo9, x, etiqueta_pos="sube 9", etiqueta_neg="baja 9")
+    for e in out["logit_9"]:
+        k = e["feature"]; e["peso"] = round(float(W[B, k]), 3); e["z"] = round(float(z[k]), 2)
+    # reparto por canal y concentración
+    ab = np.abs(margen); ordm = np.argsort(-ab); acum = np.cumsum(ab[ordm]) / ab.sum()
+    out["concentracion_margen"] = {"features_para_50pct_del_voto_absoluto": int(np.searchsorted(acum, 0.5) + 1),
+                                   "features_para_80pct": int(np.searchsorted(acum, 0.8) + 1),
+                                   "features_con_voto_no_nulo": int((ab > 1e-6).sum())}
+    fig.suptitle("6 · Feature a feature: cada una de las 704 entradas (celda 4×4 de un canal) con su voto = peso × valor. "
+                 "Sombreado: la celda de cada feature sobre el dígito.", color=T1, fontsize=11)
+    fig.savefig(IMG / "7-cinco-6-features.png", dpi=100, bbox_inches="tight"); plt.close(fig)
+    print("→", IMG / "7-cinco-6-features.png")
+    return out
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--k", type=int, default=36, help="posición en la lista de fallos del combinado, semilla 0")
@@ -317,6 +384,7 @@ def main() -> int:
     out["borrar"] = figura_borrar(x, f_logits)
     out["ejemplos"] = figura_ejemplos(x, z, (X[tr] - mu) / sd, img, y, tr)
     out["rasgos"] = figura_perfil(x, X, img, y, tr, i)
+    out["features"] = figura_features(x, z, W, b, logits)
     (AQUI / "resultados-cinco.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps(out, ensure_ascii=False, indent=1))
     return 0
