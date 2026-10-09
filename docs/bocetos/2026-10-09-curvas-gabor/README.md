@@ -195,3 +195,67 @@ fallan en **lazos**: 8→9, 5→9, 8→6, 8→1, donde lo que distingue es si un
 ni un κ. **Añadir κ no cierra ese hueco**, porque su información está contenida casi entera en los 4 mapas de rectas
 integrados (49 de 70 fallos compartidos). El hueco es de vocabulario —lazo cerrado contra abierto, el mismo que señaló
 `feat-cortas`—, no de curvatura.
+
+## Por qué el combinado lee 9 en un 5 nítido (2026-10-09, pedido del dueño)
+
+El dígito es el **1018 de val**, el fallo nº 37 (fila 4, columna 1) de
+[`6-fallos-combinado.png`](imagenes/6-fallos-combinado.png). `python por_que_5.py` (≈ 40 s; `--k` elige otro fallo de la
+lista) reproduce **el mismo compositor**: comprueba que salen los mismos 68 fallos y que las rejillas que dibuja son
+exactamente las 704 características que recibió. Los números, en [`resultados-cinco.json`](resultados-cinco.json).
+
+**No es mala suerte de una semilla.** Falla con las tres. El de rectas solo también dice 9 (tres de tres), y el de
+curvas solo dice 6.
+
+| | logit 5 | logit 9 | margen 9 − 5 |
+|---|---:|---:|---:|
+| dígito 1018 | 7,64 | **10,00** | +2,36 |
+
+### Las cinco figuras
+
+1. [**Lo que ve**](imagenes/7-cinco-1-entrada.png): la imagen, los 4 Gabor, la integración de 15 px y las 11 rejillas
+   8×8 que llegan al compositor. No ve la imagen, sino dónde hay trazo de cada orientación.
+2. [**Quién vota**](imagenes/7-cinco-2-votos.png): el compositor es lineal, así que logit 9 − logit 5 es la suma, celda a
+   celda, de (W₉ − W₅) × z. Votan 9 los canales **horizontales** (+1,70 a escala 1 y +1,54 a escala ½) y la **vertical**
+   a escala ½ (+1,09). Votan 5 las diagonales y el canal «recto» de curvas (−0,77, la barra de arriba). Las curvas apenas
+   votan (+0,03). Más de la mitad del margen (+1,31 de +2,36) viene de lo que **falta**, no de lo que hay.
+3. [**Qué tinta lo hace 9**](imagenes/7-cinco-3-borrar.png): borrando parches de 4×4, la barra media y el lado derecho
+   empujan al 9; la barra de arriba y el trazo izquierdo empujan al 5. **Borrar UN solo parche** (filas 10–13,
+   columnas 12–15, donde la barra media sale del trazo izquierdo) lo vuelve 5, con margen −2,34. La decisión era un
+   casi-empate.
+4. [**Con qué aprendió**](imagenes/7-cinco-4-ejemplos.png): 18 cincos y 18 nueves. De los 12 dígitos de entrenamiento más
+   parecidos en las 704 características, **9 son nueves**. Los dos más cercanos son cincos, pero un compositor lineal no
+   vota por vecinos.
+5. [**Los dos rasgos, medidos**](imagenes/7-cinco-5-rasgos.png): contra la media de los 18 «5» y los 18 «9» de entrenamiento.
+
+### La causa: dos rasgos de 9 en un 5, y 18 ejemplos que no los cubren
+
+El máximo por fila de celdas de cada canal, contra la media de entrenamiento:
+
+| trazo HORIZONTAL (— 0°, escala 1) | px 8–11 | px 12–15 | px 16–19 |
+|---|---:|---:|---:|
+| este 5 | **1,38** | **1,84** | **0,14** |
+| media de los 18 «5» | 0,22 | 0,96 | 0,93 |
+| media de los 18 «9» | 0,42 | 1,16 | 0,38 |
+
+| trazo VERTICAL a la derecha (\| 90°, escala ½) | px 12–15 | px 16–19 | px 20–23 | px 24–27 |
+|---|---:|---:|---:|---:|
+| este 5 | **1,21** | **1,29** | **1,29** | **1,29** |
+| media de los 18 «5» | 0,58 | 0,57 | 0,52 | 0,49 |
+| media de los 18 «9» | 1,52 | 1,54 | 1,43 | 1,27 |
+
+1. **La barra media está alta.** En este 5 cae en px 8–15. En los 5 de entrenamiento cae en px 12–19, y casi nunca hay
+   trazo horizontal en px 16–19 sin barra (aquí 0,14 contra 0,93). Una horizontal en px 12–15 **sin nada debajo** es lo
+   que dibuja el fondo del lazo de un 9. Por eso vota 9 lo que hay y también lo que falta.
+2. **El lado derecho del cuenco es una vertical recta y larga.** Mide 1,2–1,3 desde px 12 hasta abajo, contra 0,5 de los
+   5 de entrenamiento, que lo tienen redondo. Es el perfil del palo de un 9.
+3. **Lo que separa un 5 de un 9 no está en las características.** Esa diferencia es que el lazo de arriba está **abierto
+   por la derecha**. El compositor sólo ve cuánta vertical hay en cada celda, no si el lazo cierra. La abertura sí se
+   nota (0,36–0,98 arriba a la derecha, contra 0,88–1,36 de los 9), pero pesa menos que los dos rasgos de arriba.
+
+**Hipótesis descartada: la integración de 15 px.** Estira la vertical derecha hacia arriba y rellena parte de la
+abertura: el mapa vale 0,18–0,98 en filas sin tinta. Pero sin integrar (los mapas Gabor crudos más las curvas) el dígito
+1018 **sigue saliendo 9** con las tres semillas, y el acierto en val es el mismo (0,957–0,960). No es la causa.
+
+**Qué lo arreglaría, sin comprobar:** un rasgo de **lazo cerrado contra abierto**, que es el hueco de vocabulario que ya
+apuntaba la tabla de fallos (8→9, 5→9, 8→6), o más ejemplos de 5 con barra alta y cuenco cuadrado. Con 18 por clase, un
+estilo que no está en el entrenamiento se lee por el vecino más parecido en lo que el detector sí ve.
