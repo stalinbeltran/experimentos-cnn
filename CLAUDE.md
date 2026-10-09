@@ -22,7 +22,46 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
-## ⏳ PENDIENTE (2026-10-07): detectores de borde de un solo lado — empieza aquí
+## ⏳ PENDIENTE (2026-10-09): la línea de RECTAS — empieza aquí
+
+Dos experimentos cerrados el 2026-10-08 (`rect-lin`, `rect-bor`; reportes #38 y #39 del central) y un tanteo del 09 que
+cambia el rumbo: **4 kernels Gabor FIJOS, sin entrenar, conservando el MAPA (no su max) e integrados a lo largo de su
+orientación en 2 escalas, leen los dígitos 0,955** (180/1617, compositor lineal) contra 0,949 de los 13 detectores CNN de
+`feat-ind32`. Detalle en `2026-10-08-rectas-grosor-bordes/README.md` § «Tanteo». Nada vivo ni pagado pendiente.
+
+Lo que falta, por orden de lo que pidió o aceptó el dueño:
+
+1. **Convertir el tanteo en experimento** con su criterio escrito antes: Gabor fijo + mapa + integración + 2 escalas →
+   compositor. Con curva de N (180 → 900+), más semillas, y las referencias re-ejecutadas con el MISMO protocolo (el
+   `verificador` sólo las comprobó en los documentos). Y ampliar el vocabulario FIJO (arcos, esquinas) para ver si suma.
+2. **Cómo leer el mapa en vez del max** (el dueño: «el problema es que usamos el máximo»). Probada sólo la opción 1
+   (integrar a lo largo de la orientación). Faltan la **2** (segmentos: umbral + componentes conexas → largo, ancho,
+   orientación de cada trozo) y la **3** (votación tipo Hough), que es la única que podría unir **puntos muy separados**.
+3. **Curvas como segunda etapa sobre rectas cortas** (el dueño, 2026-10-08): una curva = cadena de detecciones cortas cuya
+   orientación gira. Necesita la opción 2 de arriba.
+4. **Grosor.** (a) Gabor más ancho o con 2 escalas como detector (en `rect-lin` daba 0,88 en 6–8 px); (b) entrenar con
+   trazo 2–8 px y Sobel delante, para comprobar la hipótesis «aprendió dos bordes juntos, no un borde» (`rect-bor`);
+   (c) bordes de un solo lado, que necesitan un detector de varios canales.
+5. **El kernel APRENDIDO salió ruidoso y responde desplazado del borde** (visto por el dueño en `rect-bor`,
+   `resultados/ejemplo-curva.png`). Arreglos propuestos y sin probar: kernel simétrico, kernel paramétrico (3–4
+   números), o supervisar DÓNDE está la recta (objetivo = mapa) y no sólo «hay recta». Causa probable, sin comprobar:
+   la supervisión sólo dice «en alguna parte».
+6. **El banco de prueba tiene figuras que no son lo que dice su etiqueta**: «rectas» de 10 × 14 px (un bloque) y
+   «curvas» de radio 9 y 8 px (una mancha). Quitarlas y re-medir; 0 $, sin re-entrenar.
+7. **Rectas suavizadas (antialias) contra binarias**: todo lo medido es binario, como los dígitos de NIST. Medir si
+   entrenar suavizado ayuda en el banco binario.
+8. **Método**: N equilibrado por orientación en la curva de aprendizaje (con N = 4 hay orientaciones sin ejemplo), y
+   guardar los kernels SIN redondear (con 4 decimales, el control re-evaluado de `rect-bor` difiere hasta 0,028).
+9. **Punteadas**: un kernel no las generaliza en ningún sentido (`rect-lin`). Es la opción 3 de arriba.
+
+⚠ El pendiente de `feat-1lado` («ningún detector de recta ve la MITAD de las rectas reales») queda **contestado en
+parte** por `rect-lin`: el hueco era el ÁNGULO entre clases, y un kernel lineal con 4 orientaciones lo cubre (0,98 a
+15–22,5° de su centro, contra 0,30 de la CNN). Lo de los arcos de esa lista sigue abierto.
+
+⚠ Fuera de este repo, y conocido: el freno (`cerrable.mjs`) dice `NO SÉ` con una máquina de Vast lanzada desde `~/src`
+(sin `WORKSPACE.json` no hay prefijo). Es el P1/P2 de `telegram-coordinator/docs/freno-prefijos-2026-09-01.md`.
+
+## ⏳ PENDIENTE (2026-10-07): detectores de borde de un solo lado
 
 Línea de trabajo abierta con el dueño: bordes de un lado como único pre-proceso, una «vista» por dirección, y qué
 compositor usar. Todo lo hecho (figuras, pruebas rápidas a 0 $, resultados) y la lista de lo que falta están en

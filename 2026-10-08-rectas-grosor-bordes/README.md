@@ -144,6 +144,9 @@ python nn/evaluar.py --tablas --figuras
 
 ## Lo que queda pendiente
 
+⚠ La lista completa y ordenada de la línea de rectas (incluido lo que salió después de cerrar esto) vive en el
+`CLAUDE.md` del repo, § «PENDIENTE (2026-10-09): la línea de RECTAS». Lo de abajo es lo que quedó al cerrar.
+
 1. **Entrenar con algo de grosor** (p. ej. 2–8 px) con Sobel delante, para ver si aprende «un borde» y no «dos bordes
    juntos», y así pasar de 0,70 en lo grueso. Es la prueba directa de la hipótesis de arriba.
 2. **El mapa, no el max** (pendiente 1 de `rect-lin`): con bordes, una recta gruesa debería dar DOS detecciones paralelas;
