@@ -38,7 +38,10 @@ Lo que falta, por orden de lo que pidió o aceptó el dueño:
    (integrar a lo largo de la orientación). Faltan la **2** (segmentos: umbral + componentes conexas → largo, ancho,
    orientación de cada trozo) y la **3** (votación tipo Hough), que es la única que podría unir **puntos muy separados**.
 3. **Curvas como segunda etapa sobre rectas cortas** (el dueño, 2026-10-08): una curva = cadena de detecciones cortas cuya
-   orientación gira. Necesita la opción 2 de arriba.
+   orientación gira. ✅ **Boceto hecho el 2026-10-09** (`docs/bocetos/2026-10-09-curvas-gabor/`, 0 $): 12 Gabor fijos →
+   orientación local → giro κ a lo largo de la tangente → recta/curva (con radio)/esquina/mancha. Sobre el banco de
+   `rect-lin`: 0 % de rectas finas leídas como curva, 99 % de los arcos R ≤ 27 como curva; radio útil 5–30 px. Falla en
+   esquinas de brazos cortos, trazo grueso (≥ 8 px) y punteadas. Lo que sería el experimento está en su README.
 4. **Grosor.** (a) Gabor más ancho o con 2 escalas como detector (en `rect-lin` daba 0,88 en 6–8 px); (b) entrenar con
    trazo 2–8 px y Sobel delante, para comprobar la hipótesis «aprendió dos bordes juntos, no un borde» (`rect-bor`);
    (c) bordes de un solo lado, que necesitan un detector de varios canales.

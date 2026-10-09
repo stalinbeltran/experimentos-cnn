@@ -1,0 +1,144 @@
+{
+ "recta · grosor 2": {
+  "recta": 266,
+  "corto": 94
+ },
+ "recta · grosor 3": {
+  "corto": 118,
+  "recta": 242
+ },
+ "recta · grosor 4": {
+  "corto": 118,
+  "recta": 238,
+  "mancha": 4
+ },
+ "recta · grosor 6": {
+  "corto": 64,
+  "recta": 192,
+  "curva": 5,
+  "esquina": 6,
+  "mancha": 93
+ },
+ "recta · grosor 8": {
+  "mancha": 125,
+  "corto": 77,
+  "recta": 140,
+  "curva": 11,
+  "esquina": 7
+ },
+ "recta · grosor 10": {
+  "corto": 149,
+  "esquina": 121,
+  "curva": 33,
+  "mancha": 57
+ },
+ "recta · grosor 12": {
+  "corto": 198,
+  "esquina": 120,
+  "curva": 36,
+  "mancha": 6
+ },
+ "recta · grosor 14": {
+  "corto": 181,
+  "esquina": 120,
+  "curva": 59
+ },
+ "punteada · sep 2": {
+  "recta": 120
+ },
+ "punteada · sep 3": {
+  "recta": 110,
+  "corto": 10
+ },
+ "punteada · sep 4": {
+  "nada": 48,
+  "corto": 64,
+  "mancha": 1,
+  "recta": 7
+ },
+ "punteada · sep 6": {
+  "nada": 120
+ },
+ "punteada · sep 8": {
+  "nada": 120
+ },
+ "punteada · sep 10": {
+  "nada": 120
+ },
+ "punteada · sep 12": {
+  "nada": 120
+ },
+ "arco R 6 · grosor 2": {
+  "curva": 24
+ },
+ "arco R 6 · grosor 4": {
+  "curva": 24
+ },
+ "arco R 6 · grosor 8": {
+  "curva": 20,
+  "corto": 2,
+  "esquina": 2
+ },
+ "arco R 9 · grosor 2": {
+  "curva": 24
+ },
+ "arco R 9 · grosor 4": {
+  "curva": 24
+ },
+ "arco R 9 · grosor 8": {
+  "curva": 24
+ },
+ "arco R 12 · grosor 2": {
+  "curva": 24
+ },
+ "arco R 12 · grosor 4": {
+  "curva": 24
+ },
+ "arco R 12 · grosor 8": {
+  "curva": 24
+ },
+ "arco R 18 · grosor 2": {
+  "curva": 24
+ },
+ "arco R 18 · grosor 4": {
+  "curva": 24
+ },
+ "arco R 18 · grosor 8": {
+  "curva": 24
+ },
+ "arco R 27 · grosor 2": {
+  "curva": 24
+ },
+ "arco R 27 · grosor 4": {
+  "curva": 24
+ },
+ "arco R 27 · grosor 8": {
+  "curva": 24
+ },
+ "arco R 40 · grosor 2": {
+  "recta": 10,
+  "curva": 14
+ },
+ "arco R 40 · grosor 4": {
+  "curva": 19,
+  "recta": 3,
+  "esquina": 2
+ },
+ "arco R 40 · grosor 8": {
+  "recta": 2,
+  "esquina": 3,
+  "curva": 19
+ },
+ "ruido": {
+  "nada": 300
+ },
+ "puntos-sueltos": {
+  "mancha": 53,
+  "nada": 220,
+  "corto": 27
+ },
+ "mancha": {
+  "mancha": 298,
+  "nada": 2
+ }
+}
