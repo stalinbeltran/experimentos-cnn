@@ -1,0 +1,47 @@
+{
+ "pixeles 8×8": {
+  "caracteristicas": 64,
+  "val_1617": 0.8918,
+  "val_rango": [
+   0.8893,
+   0.8936
+  ],
+  "ciega_3823": 0.8952
+ },
+ "pixeles 32×32": {
+  "caracteristicas": 1024,
+  "val_1617": 0.8942,
+  "val_rango": [
+   0.8936,
+   0.8949
+  ],
+  "ciega_3823": 0.9089
+ },
+ "A Gabor (mapa)": {
+  "caracteristicas": 256,
+  "val_1617": 0.9406,
+  "val_rango": [
+   0.9406,
+   0.9406
+  ],
+  "ciega_3823": 0.9276
+ },
+ "B Gabor + integrado": {
+  "caracteristicas": 256,
+  "val_1617": 0.9443,
+  "val_rango": [
+   0.9431,
+   0.9456
+  ],
+  "ciega_3823": 0.9329
+ },
+ "C B en 2 escalas": {
+  "caracteristicas": 512,
+  "val_1617": 0.9546,
+  "val_rango": [
+   0.9511,
+   0.9567
+  ],
+  "ciega_3823": 0.9466
+ }
+}

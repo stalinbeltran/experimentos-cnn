@@ -99,6 +99,26 @@ original; umbral a 5 % de FP sobre los negativos de entrenamiento.
 - La lección común: **la información está en el mapa, y el max de la imagen la tira**. Es el pendiente «el mapa, no el
   max» de `rect-lin`.
 
+### Tanteo: un compositor de dígitos con el Gabor fijo (2026-10-09, pedido del dueño; NO es parte del criterio)
+
+`python nn/prueba_digitos.py` (20 s en el dev). El Gabor 9×9 FIJO, sin entrenar nada, conservando el MAPA (sin max de la
+imagen): max en celdas 4×4 → 8×8 por orientación. El compositor y el reparto de los `feat-*` (lineal, 180 train / 1617 val,
+3 semillas; a ciegas, 3823 de otros escritores).
+
+| detector | características | val (1617) | a ciegas (3823) |
+|---|---:|---:|---:|
+| píxeles 8×8 | 64 | 0,892 | 0,895 |
+| píxeles 32×32 | 1024 | 0,894 | 0,909 |
+| A · Gabor, su mapa | 256 | 0,941 | 0,928 |
+| B · A integrado a lo largo de su orientación (15 px) | 256 | 0,944 | 0,933 |
+| **C · B en 2 escalas** | 512 | **0,955** | **0,947** |
+| *`feat-ind32`: 13 detectores CNN entrenados* | 832 | *0,949* | — |
+
+**La predicción escrita antes falló a favor**: decía que ninguno llegaría a 0,949, por faltar arcos, lazo y esquinas. Con 4
+kernels fijos y sólo rectas, C lee 0,955. ⚠ Es un tanteo: 0,006 sobre la referencia, 3 semillas que sólo cambian la
+inicialización del compositor, y el protocolo de las referencias no se ha re-ejecutado (lo verificó el agente
+`verificador` leyendo los documentos). Para declarar algo, haría falta un experimento propio con su criterio.
+
 ## Los kernels
 
 ![kernels](resultados/kernels.png)
