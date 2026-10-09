@@ -15,7 +15,7 @@ Aquí está montada entera, sin entrenar nada, y aplicada a rectas, curvas, esqu
                  si no → CURVA, con su radio; y si κ cambia de signo a mitad, S.
 
 Convención de ángulo de rect-lin: x a la derecha, y hacia ABAJO; 0° = —, 45° = \\, 90° = |, 135° = /.
-`kernel_gabor` está COPIADO de `2026-10-08-rectas-kernel-lineal/nn/modelo.py` (no se importa de otro experimento).
+`kernel_gabor` está COPIADO de `nn/modelo.py` del experimento `rect-lin` (no se importa de otro experimento).
 
     python curvas.py              → imagenes/*.png y resultados.json
     python curvas.py --banco      → además pasa el banco de rect-lin entero y escribe resultados-banco.{json,txt}

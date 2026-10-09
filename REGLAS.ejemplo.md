@@ -49,6 +49,20 @@ Los pasos, en orden, y qué se decide en cada uno:
 - **Qué se llama «ganar»:** RELLENAR — o «no se declara ganador: se reportan todos los que
   pasan», si es el caso.
 
+## Desplazamientos
+
+Regla del dueño del 2026-10-09 (`CLAUDE.md` § «la resistencia a los DESPLAZAMIENTOS se mide SIEMPRE»). Obligatoria
+desde esa fecha; `comprobar.py` la exige.
+
+- **Qué se reconoce y a qué nivel:** RELLENAR — el objeto entero, cada feature individual, o los dos (cada nivel lleva
+  su curva). Si este experimento no reconoce nada, escríbelo con el porqué y borra las líneas de abajo.
+- **Rango y direcciones:** RELLENAR — d = −k…+k px, horizontal y vertical por separado y cada signo aparte; k ≥ 4 y no
+  menor que la celda o el stride más grande de la red.
+- **Qué curva:** RELLENAR — la métrica de este experimento contra d, y el % que cambia de lectura respecto de d = 0.
+- **Recorte:** RELLENAR — cuánto margen deja el lienzo; si mover corta tinta, cómo se separa (el % recortado va en la
+  figura). Nada de `np.roll`.
+- **Dónde queda:** RELLENAR — script, figura, y la forma esperada escrita en `instrucciones/02-criterio.md`.
+
 ## Scripts
 
 Los de este experimento, con su interfaz exacta. **Los nombres y las banderas son de aquí**:

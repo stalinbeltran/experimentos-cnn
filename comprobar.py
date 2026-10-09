@@ -65,6 +65,12 @@ PLANTILLA_REGLAS = "REGLAS.ejemplo.md"
 # ninguno: entonces se escribe «no se copió de ninguno», que es un dato.
 SECCIONES_REGLAS = ("## Entradas", "## Salidas", "## Procesos", "## Scripts",
                     "## Qué NO hereda")
+# Regla del dueño (2026-10-09, CLAUDE.md § «la resistencia a los DESPLAZAMIENTOS se mide SIEMPRE»): todo experimento
+# que reconozca algo trae la curva de su métrica contra el desplazamiento. Se exige desde esa fecha y no antes: los
+# anteriores están cerrados, y exigírsela a ellos sería un aviso permanente que se deja de leer. La fecha se lee del
+# `creado` del manifiesto, que es un dato y no depende del nombre de la carpeta.
+SECCION_DESPLAZAMIENTOS = "## Desplazamientos"
+DESDE_DESPLAZAMIENTOS = "2026-10-09"
 # El marcador de la plantilla. Un hueco se lee como «aquí no aplica» y en realidad
 # es «todavía no lo he pensado»: entre un fallo ruidoso y uno silencioso, el
 # ruidoso (regla 3 de escritura).
@@ -136,6 +142,14 @@ def _problemas_de_reglas(exps) -> list[str]:
         faltan = [s for s in SECCIONES_REGLAS if s not in txt]
         if faltan:
             malos.append(f"{e.rel()}/{REGLAS}: le faltan las secciones " + ", ".join(faltan))
+        if (str(e.datos.get("creado", "")) >= DESDE_DESPLAZAMIENTOS
+                and SECCION_DESPLAZAMIENTOS not in txt):
+            malos.append(
+                f"{e.rel()}/{REGLAS}: le falta '{SECCION_DESPLAZAMIENTOS}' (obligatoria desde "
+                f"{DESDE_DESPLAZAMIENTOS}): cómo mide este experimento la resistencia a que la "
+                f"entrada se mueva unos píxeles. Cópiala de {PLANTILLA_REGLAS}; si no reconoce "
+                f"nada, dilo ahí"
+            )
         if SIN_RELLENAR in txt:
             cuantas = txt.count(SIN_RELLENAR)
             malos.append(

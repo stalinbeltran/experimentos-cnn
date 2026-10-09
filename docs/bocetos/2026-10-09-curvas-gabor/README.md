@@ -299,3 +299,31 @@ no es de un estilo raro: es un gemelo del 1524 con la barra 1–1,5 px más alta
 **Qué lo arreglaría, sin comprobar:** cualquier cosa que haga a la lectura tolerante a 1–2 px. Por ejemplo, máximo en
 celdas que se solapan, aumentar el entrenamiento con copias desplazadas ±1–2 px, o un compositor con menos pesos. Las
 tres se miden con el mismo `gemelos_5.py`: el número a bajar es esos 121 de 1617.
+
+## Primera curva de desplazamientos (2026-10-09; regla del dueño, `CLAUDE.md` del repo)
+
+`python desplazamientos.py` (≈ 4 min; `--figura` redibuja desde
+[`resultados-desplazamientos.json`](resultados-desplazamientos.json)). La misma entrada movida d px, sin re-entrenar,
+en los dos niveles que pide la regla: [**la figura**](imagenes/9-desplazamientos.png).
+
+**Dígito entero, horizontal** (la dirección casi limpia: se recorta algo de tinta al 1,5 / 3,4 / 6,3 / 11,8 % de los dígitos con d = +1 / +2 / +3 / +4, y al 1,1 % con −4):
+
+| acierto en val | −4 | −3 | −2 | −1 | **0** | +1 | +2 | +3 | +4 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| curvas | 0,403 | 0,536 | 0,690 | 0,819 | **0,867** | 0,839 | 0,727 | 0,597 | 0,441 |
+| rectas | 0,241 | 0,472 | 0,816 | 0,925 | **0,957** | 0,933 | 0,872 | 0,669 | 0,456 |
+| combinado | 0,267 | 0,556 | 0,842 | 0,945 | **0,958** | 0,936 | 0,870 | 0,719 | 0,491 |
+
+- **Los tres caen deprisa**: con 2 px el combinado pierde 0,09–0,12, y con 4 px queda entre 0,27 y 0,49. Es la rejilla
+  fija de celdas 4×4 con un peso por celda, como se vio con el 5 y sus gemelos.
+- **No es simétrica**: a la izquierda cae antes (−3 px: 0,556; +3 px: 0,719).
+- **Las curvas solas caen menos en proporción**, pero parten de 0,867.
+- **Vertical no vale con este dataset**: los dígitos ocupan los 32 px de alto y se recortan desde d = ±1 (97–100 %).
+  Está en la figura, marcada.
+
+**Feature individual** (el detector de curvas sobre el banco de `rect-lin`, con margen en el lienzo): **plana en
+1,00**, en las dos direcciones y las 9 posiciones. Rectas finas leídas «recta» (n = 720), arcos de R 6–27 leídos
+«curva» (n = 240), y 0 falsos positivos en 300 negativos. Es por construcción: convolución más estadísticas por
+componente, sin rejilla fija, y una convolución es equivariante a desplazamientos enteros (κ idéntico en 194 de 200
+figuras movidas 3 px; las 6 restantes tocan el borde). **El detector no pierde nada al moverse; lo pierde el
+compositor**, que lee sus mapas en celdas fijas.

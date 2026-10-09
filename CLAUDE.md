@@ -27,7 +27,7 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
 Dos experimentos cerrados el 2026-10-08 (`rect-lin`, `rect-bor`; reportes #38 y #39 del central) y un tanteo del 09 que
 cambia el rumbo: **4 kernels Gabor FIJOS, sin entrenar, conservando el MAPA (no su max) e integrados a lo largo de su
 orientación en 2 escalas, leen los dígitos 0,955** (180/1617, compositor lineal) contra 0,949 de los 13 detectores CNN de
-`feat-ind32`. Detalle en `2026-10-08-rectas-grosor-bordes/README.md` § «Tanteo». Nada vivo ni pagado pendiente.
+`feat-ind32`. Detalle en el README de `rect-bor` § «Tanteo». Nada vivo ni pagado pendiente.
 
 Lo que falta, por orden de lo que pidió o aceptó el dueño:
 
@@ -85,6 +85,60 @@ ya decididos (§ «Cuarta parte»). El experimento corrió: `feat-1lado`. ⚠ **
    lo elija.
 3. Un experimento declara en su `REGLAS.md` qué pre-proceso usa (o «ninguno»). Es una regla de esta línea de trabajo;
    no hereda la Regla 0: un experimento que quiera saltársela lo pregunta.
+
+## ⚠ Regla del dueño (2026-10-09): la resistencia a los DESPLAZAMIENTOS se mide SIEMPRE
+
+> «Siempre que hagamos reconocimiento debemos evaluar la resistencia de cualquier experimento a las variaciones de
+> posición. Probablemente se obtengan curvas, probablemente distintas según los píxeles desplazados. Eso para números
+> enteros. Para features individuales también queremos curvas, pues los desplazamientos siempre están presentes en
+> reconocimiento visual.»
+
+**Por qué, medido el mismo día** (boceto `docs/bocetos/2026-10-09-curvas-gabor/`, § «Los gemelos» y
+`imagenes/9-desplazamientos.png`). El compositor lineal de dígitos que leía val a 0,958 falla un 5 nítido que tiene un
+gemelo casi idéntico en entrenamiento: la barra media está 1–1,5 px más alta y cruza una frontera de celda. Moviendo
+todo val:
+
+| compositor combinado, movido en horizontal | d = 0 | ±1 px | ±2 px | ±4 px |
+|---|---:|---:|---:|---:|
+| acierto | 0,958 | 0,945 / 0,936 | 0,842 / 0,870 | 0,267 / 0,491 |
+
+**Ningún experimento de reconocimiento de este repo había medido esto**, y un acierto a d = 0 no dice nada de lo que
+pasa con 1 px. Desde hoy, todo experimento que reconozca algo (el objeto entero, cada feature, o los dos) trae su curva.
+
+### Qué se mide
+
+1. **Los dos niveles, cada uno con su curva.** El **objeto entero** (p. ej. el acierto del dígito) y **cada feature
+   individual** (el recall de cada detector, y sus falsos positivos). Para una feature, el desplazamiento que importa es
+   también el de su posición **relativa a la rejilla de quien la lee**: un detector puede ser invariante y su compositor
+   no.
+2. **Métrica contra d, con d = −k…+k px enteros**, horizontal y vertical **por separado** y **cada signo aparte**: las
+   curvas salen asimétricas (medido: −1 px arregla el 5 que +1 px empeora). k ≥ 4, y nunca menor que la celda o el
+   stride más grande de la red.
+3. **Además del acierto, el % que CAMBIA de lectura respecto de d = 0.** El acierto puede moverse poco mientras muchas
+   lecturas cambian en los dos sentidos (medido: con ±1 px el acierto baja 0,013 y cambian 121 de 1617).
+4. **Sólo evaluación: se mueve la entrada, no se re-entrena.** Entrenar con copias desplazadas es un **arreglo**, y si
+   se prueba va como brazo propio, declarado en el criterio y medido con la misma curva.
+5. **Lo que sale por un borde se PIERDE y se CUENTA.** No se usa `np.roll`: hace reaparecer la tinta por el lado
+   contrario y mide otra cosa. Si mover corta tinta, la curva mide el recorte y no la tolerancia, así que el % recortado
+   va en la misma figura. ⚠ **Los dígitos de UCI ocupan los 32 px de alto** (1555 de 1617 en val): con ese dataset la
+   curva vertical está recortada desde d = ±1 y no vale. **Un dataset nuevo de reconocimiento deja un margen ≥ k px**
+   en el lienzo para que las dos direcciones se puedan medir.
+6. **Una curva plana es un resultado, y se dice por qué.** Una convolución es exactamente equivariante a desplazamientos
+   enteros, así que un detector sin rejilla fija (convolución + max sobre toda la imagen, o estadísticas por
+   componente) sale plano **por construcción**: medido, el detector de curvas del boceto da 1,00 en las 9 posiciones.
+   Lo que rompe la invariancia es lo que lee **en celdas fijas** (max-pool por celda, un peso por celda, stride).
+7. **La forma esperada se escribe en el criterio ANTES de medir** (R13), como el resto.
+
+### Cómo se sostiene
+
+- `REGLAS.md` lleva una sección **`## Desplazamientos`** (está en `REGLAS.ejemplo.md`): qué se reconoce y a qué nivel,
+  rango y direcciones, qué curva, cómo se trata el recorte y dónde queda la figura. Si el experimento no reconoce nada,
+  se escribe eso y el porqué, y la sección queda cerrada.
+- **`comprobar.py` la exige a todo experimento con `creado` ≥ 2026-10-09** y falla si falta. Los anteriores no la tienen
+  y no se les exige: están cerrados, y un aviso que sale siempre se deja de leer. El que se reabra para reconocer algo
+  nuevo, se la añade. Test: `python3 -m unittest tests/test_desplazamientos.py`.
+- **La primera aplicación, para copiar la forma**: `docs/bocetos/2026-10-09-curvas-gabor/desplazamientos.py`
+  (`mover()` sin `np.roll`, las dos direcciones, % que cambia, % recortado, objeto y feature en una figura).
 
 ## ⚠⚠ Regla 0 — cada experimento es INDEPENDIENTE de los demás
 
