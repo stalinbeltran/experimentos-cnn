@@ -227,7 +227,12 @@ curvas solo dice 6.
    vota por vecinos.
 5. [**Los dos rasgos, medidos**](imagenes/7-cinco-5-rasgos.png): contra la media de los 18 «5» y los 18 «9» de entrenamiento.
 
-### La causa: dos rasgos de 9 en un 5, y 18 ejemplos que no los cubren
+### Dos rasgos de 9 en un 5
+
+⚠ **CORREGIDO el mismo día** (sección siguiente): aquí se dijo que los 18 «5» de entrenamiento no cubrían este
+estilo. **Es falso**: hay dos casi idénticos (1524 y 1517), y los dos salen 5 con margen. Los rasgos de abajo están
+medidos y siguen valiendo, pero no son «un estilo que no vio»: son **un desplazamiento de 1–1,5 px** que cruza una
+frontera de celda.
 
 El máximo por fila de celdas de cada canal, contra la media de entrenamiento:
 
@@ -256,6 +261,41 @@ El máximo por fila de celdas de cada canal, contra la media de entrenamiento:
 abertura: el mapa vale 0,18–0,98 en filas sin tinta. Pero sin integrar (los mapas Gabor crudos más las curvas) el dígito
 1018 **sigue saliendo 9** con las tres semillas, y el acierto en val es el mismo (0,957–0,960). No es la causa.
 
-**Qué lo arreglaría, sin comprobar:** un rasgo de **lazo cerrado contra abierto**, que es el hueco de vocabulario que ya
-apuntaba la tabla de fallos (8→9, 5→9, 8→6), o más ejemplos de 5 con barra alta y cuenco cuadrado. Con 18 por clase, un
-estilo que no está en el entrenamiento se lee por el vecino más parecido en lo que el detector sí ve.
+**Qué lo arreglaría, sin comprobar:** ver la sección siguiente. Lo primero no es vocabulario, es que el compositor
+tolere 1–2 px de desplazamiento.
+
+## Los gemelos de entrenamiento: el mismo 5, 1 px más abajo, sale 5 (2026-10-09, visto por el dueño)
+
+El dueño vio en la figura 4 que algunos «5» de entrenamiento son, para un humano, idénticos al que falla. **Es verdad**,
+y cambia la explicación. `python gemelos_5.py` (≈ 40 s; [`resultados-gemelos.json`](resultados-gemelos.json)).
+
+1. [**Los 18 «5», ordenados por parecido**](imagenes/8-gemelos-1-parecidos.png) con el contorno del que falla encima.
+   Dos comparten el 65 % de la tinta (IoU): **1524 y 1517**. Los dos salen 5 con margen 9 − 5 = −6,7. Los 18 salen 5:
+   el compositor acierta el 100 % del entrenamiento.
+2. [**Este contra cada gemelo**](imagenes/8-gemelos-2-diferencia.png). El compositor es lineal, así que la diferencia de
+   margen es exacta: −6,7 (gemelo) + 9,1 = +2,4 (el que falla). Casi todo lo aportan los dos canales **horizontales**
+   (+2,9 y +3,0 con el 1524). En píxeles, la diferencia es que la barra media del que falla ocupa las filas **10–13** y la
+   del 1524 las **11–15**: está 1–1,5 px más alta. Con eso entra en la fila de celdas de px 8–11, donde el compositor
+   aprendió que una horizontal es el fondo del lazo de un 9 (1,38 contra 0,35 en el gemelo).
+3. [**El mismo dígito movido**](imagenes/8-gemelos-3-desplazar.png). Movido **1 px a la izquierda** dice 5 (−1,6); 2 px,
+   5 con más margen (−4,8); 1 px a la derecha, 9 con más margen (+5,3). ⚠ Los desplazamientos verticales cortan tinta,
+   porque los dígitos ocupan los 32 px de alto (1555 de 1617 en val); la prueba limpia es la horizontal.
+
+**No es una rareza de este dígito.** En todo val:
+
+| movido 1 px en horizontal | |
+|---|---:|
+| dígitos que cambian de lectura | 121 de 1617 (7,5 %) |
+| acierto original | 0,958 |
+| acierto movido a la izquierda / derecha | 0,945 / 0,936 |
+| fallos que 1 px arregla | 27 de 68 |
+| aciertos que 1 px estropea | 85 |
+
+**La causa, entonces:** las características son el máximo en **celdas fijas de 4×4 px**, y el compositor lineal tiene
+**un peso por celda**. Con 180 ejemplos y 704 pesos acierta todo el entrenamiento, y lo hace apoyándose en en qué celda
+cae cada trazo. Un trazo que se mueve 1 px puede cruzar una frontera de celda, y entonces cambia de peso. El 5 que falla
+no es de un estilo raro: es un gemelo del 1524 con la barra 1–1,5 px más alta.
+
+**Qué lo arreglaría, sin comprobar:** cualquier cosa que haga a la lectura tolerante a 1–2 px. Por ejemplo, máximo en
+celdas que se solapan, aumentar el entrenamiento con copias desplazadas ±1–2 px, o un compositor con menos pesos. Las
+tres se miden con el mismo `gemelos_5.py`: el número a bajar es esos 121 de 1617.
