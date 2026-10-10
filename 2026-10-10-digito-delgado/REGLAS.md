@@ -19,8 +19,8 @@ de un esqueleto morfológico, y qué alternativa lo hace mejor?
 
 - **Pesos:** ninguno (no se aprende nada).
 - **Métricas:** `resultados/metricas.json` — por brazo, las cuatro del criterio (media y por dígito).
-- **Figuras:** `resultados/1-alternativas.png` (los 64 dígitos con cada brazo) y `resultados/2-metricas.png`; se
-  regeneran con `python nn/delgado.py`.
+- **Figuras:** `resultados/1-comparacion.png` (16 de los 64 con todos los brazos), `resultados/2-<A|B8|B12|C|D>.png`
+  (los 64 con cada brazo) y `resultados/3-metricas.png`; se regeneran con `python nn/delgado.py`.
 - **Tablas / informe:** en el `README.md` de esta carpeta.
 - **Qué se commitea:** todo lo de `resultados/` (pesa poco). El dato de entrada no.
 

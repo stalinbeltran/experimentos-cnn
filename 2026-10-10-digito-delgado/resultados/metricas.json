@@ -1,0 +1,2405 @@
+{
+ "umbrales": {
+  "delgadez": 85.0,
+  "dentro": 95.0,
+  "cobertura": 95.0,
+  "topologia": 90.0
+ },
+ "parametros": {
+  "K": 9,
+  "orientaciones": 8,
+  "lam_impar": 10.0,
+  "tau_A": 0.2,
+  "tau_B": 0.3,
+  "fase_C": 30.0,
+  "H": 1.0
+ },
+ "indices": [
+  1599,
+  563,
+  596,
+  363,
+  1117,
+  1688,
+  1723,
+  1737,
+  75,
+  77,
+  502,
+  700,
+  1309,
+  409,
+  448,
+  1729,
+  1602,
+  446,
+  1632,
+  247,
+  110,
+  876,
+  1022,
+  678,
+  633,
+  1575,
+  402,
+  420,
+  792,
+  492,
+  1561,
+  211,
+  1108,
+  1595,
+  1657,
+  628,
+  754,
+  414,
+  524,
+  643,
+  1790,
+  500,
+  638,
+  816,
+  829,
+  852,
+  890,
+  898,
+  997,
+  1423,
+  1455,
+  1468,
+  1491,
+  1511,
+  1529,
+  1537,
+  1542,
+  161,
+  683,
+  738,
+  1662,
+  119,
+  1612,
+  1658
+ ],
+ "brazos": {
+  "A · valle firmado (impar λ 10)": {
+   "delgadez": 21.4,
+   "dentro": 96.7,
+   "cobertura": 88.9,
+   "topologia": 28.1,
+   "px_medio": 80.8,
+   "por_digito": [
+    {
+     "delgadez": 19.047619047619047,
+     "dentro": 100.0,
+     "cobertura": 60.07067137809188,
+     "topologia": false,
+     "px": 42
+    },
+    {
+     "delgadez": 37.5,
+     "dentro": 92.5,
+     "cobertura": 95.50898203592814,
+     "topologia": false,
+     "px": 80
+    },
+    {
+     "delgadez": 34.72222222222222,
+     "dentro": 95.83333333333334,
+     "cobertura": 93.66666666666667,
+     "topologia": false,
+     "px": 72
+    },
+    {
+     "delgadez": 7.4074074074074066,
+     "dentro": 96.29629629629629,
+     "cobertura": 23.480662983425415,
+     "topologia": false,
+     "px": 27
+    },
+    {
+     "delgadez": 23.076923076923077,
+     "dentro": 96.15384615384616,
+     "cobertura": 27.806122448979593,
+     "topologia": false,
+     "px": 26
+    },
+    {
+     "delgadez": 54.54545454545454,
+     "dentro": 100.0,
+     "cobertura": 55.72289156626506,
+     "topologia": false,
+     "px": 22
+    },
+    {
+     "delgadez": 15.384615384615385,
+     "dentro": 94.23076923076923,
+     "cobertura": 54.35435435435435,
+     "topologia": false,
+     "px": 52
+    },
+    {
+     "delgadez": 20.0,
+     "dentro": 95.0,
+     "cobertura": 21.502590673575128,
+     "topologia": false,
+     "px": 20
+    },
+    {
+     "delgadez": 9.375,
+     "dentro": 91.66666666666666,
+     "cobertura": 99.62121212121212,
+     "topologia": true,
+     "px": 96
+    },
+    {
+     "delgadez": 16.129032258064516,
+     "dentro": 96.7741935483871,
+     "cobertura": 86.59217877094973,
+     "topologia": false,
+     "px": 62
+    },
+    {
+     "delgadez": 22.916666666666664,
+     "dentro": 93.75,
+     "cobertura": 95.59748427672956,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 20.618556701030926,
+     "dentro": 91.75257731958763,
+     "cobertura": 99.41520467836257,
+     "topologia": true,
+     "px": 97
+    },
+    {
+     "delgadez": 13.829787234042554,
+     "dentro": 93.61702127659575,
+     "cobertura": 99.6124031007752,
+     "topologia": true,
+     "px": 94
+    },
+    {
+     "delgadez": 22.5,
+     "dentro": 93.75,
+     "cobertura": 95.55555555555556,
+     "topologia": true,
+     "px": 80
+    },
+    {
+     "delgadez": 5.405405405405405,
+     "dentro": 94.5945945945946,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 111
+    },
+    {
+     "delgadez": 20.0,
+     "dentro": 94.66666666666667,
+     "cobertura": 88.51963746223565,
+     "topologia": false,
+     "px": 75
+    },
+    {
+     "delgadez": 28.57142857142857,
+     "dentro": 94.8051948051948,
+     "cobertura": 94.33962264150944,
+     "topologia": true,
+     "px": 77
+    },
+    {
+     "delgadez": 15.74074074074074,
+     "dentro": 93.51851851851852,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 23.076923076923077,
+     "dentro": 96.15384615384616,
+     "cobertura": 64.85714285714286,
+     "topologia": false,
+     "px": 52
+    },
+    {
+     "delgadez": 26.08695652173913,
+     "dentro": 95.65217391304348,
+     "cobertura": 88.69047619047619,
+     "topologia": false,
+     "px": 69
+    },
+    {
+     "delgadez": 12.643678160919542,
+     "dentro": 96.55172413793103,
+     "cobertura": 99.24528301886792,
+     "topologia": true,
+     "px": 87
+    },
+    {
+     "delgadez": 10.843373493975903,
+     "dentro": 97.59036144578313,
+     "cobertura": 98.85057471264368,
+     "topologia": true,
+     "px": 83
+    },
+    {
+     "delgadez": 30.851063829787233,
+     "dentro": 95.74468085106383,
+     "cobertura": 97.97101449275362,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 25.287356321839084,
+     "dentro": 97.70114942528735,
+     "cobertura": 96.43835616438356,
+     "topologia": false,
+     "px": 87
+    },
+    {
+     "delgadez": 12.781954887218044,
+     "dentro": 95.48872180451127,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 133
+    },
+    {
+     "delgadez": 28.8135593220339,
+     "dentro": 96.61016949152543,
+     "cobertura": 76.14678899082568,
+     "topologia": false,
+     "px": 59
+    },
+    {
+     "delgadez": 26.506024096385545,
+     "dentro": 93.97590361445783,
+     "cobertura": 94.43037974683544,
+     "topologia": false,
+     "px": 83
+    },
+    {
+     "delgadez": 36.04651162790697,
+     "dentro": 97.67441860465115,
+     "cobertura": 98.65591397849462,
+     "topologia": false,
+     "px": 86
+    },
+    {
+     "delgadez": 22.07792207792208,
+     "dentro": 100.0,
+     "cobertura": 97.37609329446065,
+     "topologia": false,
+     "px": 77
+    },
+    {
+     "delgadez": 27.77777777777778,
+     "dentro": 94.44444444444444,
+     "cobertura": 95.13677811550151,
+     "topologia": false,
+     "px": 72
+    },
+    {
+     "delgadez": 12.5,
+     "dentro": 97.72727272727273,
+     "cobertura": 97.12460063897763,
+     "topologia": false,
+     "px": 88
+    },
+    {
+     "delgadez": 20.77922077922078,
+     "dentro": 92.20779220779221,
+     "cobertura": 87.5,
+     "topologia": false,
+     "px": 77
+    },
+    {
+     "delgadez": 14.529914529914532,
+     "dentro": 94.01709401709401,
+     "cobertura": 99.67741935483872,
+     "topologia": true,
+     "px": 117
+    },
+    {
+     "delgadez": 18.095238095238095,
+     "dentro": 89.52380952380953,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 105
+    },
+    {
+     "delgadez": 19.130434782608695,
+     "dentro": 94.78260869565217,
+     "cobertura": 97.99426934097421,
+     "topologia": false,
+     "px": 115
+    },
+    {
+     "delgadez": 19.801980198019802,
+     "dentro": 94.05940594059405,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 25.287356321839084,
+     "dentro": 94.25287356321839,
+     "cobertura": 91.54078549848943,
+     "topologia": false,
+     "px": 87
+    },
+    {
+     "delgadez": 26.190476190476193,
+     "dentro": 100.0,
+     "cobertura": 99.70930232558139,
+     "topologia": true,
+     "px": 84
+    },
+    {
+     "delgadez": 17.77777777777778,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 90
+    },
+    {
+     "delgadez": 17.142857142857142,
+     "dentro": 96.19047619047619,
+     "cobertura": 99.36908517350159,
+     "topologia": false,
+     "px": 105
+    },
+    {
+     "delgadez": 9.67741935483871,
+     "dentro": 93.54838709677419,
+     "cobertura": 60.303030303030305,
+     "topologia": false,
+     "px": 62
+    },
+    {
+     "delgadez": 22.22222222222222,
+     "dentro": 100.0,
+     "cobertura": 99.21671018276761,
+     "topologia": true,
+     "px": 99
+    },
+    {
+     "delgadez": 10.2803738317757,
+     "dentro": 98.13084112149532,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 107
+    },
+    {
+     "delgadez": 20.224719101123593,
+     "dentro": 100.0,
+     "cobertura": 99.69135802469135,
+     "topologia": true,
+     "px": 89
+    },
+    {
+     "delgadez": 13.541666666666666,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 96
+    },
+    {
+     "delgadez": 37.03703703703704,
+     "dentro": 98.14814814814815,
+     "cobertura": 81.11702127659575,
+     "topologia": false,
+     "px": 54
+    },
+    {
+     "delgadez": 52.63157894736842,
+     "dentro": 100.0,
+     "cobertura": 63.05418719211823,
+     "topologia": false,
+     "px": 38
+    },
+    {
+     "delgadez": 22.916666666666664,
+     "dentro": 100.0,
+     "cobertura": 67.23716381418093,
+     "topologia": false,
+     "px": 48
+    },
+    {
+     "delgadez": 16.49484536082474,
+     "dentro": 100.0,
+     "cobertura": 98.49397590361446,
+     "topologia": false,
+     "px": 97
+    },
+    {
+     "delgadez": 9.473684210526317,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 95
+    },
+    {
+     "delgadez": 13.793103448275861,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 87
+    },
+    {
+     "delgadez": 16.666666666666664,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 5.555555555555555,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 108
+    },
+    {
+     "delgadez": 10.891089108910892,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 17.894736842105264,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 12.087912087912088,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 91
+    },
+    {
+     "delgadez": 28.125,
+     "dentro": 100.0,
+     "cobertura": 84.19452887537993,
+     "topologia": false,
+     "px": 64
+    },
+    {
+     "delgadez": 33.80281690140845,
+     "dentro": 95.77464788732394,
+     "cobertura": 98.09160305343512,
+     "topologia": false,
+     "px": 71
+    },
+    {
+     "delgadez": 46.774193548387096,
+     "dentro": 98.38709677419355,
+     "cobertura": 88.35227272727273,
+     "topologia": false,
+     "px": 62
+    },
+    {
+     "delgadez": 30.23255813953488,
+     "dentro": 96.51162790697676,
+     "cobertura": 98.51301115241635,
+     "topologia": true,
+     "px": 86
+    },
+    {
+     "delgadez": 31.03448275862069,
+     "dentro": 96.55172413793103,
+     "cobertura": 85.98726114649682,
+     "topologia": false,
+     "px": 58
+    },
+    {
+     "delgadez": 10.204081632653061,
+     "dentro": 93.87755102040816,
+     "cobertura": 99.6551724137931,
+     "topologia": false,
+     "px": 98
+    },
+    {
+     "delgadez": 18.823529411764707,
+     "dentro": 98.82352941176471,
+     "cobertura": 98.84169884169884,
+     "topologia": true,
+     "px": 85
+    },
+    {
+     "delgadez": 15.730337078651685,
+     "dentro": 96.62921348314607,
+     "cobertura": 97.42120343839542,
+     "topologia": false,
+     "px": 89
+    }
+   ],
+   "pasa": {
+    "delgadez": false,
+    "dentro": true,
+    "cobertura": false,
+    "topologia": false
+   },
+   "pasa_los_cuatro": false
+  },
+  "B · cresta par λ 8": {
+   "delgadez": 29.4,
+   "dentro": 88.6,
+   "cobertura": 99.2,
+   "topologia": 6.2,
+   "px_medio": 108.7,
+   "por_digito": [
+    {
+     "delgadez": 42.857142857142854,
+     "dentro": 88.09523809523809,
+     "cobertura": 96.81978798586573,
+     "topologia": false,
+     "px": 84
+    },
+    {
+     "delgadez": 34.375,
+     "dentro": 84.375,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 128
+    },
+    {
+     "delgadez": 28.688524590163933,
+     "dentro": 76.22950819672131,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 122
+    },
+    {
+     "delgadez": 55.769230769230774,
+     "dentro": 78.84615384615384,
+     "cobertura": 96.96132596685084,
+     "topologia": false,
+     "px": 104
+    },
+    {
+     "delgadez": 39.6551724137931,
+     "dentro": 81.89655172413794,
+     "cobertura": 94.13265306122449,
+     "topologia": false,
+     "px": 116
+    },
+    {
+     "delgadez": 48.41269841269841,
+     "dentro": 74.60317460317461,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 126
+    },
+    {
+     "delgadez": 49.504950495049506,
+     "dentro": 90.0990099009901,
+     "cobertura": 93.09309309309309,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 36.0655737704918,
+     "dentro": 79.50819672131148,
+     "cobertura": 91.45077720207254,
+     "topologia": false,
+     "px": 122
+    },
+    {
+     "delgadez": 28.000000000000004,
+     "dentro": 86.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 100
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 84.16666666666667,
+     "cobertura": 98.60335195530726,
+     "topologia": false,
+     "px": 120
+    },
+    {
+     "delgadez": 23.770491803278688,
+     "dentro": 86.88524590163934,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 122
+    },
+    {
+     "delgadez": 23.636363636363637,
+     "dentro": 81.81818181818183,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 21.50537634408602,
+     "dentro": 91.39784946236558,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 93
+    },
+    {
+     "delgadez": 31.57894736842105,
+     "dentro": 87.36842105263159,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 33.0,
+     "dentro": 90.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 100
+    },
+    {
+     "delgadez": 34.42622950819672,
+     "dentro": 75.40983606557377,
+     "cobertura": 98.79154078549848,
+     "topologia": false,
+     "px": 122
+    },
+    {
+     "delgadez": 32.631578947368425,
+     "dentro": 80.0,
+     "cobertura": 99.05660377358491,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 13.445378151260504,
+     "dentro": 84.87394957983193,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 119
+    },
+    {
+     "delgadez": 36.440677966101696,
+     "dentro": 77.11864406779661,
+     "cobertura": 96.57142857142857,
+     "topologia": false,
+     "px": 118
+    },
+    {
+     "delgadez": 24.390243902439025,
+     "dentro": 78.04878048780488,
+     "cobertura": 97.91666666666666,
+     "topologia": false,
+     "px": 123
+    },
+    {
+     "delgadez": 21.21212121212121,
+     "dentro": 90.9090909090909,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 99
+    },
+    {
+     "delgadez": 14.85148514851485,
+     "dentro": 88.11881188118812,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 20.33898305084746,
+     "dentro": 88.13559322033898,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 118
+    },
+    {
+     "delgadez": 30.08849557522124,
+     "dentro": 91.1504424778761,
+     "cobertura": 99.72602739726028,
+     "topologia": false,
+     "px": 113
+    },
+    {
+     "delgadez": 31.666666666666664,
+     "dentro": 83.33333333333334,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 120
+    },
+    {
+     "delgadez": 28.30188679245283,
+     "dentro": 83.9622641509434,
+     "cobertura": 98.1651376146789,
+     "topologia": false,
+     "px": 106
+    },
+    {
+     "delgadez": 34.25925925925926,
+     "dentro": 83.33333333333334,
+     "cobertura": 99.49367088607595,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 37.234042553191486,
+     "dentro": 91.48936170212765,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 35.41666666666667,
+     "dentro": 94.79166666666666,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 21.21212121212121,
+     "dentro": 88.88888888888889,
+     "cobertura": 99.69604863221885,
+     "topologia": true,
+     "px": 99
+    },
+    {
+     "delgadez": 30.927835051546392,
+     "dentro": 86.5979381443299,
+     "cobertura": 99.68051118210862,
+     "topologia": false,
+     "px": 97
+    },
+    {
+     "delgadez": 19.469026548672566,
+     "dentro": 84.95575221238938,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 113
+    },
+    {
+     "delgadez": 24.62686567164179,
+     "dentro": 87.31343283582089,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 134
+    },
+    {
+     "delgadez": 21.84873949579832,
+     "dentro": 75.63025210084034,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 119
+    },
+    {
+     "delgadez": 25.0,
+     "dentro": 78.84615384615384,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 156
+    },
+    {
+     "delgadez": 28.82882882882883,
+     "dentro": 80.18018018018019,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 111
+    },
+    {
+     "delgadez": 31.896551724137932,
+     "dentro": 88.79310344827587,
+     "cobertura": 99.69788519637463,
+     "topologia": false,
+     "px": 116
+    },
+    {
+     "delgadez": 35.41666666666667,
+     "dentro": 97.91666666666666,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 19.0,
+     "dentro": 98.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 100
+    },
+    {
+     "delgadez": 19.00826446280992,
+     "dentro": 93.38842975206612,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 121
+    },
+    {
+     "delgadez": 27.11864406779661,
+     "dentro": 84.7457627118644,
+     "cobertura": 97.57575757575758,
+     "topologia": false,
+     "px": 118
+    },
+    {
+     "delgadez": 31.35593220338983,
+     "dentro": 97.45762711864407,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 118
+    },
+    {
+     "delgadez": 21.49532710280374,
+     "dentro": 96.26168224299066,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 107
+    },
+    {
+     "delgadez": 16.666666666666664,
+     "dentro": 99.01960784313727,
+     "cobertura": 99.38271604938271,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 26.923076923076923,
+     "dentro": 98.07692307692307,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 104
+    },
+    {
+     "delgadez": 34.54545454545455,
+     "dentro": 92.72727272727272,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 40.16393442622951,
+     "dentro": 89.34426229508196,
+     "cobertura": 98.27586206896551,
+     "topologia": false,
+     "px": 122
+    },
+    {
+     "delgadez": 33.9622641509434,
+     "dentro": 93.39622641509435,
+     "cobertura": 98.0440097799511,
+     "topologia": false,
+     "px": 106
+    },
+    {
+     "delgadez": 27.350427350427353,
+     "dentro": 95.72649572649573,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 117
+    },
+    {
+     "delgadez": 27.184466019417474,
+     "dentro": 99.02912621359224,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 24.742268041237114,
+     "dentro": 98.96907216494846,
+     "cobertura": 99.40828402366864,
+     "topologia": true,
+     "px": 97
+    },
+    {
+     "delgadez": 33.00970873786408,
+     "dentro": 98.05825242718447,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 17.857142857142858,
+     "dentro": 96.42857142857143,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 112
+    },
+    {
+     "delgadez": 18.181818181818183,
+     "dentro": 97.27272727272728,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 20.689655172413794,
+     "dentro": 95.6896551724138,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 116
+    },
+    {
+     "delgadez": 26.851851851851855,
+     "dentro": 99.07407407407408,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 35.35353535353536,
+     "dentro": 93.93939393939394,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 99
+    },
+    {
+     "delgadez": 25.806451612903224,
+     "dentro": 87.09677419354838,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 93
+    },
+    {
+     "delgadez": 32.038834951456316,
+     "dentro": 87.37864077669903,
+     "cobertura": 96.875,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 25.0,
+     "dentro": 96.875,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 28.000000000000004,
+     "dentro": 88.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 100
+    },
+    {
+     "delgadez": 23.404255319148938,
+     "dentro": 90.42553191489363,
+     "cobertura": 99.6551724137931,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 27.906976744186046,
+     "dentro": 93.02325581395348,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 86
+    },
+    {
+     "delgadez": 51.041666666666664,
+     "dentro": 90.625,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    }
+   ],
+   "pasa": {
+    "delgadez": false,
+    "dentro": false,
+    "cobertura": true,
+    "topologia": false
+   },
+   "pasa_los_cuatro": false
+  },
+  "B · cresta par λ 12": {
+   "delgadez": 33.8,
+   "dentro": 91.4,
+   "cobertura": 99.6,
+   "topologia": 6.2,
+   "px_medio": 100.1,
+   "por_digito": [
+    {
+     "delgadez": 42.168674698795186,
+     "dentro": 93.97590361445783,
+     "cobertura": 98.58657243816255,
+     "topologia": true,
+     "px": 83
+    },
+    {
+     "delgadez": 36.283185840707965,
+     "dentro": 86.72566371681415,
+     "cobertura": 99.7005988023952,
+     "topologia": false,
+     "px": 113
+    },
+    {
+     "delgadez": 40.86021505376344,
+     "dentro": 84.94623655913979,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 93
+    },
+    {
+     "delgadez": 61.29032258064516,
+     "dentro": 88.17204301075269,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 93
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 92.15686274509804,
+     "cobertura": 97.1938775510204,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 48.18181818181818,
+     "dentro": 83.63636363636363,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 67.04545454545455,
+     "dentro": 93.18181818181817,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 88
+    },
+    {
+     "delgadez": 46.07843137254902,
+     "dentro": 90.19607843137256,
+     "cobertura": 94.04145077720207,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 20.588235294117645,
+     "dentro": 88.23529411764706,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 22.429906542056074,
+     "dentro": 92.5233644859813,
+     "cobertura": 99.72067039106145,
+     "topologia": false,
+     "px": 107
+    },
+    {
+     "delgadez": 16.379310344827587,
+     "dentro": 89.65517241379311,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 116
+    },
+    {
+     "delgadez": 16.666666666666664,
+     "dentro": 92.15686274509804,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 25.287356321839084,
+     "dentro": 93.10344827586206,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 87
+    },
+    {
+     "delgadez": 38.095238095238095,
+     "dentro": 90.47619047619048,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 84
+    },
+    {
+     "delgadez": 29.807692307692307,
+     "dentro": 86.53846153846155,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 104
+    },
+    {
+     "delgadez": 30.909090909090907,
+     "dentro": 86.36363636363636,
+     "cobertura": 99.69788519637463,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 28.723404255319153,
+     "dentro": 84.04255319148936,
+     "cobertura": 99.37106918238993,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 25.0,
+     "dentro": 91.66666666666666,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 29.7029702970297,
+     "dentro": 87.12871287128714,
+     "cobertura": 98.57142857142858,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 24.107142857142858,
+     "dentro": 87.5,
+     "cobertura": 99.70238095238095,
+     "topologia": true,
+     "px": 112
+    },
+    {
+     "delgadez": 23.711340206185564,
+     "dentro": 88.65979381443299,
+     "cobertura": 99.62264150943396,
+     "topologia": false,
+     "px": 97
+    },
+    {
+     "delgadez": 28.04878048780488,
+     "dentro": 90.2439024390244,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 82
+    },
+    {
+     "delgadez": 31.53153153153153,
+     "dentro": 89.1891891891892,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 111
+    },
+    {
+     "delgadez": 37.234042553191486,
+     "dentro": 94.68085106382979,
+     "cobertura": 99.72602739726028,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 37.03703703703704,
+     "dentro": 87.96296296296296,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 25.263157894736842,
+     "dentro": 89.47368421052632,
+     "cobertura": 99.08256880733946,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 31.25,
+     "dentro": 93.75,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 35.869565217391305,
+     "dentro": 94.56521739130434,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 92
+    },
+    {
+     "delgadez": 30.526315789473685,
+     "dentro": 94.73684210526315,
+     "cobertura": 99.70845481049562,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 27.083333333333332,
+     "dentro": 90.625,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 42.69662921348314,
+     "dentro": 88.76404494382022,
+     "cobertura": 99.36102236421725,
+     "topologia": false,
+     "px": 89
+    },
+    {
+     "delgadez": 24.0,
+     "dentro": 88.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 100
+    },
+    {
+     "delgadez": 26.956521739130434,
+     "dentro": 87.82608695652175,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 115
+    },
+    {
+     "delgadez": 28.703703703703702,
+     "dentro": 83.33333333333334,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 108
+    },
+    {
+     "delgadez": 20.610687022900763,
+     "dentro": 87.78625954198473,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 131
+    },
+    {
+     "delgadez": 40.42553191489361,
+     "dentro": 88.29787234042553,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 30.434782608695656,
+     "dentro": 90.43478260869566,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 115
+    },
+    {
+     "delgadez": 36.08247422680412,
+     "dentro": 97.9381443298969,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 97
+    },
+    {
+     "delgadez": 37.89473684210527,
+     "dentro": 97.89473684210527,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 25.71428571428571,
+     "dentro": 95.23809523809523,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 105
+    },
+    {
+     "delgadez": 35.92233009708738,
+     "dentro": 88.3495145631068,
+     "cobertura": 98.7878787878788,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 35.45454545454545,
+     "dentro": 98.18181818181819,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 110
+    },
+    {
+     "delgadez": 47.87234042553192,
+     "dentro": 96.80851063829788,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 94
+    },
+    {
+     "delgadez": 36.84210526315789,
+     "dentro": 97.89473684210527,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 30.76923076923077,
+     "dentro": 93.26923076923077,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 104
+    },
+    {
+     "delgadez": 31.63265306122449,
+     "dentro": 93.87755102040816,
+     "cobertura": 99.46808510638297,
+     "topologia": false,
+     "px": 98
+    },
+    {
+     "delgadez": 31.896551724137932,
+     "dentro": 90.51724137931035,
+     "cobertura": 99.75369458128078,
+     "topologia": false,
+     "px": 116
+    },
+    {
+     "delgadez": 44.329896907216494,
+     "dentro": 94.84536082474226,
+     "cobertura": 98.77750611246944,
+     "topologia": false,
+     "px": 97
+    },
+    {
+     "delgadez": 43.13725490196079,
+     "dentro": 93.13725490196079,
+     "cobertura": 98.49397590361446,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 37.254901960784316,
+     "dentro": 97.05882352941177,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 102
+    },
+    {
+     "delgadez": 22.772277227722775,
+     "dentro": 99.00990099009901,
+     "cobertura": 99.70414201183432,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 44.0,
+     "dentro": 93.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 100
+    },
+    {
+     "delgadez": 34.65346534653465,
+     "dentro": 94.05940594059405,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 101
+    },
+    {
+     "delgadez": 30.097087378640776,
+     "dentro": 96.11650485436894,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 40.77669902912621,
+     "dentro": 96.11650485436894,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 103
+    },
+    {
+     "delgadez": 27.027027027027028,
+     "dentro": 95.4954954954955,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 111
+    },
+    {
+     "delgadez": 47.368421052631575,
+     "dentro": 94.73684210526315,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 95
+    },
+    {
+     "delgadez": 33.72093023255814,
+     "dentro": 89.53488372093024,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 86
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 91.66666666666666,
+     "cobertura": 95.73863636363636,
+     "topologia": false,
+     "px": 96
+    },
+    {
+     "delgadez": 32.18390804597701,
+     "dentro": 96.55172413793103,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 87
+    },
+    {
+     "delgadez": 24.242424242424242,
+     "dentro": 90.9090909090909,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 99
+    },
+    {
+     "delgadez": 34.44444444444444,
+     "dentro": 88.88888888888889,
+     "cobertura": 99.6551724137931,
+     "topologia": false,
+     "px": 90
+    },
+    {
+     "delgadez": 45.23809523809524,
+     "dentro": 90.47619047619048,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 84
+    },
+    {
+     "delgadez": 32.35294117647059,
+     "dentro": 89.2156862745098,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 102
+    }
+   ],
+   "pasa": {
+    "delgadez": false,
+    "dentro": false,
+    "cobertura": true,
+    "topologia": false
+   },
+   "pasa_los_cuatro": false
+  },
+  "C · fase local (λ 10)": {
+   "delgadez": 53.5,
+   "dentro": 98.4,
+   "cobertura": 81.7,
+   "topologia": 4.7,
+   "px_medio": 48.5,
+   "por_digito": [
+    {
+     "delgadez": 92.85714285714286,
+     "dentro": 100.0,
+     "cobertura": 39.57597173144876,
+     "topologia": false,
+     "px": 14
+    },
+    {
+     "delgadez": 75.75757575757575,
+     "dentro": 100.0,
+     "cobertura": 80.83832335329342,
+     "topologia": false,
+     "px": 33
+    },
+    {
+     "delgadez": 93.93939393939394,
+     "dentro": 100.0,
+     "cobertura": 89.0,
+     "topologia": false,
+     "px": 33
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 9.668508287292818,
+     "topologia": true,
+     "px": 2
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 100.0,
+     "cobertura": 12.755102040816327,
+     "topologia": true,
+     "px": 6
+    },
+    {
+     "delgadez": 0.0,
+     "dentro": 0.0,
+     "cobertura": 0.0,
+     "topologia": false,
+     "px": 0
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 38.73873873873874,
+     "topologia": false,
+     "px": 18
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 8.808290155440414,
+     "topologia": true,
+     "px": 2
+    },
+    {
+     "delgadez": 48.837209302325576,
+     "dentro": 100.0,
+     "cobertura": 91.28787878787878,
+     "topologia": false,
+     "px": 43
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 100.0,
+     "cobertura": 61.731843575419,
+     "topologia": false,
+     "px": 30
+    },
+    {
+     "delgadez": 40.38461538461539,
+     "dentro": 100.0,
+     "cobertura": 91.50943396226415,
+     "topologia": false,
+     "px": 52
+    },
+    {
+     "delgadez": 41.81818181818181,
+     "dentro": 100.0,
+     "cobertura": 95.6140350877193,
+     "topologia": false,
+     "px": 55
+    },
+    {
+     "delgadez": 40.98360655737705,
+     "dentro": 100.0,
+     "cobertura": 99.6124031007752,
+     "topologia": false,
+     "px": 61
+    },
+    {
+     "delgadez": 42.592592592592595,
+     "dentro": 100.0,
+     "cobertura": 96.5079365079365,
+     "topologia": false,
+     "px": 54
+    },
+    {
+     "delgadez": 46.875,
+     "dentro": 100.0,
+     "cobertura": 98.34437086092716,
+     "topologia": false,
+     "px": 64
+    },
+    {
+     "delgadez": 47.368421052631575,
+     "dentro": 100.0,
+     "cobertura": 75.83081570996978,
+     "topologia": false,
+     "px": 38
+    },
+    {
+     "delgadez": 45.45454545454545,
+     "dentro": 100.0,
+     "cobertura": 94.33962264150944,
+     "topologia": false,
+     "px": 44
+    },
+    {
+     "delgadez": 34.72222222222222,
+     "dentro": 100.0,
+     "cobertura": 99.079754601227,
+     "topologia": false,
+     "px": 72
+    },
+    {
+     "delgadez": 83.33333333333334,
+     "dentro": 100.0,
+     "cobertura": 51.714285714285715,
+     "topologia": false,
+     "px": 24
+    },
+    {
+     "delgadez": 75.86206896551724,
+     "dentro": 100.0,
+     "cobertura": 88.98809523809523,
+     "topologia": false,
+     "px": 29
+    },
+    {
+     "delgadez": 41.86046511627907,
+     "dentro": 100.0,
+     "cobertura": 87.9245283018868,
+     "topologia": false,
+     "px": 43
+    },
+    {
+     "delgadez": 32.0,
+     "dentro": 100.0,
+     "cobertura": 95.40229885057471,
+     "topologia": false,
+     "px": 50
+    },
+    {
+     "delgadez": 39.53488372093023,
+     "dentro": 100.0,
+     "cobertura": 77.39130434782608,
+     "topologia": false,
+     "px": 43
+    },
+    {
+     "delgadez": 43.103448275862064,
+     "dentro": 100.0,
+     "cobertura": 89.86301369863014,
+     "topologia": false,
+     "px": 58
+    },
+    {
+     "delgadez": 61.19402985074627,
+     "dentro": 98.50746268656717,
+     "cobertura": 99.32885906040269,
+     "topologia": false,
+     "px": 67
+    },
+    {
+     "delgadez": 36.36363636363637,
+     "dentro": 100.0,
+     "cobertura": 64.22018348623854,
+     "topologia": false,
+     "px": 33
+    },
+    {
+     "delgadez": 48.07692307692308,
+     "dentro": 100.0,
+     "cobertura": 92.91139240506328,
+     "topologia": false,
+     "px": 52
+    },
+    {
+     "delgadez": 56.896551724137936,
+     "dentro": 100.0,
+     "cobertura": 96.50537634408603,
+     "topologia": false,
+     "px": 58
+    },
+    {
+     "delgadez": 49.09090909090909,
+     "dentro": 100.0,
+     "cobertura": 92.71137026239067,
+     "topologia": false,
+     "px": 55
+    },
+    {
+     "delgadez": 71.05263157894737,
+     "dentro": 100.0,
+     "cobertura": 91.7933130699088,
+     "topologia": false,
+     "px": 38
+    },
+    {
+     "delgadez": 68.51851851851852,
+     "dentro": 100.0,
+     "cobertura": 97.44408945686901,
+     "topologia": false,
+     "px": 54
+    },
+    {
+     "delgadez": 81.81818181818183,
+     "dentro": 100.0,
+     "cobertura": 71.71052631578947,
+     "topologia": false,
+     "px": 22
+    },
+    {
+     "delgadez": 49.23076923076923,
+     "dentro": 100.0,
+     "cobertura": 97.41935483870968,
+     "topologia": false,
+     "px": 65
+    },
+    {
+     "delgadez": 62.5,
+     "dentro": 100.0,
+     "cobertura": 97.68339768339769,
+     "topologia": false,
+     "px": 48
+    },
+    {
+     "delgadez": 56.52173913043478,
+     "dentro": 100.0,
+     "cobertura": 89.68481375358166,
+     "topologia": false,
+     "px": 46
+    },
+    {
+     "delgadez": 59.183673469387756,
+     "dentro": 100.0,
+     "cobertura": 97.15302491103202,
+     "topologia": false,
+     "px": 49
+    },
+    {
+     "delgadez": 70.27027027027027,
+     "dentro": 100.0,
+     "cobertura": 82.77945619335347,
+     "topologia": false,
+     "px": 37
+    },
+    {
+     "delgadez": 35.36585365853659,
+     "dentro": 100.0,
+     "cobertura": 99.4186046511628,
+     "topologia": false,
+     "px": 82
+    },
+    {
+     "delgadez": 43.47826086956522,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 69
+    },
+    {
+     "delgadez": 52.307692307692314,
+     "dentro": 100.0,
+     "cobertura": 98.42271293375394,
+     "topologia": false,
+     "px": 65
+    },
+    {
+     "delgadez": 29.411764705882355,
+     "dentro": 100.0,
+     "cobertura": 35.75757575757576,
+     "topologia": false,
+     "px": 17
+    },
+    {
+     "delgadez": 43.02325581395349,
+     "dentro": 100.0,
+     "cobertura": 99.21671018276761,
+     "topologia": false,
+     "px": 86
+    },
+    {
+     "delgadez": 35.064935064935064,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 77
+    },
+    {
+     "delgadez": 43.05555555555556,
+     "dentro": 100.0,
+     "cobertura": 99.69135802469135,
+     "topologia": false,
+     "px": 72
+    },
+    {
+     "delgadez": 46.3768115942029,
+     "dentro": 100.0,
+     "cobertura": 99.67105263157895,
+     "topologia": false,
+     "px": 69
+    },
+    {
+     "delgadez": 33.33333333333333,
+     "dentro": 100.0,
+     "cobertura": 67.02127659574468,
+     "topologia": false,
+     "px": 42
+    },
+    {
+     "delgadez": 52.17391304347826,
+     "dentro": 100.0,
+     "cobertura": 44.33497536945813,
+     "topologia": false,
+     "px": 23
+    },
+    {
+     "delgadez": 56.75675675675676,
+     "dentro": 100.0,
+     "cobertura": 60.63569682151589,
+     "topologia": false,
+     "px": 37
+    },
+    {
+     "delgadez": 60.56338028169014,
+     "dentro": 100.0,
+     "cobertura": 96.98795180722891,
+     "topologia": false,
+     "px": 71
+    },
+    {
+     "delgadez": 43.90243902439025,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 82
+    },
+    {
+     "delgadez": 26.82926829268293,
+     "dentro": 100.0,
+     "cobertura": 99.40828402366864,
+     "topologia": false,
+     "px": 82
+    },
+    {
+     "delgadez": 56.060606060606055,
+     "dentro": 100.0,
+     "cobertura": 99.64788732394366,
+     "topologia": false,
+     "px": 66
+    },
+    {
+     "delgadez": 35.8974358974359,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": false,
+     "px": 78
+    },
+    {
+     "delgadez": 28.04878048780488,
+     "dentro": 100.0,
+     "cobertura": 99.39577039274926,
+     "topologia": false,
+     "px": 82
+    },
+    {
+     "delgadez": 61.64383561643836,
+     "dentro": 100.0,
+     "cobertura": 99.08256880733946,
+     "topologia": false,
+     "px": 73
+    },
+    {
+     "delgadez": 31.25,
+     "dentro": 100.0,
+     "cobertura": 99.11764705882354,
+     "topologia": false,
+     "px": 80
+    },
+    {
+     "delgadez": 37.5,
+     "dentro": 100.0,
+     "cobertura": 68.08510638297872,
+     "topologia": false,
+     "px": 48
+    },
+    {
+     "delgadez": 64.1025641025641,
+     "dentro": 100.0,
+     "cobertura": 96.18320610687023,
+     "topologia": false,
+     "px": 39
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 61.36363636363637,
+     "topologia": false,
+     "px": 21
+    },
+    {
+     "delgadez": 58.69565217391305,
+     "dentro": 100.0,
+     "cobertura": 94.79553903345726,
+     "topologia": false,
+     "px": 46
+    },
+    {
+     "delgadez": 54.83870967741935,
+     "dentro": 100.0,
+     "cobertura": 68.78980891719745,
+     "topologia": false,
+     "px": 31
+    },
+    {
+     "delgadez": 46.774193548387096,
+     "dentro": 98.38709677419355,
+     "cobertura": 99.3103448275862,
+     "topologia": false,
+     "px": 62
+    },
+    {
+     "delgadez": 67.24137931034483,
+     "dentro": 100.0,
+     "cobertura": 97.68339768339769,
+     "topologia": false,
+     "px": 58
+    },
+    {
+     "delgadez": 77.19298245614034,
+     "dentro": 100.0,
+     "cobertura": 97.134670487106,
+     "topologia": false,
+     "px": 57
+    }
+   ],
+   "pasa": {
+    "delgadez": false,
+    "dentro": true,
+    "cobertura": false,
+    "topologia": false
+   },
+   "pasa_los_cuatro": false
+  },
+  "D · esqueleto morfológico (REFERENCIA)": {
+   "delgadez": 88.3,
+   "dentro": 100.0,
+   "cobertura": 92.8,
+   "topologia": 100.0,
+   "px_medio": 55.4,
+   "por_digito": [
+    {
+     "delgadez": 96.96969696969697,
+     "dentro": 100.0,
+     "cobertura": 75.61837455830388,
+     "topologia": true,
+     "px": 33
+    },
+    {
+     "delgadez": 75.92592592592592,
+     "dentro": 100.0,
+     "cobertura": 94.91017964071857,
+     "topologia": true,
+     "px": 54
+    },
+    {
+     "delgadez": 91.11111111111111,
+     "dentro": 100.0,
+     "cobertura": 92.0,
+     "topologia": true,
+     "px": 45
+    },
+    {
+     "delgadez": 97.2972972972973,
+     "dentro": 100.0,
+     "cobertura": 70.99447513812154,
+     "topologia": true,
+     "px": 37
+    },
+    {
+     "delgadez": 87.2340425531915,
+     "dentro": 100.0,
+     "cobertura": 68.62244897959184,
+     "topologia": true,
+     "px": 47
+    },
+    {
+     "delgadez": 79.06976744186046,
+     "dentro": 100.0,
+     "cobertura": 75.90361445783132,
+     "topologia": true,
+     "px": 43
+    },
+    {
+     "delgadez": 97.72727272727273,
+     "dentro": 100.0,
+     "cobertura": 71.47147147147147,
+     "topologia": true,
+     "px": 44
+    },
+    {
+     "delgadez": 75.55555555555556,
+     "dentro": 100.0,
+     "cobertura": 72.7979274611399,
+     "topologia": true,
+     "px": 45
+    },
+    {
+     "delgadez": 91.30434782608695,
+     "dentro": 100.0,
+     "cobertura": 97.72727272727273,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 73.46938775510205,
+     "dentro": 100.0,
+     "cobertura": 85.19553072625699,
+     "topologia": true,
+     "px": 49
+    },
+    {
+     "delgadez": 92.3076923076923,
+     "dentro": 100.0,
+     "cobertura": 94.0251572327044,
+     "topologia": true,
+     "px": 52
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 97.36842105263158,
+     "topologia": true,
+     "px": 51
+    },
+    {
+     "delgadez": 98.11320754716981,
+     "dentro": 100.0,
+     "cobertura": 99.2248062015504,
+     "topologia": true,
+     "px": 53
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 94.92063492063491,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 98.67549668874173,
+     "topologia": true,
+     "px": 57
+    },
+    {
+     "delgadez": 84.61538461538461,
+     "dentro": 100.0,
+     "cobertura": 95.46827794561933,
+     "topologia": true,
+     "px": 52
+    },
+    {
+     "delgadez": 100.0,
+     "dentro": 100.0,
+     "cobertura": 96.54088050314465,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 98.18181818181819,
+     "dentro": 100.0,
+     "cobertura": 98.46625766871165,
+     "topologia": true,
+     "px": 55
+    },
+    {
+     "delgadez": 77.5,
+     "dentro": 100.0,
+     "cobertura": 76.28571428571429,
+     "topologia": true,
+     "px": 40
+    },
+    {
+     "delgadez": 75.51020408163265,
+     "dentro": 100.0,
+     "cobertura": 88.39285714285714,
+     "topologia": true,
+     "px": 49
+    },
+    {
+     "delgadez": 93.33333333333333,
+     "dentro": 100.0,
+     "cobertura": 96.60377358490567,
+     "topologia": true,
+     "px": 45
+    },
+    {
+     "delgadez": 84.61538461538461,
+     "dentro": 100.0,
+     "cobertura": 99.23371647509579,
+     "topologia": true,
+     "px": 52
+    },
+    {
+     "delgadez": 87.03703703703704,
+     "dentro": 100.0,
+     "cobertura": 94.78260869565217,
+     "topologia": true,
+     "px": 54
+    },
+    {
+     "delgadez": 87.93103448275862,
+     "dentro": 100.0,
+     "cobertura": 90.41095890410958,
+     "topologia": true,
+     "px": 58
+    },
+    {
+     "delgadez": 83.60655737704919,
+     "dentro": 100.0,
+     "cobertura": 95.63758389261746,
+     "topologia": true,
+     "px": 61
+    },
+    {
+     "delgadez": 86.0,
+     "dentro": 100.0,
+     "cobertura": 89.29663608562691,
+     "topologia": true,
+     "px": 50
+    },
+    {
+     "delgadez": 91.37931034482759,
+     "dentro": 100.0,
+     "cobertura": 94.43037974683544,
+     "topologia": true,
+     "px": 58
+    },
+    {
+     "delgadez": 98.27586206896551,
+     "dentro": 100.0,
+     "cobertura": 97.58064516129032,
+     "topologia": true,
+     "px": 58
+    },
+    {
+     "delgadez": 90.9090909090909,
+     "dentro": 100.0,
+     "cobertura": 93.58600583090379,
+     "topologia": true,
+     "px": 55
+    },
+    {
+     "delgadez": 83.92857142857143,
+     "dentro": 100.0,
+     "cobertura": 98.17629179331307,
+     "topologia": true,
+     "px": 56
+    },
+    {
+     "delgadez": 81.35593220338984,
+     "dentro": 100.0,
+     "cobertura": 96.1661341853035,
+     "topologia": true,
+     "px": 59
+    },
+    {
+     "delgadez": 84.0909090909091,
+     "dentro": 100.0,
+     "cobertura": 90.46052631578947,
+     "topologia": true,
+     "px": 44
+    },
+    {
+     "delgadez": 81.66666666666667,
+     "dentro": 100.0,
+     "cobertura": 97.74193548387096,
+     "topologia": true,
+     "px": 60
+    },
+    {
+     "delgadez": 85.41666666666666,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 48
+    },
+    {
+     "delgadez": 90.38461538461539,
+     "dentro": 100.0,
+     "cobertura": 93.69627507163324,
+     "topologia": true,
+     "px": 52
+    },
+    {
+     "delgadez": 85.1063829787234,
+     "dentro": 100.0,
+     "cobertura": 99.28825622775801,
+     "topologia": true,
+     "px": 47
+    },
+    {
+     "delgadez": 88.0,
+     "dentro": 100.0,
+     "cobertura": 93.95770392749245,
+     "topologia": true,
+     "px": 50
+    },
+    {
+     "delgadez": 87.5,
+     "dentro": 100.0,
+     "cobertura": 99.70930232558139,
+     "topologia": true,
+     "px": 72
+    },
+    {
+     "delgadez": 78.26086956521739,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 69
+    },
+    {
+     "delgadez": 82.6086956521739,
+     "dentro": 100.0,
+     "cobertura": 99.36908517350159,
+     "topologia": true,
+     "px": 69
+    },
+    {
+     "delgadez": 97.67441860465115,
+     "dentro": 100.0,
+     "cobertura": 74.54545454545455,
+     "topologia": true,
+     "px": 43
+    },
+    {
+     "delgadez": 91.8918918918919,
+     "dentro": 100.0,
+     "cobertura": 98.69451697127938,
+     "topologia": true,
+     "px": 74
+    },
+    {
+     "delgadez": 91.42857142857143,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 70
+    },
+    {
+     "delgadez": 92.42424242424242,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 66
+    },
+    {
+     "delgadez": 82.85714285714286,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 70
+    },
+    {
+     "delgadez": 76.36363636363637,
+     "dentro": 100.0,
+     "cobertura": 86.70212765957447,
+     "topologia": true,
+     "px": 55
+    },
+    {
+     "delgadez": 93.47826086956522,
+     "dentro": 100.0,
+     "cobertura": 77.33990147783251,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 93.47826086956522,
+     "dentro": 100.0,
+     "cobertura": 75.79462102689487,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 82.89473684210526,
+     "dentro": 100.0,
+     "cobertura": 99.3975903614458,
+     "topologia": true,
+     "px": 76
+    },
+    {
+     "delgadez": 93.15068493150685,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 73
+    },
+    {
+     "delgadez": 85.29411764705883,
+     "dentro": 100.0,
+     "cobertura": 99.70414201183432,
+     "topologia": true,
+     "px": 68
+    },
+    {
+     "delgadez": 91.04477611940298,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 67
+    },
+    {
+     "delgadez": 92.64705882352942,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 68
+    },
+    {
+     "delgadez": 85.5072463768116,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 69
+    },
+    {
+     "delgadez": 91.17647058823529,
+     "dentro": 100.0,
+     "cobertura": 99.38837920489296,
+     "topologia": true,
+     "px": 68
+    },
+    {
+     "delgadez": 94.11764705882352,
+     "dentro": 100.0,
+     "cobertura": 100.0,
+     "topologia": true,
+     "px": 68
+    },
+    {
+     "delgadez": 78.78787878787878,
+     "dentro": 100.0,
+     "cobertura": 98.48024316109422,
+     "topologia": true,
+     "px": 66
+    },
+    {
+     "delgadez": 81.81818181818183,
+     "dentro": 100.0,
+     "cobertura": 98.85496183206108,
+     "topologia": true,
+     "px": 55
+    },
+    {
+     "delgadez": 75.86206896551724,
+     "dentro": 100.0,
+     "cobertura": 87.7840909090909,
+     "topologia": true,
+     "px": 58
+    },
+    {
+     "delgadez": 84.48275862068965,
+     "dentro": 100.0,
+     "cobertura": 95.91078066914498,
+     "topologia": true,
+     "px": 58
+    },
+    {
+     "delgadez": 91.30434782608695,
+     "dentro": 100.0,
+     "cobertura": 88.21656050955414,
+     "topologia": true,
+     "px": 46
+    },
+    {
+     "delgadez": 94.54545454545455,
+     "dentro": 100.0,
+     "cobertura": 99.6551724137931,
+     "topologia": true,
+     "px": 55
+    },
+    {
+     "delgadez": 91.52542372881356,
+     "dentro": 100.0,
+     "cobertura": 98.45559845559846,
+     "topologia": true,
+     "px": 59
+    },
+    {
+     "delgadez": 93.10344827586206,
+     "dentro": 100.0,
+     "cobertura": 97.42120343839542,
+     "topologia": true,
+     "px": 58
+    }
+   ],
+   "pasa": {
+    "delgadez": true,
+    "dentro": true,
+    "cobertura": false,
+    "topologia": true
+   },
+   "pasa_los_cuatro": false
+  }
+ }
+}
