@@ -405,3 +405,20 @@ Un barrido aparte, sin commitear, sobre **rectas de 1 px** en 36 orientaciones (
 λ = 6 → 36/36 · λ = 4 → 32 · λ = 3,5 → 28 · λ = 3 → 20 · λ = 2,75 → 11 · λ = 2,5 → 2. O sea que estrechar empeora
 **incluso el trazo fino**, para el que en principio estaría hecho. La causa probable (no aislada): el kernel sigue igual
 de largo pero se hace más estrecho, así que se afina en orientación, y 12 orientaciones cada 15° dejan huecos entre ellas.
+
+**Por qué no las detecta aunque en la fila 2 «se ven» curvas** (medido el 2026-10-10 con sondas sueltas sobre el arco
+R = 12 de la galería, sin commitear):
+
+1. **Lo que se ve son los BORDES, no el trazo.** De través, el Gabor λ = 2 vale `−0,2 · +0,33 · −0,2`: premia 1 px de
+   tinta y castiga sus dos vecinos. Dentro de un trazo de 6 px los tres tienen tinta y se cancela (energía 0,09–0,12 en
+   las filas interiores); sólo responde la fila del borde, a la que le falta un vecino negativo (0,94 arriba, 0,79 abajo).
+   Por eso la fila 2 enseña dos contornos, el interior y el exterior.
+2. **Esos bordes no llegan al umbral.** El detector decide primero dónde hay trazo con TAU = 1,2 (fijado para λ = 6,
+   donde el arco de 3 px da 3,75). Con λ = 2 el máximo es 0,76–1,11 desde 2 px de grosor: **0 píxeles** pasan, y sin
+   píxeles el veredicto es «nada». El ojo ve la curva porque la fila 2 se pinta en gris relativo y porque integra la forma
+   entera; el detector mira ventanas de 9 px.
+3. **Y bajar el umbral no basta.** Donde el borde se inclina es una escalera, y una franja de 1 px no encaja con ella: en
+   el arco de 3 px la energía del borde cae de 0,99 en la parte plana de arriba a 0,55 en los lados. Con TAU = 0,6 y sin
+   umbral de coherencia sigue saliendo «corto»/«nada»: la cadena se rompe y no quedan tramos para medir el giro a ±4 px.
+4. **El de 1 px** sí pasa en la parte plana (2,15), pero los tramos oblicuos bajan a ~1,0 por el mismo motivo: 12 píxeles
+   sueltos, «corto».
