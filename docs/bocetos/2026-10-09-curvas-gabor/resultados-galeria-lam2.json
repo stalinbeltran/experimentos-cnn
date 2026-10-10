@@ -1,0 +1,262 @@
+{
+ "grosor-arco": [
+  {
+   "trazo": "1 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 8,
+     "n_nucleo": 0,
+     "coh_med": 0.82,
+     "giro_total": 0.0,
+     "frac_medible": 0.0,
+     "kappa_med": 0.0,
+     "kappa_p90": 0.0,
+     "signo_dominante": 0.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "corto"
+    }
+   ]
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  }
+ ],
+ "grosor-recta": [
+  {
+   "trazo": "1 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 6,
+     "n_nucleo": 0,
+     "coh_med": 0.33,
+     "giro_total": 0.0,
+     "frac_medible": 0.0,
+     "kappa_med": 0.0,
+     "kappa_p90": 0.0,
+     "signo_dominante": 0.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "mancha"
+    }
+   ]
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  }
+ ],
+ "radio": [
+  {
+   "trazo": "R = 4",
+   "esperado": "curva",
+   "radio_real": 4.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 6",
+   "esperado": "curva",
+   "radio_real": 6.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 9",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 12",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 18",
+   "esperado": "curva",
+   "radio_real": 18.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 27",
+   "esperado": "curva",
+   "radio_real": 27.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "R = 40",
+   "esperado": "curva",
+   "radio_real": 40.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "recta (R = ∞)",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": []
+  }
+ ],
+ "posicion": [
+  {
+   "trazo": "centro",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "arriba-izq.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "abajo-der.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "pegada al borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "cortada por el borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "girada 45°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "girada 90°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  },
+  {
+   "trazo": "girada 225°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": []
+  }
+ ]
+}

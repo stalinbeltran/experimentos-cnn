@@ -10,10 +10,14 @@ Cada columna es un trazo y tiene tres filas:
 
 El detector es el de `curvas.py` sin tocar una línea (se importa). Sólo dibuja: no ajusta nada, no entrena nada.
 
-    python galeria.py   → imagenes/10-galeria-*.png y resultados-galeria.json
+    python galeria.py            → imagenes/10-galeria-*.png y resultados-galeria.json  (λ = 6, el de curvas.py)
+    python galeria.py --lam 2    → lo mismo con el Gabor ESTRECHADO: imagenes/10-galeria-*-lam2.png y
+                                   resultados-galeria-lam2.json. Sólo cambia λ (ancho de la franja central = λ/2 y
+                                   envolvente transversal σ = λ/2); el kernel sigue 9×9 y TAU y demás umbrales, iguales
 """
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -23,6 +27,7 @@ import numpy as np
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
 import curvas as cv                                                 # noqa: E402
+import torch                                                        # noqa: E402
 from curvas import arco, recta, detectar, plt                       # noqa: E402
 
 OK, MAL = "#1b7f3b", "#c2410c"
@@ -81,6 +86,14 @@ def figura(nombre_png: str, titulo: str, items: list[tuple[str, np.ndarray, str,
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--lam", type=float, default=cv.LAM, help="λ del Gabor (px); 2 = el mínimo de la rejilla (Nyquist)")
+    lam = ap.parse_args().lam
+    suf, tit = "", ""
+    if lam != cv.LAM:                    # el detector lee el banco global en cada llamada: basta con sustituirlo
+        cv.LAM = lam
+        cv.GABOR = torch.from_numpy(np.stack([cv.kernel_gabor(cv.K, t, lam) for t in cv.THETAS])[:, None])
+        suf, tit = f"-lam{lam:g}", f"  ·  Gabor λ = {lam:g} (franja central {lam / 2:g} px)"
     G = [1, 2, 3, 4, 6, 8, 10, 12]
     grosor_arco = [(f"{g} px", arco(16, 10, 12, 0, 22, g), "curva", 12.0) for g in G]
     grosor_recta = [(f"{g} px", recta(16, 16, 22, 30, g), "recta", None) for g in G]
@@ -95,12 +108,12 @@ def main() -> int:
            ("girada 90°", arco(14, 16, 9, 90, 18, 3), "curva", 9.0),
            ("girada 225°", arco(18, 18, 9, 225, 18, 3), "curva", 9.0)]
     out = {
-        "grosor-arco": figura("10-galeria-1-grosor-arco.png", "GROSOR · arco R = 12, 22 px de largo", grosor_arco),
-        "grosor-recta": figura("10-galeria-2-grosor-recta.png", "GROSOR · recta a 30°, 22 px de largo", grosor_recta),
-        "radio": figura("10-galeria-3-radio.png", "RADIO · arcos de 3 px de grosor y 20 px de largo", radios),
-        "posicion": figura("10-galeria-4-posicion.png", "POSICIÓN y ORIENTACIÓN · arco R = 9, 3 px, 18 px de largo", pos),
+        "grosor-arco": figura(f"10-galeria-1-grosor-arco{suf}.png", "GROSOR · arco R = 12, 22 px de largo" + tit, grosor_arco),
+        "grosor-recta": figura(f"10-galeria-2-grosor-recta{suf}.png", "GROSOR · recta a 30°, 22 px de largo" + tit, grosor_recta),
+        "radio": figura(f"10-galeria-3-radio{suf}.png", "RADIO · arcos de 3 px de grosor y 20 px de largo" + tit, radios),
+        "posicion": figura(f"10-galeria-4-posicion{suf}.png", "POSICIÓN y ORIENTACIÓN · arco R = 9, 3 px, 18 px de largo" + tit, pos),
     }
-    (AQUI / "resultados-galeria.json").write_text(json.dumps(out, indent=1, ensure_ascii=False, default=float))
+    (AQUI / f"resultados-galeria{suf}.json").write_text(json.dumps(out, indent=1, ensure_ascii=False, default=float))
     return 0
 
 

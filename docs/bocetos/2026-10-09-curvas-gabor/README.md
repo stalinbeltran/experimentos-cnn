@@ -379,3 +379,29 @@ Lo que se ve (medido con esta galería):
   R = 9 da 9,1–10,9 en todas).
 - **Posición.** Dentro del cuadro, la posición no cambia nada (convolución). Pegada al borde sobreestima un poco
   (R ≈ 12); **cortada** por el borde queda «corto»: le faltan píxeles para medir el giro.
+
+### La misma galería con el Gabor ESTRECHADO al mínimo: λ = 2 (2026-10-10, pedido del dueño)
+
+`python galeria.py --lam 2` → `imagenes/10-galeria-*-lam2.png` y [`resultados-galeria-lam2.json`](resultados-galeria-lam2.json).
+Las de λ = 6 de arriba **no se tocan** (re-generadas, salen idénticas byte a byte).
+
+**Qué es el «ancho».** El Gabor par de este boceto es `exp(−u²/2σu² − v²/2σv²)·cos(2πv/λ)` sobre 9×9: a lo largo de la
+recta σu = k/3 = 3 px; de través, una franja central positiva de **λ/2 px** con dos negativas a los lados y envolvente
+σv = λ/2. Con λ = 6 la franja central mide **3 px** (hecha para trazos de ~3 px) y el kernel entero, 9 px de través.
+**λ = 2 es el mínimo de la rejilla** (Nyquist): franja central de 1 px. Sólo cambia λ; el kernel sigue siendo 9×9 y TAU
+(1,2) y los demás umbrales no se tocan.
+
+![grosor arco λ2](imagenes/10-galeria-1-grosor-arco-lam2.png)
+![grosor recta λ2](imagenes/10-galeria-2-grosor-recta-lam2.png)
+![radio λ2](imagenes/10-galeria-3-radio-lam2.png)
+![posición λ2](imagenes/10-galeria-4-posicion-lam2.png)
+
+**0/32**, contra 19/32 con λ = 6. Un trazo de 2 px o más cubre la franja positiva **y** las negativas y se cancela: sólo
+quedan sus bordes, con energía ≈ 1,0–1,1, por debajo de TAU. La recta de 1 px a 30° tampoco pasa: con franja de 1 px,
+una recta oblicua cae entre píxeles (aliasing) y su energía baja a 0,83. **Y no es sólo el umbral:** el ruido del 1 % llega
+a 0,97 con λ = 2, así que bajar TAU para recoger esos bordes metería el ruido.
+
+Un barrido aparte, sin commitear, sobre **rectas de 1 px** en 36 orientaciones (cada 5°), 22 px de largo, sale recta en:
+λ = 6 → 36/36 · λ = 4 → 32 · λ = 3,5 → 28 · λ = 3 → 20 · λ = 2,75 → 11 · λ = 2,5 → 2. O sea que estrechar empeora
+**incluso el trazo fino**, para el que en principio estaría hecho. La causa probable (no aislada): el kernel sigue igual
+de largo pero se hace más estrecho, así que se afina en orientación, y 12 orientaciones cada 15° dejan huecos entre ellas.
