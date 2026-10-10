@@ -595,3 +595,23 @@ construcción** (convolución + lectura por trozo, sin rejilla fija; regla 6), y
 
 **Lo que no está hecho:** combinarlo con rectas (el combinado de antes sumaba +0,003); limpiar la escalera de los bordes
 de UCI antes del detector; y la curva vertical con un dataset que deje margen.
+
+### Los fallos, en una imagen (2026-10-10, pedido del dueño)
+
+`python fallos_bordes.py` → [`imagenes/15-fallos-bordes.png`](imagenes/15-fallos-bordes.png) y
+[`resultados-fallos-bordes.json`](resultados-fallos-bordes.json): los **181** dígitos de val que falla el compositor
+sobre bordes (semilla 0, acierto 0,888), ordenados por dígito real, con lo que vio el detector encima.
+
+![fallos](imagenes/15-fallos-bordes.png)
+
+Fallos por dígito real: 0: 5 · 1: 25 · 2: 8 · 3: 21 · 4: 19 · 5: 10 · 6: 7 · 7: 9 · **8: 48** · 9: 29. Lo que se ve, y
+lo que se midió con una sonda suelta (sin commitear) sobre la fracción del borde con giro medible:
+
+- **En general el detector mide poco borde: el 25 % en los aciertos y el 18 % en los fallos** (medias). Los fallos
+  tienen menos borde legible, pero los aciertos tampoco tienen mucho: la escalera de los dígitos de UCI deja la mayor
+  parte del contorno en gris.
+- **El 8 no falla por eso**: mide el **12 %** del borde, igual en sus fallos que en sus aciertos. Es la clase con menos
+  borde legible de todas, y lo que queda (trozos curvos sueltos en los dos lazos) se parece al 3, al 9 y al 2.
+- **4→1 (12):** del 4 sale sobre todo el trazo diagonal largo, en verde (recto); las curvas son pocas y pequeñas.
+- **1→8, 1→6 (17 juntos):** los 1 de UCI son **gruesos**, casi un bloque, y su contorno cerrado tiene curvas en los
+  extremos que se leen como lazos.
