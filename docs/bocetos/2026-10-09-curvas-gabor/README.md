@@ -743,3 +743,45 @@ fallaban antes** y 34 son nuevos. Cada fallo en dos celdas: el borde gris que en
 
 Fallos por real: 0: 0 · 1: 8 · 2: 5 · 3: 6 · 4: 4 · 5: 3 · 6: 5 · 7: 6 · **8: 20** · 9: 7. Más frecuentes: **8→9 (14)**,
 2→1 (5), 1→8 (5), 7→4 (4), 6→0 (3), 8→1 (3).
+
+## El detector con la entrada SIEMPRE DELGADA: esqueleto morfológico antes (2026-10-10, pedido del dueño)
+
+*«El esqueleto morfológico se ve bien. Ahora en el experimento detector de curvas, entrena el detector de curvas con esa
+entrada siempre delgada (para las curvas definidas de ese detector, previamente adelgazadas por el morfológico).»* La
+morfología se usa aquí **para adelgazar, por orden del dueño**; la regla del mismo día la prohíbe para sacar el borde.
+
+[`esqueleto.py`](esqueleto.py) (6,5 min, 0 $; [`resultados-esqueleto.json`](resultados-esqueleto.json)): imagen →
+`skimage.skeletonize` → el detector (sin paso de borde). «Entrenar» este detector es **calibrarlo** (no tiene pesos): λ del
+Gabor par, TAU, σE y coherencia, 48 combinaciones, elegidas con **la mitad del banco de `rect-lin` esqueletizado**
+(rectas de todos los grosores, arcos R ≤ 27, negativos; tres tasas por igual) y comprobadas en la otra mitad.
+
+![detector sobre el esqueleto](imagenes/20-esqueleto-1-detector.png)
+![resultados](imagenes/20-esqueleto-2-resultados.png)
+
+| | rectas → sólo rectos | arcos → curva con su radio | negativos → nada | dígitos val · a ciegas |
+|---|---:|---:|---:|---:|
+| **esqueleto + detector calibrado** (λ par 6 · TAU 0,5 · σE 1 · coh 0,35) | **30,0** | **62,8** | 100 | **0,886 · 0,881** |
+| borde gris re-calibrado (λ_b 10 · K 9), lo mejor hasta hoy | — | — | — | 0,960 · 0,957 |
+
+(banco: la mitad de prueba; la de calibrar da lo mismo, 29,8 / 55,0 / 100. Galería: arcos 13/23 · rectas 7/9.)
+
+**No funciona tan bien como el borde gris: 0,886 contra 0,960.** Y el motivo se ve en el banco, desglosado (sonda suelta
+con la calibración elegida, sin commitear):
+
+- **Los arcos salen bien** (casi todos con trozo curvo, de R 6 a 27 y grosor 2 a 8): lo que falla en ellos es sobre todo
+  el radio a ±25 %.
+- **Las rectas son el problema, y por el esqueleto, no por el detector.** Una recta de 10 px queda en un esqueleto de
+  ~8 px: no da para medir el giro a ±4 px («sin trozos» en 41–53 de 60). Y una recta gruesa (6–14 px) se esqueletiza como
+  una línea con **ramitas en Y en las esquinas**, que el detector lee como curvas (28–38 de 60 en las de 16 px). Las finas
+  y largas sí salen rectas (L 16 · g 2: 60/60).
+- **En los dígitos** pasa lo mismo: el esqueleto de un trazo grueso trae ramitas en los extremos y en los cruces
+  (figura 1), y el arco grueso de 12 px se queda en una línea corta y recta.
+- **Predicción**: acerté el λ par mayor que 3 (salió 6) y que no superaría al borde gris; fallé por mucho en el banco
+  (esperaba ≥ 90 % de arcos y de rectas) y en dígitos (esperaba 0,94–0,96).
+
+⚠ **Medido una sola vez y sin pasar por el `verificador`**; los números salen del JSON de esta corrida.
+
+**Lo que lo arreglaría, sin probar**: (1) **podar las ramitas** del esqueleto (quitar ramas de menos de ~3 px desde un
+extremo), que es lo que convierte las rectas gruesas en curvas; (2) **calibrar con figuras que de verdad sean líneas**
+tras esqueletizar (las del banco de 10 × 14 px son bloques, el pendiente 6 de la línea); (3) bajar la distancia de giro
+(±4 px) para esqueletos cortos.
