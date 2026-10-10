@@ -879,3 +879,30 @@ dígitos cumple el «≤ 3 px» para el que se calibró el detector.
   trazo.
 
 ⚠ No pasado por el `verificador`; los números salen del JSON de esta corrida.
+
+#### Los píxeles grises fuera del dígito (observado por el dueño en la figura 23-2, 2026-10-10)
+
+El gris de esas figuras es la **máscara de trazo** del detector: donde la energía de algún Gabor par supera TAU sin que
+se pueda medir el giro. Con el TAU 0,3 de la calibración, **se sale de la tinta** (medido: en 300 dígitos de val, el 35 %
+de la máscara está fuera; a 2 px de mediana, hasta 5 px) por dos vías, comprobadas con figuras sueltas:
+
+- **los extremos del trazo**: el Gabor es alargado y sigue respondiendo 3–4 px más allá de donde acaba la línea (en un
+  trazo vertical de 4 × 12 px, todo lo que sobra está en las filas de los extremos; en las del centro, nada);
+- **el lado de trazos oblicuos, curvas y cruces**: un Gabor de otra orientación cruza el trazo y responde algo desde fuera
+  (49–73 % de la máscara fuera en un trazo a 30°, un arco, un círculo y una cruz).
+
+No es un error de dibujo: esos píxeles **entran en el mapa de «golpe»** que lee el compositor, y el 11–13 % de los
+píxeles de color (los que sí miden giro) también cae fuera. Qué cuesta cada arreglo ([`mascara.py`](mascara.py),
+[`resultados-mascara.json`](resultados-mascara.json)):
+
+| variante | máscara fuera de la tinta | sintéticas delgadas: rectas · arcos · radio ±25 % | dígitos val · a ciegas |
+|---|---:|---:|---:|
+| TAU 0,3 (la de ahora) | 35 % | 99,7 · 97,7 · 81,0 | 0,929 · 0,921 |
+| **TAU 0,6** (empataba en la calibración) | **13 %** | **99,7 · 97,7 · 81,0** | **0,931 · 0,929** |
+| TAU 0,9 | 4 % | 99,0 · 94,3 · 79,3 | 0,934 · 0,903 |
+| máscara ∩ tinta | 0 % | 74,0 · 55,3 · 46,3 | 0,946 · 0,935 |
+
+**TAU 0,6 es gratis**: quita casi dos tercios del desborde sin cambiar nada en las figuras delgadas (empataba ahí) y mejora
+algo los dígitos. **Recortar a la tinta** quita todo el desborde y es lo que más sube en dígitos, pero **rompe las líneas
+de 1 px** (el giro se mide a ±4 px a lo largo de la tangente, y en una escalera oblicua de 1 px esos puntos caen fuera de
+la tinta): contradice el objetivo «sólo trazos delgados». Ninguno se ha aplicado todavía: decide el dueño.

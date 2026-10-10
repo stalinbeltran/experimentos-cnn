@@ -1,0 +1,66 @@
+{
+ "TAU 0,3 (la de delgadas.py)": {
+  "mascara_fuera_de_la_tinta_pc": 35.4,
+  "sinteticas": {
+   "recta_bien": 99.7,
+   "arco_bien": 97.7,
+   "negativo_bien": 100.0,
+   "radio_a_25pc": 81.0,
+   "pos_recta_mediana_px": 0.21,
+   "pos_arco_mediana_px": 1.15,
+   "pos_arco_p90_px": 2.04,
+   "centro_curv_mediana_px": 2.25,
+   "puntos": 93.6
+  },
+  "digitos_val": 0.9287,
+  "digitos_ciega": 0.9209
+ },
+ "TAU 0,6 (empataba)": {
+  "mascara_fuera_de_la_tinta_pc": 13.5,
+  "sinteticas": {
+   "recta_bien": 99.7,
+   "arco_bien": 97.7,
+   "negativo_bien": 100.0,
+   "radio_a_25pc": 81.0,
+   "pos_recta_mediana_px": 0.21,
+   "pos_arco_mediana_px": 1.15,
+   "pos_arco_p90_px": 2.04,
+   "centro_curv_mediana_px": 2.25,
+   "puntos": 93.6
+  },
+  "digitos_val": 0.9314,
+  "digitos_ciega": 0.9293
+ },
+ "TAU 0,9": {
+  "mascara_fuera_de_la_tinta_pc": 4.4,
+  "sinteticas": {
+   "recta_bien": 99.0,
+   "arco_bien": 94.3,
+   "negativo_bien": 100.0,
+   "radio_a_25pc": 79.3,
+   "pos_recta_mediana_px": 0.21,
+   "pos_arco_mediana_px": 1.12,
+   "pos_arco_p90_px": 2.03,
+   "centro_curv_mediana_px": 2.14,
+   "puntos": 92.8
+  },
+  "digitos_val": 0.9338,
+  "digitos_ciega": 0.9032
+ },
+ "TAU 0,3 + máscara ∩ tinta": {
+  "mascara_fuera_de_la_tinta_pc": 0.0,
+  "sinteticas": {
+   "recta_bien": 74.0,
+   "arco_bien": 55.3,
+   "negativo_bien": 100.0,
+   "radio_a_25pc": 46.3,
+   "pos_recta_mediana_px": 0.23,
+   "pos_arco_mediana_px": 0.99,
+   "pos_arco_p90_px": 1.92,
+   "centro_curv_mediana_px": 2.14,
+   "puntos": 73.4
+  },
+  "digitos_val": 0.9456,
+  "digitos_ciega": 0.935
+ }
+}
