@@ -731,3 +731,15 @@ y el λ del Gabor PAR que lee las líneas (3/4)— **eligiendo sólo con la gale
 - En λ_b 8 · K 9 la galería eligió **λ 4** para el Gabor par que lee las líneas, no el λ 3 acordado: el borde gris es
   una banda más ancha que el contorno de 1 px para el que se eligió λ 3. En λ_b 10–12 · K 9 se queda en 3.
 - **Falta**: la curva de desplazamientos con este borde, y mirar K 11 y TAU < 0,1.
+
+#### Los fallos con el borde gris re-calibrado (2026-10-10, pedido del dueño)
+
+[`fallos_gris.py`](fallos_gris.py) → [`imagenes/19-fallos-gris.png`](imagenes/19-fallos-gris.png) y
+[`resultados-fallos-gris.json`](resultados-fallos-gris.json). λ_b 10 · kernel 9 (el mejor a ciegas, y el que conserva el
+λ 3 del Gabor par), semilla 0: **64 fallos** en val (acierto 0,960), contra 181 con el borde morfológico; **30 ya
+fallaban antes** y 34 son nuevos. Cada fallo en dos celdas: el borde gris que entra y lo que ve el detector.
+
+![fallos gris](imagenes/19-fallos-gris.png)
+
+Fallos por real: 0: 0 · 1: 8 · 2: 5 · 3: 6 · 4: 4 · 5: 3 · 6: 5 · 7: 6 · **8: 20** · 9: 7. Más frecuentes: **8→9 (14)**,
+2→1 (5), 1→8 (5), 7→4 (4), 6→0 (3), 8→1 (3).
