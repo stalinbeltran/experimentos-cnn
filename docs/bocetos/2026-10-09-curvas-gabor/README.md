@@ -356,3 +356,26 @@ Lo que se lee:
   absoluto y 238 para el 80 %. Las 20 de la figura explican +2,18 del margen porque el resto se cancela entre sí.
 - **Lo que sube el logit del 9 es el mismo bloque**: 16 de las 20 primeras son del canal horizontal (filas 2 y 3 de
   celdas, las dos escalas). El 9 se reconoce casi sólo por horizontales en la mitad superior.
+
+## Galería (2026-10-10, pedido del dueño): trazos característicos y lo que hace el detector
+
+`python galeria.py` (~5 s; [`resultados-galeria.json`](resultados-galeria.json)). El detector de `curvas.py` **sin tocar**,
+sobre trazos que varían **una** cosa cada vez. Cada columna: 1 la entrada · 2 lo que sale del filtro de rectas (energía
+del banco y la orientación ganadora en cada píxel) · 3 el giro |κ| medido y el veredicto. Una curva cuenta como ✓ si su
+radio queda dentro de ±25 % del real (**tolerancia elegida para la figura**, no calibrada).
+
+![grosor arco](imagenes/10-galeria-1-grosor-arco.png)
+![grosor recta](imagenes/10-galeria-2-grosor-recta.png)
+![radio](imagenes/10-galeria-3-radio.png)
+![posición](imagenes/10-galeria-4-posicion.png)
+
+Lo que se ve (medido con esta galería):
+
+- **Grosor.** De 1 a 8 px el arco R = 12 sale curva con R 12,6–15,4. Desde 6 px el filtro ve los **dos bordes** del
+  trazo (fila 2) y el radio que da es el del borde **exterior**: con 12 px de grosor estima 17,5, y el borde exterior está
+  en 18. Las rectas a 30° salen recta hasta 8 px; con 10 y 12 px el trazo es un rectángulo y sale **esquina**.
+- **Radio.** R = 4 sale «corto» (por debajo del rango útil); 6, 9 y 12 bien; R = 40 sale recta (ya conocido). R = 18
+  horizontal sale 27 ✗, pero **es la orientación peor**: el mismo arco girado da 17,5–22,5 (medido en 8 orientaciones;
+  R = 9 da 9,1–10,9 en todas).
+- **Posición.** Dentro del cuadro, la posición no cambia nada (convolución). Pegada al borde sobreestima un poco
+  (R ≈ 12); **cortada** por el borde queda «corto»: le faltan píxeles para medir el giro.

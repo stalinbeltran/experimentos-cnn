@@ -1,0 +1,728 @@
+{
+ "grosor-arco": [
+  {
+   "trazo": "1 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 26,
+     "n_nucleo": 10,
+     "coh_med": 0.61,
+     "giro_total": 50.8,
+     "frac_medible": 0.4,
+     "kappa_med": 4.12,
+     "kappa_p90": 4.36,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "curva",
+     "radio": 13.9
+    }
+   ]
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 16,
+     "coh_med": 0.63,
+     "giro_total": 54.9,
+     "frac_medible": 0.88,
+     "kappa_med": 4.56,
+     "kappa_p90": 4.74,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 12.6
+    }
+   ]
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 70,
+     "n_nucleo": 20,
+     "coh_med": 0.63,
+     "giro_total": 55.2,
+     "frac_medible": 0.9,
+     "kappa_med": 4.09,
+     "kappa_p90": 4.5,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 14.0
+    }
+   ]
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 72,
+     "n_nucleo": 26,
+     "coh_med": 0.58,
+     "giro_total": 57.3,
+     "frac_medible": 1.0,
+     "kappa_med": 3.72,
+     "kappa_p90": 4.98,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 15.4
+    }
+   ]
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 94,
+     "n_nucleo": 64,
+     "coh_med": 0.53,
+     "giro_total": 54.9,
+     "frac_medible": 0.47,
+     "kappa_med": 4.03,
+     "kappa_p90": 4.88,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 14.2
+    }
+   ]
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 74,
+     "n_nucleo": 46,
+     "coh_med": 0.53,
+     "giro_total": 60.9,
+     "frac_medible": 0.3,
+     "kappa_med": 3.9,
+     "kappa_p90": 4.56,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 14.7
+    }
+   ]
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 76,
+     "n_nucleo": 44,
+     "coh_med": 0.51,
+     "giro_total": 69.6,
+     "frac_medible": 0.36,
+     "kappa_med": 3.64,
+     "kappa_p90": 4.01,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 15.7
+    },
+    {
+     "n_px": 16,
+     "n_nucleo": 10,
+     "coh_med": 0.66,
+     "giro_total": 36.8,
+     "frac_medible": 0.0,
+     "kappa_med": 0.0,
+     "kappa_p90": 0.0,
+     "signo_dominante": 0.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "corto"
+    }
+   ]
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 102,
+     "n_nucleo": 60,
+     "coh_med": 0.56,
+     "giro_total": 71.7,
+     "frac_medible": 0.4,
+     "kappa_med": 3.28,
+     "kappa_p90": 4.5,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 17.5
+    }
+   ]
+  }
+ ],
+ "grosor-recta": [
+  {
+   "trazo": "1 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 26,
+     "n_nucleo": 20,
+     "coh_med": 0.66,
+     "giro_total": 4.4,
+     "frac_medible": 0.7,
+     "kappa_med": 0.05,
+     "kappa_p90": 0.21,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 26,
+     "coh_med": 0.61,
+     "giro_total": 2.6,
+     "frac_medible": 1.0,
+     "kappa_med": 0.06,
+     "kappa_p90": 0.87,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 64,
+     "n_nucleo": 26,
+     "coh_med": 0.64,
+     "giro_total": 2.3,
+     "frac_medible": 0.92,
+     "kappa_med": 0.04,
+     "kappa_p90": 1.06,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 76,
+     "n_nucleo": 32,
+     "coh_med": 0.62,
+     "giro_total": 4.6,
+     "frac_medible": 0.69,
+     "kappa_med": 0.01,
+     "kappa_p90": 0.3,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 90,
+     "n_nucleo": 66,
+     "coh_med": 0.57,
+     "giro_total": 5.4,
+     "frac_medible": 0.42,
+     "kappa_med": 0.01,
+     "kappa_p90": 0.08,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 37,
+     "n_nucleo": 27,
+     "coh_med": 0.58,
+     "giro_total": 6.8,
+     "frac_medible": 0.33,
+     "kappa_med": 0.02,
+     "kappa_p90": 0.13,
+     "signo_dominante": 0.67,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    },
+    {
+     "n_px": 37,
+     "n_nucleo": 27,
+     "coh_med": 0.58,
+     "giro_total": 6.8,
+     "frac_medible": 0.33,
+     "kappa_med": 0.02,
+     "kappa_p90": 0.13,
+     "signo_dominante": 0.67,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 84,
+     "n_nucleo": 60,
+     "coh_med": 0.57,
+     "giro_total": 91.1,
+     "frac_medible": 0.4,
+     "kappa_med": 0.16,
+     "kappa_p90": 5.52,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 2,
+     "trozos_curvos": 0,
+     "que": "esquina"
+    }
+   ]
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 90,
+     "n_nucleo": 68,
+     "coh_med": 0.58,
+     "giro_total": 179.0,
+     "frac_medible": 0.29,
+     "kappa_med": 0.16,
+     "kappa_p90": 0.73,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 2,
+     "trozos_curvos": 0,
+     "que": "esquina"
+    }
+   ]
+  }
+ ],
+ "radio": [
+  {
+   "trazo": "R = 4",
+   "esperado": "curva",
+   "radio_real": 4.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 60,
+     "n_nucleo": 2,
+     "coh_med": 0.42,
+     "giro_total": 0.0,
+     "frac_medible": 0.0,
+     "kappa_med": 0.0,
+     "kappa_p90": 0.0,
+     "signo_dominante": 0.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "corto"
+    }
+   ]
+  },
+  {
+   "trazo": "R = 6",
+   "esperado": "curva",
+   "radio_real": 6.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 66,
+     "n_nucleo": 6,
+     "coh_med": 0.49,
+     "giro_total": 78.6,
+     "frac_medible": 1.0,
+     "kappa_med": 9.2,
+     "kappa_p90": 9.96,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 6.2
+    }
+   ]
+  },
+  {
+   "trazo": "R = 9",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 62,
+     "n_nucleo": 14,
+     "coh_med": 0.62,
+     "giro_total": 60.3,
+     "frac_medible": 1.0,
+     "kappa_med": 5.26,
+     "kappa_p90": 5.99,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 10.9
+    }
+   ]
+  },
+  {
+   "trazo": "R = 12",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 62,
+     "n_nucleo": 16,
+     "coh_med": 0.62,
+     "giro_total": 37.3,
+     "frac_medible": 1.0,
+     "kappa_med": 3.96,
+     "kappa_p90": 4.42,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 14.5
+    }
+   ]
+  },
+  {
+   "trazo": "R = 18",
+   "esperado": "curva",
+   "radio_real": 18.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 66,
+     "n_nucleo": 22,
+     "coh_med": 0.68,
+     "giro_total": 23.9,
+     "frac_medible": 0.82,
+     "kappa_med": 2.11,
+     "kappa_p90": 2.92,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 27.2
+    }
+   ]
+  },
+  {
+   "trazo": "R = 27",
+   "esperado": "curva",
+   "radio_real": 27.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 66,
+     "n_nucleo": 22,
+     "coh_med": 0.71,
+     "giro_total": 14.9,
+     "frac_medible": 0.82,
+     "kappa_med": 1.49,
+     "kappa_p90": 2.57,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 2,
+     "que": "curva",
+     "radio": 38.5
+    }
+   ]
+  },
+  {
+   "trazo": "R = 40",
+   "esperado": "curva",
+   "radio_real": 40.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 68,
+     "n_nucleo": 28,
+     "coh_med": 0.72,
+     "giro_total": 3.6,
+     "frac_medible": 1.0,
+     "kappa_med": 0.62,
+     "kappa_p90": 2.73,
+     "signo_dominante": 0.61,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  },
+  {
+   "trazo": "recta (R = ∞)",
+   "esperado": "recta",
+   "radio_real": null,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 84,
+     "n_nucleo": 24,
+     "coh_med": 0.69,
+     "giro_total": 0.4,
+     "frac_medible": 0.67,
+     "kappa_med": 0.07,
+     "kappa_p90": 0.44,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 1,
+     "trozos_curvos": 0,
+     "que": "recta"
+    }
+   ]
+  }
+ ],
+ "posicion": [
+  {
+   "trazo": "centro",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 10,
+     "coh_med": 0.58,
+     "giro_total": 37.6,
+     "frac_medible": 1.0,
+     "kappa_med": 5.19,
+     "kappa_p90": 5.98,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 11.0
+    }
+   ]
+  },
+  {
+   "trazo": "arriba-izq.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 10,
+     "coh_med": 0.58,
+     "giro_total": 37.6,
+     "frac_medible": 1.0,
+     "kappa_med": 5.19,
+     "kappa_p90": 5.98,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 11.0
+    }
+   ]
+  },
+  {
+   "trazo": "abajo-der.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 10,
+     "coh_med": 0.58,
+     "giro_total": 37.6,
+     "frac_medible": 1.0,
+     "kappa_med": 5.19,
+     "kappa_p90": 5.98,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 11.0
+    }
+   ]
+  },
+  {
+   "trazo": "pegada al borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 54,
+     "n_nucleo": 14,
+     "coh_med": 0.58,
+     "giro_total": 56.6,
+     "frac_medible": 0.86,
+     "kappa_med": 4.92,
+     "kappa_p90": 6.32,
+     "signo_dominante": 0.5,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 11.6
+    }
+   ]
+  },
+  {
+   "trazo": "cortada por el borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 37,
+     "n_nucleo": 4,
+     "coh_med": 0.47,
+     "giro_total": 19.8,
+     "frac_medible": 0.5,
+     "kappa_med": 3.23,
+     "kappa_p90": 3.48,
+     "signo_dominante": 1.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 0,
+     "que": "corto"
+    }
+   ]
+  },
+  {
+   "trazo": "girada 45°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 58,
+     "n_nucleo": 15,
+     "coh_med": 0.53,
+     "giro_total": 63.8,
+     "frac_medible": 1.0,
+     "kappa_med": 4.67,
+     "kappa_p90": 6.68,
+     "signo_dominante": 1.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 12.3
+    }
+   ]
+  },
+  {
+   "trazo": "girada 90°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": true,
+   "componentes": [
+    {
+     "n_px": 56,
+     "n_nucleo": 10,
+     "coh_med": 0.58,
+     "giro_total": 37.6,
+     "frac_medible": 1.0,
+     "kappa_med": 5.19,
+     "kappa_p90": 5.98,
+     "signo_dominante": 1.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 11.0
+    }
+   ]
+  },
+  {
+   "trazo": "girada 225°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "acierta": false,
+   "componentes": [
+    {
+     "n_px": 58,
+     "n_nucleo": 15,
+     "coh_med": 0.53,
+     "giro_total": 63.8,
+     "frac_medible": 1.0,
+     "kappa_med": 4.67,
+     "kappa_p90": 6.68,
+     "signo_dominante": 1.0,
+     "trozos_rectos": 0,
+     "trozos_curvos": 1,
+     "que": "curva",
+     "radio": 12.3
+    }
+   ]
+  }
+ ]
+}
