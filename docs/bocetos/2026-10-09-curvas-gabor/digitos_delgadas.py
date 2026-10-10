@@ -98,6 +98,8 @@ def main() -> int:
     for j in normales:
         k = f"{y[va][j]}→{pv0[j]}"; cf[k] = cf.get(k, 0) + 1
     out["confusiones_sin_gruesos"] = dict(sorted(cf.items(), key=lambda z: -z[1])[:10])
+    out["indices_errores_figura"] = [int(va[j]) for j in normales[np.lexsort((pv0[normales], y[va][normales]))]]
+    out["indices_muy_gruesos"] = [int(va[j]) for j in gruesos[np.lexsort((pv0[gruesos], y[va][gruesos]))]]
     out["acierto_val_sin_gruesos_semilla_0"] = round(float((pv0[anc[va] < MUY_GRUESO] == y[va][anc[va] < MUY_GRUESO]).mean()), 4)
     print(f"val {out['val']} {out['val_rango']} · a ciegas {out['ciega']} · por grosor {por_grosor} · fallos "
           f"{out['fallos_val_semilla_0']}  ({time.time() - t0:.0f} s)", flush=True)
@@ -189,6 +191,21 @@ def main() -> int:
                      "flecha al centro de curvatura · gris: sin giro medible", fontsize=10, color=C.T1)
         fig.tight_layout(rect=(0, 0, 1, 0.96)); fig.savefig(DB.IMG / f"23-digitos-delgadas-{nombre}.png", dpi=100)
         plt.close(fig)
+    # ── figura 4: los MISMOS errores de la figura 2, el dígito original sin ningún proceso (pedido del dueño) ──
+    orden = normales[np.lexsort((pv0[normales], y[va][normales]))]
+    cols = 12; filas = int(np.ceil(len(orden) / cols))
+    fig, axs = plt.subplots(filas, cols, figsize=(cols * 1.25, filas * 1.45 + 0.9))
+    for k, ax in enumerate(np.atleast_2d(axs).flat):
+        ax.set_xticks([]); ax.set_yticks([])
+        if k >= len(orden):
+            ax.axis("off"); continue
+        j = orden[k]; i = va[j]
+        ax.imshow(d["imagenes"][i], cmap="gray_r", vmin=0, vmax=d["imagenes"].max())
+        ax.set_title(f"{y[i]}→{pv0[j]} · {anc[i]:.1f}px", fontsize=8.5, pad=2, color=NAR)
+    fig.suptitle(f"23 · los mismos {len(orden)} errores de la figura 2, ORIGINALES sin ningún proceso (el dato del dataset tal "
+                 "cual)\n«real→leído · grosor típico»", fontsize=10.5, color=C.T1)
+    fig.tight_layout(rect=(0, 0, 1, 0.96)); fig.savefig(DB.IMG / "23-digitos-delgadas-4-originales.png", dpi=100)
+    plt.close(fig)
     print(f"→ 23-digitos-delgadas-*.png · total {time.time() - t0:.0f} s")
     return 0
 

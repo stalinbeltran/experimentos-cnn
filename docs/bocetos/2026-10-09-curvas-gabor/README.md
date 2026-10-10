@@ -860,6 +860,10 @@ dígitos cumple el «≤ 3 px» para el que se calibró el detector.
 ![estadísticas](imagenes/23-digitos-delgadas-1-estadisticas.png)
 ![errores](imagenes/23-digitos-delgadas-2-errores.png)
 ![muy gruesos](imagenes/23-digitos-delgadas-3-muy-gruesos.png)
+![originales](imagenes/23-digitos-delgadas-4-originales.png)
+
+(La 4 son los mismos 110 errores de la 2, el dígito del dataset tal cual, sin ningún proceso; sus índices, en
+`indices_errores_figura` del JSON.)
 
 - **Val 0,929 · a ciegas 0,921** (3 semillas). Por debajo del borde gris re-calibrado (0,960 / 0,957) y por encima del
   borde morfológico (0,889).
