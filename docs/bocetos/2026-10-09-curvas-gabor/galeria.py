@@ -85,22 +85,30 @@ def figura(nombre_png: str, titulo: str, items: list[tuple[str, np.ndarray, str,
     return res
 
 
-def trazos() -> dict[str, tuple[str, list[tuple[str, np.ndarray, str, float | None, int]]]]:
-    """Los 32 trazos de la galería, por grupo: (nombre del png, título, [(etiqueta, imagen, esperado, R real, grosor)]).
+def _centro(mx, my, r, ang) -> tuple[float, float]:
+    """El centro de `arco(mx, my, r, ang, …)` de curvas.py: el punto medio + r · (−sin ang, cos ang)."""
+    t = np.deg2rad(ang)
+    return (mx - r * np.sin(t), my + r * np.cos(t))
+
+
+def trazos() -> dict:
+    """Los 32 trazos de la galería, por grupo: (nombre del png, título, [(etiqueta, imagen, esperado, R real, grosor,
+    centro real o None)]).
     Los comparte `bordes.py`, para que las dos galerías enseñen exactamente los mismos trazos."""
     G = [1, 2, 3, 4, 6, 8, 10, 12]
-    grosor_arco = [(f"{g} px", arco(16, 10, 12, 0, 22, g), "curva", 12.0, g) for g in G]
-    grosor_recta = [(f"{g} px", recta(16, 16, 22, 30, g), "recta", None, g) for g in G]
-    radios = [(f"R = {r}", arco(16, 12 if r < 20 else 14, r, 0, 20, 3), "curva", float(r), 3) for r in (4, 6, 9, 12, 18, 27, 40)]
-    radios.append(("recta (R = ∞)", recta(16, 16, 20, 0, 3), "recta", None, 3))
-    pos = [("centro", arco(16, 12, 9, 0, 18, 3), "curva", 9.0, 3),
-           ("arriba-izq.", arco(9, 5, 9, 0, 18, 3), "curva", 9.0, 3),
-           ("abajo-der.", arco(23, 18, 9, 0, 18, 3), "curva", 9.0, 3),
-           ("pegada al borde", arco(16, 1.5, 9, 0, 18, 3), "curva", 9.0, 3),
-           ("cortada por el borde", arco(3, 12, 9, 0, 18, 3), "curva", 9.0, 3),
-           ("girada 45°", arco(16, 14, 9, 45, 18, 3), "curva", 9.0, 3),
-           ("girada 90°", arco(14, 16, 9, 90, 18, 3), "curva", 9.0, 3),
-           ("girada 225°", arco(18, 18, 9, 225, 18, 3), "curva", 9.0, 3)]
+    grosor_arco = [(f"{g} px", arco(16, 10, 12, 0, 22, g), "curva", 12.0, g, _centro(16, 10, 12, 0)) for g in G]
+    grosor_recta = [(f"{g} px", recta(16, 16, 22, 30, g), "recta", None, g, None) for g in G]
+    radios = [(f"R = {r}", arco(16, 12 if r < 20 else 14, r, 0, 20, 3), "curva", float(r), 3,
+               _centro(16, 12 if r < 20 else 14, r, 0)) for r in (4, 6, 9, 12, 18, 27, 40)]
+    radios.append(("recta (R = ∞)", recta(16, 16, 20, 0, 3), "recta", None, 3, None))
+    pos = [("centro", arco(16, 12, 9, 0, 18, 3), "curva", 9.0, 3, _centro(16, 12, 9, 0)),
+           ("arriba-izq.", arco(9, 5, 9, 0, 18, 3), "curva", 9.0, 3, _centro(9, 5, 9, 0)),
+           ("abajo-der.", arco(23, 18, 9, 0, 18, 3), "curva", 9.0, 3, _centro(23, 18, 9, 0)),
+           ("pegada al borde", arco(16, 1.5, 9, 0, 18, 3), "curva", 9.0, 3, _centro(16, 1.5, 9, 0)),
+           ("cortada por el borde", arco(3, 12, 9, 0, 18, 3), "curva", 9.0, 3, _centro(3, 12, 9, 0)),
+           ("girada 45°", arco(16, 14, 9, 45, 18, 3), "curva", 9.0, 3, _centro(16, 14, 9, 45)),
+           ("girada 90°", arco(14, 16, 9, 90, 18, 3), "curva", 9.0, 3, _centro(14, 16, 9, 90)),
+           ("girada 225°", arco(18, 18, 9, 225, 18, 3), "curva", 9.0, 3, _centro(18, 18, 9, 225))]
     return {"grosor-arco": ("1-grosor-arco", "GROSOR · arco R = 12, 22 px de largo", grosor_arco),
             "grosor-recta": ("2-grosor-recta", "GROSOR · recta a 30°, 22 px de largo", grosor_recta),
             "radio": ("3-radio", "RADIO · arcos de 3 px de grosor y 20 px de largo", radios),

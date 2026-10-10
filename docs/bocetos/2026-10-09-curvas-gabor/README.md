@@ -516,3 +516,31 @@ el banco de `rect-lin`, con sondas sueltas): cada trozo del contorno es recto (|
 px de largo: **sólo trozos rectos en el 86–87 %**, algún trozo curvo en el 8–10 %, nada en el 3–6 %. Rectas de 10 px:
 **nada en el 93 %** (no caben ±4 px para medir el giro a lo largo de un borde tan corto). Arcos R ≤ 27: sólo curvos 73 %,
 rectos y curvos 21 %, sólo rectos 6 %. Arcos R 40: sólo rectos 69 %.
+
+## La ORIENTACIÓN de cada curva: hacia dónde está su centro (2026-10-10, pedido del dueño)
+
+Hasta aquí cada trozo curvo traía su **radio** pero no su orientación. No hacía falta medir nada nuevo: en cada píxel ya
+están la orientación local θ y el giro κ, y su combinación es el **vector de curvatura**
+
+    k = κ · (−sin θ, cos θ)        (la derivada de la tangente u = (cos θ, sin θ) a lo largo de sí misma)
+
+que apunta siempre al **centro** de la curva. ⚠ Esto corrige a medias la decisión 3 de arriba: el **signo de κ solo** no
+sirve (se da la vuelta donde θ cruza 0°/180°), pero cuando se da la vuelta la tangente se da la vuelta también la normal,
+así que el **producto** no cambia. `bordes.trozos(..., theta)` promedia los k del trozo y devuelve `direccion` (0° →,
+90° ↓, 180° ←, 270° ↑, en coordenadas de imagen), `coherencia` (1 = todos los píxeles apuntan igual) y `centro`
+(centroide del trozo + radio · dirección). Sin parámetros nuevos.
+
+![orientación grosor](imagenes/13-orientacion-1-grosor-arco.png)
+![orientación recta](imagenes/13-orientacion-2-grosor-recta.png)
+![orientación radio](imagenes/13-orientacion-3-radio.png)
+![orientación posición](imagenes/13-orientacion-4-posicion.png)
+
+Medido sobre los 32 trazos de la galería ([`resultados-orientacion.json`](resultados-orientacion.json)): **28 trozos
+curvos, error mediano 0°, p90 7,6°**; 26 de 28 a ≤ 20° de la dirección real, que se mide desde **cada trozo** hasta el
+centro real (no desde el punto medio del arco: un trozo puede no estar ahí, como en el arco cortado por el borde). Los
+dos que fallan (127°) son los dos trozos pequeños del arco de 12 px de grosor, en los «pies» del contorno: son las
+**esquinas** donde el borde interior se junta con los extremos, no el arco, y su curvatura apunta hacia dentro del
+trazo. La tolerancia de ±20° es **elegida para la figura**, no calibrada.
+
+Lo que esto abre, **sin probar**: distinguir una S de una C (dos trozos con direcciones opuestas contra la misma
+dirección), y emparejar el borde de fuera con el de dentro de un trazo grueso (los dos apuntan al **mismo** centro).
