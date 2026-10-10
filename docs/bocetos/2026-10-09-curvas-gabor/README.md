@@ -507,6 +507,6 @@ punteadas (sus bordes son puntos sueltos); y nada de esto está probado en dígi
    ×1,6; con λ = 6, ×1,3). Los cuatro mínimos son los píxeles del escalón.
 3. **Un borde curvo de 1 px (R = 12).** En un tramo oblicuo, el kernel de la orientación correcta casi no responde
    (tangente real 32°: r(30°) = 0,21) y responden los vecinos (15°: 0,69; 45°: 0,67) y otros lejanos: la coherencia baja
-   a 0,18–0,35, bajo el mínimo, y el giro no se mide. Sólo se mide arriba, donde la tangente es casi 0° y la rejilla
+   a 0,18–0,31 en los cinco píxeles de cada extremo, bajo el mínimo de 0,35, y el giro no se mide. Sólo se mide arriba, donde la tangente es casi 0° y la rejilla
    ayuda; pero ahí la orientación se aplana hacia 0° y el giro sale 1,7–1,9 °/px (real 4,8): «recta». Con λ = 3, el giro
    se mide en 10 píxeles (2,9–4,6 °/px) y sale curva R ≈ 14.
