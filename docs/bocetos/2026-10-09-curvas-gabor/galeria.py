@@ -85,6 +85,28 @@ def figura(nombre_png: str, titulo: str, items: list[tuple[str, np.ndarray, str,
     return res
 
 
+def trazos() -> dict[str, tuple[str, list[tuple[str, np.ndarray, str, float | None, int]]]]:
+    """Los 32 trazos de la galería, por grupo: (nombre del png, título, [(etiqueta, imagen, esperado, R real, grosor)]).
+    Los comparte `bordes.py`, para que las dos galerías enseñen exactamente los mismos trazos."""
+    G = [1, 2, 3, 4, 6, 8, 10, 12]
+    grosor_arco = [(f"{g} px", arco(16, 10, 12, 0, 22, g), "curva", 12.0, g) for g in G]
+    grosor_recta = [(f"{g} px", recta(16, 16, 22, 30, g), "recta", None, g) for g in G]
+    radios = [(f"R = {r}", arco(16, 12 if r < 20 else 14, r, 0, 20, 3), "curva", float(r), 3) for r in (4, 6, 9, 12, 18, 27, 40)]
+    radios.append(("recta (R = ∞)", recta(16, 16, 20, 0, 3), "recta", None, 3))
+    pos = [("centro", arco(16, 12, 9, 0, 18, 3), "curva", 9.0, 3),
+           ("arriba-izq.", arco(9, 5, 9, 0, 18, 3), "curva", 9.0, 3),
+           ("abajo-der.", arco(23, 18, 9, 0, 18, 3), "curva", 9.0, 3),
+           ("pegada al borde", arco(16, 1.5, 9, 0, 18, 3), "curva", 9.0, 3),
+           ("cortada por el borde", arco(3, 12, 9, 0, 18, 3), "curva", 9.0, 3),
+           ("girada 45°", arco(16, 14, 9, 45, 18, 3), "curva", 9.0, 3),
+           ("girada 90°", arco(14, 16, 9, 90, 18, 3), "curva", 9.0, 3),
+           ("girada 225°", arco(18, 18, 9, 225, 18, 3), "curva", 9.0, 3)]
+    return {"grosor-arco": ("1-grosor-arco", "GROSOR · arco R = 12, 22 px de largo", grosor_arco),
+            "grosor-recta": ("2-grosor-recta", "GROSOR · recta a 30°, 22 px de largo", grosor_recta),
+            "radio": ("3-radio", "RADIO · arcos de 3 px de grosor y 20 px de largo", radios),
+            "posicion": ("4-posicion", "POSICIÓN y ORIENTACIÓN · arco R = 9, 3 px, 18 px de largo", pos)}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--lam", type=float, default=cv.LAM, help="λ del Gabor (px); 2 = el mínimo de la rejilla (Nyquist)")
@@ -94,25 +116,8 @@ def main() -> int:
         cv.LAM = lam
         cv.GABOR = torch.from_numpy(np.stack([cv.kernel_gabor(cv.K, t, lam) for t in cv.THETAS])[:, None])
         suf, tit = f"-lam{lam:g}", f"  ·  Gabor λ = {lam:g} (franja central {lam / 2:g} px)"
-    G = [1, 2, 3, 4, 6, 8, 10, 12]
-    grosor_arco = [(f"{g} px", arco(16, 10, 12, 0, 22, g), "curva", 12.0) for g in G]
-    grosor_recta = [(f"{g} px", recta(16, 16, 22, 30, g), "recta", None) for g in G]
-    radios = [(f"R = {r}", arco(16, 12 if r < 20 else 14, r, 0, 20, 3), "curva", float(r)) for r in (4, 6, 9, 12, 18, 27, 40)]
-    radios.append(("recta (R = ∞)", recta(16, 16, 20, 0, 3), "recta", None))
-    pos = [("centro", arco(16, 12, 9, 0, 18, 3), "curva", 9.0),
-           ("arriba-izq.", arco(9, 5, 9, 0, 18, 3), "curva", 9.0),
-           ("abajo-der.", arco(23, 18, 9, 0, 18, 3), "curva", 9.0),
-           ("pegada al borde", arco(16, 1.5, 9, 0, 18, 3), "curva", 9.0),
-           ("cortada por el borde", arco(3, 12, 9, 0, 18, 3), "curva", 9.0),
-           ("girada 45°", arco(16, 14, 9, 45, 18, 3), "curva", 9.0),
-           ("girada 90°", arco(14, 16, 9, 90, 18, 3), "curva", 9.0),
-           ("girada 225°", arco(18, 18, 9, 225, 18, 3), "curva", 9.0)]
-    out = {
-        "grosor-arco": figura(f"10-galeria-1-grosor-arco{suf}.png", "GROSOR · arco R = 12, 22 px de largo" + tit, grosor_arco),
-        "grosor-recta": figura(f"10-galeria-2-grosor-recta{suf}.png", "GROSOR · recta a 30°, 22 px de largo" + tit, grosor_recta),
-        "radio": figura(f"10-galeria-3-radio{suf}.png", "RADIO · arcos de 3 px de grosor y 20 px de largo" + tit, radios),
-        "posicion": figura(f"10-galeria-4-posicion{suf}.png", "POSICIÓN y ORIENTACIÓN · arco R = 9, 3 px, 18 px de largo" + tit, pos),
-    }
+    out = {k: figura(f"10-galeria-{png}{suf}.png", t + tit, [it[:4] for it in items])
+           for k, (png, t, items) in trazos().items()}
     (AQUI / f"resultados-galeria{suf}.json").write_text(json.dumps(out, indent=1, ensure_ascii=False, default=float))
     return 0
 

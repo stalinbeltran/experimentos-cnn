@@ -1,0 +1,11 @@
+| banco de rect-lin | n | qué cuenta como acierto | original (λ 6, imagen) | bordes (λ 3) |
+|---|---:|---|---:|---:|
+| arcos R 40 | 72 | algún trozo a ±25 % de R, R ± g/2 | 61.1 % | 0.0 % |
+| arcos R ≤ 27 | 360 | algún trozo a ±25 % de R, R ± g/2 | 86.9 % | 90.6 % |
+| mancha | 300 | ningún trozo curvo | 100.0 % | 100.0 % |
+| punteada | 840 | ningún trozo curvo | 99.8 % | 99.4 % |
+| puntos-sueltos | 300 | ningún trozo curvo | 100.0 % | 100.0 % |
+| rectas grosor 10–14 | 1080 | ningún trozo curvo | 97.4 % | 88.9 % |
+| rectas grosor 2–4 | 1080 | ningún trozo curvo | 94.8 % | 96.9 % |
+| rectas grosor 6–8 | 720 | ningún trozo curvo | 97.1 % | 93.3 % |
+| ruido | 300 | ningún trozo curvo | 100.0 % | 100.0 % |

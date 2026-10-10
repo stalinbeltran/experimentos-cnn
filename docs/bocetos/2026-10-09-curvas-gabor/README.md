@@ -7,6 +7,11 @@ Es el pendiente 3 de la línea de rectas (`CLAUDE.md` del repo): *«una curva = 
 cuya orientación gira»* (el dueño, 2026-10-08). Todo sale de [`curvas.py`](curvas.py); los números de este
 documento están en [`resultados.json`](resultados.json) y [`resultados-banco.txt`](resultados-banco.txt).
 
+> ⚠ **La idea del dueño, desde el 2026-10-10: el detector trabaja SÓLO sobre los BORDES de la imagen real**, no sobre el
+> trazo relleno. Un trazo grueso son dos curvas paralelas (su contorno de fuera, de radio R + g/2, y el de dentro,
+> R − g/2), y lo que se busca son ésas. Lo que hay más abajo hasta § «Galería» es la versión anterior, sobre el trazo, y
+> se conserva para comparar. La versión sobre bordes es [`bordes.py`](bordes.py), en § «Sobre los BORDES».
+
 ## El plan, en cuatro pasos
 
 ```
@@ -422,3 +427,65 @@ R = 12 de la galería, sin commitear):
    umbral de coherencia sigue saliendo «corto»/«nada»: la cadena se rompe y no quedan tramos para medir el giro a ±4 px.
 4. **El de 1 px** sí pasa en la parte plana (2,15), pero los tramos oblicuos bajan a ~1,0 por el mismo motivo: 12 píxeles
    sueltos, «corto».
+
+## Sobre los BORDES (2026-10-10, la idea del dueño): el filtro estrecho sí ve las curvas
+
+*«Mi idea es que se usen sólo los bordes de la imagen real»* (el dueño, ese día). Es lo que el Gabor λ = 2 ya hacía por
+su cuenta (§ anterior), sólo que ahora es la **entrada**: [`bordes.py`](bordes.py) extrae el contorno de 1 px
+(`x AND NOT erosión 3×3`; el marco de la imagen no cuenta como borde) y le pasa el detector. Cuatro cambios respecto de
+`curvas.py`, todos elegidos con un barrido, **no calibrados**; el detalle y de dónde sale cada número, en la cabecera del
+script:
+
+| | `curvas.py` (sobre el trazo) | `bordes.py` (sobre los bordes) |
+|---|---|---|
+| entrada | la imagen | su contorno de 1 px |
+| ancho del filtro λ | 6 (franja de 3 px) | **3** (franja de 1,5 px) |
+| energía antes del umbral | tal cual | suavizada σ = 1 px |
+| umbral de trazo TAU | 1,2 | 0,5 |
+| giro mínimo de un trozo curvo | 1 °/px (R < 57) | 2 °/px (R < 29) |
+| veredicto | por componente | **por trozo**: cada curva del contorno, con su radio |
+
+**El mínimo que funciona es λ = 3, no λ = 2.** Barrido sobre los 32 trazos de la galería, en bordes (λ ∈ {2; 2,5; 3; 4;
+6}, kernel 5/7/9, 12/24 orientaciones, σ ∈ {0,7; 1; 1,5}, TAU 0,3–1,2): **λ = 2 no ve ningún arco en ninguna
+combinación (0/22)**. Una franja de 1 px no encaja con un borde oblicuo de 1 px, que es una escalera: la respuesta cae a
+cero cada medio píxel de desajuste. Con 1,5 px ya cabe la escalera.
+
+![bordes grosor arco](imagenes/11-bordes-1-grosor-arco.png)
+![bordes grosor recta](imagenes/11-bordes-2-grosor-recta.png)
+![bordes radio](imagenes/11-bordes-3-radio.png)
+![bordes posición](imagenes/11-bordes-4-posicion.png)
+
+**29/32**, contra 19/32 sobre el trazo — ⚠ **con un criterio de acierto distinto**: aquí un arco acierta si **algún**
+trozo curvo cae a ±25 % de **alguno** de los radios reales de su contorno (R + g/2, R, R − g/2), y una recta si no sale
+**ningún** trozo curvo. Es más laxo que el de la galería anterior (veredicto de la componente y radio a ±25 % de R).
+La comparación justa, con el **mismo** criterio para los dos, es la del banco:
+
+[`resultados-bordes-banco.txt`](resultados-bordes-banco.txt) (`python bordes.py --banco`, 2.040 figuras de `rect-lin`):
+
+| banco de rect-lin | n | acierto si… | sobre el trazo (λ 6) | sobre los bordes (λ 3) |
+|---|---:|---|---:|---:|
+| arcos R ≤ 27 | 360 | algún trozo a ±25 % de R, R ± g/2 | 86,9 % | **90,6 %** |
+| arcos R 40 | 72 | ídem | 61,1 % | 0,0 % |
+| rectas grosor 2–4 | 1080 | ningún trozo curvo | 94,8 % | **96,9 %** |
+| rectas grosor 6–8 | 720 | ídem | 97,1 % | 93,3 % |
+| rectas grosor 10–14 | 1080 | ídem | 97,4 % | 88,9 % |
+| punteada · mancha · puntos · ruido | 1740 | ídem | 99,8–100 % | 99,4–100 % |
+
+⚠ **El banco ya no es una prueba a ciegas para el giro mínimo**: el 2 °/px se eligió mirándolo (con 1 °/px, la escalera
+de un borde recto oblicuo salía curva de R ≈ 24–45 en el 19 % de las rectas finas). Los otros tres números se eligieron
+sólo con la galería, y en el banco lo aguantan.
+
+Lo que se ve:
+
+- **Trazo grueso → dos curvas**, como pide la idea: con 6 y 8 px salen la de fuera y la de dentro (R ≈ 13 y 11 en un
+  arco de R 12 y 6 px, cuyo contorno real es 15 y 9). Con 10–12 px sólo sale bien la de fuera (R ≈ 14–17, real 17–18):
+  la de dentro es corta y muy cerrada.
+- **Trazo de 2–4 px**: los dos bordes quedan a 1–2 px y el filtro de 1,5 px casi los junta; se mide poco (en el de 3 px,
+  dos trozos pequeños).
+- **R = 4** (contorno 5,5 y 2,5): nada, como antes. **R = 27**: sale R ≈ 19, ✗. **R = 40**: recta. El tope de 29 px
+  del giro mínimo hace que los arcos abiertos ya no salgan curva: el rango útil, en esta galería, es **5–20 px**, más corto que el de antes.
+- **Rectas, cualquier grosor: nunca curva** (8/8). Las gruesas son ahora lo que son: un rectángulo, dos lados rectos.
+
+**Qué no está hecho:** emparejar las dos curvas de un trazo (la de fuera con la de dentro → el grosor y el radio del
+trazo); las esquinas del contorno (los extremos de un trazo grueso giran 90° de golpe, y eso hoy no se busca);
+punteadas (sus bordes son puntos sueltos); y nada de esto está probado en dígitos.

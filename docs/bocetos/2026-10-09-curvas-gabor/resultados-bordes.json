@@ -1,0 +1,431 @@
+{
+ "grosor-arco": [
+  {
+   "trazo": "1 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 1,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 14.4,
+     "px": 24
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 2,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 13.2,
+     "px": 34
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.2,
+     "px": 5
+    },
+    {
+     "radio": 10.2,
+     "px": 5
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 4,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 12.0,
+     "px": 54
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 6,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 13.0,
+     "px": 28
+    },
+    {
+     "radio": 10.9,
+     "px": 12
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 8,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 12.7,
+     "px": 30
+    },
+    {
+     "radio": 11.3,
+     "px": 8
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 10,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 13.9,
+     "px": 30
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 12,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 16.7,
+     "px": 40
+    },
+    {
+     "radio": 10.2,
+     "px": 4
+    },
+    {
+     "radio": 10.2,
+     "px": 4
+    }
+   ],
+   "trozos_rectos": 1
+  }
+ ],
+ "grosor-recta": [
+  {
+   "trazo": "1 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 1,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "2 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 2,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "3 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "4 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 4,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "6 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 6,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 2
+  },
+  {
+   "trazo": "8 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 8,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 2
+  },
+  {
+   "trazo": "10 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 10,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 2
+  },
+  {
+   "trazo": "12 px",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 12,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 2
+  }
+ ],
+ "radio": [
+  {
+   "trazo": "R = 4",
+   "esperado": "curva",
+   "radio_real": 4.0,
+   "grosor": 3,
+   "acierta": false,
+   "curvas": [],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "R = 6",
+   "esperado": "curva",
+   "radio_real": 6.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 6.4,
+     "px": 8
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "R = 9",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.6,
+     "px": 24
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "R = 12",
+   "esperado": "curva",
+   "radio_real": 12.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.6,
+     "px": 4
+    },
+    {
+     "radio": 10.6,
+     "px": 4
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "R = 18",
+   "esperado": "curva",
+   "radio_real": 18.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 18.0,
+     "px": 16
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "R = 27",
+   "esperado": "curva",
+   "radio_real": 27.0,
+   "grosor": 3,
+   "acierta": false,
+   "curvas": [
+    {
+     "radio": 19.2,
+     "px": 5
+    },
+    {
+     "radio": 19.2,
+     "px": 5
+    }
+   ],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "R = 40",
+   "esperado": "curva",
+   "radio_real": 40.0,
+   "grosor": 3,
+   "acierta": false,
+   "curvas": [],
+   "trozos_rectos": 1
+  },
+  {
+   "trazo": "recta (R = ∞)",
+   "esperado": "recta",
+   "radio_real": null,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [],
+   "trozos_rectos": 1
+  }
+ ],
+ "posicion": [
+  {
+   "trazo": "centro",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.1,
+     "px": 20
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "arriba-izq.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.1,
+     "px": 20
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "abajo-der.",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.1,
+     "px": 20
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "pegada al borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 7.4,
+     "px": 4
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "cortada por el borde",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 12.2,
+     "px": 4
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "girada 45°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 11.0,
+     "px": 13
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "girada 90°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 10.1,
+     "px": 20
+    }
+   ],
+   "trozos_rectos": 0
+  },
+  {
+   "trazo": "girada 225°",
+   "esperado": "curva",
+   "radio_real": 9.0,
+   "grosor": 3,
+   "acierta": true,
+   "curvas": [
+    {
+     "radio": 11.0,
+     "px": 13
+    }
+   ],
+   "trozos_rectos": 0
+  }
+ ]
+}

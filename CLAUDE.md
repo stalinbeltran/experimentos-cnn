@@ -42,6 +42,11 @@ Lo que falta, por orden de lo que pidió o aceptó el dueño:
    orientación local → giro κ a lo largo de la tangente → recta/curva (con radio)/esquina/mancha. Sobre el banco de
    `rect-lin`: 0 % de rectas finas leídas como curva, 99 % de los arcos R ≤ 27 como curva; radio útil 5–30 px. Falla en
    esquinas de brazos cortos, trazo grueso (≥ 8 px) y punteadas. Lo que sería el experimento está en su README.
+   ⚠ **Desde el 2026-10-10, la idea del dueño: el detector trabaja SÓLO sobre los BORDES de la imagen real** (un trazo
+   grueso = dos curvas, su contorno de fuera y el de dentro). Hecho en el mismo boceto (`bordes.py`, 0 $): contorno de
+   1 px → Gabor λ = 3 (el más estrecho que funciona; λ = 2 no ve ningún arco) → giro por trozo. Banco de `rect-lin`,
+   mismo criterio: arcos R ≤ 27 90,6 % (sobre el trazo, 86,9 %), rectas finas sin curva falsa 96,9 % (94,8 %). Radio
+   útil 5–20 px. Umbrales elegidos, no calibrados. Pendiente: emparejar las dos curvas de un trazo, y probarlo en dígitos.
 4. **Grosor.** (a) Gabor más ancho o con 2 escalas como detector (en `rect-lin` daba 0,88 en 6–8 px); (b) entrenar con
    trazo 2–8 px y Sobel delante, para comprobar la hipótesis «aprendió dos bordes juntos, no un borde» (`rect-bor`);
    (c) bordes de un solo lado, que necesitan un detector de varios canales.
