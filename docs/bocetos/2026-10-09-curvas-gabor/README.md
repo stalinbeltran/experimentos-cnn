@@ -785,3 +785,15 @@ con la calibración elegida, sin commitear):
 extremo), que es lo que convierte las rectas gruesas en curvas; (2) **calibrar con figuras que de verdad sean líneas**
 tras esqueletizar (las del banco de 10 × 14 px son bloques, el pendiente 6 de la línea); (3) bajar la distancia de giro
 (±4 px) para esqueletos cortos.
+
+### Las curvas que definen al detector, esqueletizadas (2026-10-10, pedido del dueño)
+
+[`curvas_esqueleto.py`](curvas_esqueleto.py): sólo la forma que entra al detector en `esqueleto.py`, sin detector.
+
+![banco esqueletizado](imagenes/21-esqueleto-1-banco.png)
+![galería esqueletizada](imagenes/21-esqueleto-2-galeria.png)
+
+Lo que se ve (mirado, no medido): los arcos **finos y medios** (grosor 2–4) dan un esqueleto limpio que conserva la
+curva; las figuras **gruesas** (grosor ≥ 8) dan esqueletos con **ramitas en Y o en cruz** en las esquinas; las «rectas»
+de 10 px con grosor 12–14 son bloques y su esqueleto es una cruz; y los arcos **muy gruesos de la galería** (8–12 px
+sobre R 12) se esqueletizan como una **recta**: la figura es más ancha que curvada y el esqueleto sigue su eje largo.
