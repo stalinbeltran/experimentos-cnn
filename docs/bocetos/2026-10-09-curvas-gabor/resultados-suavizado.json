@@ -1,0 +1,97 @@
+{
+ "sigmas": [
+  0.0,
+  0.5,
+  0.75,
+  1.0,
+  1.5,
+  2.0
+ ],
+ "mejor_por_val": 1.5,
+ "por_sigma": {
+  "0": {
+   "val_3_semillas": 0.8893,
+   "val_rango": [
+    0.8881,
+    0.8905
+   ],
+   "val_semilla_0": 0.8881,
+   "de_los_181_arreglados": 0,
+   "de_los_181_siguen_mal": 181,
+   "aciertos_que_se_rompen": 0,
+   "borde_medible_en_los_181": 0.181
+  },
+  "0.5": {
+   "val_3_semillas": 0.8893,
+   "val_rango": [
+    0.8881,
+    0.8905
+   ],
+   "val_semilla_0": 0.8881,
+   "de_los_181_arreglados": 0,
+   "de_los_181_siguen_mal": 181,
+   "aciertos_que_se_rompen": 0,
+   "borde_medible_en_los_181": 0.181
+  },
+  "0.75": {
+   "val_3_semillas": 0.8994,
+   "val_rango": [
+    0.8967,
+    0.9048
+   ],
+   "val_semilla_0": 0.8967,
+   "de_los_181_arreglados": 58,
+   "de_los_181_siguen_mal": 123,
+   "aciertos_que_se_rompen": 44,
+   "borde_medible_en_los_181": 0.196
+  },
+  "1": {
+   "val_3_semillas": 0.9159,
+   "val_rango": [
+    0.9128,
+    0.9184
+   ],
+   "val_semilla_0": 0.9184,
+   "de_los_181_arreglados": 101,
+   "de_los_181_siguen_mal": 80,
+   "aciertos_que_se_rompen": 52,
+   "borde_medible_en_los_181": 0.244
+  },
+  "1.5": {
+   "val_3_semillas": 0.925,
+   "val_rango": [
+    0.9221,
+    0.927
+   ],
+   "val_semilla_0": 0.9221,
+   "de_los_181_arreglados": 114,
+   "de_los_181_siguen_mal": 67,
+   "aciertos_que_se_rompen": 59,
+   "borde_medible_en_los_181": 0.33
+  },
+  "2": {
+   "val_3_semillas": 0.9089,
+   "val_rango": [
+    0.9079,
+    0.9097
+   ],
+   "val_semilla_0": 0.9097,
+   "de_los_181_arreglados": 118,
+   "de_los_181_siguen_mal": 63,
+   "aciertos_que_se_rompen": 83,
+   "borde_medible_en_los_181": 0.366
+  }
+ },
+ "ejemplos_val": [
+  8,
+  294,
+  24,
+  647,
+  1048,
+  220,
+  569,
+  53,
+  563,
+  348
+ ]
+}

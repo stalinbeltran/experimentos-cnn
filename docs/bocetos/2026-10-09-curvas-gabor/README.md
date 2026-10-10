@@ -615,3 +615,33 @@ lo que se midió con una sonda suelta (sin commitear) sobre la fracción del bor
 - **4→1 (12):** del 4 sale sobre todo el trazo diagonal largo, en verde (recto); las curvas son pocas y pequeñas.
 - **1→8, 1→6 (17 juntos):** los 1 de UCI son **gruesos**, casi un bloque, y su contorno cerrado tiene curvas en los
   extremos que se leen como lazos.
+
+### Suavizar el dígito ANTES de sacarle el borde (2026-10-10, pedido del dueño)
+
+*«¿Los dígitos pasan por el Gabor primero? Prueba a suavizar los dígitos antes; varios niveles; sólo los de error.»*
+No: el Gabor ve el **borde**, y el borde hereda la escalera del dígito. [`suavizado.py`](suavizado.py) (2 min, 0 $;
+[`resultados-suavizado.json`](resultados-suavizado.json)) suaviza el dígito con una gaussiana σ, lo re-binariza en 0,5
+y sigue igual que `digitos_bordes.py`. El compositor se **re-entrena** para cada σ (train suavizado igual). Se enseñan
+los 181 fallos de σ = 0, pero se da también el val entero y cuántos aciertos se rompen: mirar sólo los fallos sesga a
+favor de cualquier cambio.
+
+![niveles](imagenes/16-suavizado-1-niveles.png)
+![fallos](imagenes/16-suavizado-2-fallos.png)
+
+| σ | val entero (3 semillas) | de los 181, arreglados | aciertos que se rompen | borde medible (los 181) |
+|---|---:|---:|---:|---:|
+| 0 | 0,889 | — | — | 0,181 |
+| 0,5 | 0,889 | 0 | 0 | 0,181 |
+| 0,75 | 0,899 | 58 | 44 | 0,196 |
+| 1 | 0,916 | 101 | 52 | 0,244 |
+| **1,5** | **0,925** [0,922–0,927] | **114** | 59 | 0,330 |
+| 2 | 0,909 | 118 | 83 | 0,366 |
+
+- **σ = 1,5 sube el val entero de 0,889 a 0,925 (+0,036)**: arregla 114 de los 181 y rompe 59 aciertos (neto +55 en
+  la semilla 0). Predicción: se cumplió la forma (sube y luego baja), no el sitio: esperaba el óptimo en 0,5–1.
+- **σ = 0,5 no cambia nada**: una gaussiana tan estrecha sobre una imagen binaria, re-binarizada en 0,5, devuelve la
+  misma imagen.
+- **El borde medible sube con σ** (0,18 → 0,33 en σ 1,5), pero el acierto cae en σ 2 aunque siga subiendo: el
+  suavizado ya cambia la forma (cierra el ojo de algunos 9 y 8; figura 1).
+- ⚠ **σ se eligió mirando val**, así que 0,925 es optimista; no se ha medido a ciegas ni con desplazamientos. Si se
+  adopta, va con su curva de desplazamientos y el número a ciegas.
