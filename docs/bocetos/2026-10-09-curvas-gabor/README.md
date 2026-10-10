@@ -570,7 +570,7 @@ celdas 8×8: 384 números. Las tres comparaciones, **re-ejecutadas aquí** (la v
 
 - **El nuevo gana al anterior: +0,022 en val y +0,032 a ciegas.** Medir sobre los bordes aporta +0,012 (sin orientación
   contra la vieja) y la **orientación** otro +0,011 (y +0,019 a ciegas). Me equivoqué por exceso: predije 0,90–0,93.
-- **Sigue lejos de rectas (−0,066).** Por dígito, el nuevo pierde sobre todo en el **8** (0,705), el **9** (0,829), el
+- **Sigue lejos de rectas (−0,065).** Por dígito, el nuevo pierde sobre todo en el **8** (0,705), el **9** (0,829), el
   **1** (0,843) y el **4** (0,881; la variante vieja daba 0,953). Confusiones más frecuentes (semilla 0): 8→3 y 8→9
   (13 cada una), 4→1 (12), 1→8 (9).
 - **Por qué no más** (figura 1, visto, no medido aparte): los bordes de los dígitos de UCI son **escaleras ruidosas**
