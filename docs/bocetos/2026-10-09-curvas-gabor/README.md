@@ -489,3 +489,24 @@ Lo que se ve:
 **Qué no está hecho:** emparejar las dos curvas de un trazo (la de fuera con la de dentro → el grosor y el radio del
 trazo); las esquinas del contorno (los extremos de un trazo grueso giran 90° de golpe, y eso hoy no se busca);
 punteadas (sus bordes son puntos sueltos); y nada de esto está probado en dígitos.
+
+### Qué pasa con la franja central de 1 px, calculado (2026-10-10, pedido del dueño)
+
+`python franja1px.py` → tres figuras con los valores que salen de `curvas.py`/`bordes.py`, sin ajustar nada
+([`resultados-franja1px.json`](resultados-franja1px.json)).
+
+![kernel](imagenes/12-franja-1-kernel.png)
+![recta](imagenes/12-franja-2-recta.png)
+![arco](imagenes/12-franja-3-arco.png)
+
+1. **El kernel.** Con λ = 2 sólo las orientaciones que la rejilla sabe dibujar con 1 px (0°, 45°, 90°, 135°) son una
+   franja (a 0°: fila central +0,33, vecinas −0,20). A 30° y 60° son celdas sueltas: la fila central alterna
+   +0,46 · 0 · −0,24 · 0. Una recta de 1 px a 30° tiene píxeles hasta 0,45 px fuera del eje, y ahí el peso es +0,14 con
+   λ = 2 contra +0,56 con λ = 3: medio píxel de desajuste es el cero del coseno.
+2. **Una recta de 1 px a 30°.** El kernel de 30° responde de 0,63 a 1,94 a lo largo de la misma recta (×3,1; con λ = 3,
+   ×1,6; con λ = 6, ×1,3). Los cuatro mínimos son los píxeles del escalón.
+3. **Un borde curvo de 1 px (R = 12).** En un tramo oblicuo, el kernel de la orientación correcta casi no responde
+   (tangente real 32°: r(30°) = 0,21) y responden los vecinos (15°: 0,69; 45°: 0,67) y otros lejanos: la coherencia baja
+   a 0,18–0,35, bajo el mínimo, y el giro no se mide. Sólo se mide arriba, donde la tangente es casi 0° y la rejilla
+   ayuda; pero ahí la orientación se aplana hacia 0° y el giro sale 1,7–1,9 °/px (real 4,8): «recta». Con λ = 3, el giro
+   se mide en 10 píxeles (2,9–4,6 °/px) y sale curva R ≈ 14.
