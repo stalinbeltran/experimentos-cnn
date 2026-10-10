@@ -60,9 +60,9 @@ NAR, AZU, GRIS, VERDE = "#c2410c", "#2a78d6", "#8a8986", "#1b7f3b"
 
 
 # ─── las características del detector sobre bordes ────────────────────────────────────────────────────────────────
-def mapas_bordes(x: np.ndarray) -> np.ndarray:
+def mapas_bordes(x: np.ndarray, borde=None) -> np.ndarray:
     """(32,32) → (7,32,32): recto · k→ · k← · k↓ · k↑ · golpe · |κ|. (El último sólo lo usa el brazo sin orientación.)"""
-    c = C.campo(B.bordes(x)); kappa, mask, _ = C.giro(c)
+    c = C.campo((borde or B.bordes)(x)); kappa, mask, _ = C.giro(c)   # `borde`: cómo se saca (bordes_gabor.py)
     medible = mask & np.isfinite(kappa)
     k = np.where(medible, np.clip(np.nan_to_num(kappa), -D.KAPPA_TOPE, D.KAPPA_TOPE), 0.0)
     th = np.deg2rad(c["theta"])
@@ -76,8 +76,8 @@ def mapas_bordes(x: np.ndarray) -> np.ndarray:
 
 
 @torch.no_grad()
-def caract(x: np.ndarray) -> dict[str, np.ndarray]:
-    m = torch.from_numpy(np.stack([mapas_bordes(xi) for xi in x]))
+def caract(x: np.ndarray, borde=None) -> dict[str, np.ndarray]:
+    m = torch.from_numpy(np.stack([mapas_bordes(xi, borde) for xi in x]))
     p = F.adaptive_max_pool2d(m, 8).flatten(2)              # (n, 7, 64)
     return {"bordes": p[:, :6].flatten(1).numpy(), "bordes sin orientación": p[:, [0, 6, 5]].flatten(1).numpy()}
 

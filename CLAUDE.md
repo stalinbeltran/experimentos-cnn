@@ -48,6 +48,8 @@ Lo que falta, por orden de lo que pidió o aceptó el dueño:
    mismo criterio: arcos R ≤ 27 90,6 % (sobre el trazo, 86,9 %), rectas finas sin curva falsa 96,9 % (94,8 %). Radio
    útil 5–20 px. Umbrales elegidos, no calibrados. Pendiente: emparejar las dos curvas de un trazo.
    **Orientación** (2026-10-10): el vector de curvatura κ·(−sin θ, cos θ) apunta al centro; error mediano 0° en la galería.
+   ⚠ **Desde el 2026-10-10 el borde es de GABOR IMPAR, no morfológico** (regla de arriba; `bordes_gabor.py`): dígitos
+   **0,938** val / **0,925** a ciegas sin suavizar. Lo de abajo se midió con el borde morfológico, ya retirado.
    **Dígitos** (2026-10-10, `digitos_bordes.py`, REEMPLAZA a la variante «curvas» de `digitos.py`): sólo este detector →
    **0,889** val / 0,868 a ciegas (la vieja, 0,867 / 0,836; rectas, 0,955). La orientación aporta +0,011. Con ±1 px
    cambia el 10–11 % de las lecturas (rectas, 4–5 %).
@@ -94,6 +96,19 @@ ya decididos (§ «Cuarta parte»). El experimento corrió: `feat-1lado`. ⚠ **
    lo elija.
 3. Un experimento declara en su `REGLAS.md` qué pre-proceso usa (o «ninguno»). Es una regla de esta línea de trabajo;
    no hereda la Regla 0: un experimento que quiera saltársela lo pregunta.
+
+## ⚠ Regla del dueño (2026-10-10): el BORDE se saca con un filtro GABOR, nunca con morfología
+
+> «No hagas más la obtención de bordes que haces, anota eso. Reemplázalo con filtro Gabor.»
+
+Hasta ese día el borde era `x AND NOT erosión₃ₓ₃(x)` (`docs/bocetos/2026-10-09-curvas-gabor/bordes.py`, función
+`bordes`). **No se usa más en trabajo nuevo**; el código se conserva sólo para reproducir las figuras ya publicadas. El
+borde se saca con un banco de **Gabor IMPAR** (seno: responde a un escalón, no a una línea), y se binariza en 0,5 si el
+detector que lo lee lo necesita: un umbral sobre la salida del Gabor no es morfología. La implementación de referencia
+es `BordeGabor` en `docs/bocetos/2026-10-09-curvas-gabor/bordes_gabor.py` (λ 6, kernel 5×5, 8 orientaciones,
+binarizado). Medido ese día con el compositor de dígitos: 0,938 en val y 0,925 a ciegas sin suavizar, contra 0,889 y
+0,868 del borde morfológico. Si un Gabor no se puede aplicar a un caso, **se dice y se analiza la alternativa con el
+dueño**; no se vuelve a la erosión en silencio.
 
 ## ⚠ Regla del dueño (2026-10-09): la resistencia a los DESPLAZAMIENTOS se mide SIEMPRE
 

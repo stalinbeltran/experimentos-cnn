@@ -54,6 +54,8 @@ _campo_original = cv.campo
 
 
 def bordes(x: np.ndarray) -> np.ndarray:
+    """⚠ RETIRADO el 2026-10-10 por orden del dueño: el borde se saca con Gabor IMPAR (`bordes_gabor.BordeGabor`), nunca
+    con morfología. Se conserva sólo para reproducir las figuras 11–16, que se calcularon con él."""
     x = x.astype(bool)
     return (x & ~binary_erosion(x, np.ones((3, 3)), border_value=1)).astype(np.uint8)
 

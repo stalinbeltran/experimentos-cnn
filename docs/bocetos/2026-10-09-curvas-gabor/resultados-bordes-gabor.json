@@ -1,0 +1,239 @@
+{
+ "protocolo": "el de digitos_bordes.py; sólo cambia cómo se saca el borde",
+ "k_b": 5,
+ "n_b": 8,
+ "galeria": {
+  "morfológico (YA NO SE USA)": {
+   "arcos": "20/23",
+   "rectas": "9/9"
+  },
+  "Gabor impar λ 3 · gris": {
+   "arcos": "3/23",
+   "rectas": "2/9"
+  },
+  "Gabor impar λ 3 · binarizado": {
+   "arcos": "3/23",
+   "rectas": "9/9"
+  },
+  "Gabor impar λ 4 · gris": {
+   "arcos": "14/23",
+   "rectas": "8/9"
+  },
+  "Gabor impar λ 4 · binarizado": {
+   "arcos": "17/23",
+   "rectas": "7/9"
+  },
+  "Gabor impar λ 6 · gris": {
+   "arcos": "13/23",
+   "rectas": "8/9"
+  },
+  "Gabor impar λ 6 · binarizado": {
+   "arcos": "17/23",
+   "rectas": "9/9"
+  }
+ },
+ "digitos": {
+  "morfológico · σ 0": {
+   "val": 0.8893,
+   "val_rango": [
+    0.8881,
+    0.8905
+   ],
+   "ciega": 0.8678,
+   "de_los_181_arreglados": 0,
+   "aciertos_que_se_rompen": 0
+  },
+  "morfológico · σ 1.5 (re-binarizado)": {
+   "val": 0.925,
+   "val_rango": [
+    0.9221,
+    0.927
+   ],
+   "ciega": 0.8986,
+   "de_los_181_arreglados": 114,
+   "aciertos_que_se_rompen": 59
+  },
+  "Gabor impar λ 3 · gris · σ 0": {
+   "val": 0.4414,
+   "val_rango": [
+    0.4403,
+    0.4422
+   ],
+   "ciega": 0.4196,
+   "de_los_181_arreglados": 65,
+   "aciertos_que_se_rompen": 789
+  },
+  "Gabor impar λ 3 · gris · σ 1": {
+   "val": 0.3651,
+   "val_rango": [
+    0.3643,
+    0.3661
+   ],
+   "ciega": 0.297,
+   "de_los_181_arreglados": 50,
+   "aciertos_que_se_rompen": 894
+  },
+  "Gabor impar λ 3 · gris · σ 1.5": {
+   "val": 0.3436,
+   "val_rango": [
+    0.3432,
+    0.3438
+   ],
+   "ciega": 0.2946,
+   "de_los_181_arreglados": 45,
+   "aciertos_que_se_rompen": 925
+  },
+  "Gabor impar λ 3 · binarizado · σ 0": {
+   "val": 0.6968,
+   "val_rango": [
+    0.6951,
+    0.6994
+   ],
+   "ciega": 0.6972,
+   "de_los_181_arreglados": 86,
+   "aciertos_que_se_rompen": 398
+  },
+  "Gabor impar λ 3 · binarizado · σ 1": {
+   "val": 0.4348,
+   "val_rango": [
+    0.4329,
+    0.436
+   ],
+   "ciega": 0.3965,
+   "de_los_181_arreglados": 43,
+   "aciertos_que_se_rompen": 775
+  },
+  "Gabor impar λ 3 · binarizado · σ 1.5": {
+   "val": 0.3212,
+   "val_rango": [
+    0.3203,
+    0.3228
+   ],
+   "ciega": 0.289,
+   "de_los_181_arreglados": 35,
+   "aciertos_que_se_rompen": 953
+  },
+  "Gabor impar λ 4 · gris · σ 0": {
+   "val": 0.9091,
+   "val_rango": [
+    0.906,
+    0.9122
+   ],
+   "ciega": 0.8887,
+   "de_los_181_arreglados": 125,
+   "aciertos_que_se_rompen": 86
+  },
+  "Gabor impar λ 4 · gris · σ 1": {
+   "val": 0.3696,
+   "val_rango": [
+    0.368,
+    0.3723
+   ],
+   "ciega": 0.3474,
+   "de_los_181_arreglados": 44,
+   "aciertos_que_se_rompen": 885
+  },
+  "Gabor impar λ 4 · gris · σ 1.5": {
+   "val": 0.329,
+   "val_rango": [
+    0.3284,
+    0.3296
+   ],
+   "ciega": 0.2882,
+   "de_los_181_arreglados": 49,
+   "aciertos_que_se_rompen": 953
+  },
+  "Gabor impar λ 4 · binarizado · σ 0": {
+   "val": 0.9208,
+   "val_rango": [
+    0.9196,
+    0.9221
+   ],
+   "ciega": 0.9133,
+   "de_los_181_arreglados": 113,
+   "aciertos_que_se_rompen": 58
+  },
+  "Gabor impar λ 4 · binarizado · σ 1": {
+   "val": 0.9124,
+   "val_rango": [
+    0.9122,
+    0.9128
+   ],
+   "ciega": 0.9098,
+   "de_los_181_arreglados": 120,
+   "aciertos_que_se_rompen": 81
+  },
+  "Gabor impar λ 4 · binarizado · σ 1.5": {
+   "val": 0.4284,
+   "val_rango": [
+    0.428,
+    0.4292
+   ],
+   "ciega": 0.3879,
+   "de_los_181_arreglados": 58,
+   "aciertos_que_se_rompen": 802
+  },
+  "Gabor impar λ 6 · gris · σ 0": {
+   "val": 0.6147,
+   "val_rango": [
+    0.6122,
+    0.6184
+   ],
+   "ciega": 0.5764,
+   "de_los_181_arreglados": 72,
+   "aciertos_que_se_rompen": 518
+  },
+  "Gabor impar λ 6 · gris · σ 1": {
+   "val": 0.4069,
+   "val_rango": [
+    0.4045,
+    0.4106
+   ],
+   "ciega": 0.383,
+   "de_los_181_arreglados": 44,
+   "aciertos_que_se_rompen": 816
+  },
+  "Gabor impar λ 6 · gris · σ 1.5": {
+   "val": 0.4042,
+   "val_rango": [
+    0.4038,
+    0.4051
+   ],
+   "ciega": 0.3542,
+   "de_los_181_arreglados": 55,
+   "aciertos_que_se_rompen": 836
+  },
+  "Gabor impar λ 6 · binarizado · σ 0": {
+   "val": 0.938,
+   "val_rango": [
+    0.9357,
+    0.9394
+   ],
+   "ciega": 0.9248,
+   "de_los_181_arreglados": 131,
+   "aciertos_que_se_rompen": 49
+  },
+  "Gabor impar λ 6 · binarizado · σ 1": {
+   "val": 0.9423,
+   "val_rango": [
+    0.9394,
+    0.9474
+   ],
+   "ciega": 0.9283,
+   "de_los_181_arreglados": 134,
+   "aciertos_que_se_rompen": 51
+  },
+  "Gabor impar λ 6 · binarizado · σ 1.5": {
+   "val": 0.9093,
+   "val_rango": [
+    0.9054,
+    0.9134
+   ],
+   "ciega": 0.8986,
+   "de_los_181_arreglados": 117,
+   "aciertos_que_se_rompen": 76
+  }
+ },
+ "mejor_gabor": "Gabor impar λ 6 · binarizado · σ 1",
+ "mejor_gabor_sin_suavizar": "Gabor impar λ 6 · binarizado · σ 0"
+}

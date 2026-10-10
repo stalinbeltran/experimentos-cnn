@@ -7,6 +7,10 @@ Es el pendiente 3 de la línea de rectas (`CLAUDE.md` del repo): *«una curva = 
 cuya orientación gira»* (el dueño, 2026-10-08). Todo sale de [`curvas.py`](curvas.py); los números de este
 documento están en [`resultados.json`](resultados.json) y [`resultados-banco.txt`](resultados-banco.txt).
 
+> ⚠⚠ **Y desde el mismo 2026-10-10, el borde se saca con un GABOR IMPAR, nunca con morfología** (regla del dueño, en
+> el `CLAUDE.md` del repo; § «El borde con GABOR», al final). Todo lo de §§ «Sobre los BORDES» … «Suavizar» usó el
+> borde morfológico (`x AND NOT erosión`), ya retirado.
+>
 > ⚠ **La idea del dueño, desde el 2026-10-10: el detector trabaja SÓLO sobre los BORDES de la imagen real**, no sobre el
 > trazo relleno. Un trazo grueso son dos curvas paralelas (su contorno de fuera, de radio R + g/2, y el de dentro,
 > R − g/2), y lo que se busca son ésas. Lo que hay más abajo hasta § «Galería» es la versión anterior, sobre el trazo, y
@@ -645,3 +649,44 @@ favor de cualquier cambio.
   suavizado ya cambia la forma (cierra el ojo de algunos 9 y 8; figura 1).
 - ⚠ **σ se eligió mirando val**, así que 0,925 es optimista; no se ha medido a ciegas ni con desplazamientos. Si se
   adopta, va con su curva de desplazamientos y el número a ciegas.
+
+## El borde con GABOR, no con morfología (2026-10-10, regla del dueño)
+
+*«No hagas más la obtención de bordes que haces, anota eso. Reemplázalo con filtro Gabor, prueba varios si es
+necesario. Prueba sin suavizar y luego suavizado, aunque sospecho que con Gabor podría no hacer falta el suavizado.»*
+
+El Gabor del detector es **par** (coseno) y responde a **líneas**; el que responde a **bordes** es el **impar** (seno).
+[`bordes_gabor.py`](bordes_gabor.py) (6 min, 0 $; [`resultados-bordes-gabor.json`](resultados-bordes-gabor.json)):
+dígito → banco de Gabor impar (5×5, 8 orientaciones, λ_b) → borde = max |respuesta|, normalizado por la de un escalón
+ideal → gris o binarizado en 0,5 → el detector de curvas sin tocar. El suavizado va sobre el dígito, sin re-binarizar.
+El compositor, el de siempre (3 semillas, 180 / 1617, 3823 a ciegas).
+
+![resultados](imagenes/17-gabor-1-resultados.png)
+![bordes](imagenes/17-gabor-2-bordes.png)
+
+| borde | σ 0 (sin suavizar) | σ 1 | σ 1,5 |
+|---|---:|---:|---:|
+| morfológico (retirado) | 0,889 · a ciegas 0,868 | — | 0,925 · 0,899 (re-binarizado) |
+| **Gabor impar λ 6 · binarizado** | **0,938 · a ciegas 0,925** | 0,942 · 0,928 | 0,909 · 0,899 |
+| Gabor impar λ 4 · binarizado | 0,921 · 0,913 | 0,912 · 0,910 | 0,428 · 0,388 |
+| Gabor impar λ 4 · gris | 0,909 · 0,889 | 0,370 | 0,329 |
+| Gabor impar λ 6 · gris | 0,615 · 0,576 | 0,407 | 0,404 |
+| Gabor impar λ 3 (gris o binarizado) | 0,441 / 0,697 | ≤ 0,435 | ≤ 0,344 |
+
+- **El Gabor impar λ 6 binarizado, sin suavizar, es el mejor borde que se ha probado: 0,938 en val y 0,925 a ciegas**
+  (+0,049 y +0,057 sobre el morfológico sin suavizar; también por encima del morfológico suavizado, 0,925 / 0,899). De
+  los 181 fallos de antes arregla 131 y rompe 49 aciertos. El borde sale liso (figura 2): el Gabor integra sobre su
+  ventana, y la escalera de los dígitos de UCI ya no llega al detector.
+- **La sospecha del dueño se confirma: con Gabor no hace falta suavizar.** σ 1 da +0,004 (0,942), dentro de lo que se
+  mueve entre semillas (0,936–0,939 contra 0,939–0,947); σ 1,5 empeora. Se adopta **sin suavizar**.
+- **Lo que falla, y por qué** (medido con una sonda suelta sobre 300 dígitos, sin commitear): las configuraciones que se
+  hunden a 0,33–0,44 dejan al detector **sin borde medible** — 3 a 17 píxeles medibles por dígito, contra 73–94 en las
+  que funcionan. El borde **gris** es una banda de 2–3 px que se desvanece, y el detector (Gabor par λ 3, calibrado sobre
+  un contorno binario de 1 px) apenas la ve; con λ 4 y σ 1,5 el escalón difuminado ya no pasa de 0,5 y el borde
+  desaparece (1,7 % de píxeles contra 20 %); con λ 3 el borde sale grueso e irregular. **No es un fallo del Gabor de
+  bordes: es el detector, calibrado para otra entrada.** Si se quiere el borde gris (sin umbral), hay que recalibrar el
+  detector para él.
+- **Galería** (32 trazos): el Gabor λ 6 binarizado ve 17/23 arcos con su radio (el morfológico, 20/23) y 9/9 rectas. En
+  trazos finos los dos bordes del trazo se juntan en una banda y el radio sale sobrestimado (arco R 9 → 13,6).
+- ⚠ **λ 6 y el binarizado se eligieron mirando val** (6 bordes × 3 σ); el número a ciegas no se usó para elegir y lo
+  confirma (0,925). **Falta** la curva de desplazamientos con este borde (regla del 2026-10-09).
