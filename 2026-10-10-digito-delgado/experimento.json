@@ -1,0 +1,14 @@
+{
+  "id": "dig-delg",
+  "titulo": "Digito DELGADO a partir de las respuestas del Gabor impar de borde (las de la figura 19 de curvas-gabor): alternativas sin morfologia",
+  "pregunta": "¿Se puede obtener el mismo dígito pero delgado (trazo de ~1 px, centrado, sin perder ni añadir lazos) aprovechando las respuestas de un banco de Gabor impar —el borde gris de la figura 19 del boceto curvas-gabor— en vez de un esqueleto morfológico, y qué alternativa lo hace mejor?",
+  "creado": "2026-10-10",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": "nn/delgado.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, commiteados antes de medir",
+  "linaje": "Sale del boceto docs/bocetos/2026-10-09-curvas-gabor (figura 19): reusa sus 64 digitos y su borde de Gabor impar, COPIANDO el codigo del banco (no se importa del boceto). No hereda nada mas."
+}
