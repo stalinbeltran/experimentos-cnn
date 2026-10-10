@@ -46,7 +46,11 @@ Lo que falta, por orden de lo que pidió o aceptó el dueño:
    grueso = dos curvas, su contorno de fuera y el de dentro). Hecho en el mismo boceto (`bordes.py`, 0 $): contorno de
    1 px → Gabor λ = 3 (el más estrecho que funciona; λ = 2 no ve ningún arco) → giro por trozo. Banco de `rect-lin`,
    mismo criterio: arcos R ≤ 27 90,6 % (sobre el trazo, 86,9 %), rectas finas sin curva falsa 96,9 % (94,8 %). Radio
-   útil 5–20 px. Umbrales elegidos, no calibrados. Pendiente: emparejar las dos curvas de un trazo, y probarlo en dígitos.
+   útil 5–20 px. Umbrales elegidos, no calibrados. Pendiente: emparejar las dos curvas de un trazo.
+   **Orientación** (2026-10-10): el vector de curvatura κ·(−sin θ, cos θ) apunta al centro; error mediano 0° en la galería.
+   **Dígitos** (2026-10-10, `digitos_bordes.py`, REEMPLAZA a la variante «curvas» de `digitos.py`): sólo este detector →
+   **0,889** val / 0,868 a ciegas (la vieja, 0,867 / 0,836; rectas, 0,955). La orientación aporta +0,011. Con ±1 px
+   cambia el 10–11 % de las lecturas (rectas, 4–5 %).
 4. **Grosor.** (a) Gabor más ancho o con 2 escalas como detector (en `rect-lin` daba 0,88 en 6–8 px); (b) entrenar con
    trazo 2–8 px y Sobel delante, para comprobar la hipótesis «aprendió dos bordes juntos, no un borde» (`rect-bor`);
    (c) bordes de un solo lado, que necesitan un detector de varios canales.

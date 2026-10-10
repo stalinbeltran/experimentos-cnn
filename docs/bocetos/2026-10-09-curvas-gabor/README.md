@@ -164,6 +164,10 @@ Necesita el `.venv` del repo con numpy, scipy, matplotlib y torch (cpu), y los d
 
 ## Tanteo (2026-10-09, pedido del dueño): un clasificador de dígitos con las curvas, contra el de rectas, y los dos juntos
 
+> ⚠ **La variante «curvas» de este tanteo está REEMPLAZADA desde el 2026-10-10** por el compositor con el detector sobre
+> BORDES (§ «El compositor de dígitos con el detector sobre BORDES», al final): el dueño lo da por revisado y con
+> prioridad. Esto se conserva porque las figuras 7–9 se calcularon con él; `digitos.py` no se ha tocado.
+
 `python digitos.py` (35 s en el dev; [`resultados-digitos.json`](resultados-digitos.json)). Mismo protocolo que el
 tanteo de `rect-bor`: compositor **lineal** (Adam, 300 épocas, lr 1e-2, L2 1e-3), 180 train / 1617 val, 3 semillas
 que sólo cambian la inicialización, y a ciegas los 3823 dígitos de otros escritores. Todas las características son
@@ -544,3 +548,50 @@ trazo. La tolerancia de ±20° es **elegida para la figura**, no calibrada.
 
 Lo que esto abre, **sin probar**: distinguir una S de una C (dos trozos con direcciones opuestas contra la misma
 dirección), y emparejar el borde de fuera con el de dentro de un trazo grueso (los dos apuntan al **mismo** centro).
+
+## El compositor de dígitos con el detector sobre BORDES (2026-10-10, pedido del dueño) — REEMPLAZA a «curvas»
+
+*«Usando sólo este detector, entrena el compositor con dígitos; si hay uno anterior puedes reemplazarlo (este está
+revisado, tiene prioridad)»*. [`digitos_bordes.py`](digitos_bordes.py) (~5 min en el dev, 0 $;
+[`resultados-digitos-bordes.json`](resultados-digitos-bordes.json)). **El protocolo de `digitos.py` sin cambiar nada**
+(compositor lineal, 180 / 1617, 3 semillas, 3823 a ciegas), y las características sólo del detector de `bordes.py`:
+mapa de recto, el **vector de curvatura** partido en sus cuatro sentidos (→ ← ↓ ↑, con |κ|) y el de esquina, max en
+celdas 8×8: 384 números. Las tres comparaciones, **re-ejecutadas aquí** (la vieja y rectas reproducen sus 0,867 y 0,955).
+
+![mapas](imagenes/14-digitos-bordes-1-mapas.png)
+![resultados](imagenes/14-digitos-bordes-2-resultados.png)
+
+| compositor | características | val (1617) | a ciegas (3823) | predicción (antes de correr) |
+|---|---:|---:|---:|---|
+| **bordes** (con orientación) | 384 | **0,889** [0,888–0,891] | **0,868** | 0,90–0,93 ✗ (por debajo) |
+| bordes sin orientación (recto · \|κ\| · esquina) | 192 | 0,879 [0,878–0,880] | 0,849 | 0,86–0,89 ✓ |
+| curvas (anterior, sobre el trazo) | 192 | 0,867 [0,865–0,868] | 0,836 | — |
+| rectas (rect-bor, variante C) | 512 | 0,955 [0,951–0,957] | 0,947 | por encima ✓ |
+
+- **El nuevo gana al anterior: +0,022 en val y +0,032 a ciegas.** Medir sobre los bordes aporta +0,012 (sin orientación
+  contra la vieja) y la **orientación** otro +0,011 (y +0,019 a ciegas). Me equivoqué por exceso: predije 0,90–0,93.
+- **Sigue lejos de rectas (−0,066).** Por dígito, el nuevo pierde sobre todo en el **8** (0,705), el **9** (0,829), el
+  **1** (0,843) y el **4** (0,881; la variante vieja daba 0,953). Confusiones más frecuentes (semilla 0): 8→3 y 8→9
+  (13 cada una), 4→1 (12), 1→8 (9).
+- **Por qué no más** (figura 1, visto, no medido aparte): los bordes de los dígitos de UCI son **escaleras ruidosas**
+  (están escalados desde 8×8), y buena parte del contorno sale gris, sin giro medible. Lo que queda son trozos sueltos.
+
+**Desplazamientos** (regla del 2026-10-09; semilla 0, val movido, sin re-entrenar):
+
+| movido en horizontal | −4 | −2 | −1 | 0 | +1 | +2 | +4 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| bordes · acierto | 0,443 | 0,792 | 0,875 | 0,888 | 0,864 | 0,789 | 0,508 |
+| bordes · % que cambia | 57 | 21 | 11 | 0 | 10 | 20 | 49 |
+| rectas · acierto | 0,241 | 0,816 | 0,925 | 0,957 | 0,933 | 0,872 | 0,456 |
+| rectas · % que cambia | 76 | 18 | 5 | 0 | 4 | 11 | 54 |
+| % recortados | 1,1 | 0,1 | 0 | 0 | 1,5 | 3,4 | 11,8 |
+
+Con ±1 px el nuevo cambia **más del doble** de lecturas que rectas (10–11 % contra 4–5 %); a ±3–4 px aguanta algo mejor.
+La forma es la de siempre: la pérdida la pone la **rejilla de celdas de 4 px** del compositor, no el detector. ⚠ La
+curva **vertical no vale**: del 97 al 100 % de los dígitos se recortan desde d = ±1 (ocupan los 32 px de alto).
+**Feature** (el detector sobre el banco de `rect-lin` movido ±4 px en las dos direcciones): **plana** — rectas finas
+leídas «sólo rectos» 0,84, arcos R 6–27 con su radio 0,89, falsos positivos 0,00 en las 9 posiciones. Es plana **por
+construcción** (convolución + lectura por trozo, sin rejilla fija; regla 6), y el banco no recorta nada.
+
+**Lo que no está hecho:** combinarlo con rectas (el combinado de antes sumaba +0,003); limpiar la escalera de los bordes
+de UCI antes del detector; y la curva vertical con un dataset que deje margen.
