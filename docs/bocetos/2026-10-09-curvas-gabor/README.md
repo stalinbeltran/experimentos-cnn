@@ -797,3 +797,49 @@ Lo que se ve (mirado, no medido): los arcos **finos y medios** (grosor 2–4) da
 curva; las figuras **gruesas** (grosor ≥ 8) dan esqueletos con **ramitas en Y o en cruz** en las esquinas; las «rectas»
 de 10 px con grosor 12–14 son bloques y su esqueleto es una cruz; y los arcos **muy gruesos de la galería** (8–12 px
 sobre R 12) se esqueletizan como una **recta**: la figura es más ancha que curvada y el esqueleto sigue su eje largo.
+
+## El detector para trazos DELGADOS (≤ 3 px), sobre la imagen, sin esqueleto (2026-10-10, pedido del dueño)
+
+*«El esqueletizado no funciona con estas curvas gruesas. Vamos a cambiar la estrategia. Vamos a ajustar Gabor para
+rectas delgadas solamente. Delgadas ≤ 3 px. Debe reconocer rectas, curvas y posición del centro aproximada. No apliques
+esqueletización a nada.»*
+
+[`delgadas.py`](delgadas.py) (3 min, 0 $; [`resultados-delgadas.json`](resultados-delgadas.json)). **Cómo queda el
+detector:**
+
+    imagen (trazo de 1–3 px) ─► 12 Gabor PAR 9×9 (cada 15°), λ 6 ─► orientación θ y coherencia por píxel ─► giro κ a ±4 px a lo
+    largo de la tangente ─► TROZOS (≥ 4 px), cada uno:
+        · RECTO si |κ| < 2 °/px, CURVO si no
+        · centro: el centroide del trozo
+        · si es curvo: radio = 57,3 / mediana |κ| · dirección al centro de curvatura (vector κ·(−sin θ, cos θ)) · ese centro
+
+Sin esqueleto, sin paso de borde. Calibración elegida entre 128 (λ 3–6 · TAU · σE · coherencia · giro mínimo) con 150
+rectas, 150 arcos y 150 negativos **sintéticos de 1–3 px con su verdad** (posición, radio, centro de curvatura): **λ 6 ·
+TAU 0,3 · σE 0,5 · coherencia 0,25 · giro mínimo 2 °/px** (empata exacto con TAU 0,6: el umbral apenas importa entre
+esos dos). Comprobada con otros 300 por tipo, de otra semilla:
+
+| prueba (sintéticas, 300 por tipo) | |
+|---|---:|
+| rectas → sólo trozos rectos | **99,7 %** |
+| arcos (R 5–25) → algún trozo curvo | **97,7 %** |
+| … con el radio a ±25 % | 81,0 % |
+| negativos (ruido, puntos) → nada | 100 % |
+| centro del trozo, error mediano | **0,21 px** (rectas) · **1,15 px** (arcos; p90 2,0) |
+| centro de curvatura, error mediano | 2,25 px |
+
+Y en lo que no se usó para calibrar: el banco de `rect-lin` (grosor ≤ 3) — rectas de 16–22 px **100 %**, arcos R ≤ 27
+**94,2 %**, negativos 99,3 % —; la galería (sus 22 trazos de ≤ 3 px) — rectas 4/4, arcos 15/18 (radio a ±25 % en 9).
+
+![detector delgado](imagenes/22-delgadas-detector.png)
+
+**Los límites, medidos:** rectas de **10 px**, sólo 19 % (no caben ±4 px de giro más un trozo de 4); arcos de **R 40**,
+8 % (giran menos de 2 °/px: se leen rectos, que es lo que son a 32×32). El centro de un arco es el de su **trozo curvo**,
+que puede no ser el punto medio del arco (p. ej. si un extremo sale recto). **Predicción:** acerté λ 4–6 (salió 6) y la
+clasificación ≥ 90 %; el radio salió como esperaba (81 %); el centro, mejor en rectas (0,21 px) y en el límite en arcos
+(1,15 px contra ≤ 1,5).
+
+**Verificado ejecutando** (agente `verificador`): las cifras de prueba se reproducen exactas, las dos semillas no comparten
+ninguna figura, y en la cadena no hay esqueleto ni paso de borde. La predicción del docstring se escribió antes de
+correrlo, pero no se commiteó antes: eso no se puede probar.
+
+⚠ **Sólo para trazos delgados**: no se ha probado en dígitos, cuyos trazos son de 4 px típicos y hasta 14 px.
