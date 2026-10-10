@@ -843,3 +843,34 @@ ninguna figura, y en la cadena no hay esqueleto ni paso de borde. La predicción
 correrlo, pero no se commiteó antes: eso no se puede probar.
 
 ⚠ **Sólo para trazos delgados**: no se ha probado en dígitos, cuyos trazos son de 4 px típicos y hasta 14 px.
+
+### El detector DELGADO sobre todos los dígitos (2026-10-10, pedido del dueño)
+
+*«Prueba ahora con todos los dígitos. Dame las estadísticas, gráficamente, y muéstrame los casos de error. Si el dígito
+es visiblemente muy grueso no lo incluyas en los errores.»* [`digitos_delgadas.py`](digitos_delgadas.py) (1 min, 0 $;
+[`resultados-digitos-delgadas.json`](resultados-digitos-delgadas.json)): el dígito tal cual (sin esqueleto ni borde) →
+el detector de `delgadas.py` con su calibración → mapas recto · vector de curvatura · golpe → el compositor lineal de
+siempre (180 / 1617 / 3823 a ciegas, 3 semillas).
+
+«Muy grueso», objetivo: **grosor típico** = 2 × mediana de la distancia de la tinta al borde. Sale en escalones
+(medido en los 5620): ≈ 2,8 px 1848 · 4 px 3581 · 4,5 px 1 · **≥ 5,7 px 155 (muy gruesos)**. ⚠ Sólo un tercio de los
+dígitos cumple el «≤ 3 px» para el que se calibró el detector.
+
+![estadísticas](imagenes/23-digitos-delgadas-1-estadisticas.png)
+![errores](imagenes/23-digitos-delgadas-2-errores.png)
+![muy gruesos](imagenes/23-digitos-delgadas-3-muy-gruesos.png)
+
+- **Val 0,929 · a ciegas 0,921** (3 semillas). Por debajo del borde gris re-calibrado (0,960 / 0,957) y por encima del
+  borde morfológico (0,889).
+- **Por grosor** (semilla 0, val · a ciegas): ≈ 2,8 px 0,918 · 0,934 — 4 px 0,934 · 0,923 — 4,5 px 0,967 · 0,861 —
+  muy gruesos 0,875 · 0,867. **Los finos no salen mejor que los de 4 px**: el límite no es sólo el grosor.
+- **114 errores en val** (semilla 0): 4 de muy gruesos (los cuatro, unos 1 casi bloque), **110 en la figura de errores**.
+  Sin los muy gruesos, 0,931. Los más frecuentes: **8→9 (19)**, 3→8 (8), 2→1 (7), 7→4 (6), 9→8 (6).
+- Por dígito: el **8** (0,80) y el **3** (0,87) son los peores; el 0, perfecto.
+- **Desplazamientos** (horizontal): ±1 px 0,90 · ±2 px 0,82–0,83; cambia el 8 % de las lecturas con 1 px.
+- **Predicción**: acerté el rango (0,92–0,95) y que no superaría al borde gris; **fallé en que los finos irían mejor**.
+- Lo que se ve en los errores (mirado, no medido): alrededor de los trazos de 4 px el detector deja una **banda ancha
+  sin giro medible** (gris) y mucho naranja disperso: con TAU 0,3 y λ 6, la energía del Gabor se extiende más allá del
+  trazo.
+
+⚠ No pasado por el `verificador`; los números salen del JSON de esta corrida.
