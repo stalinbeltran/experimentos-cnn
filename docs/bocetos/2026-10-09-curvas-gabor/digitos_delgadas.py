@@ -10,7 +10,7 @@ Cadena: dígito binario (sin esqueleto, sin borde) → detector delgado (12 Gabo
 lineal (`digitos_bordes.py`: 180 / 1617 / 3823 a ciegas, 3 semillas).
 
 «MUY GRUESO», objetivo y no a ojo: grosor típico = 2 × mediana de la distancia de la tinta al borde. En el dataset sale
-en escalones (2,8 · 4 · 4,5 · 6 px) y se llama muy grueso a **≥ 5,5 px** (los que redondean a 6: 155 de 5620, 2,8 %). Esos fallos no van en la
+en escalones (2,8 · 4 · 4,5 · 5,7–6 px) y se llama muy grueso a **≥ 5,5 px** (los que redondean a 6: 155 de 5620, 2,8 %). Esos fallos no van en la
 figura de errores sino en una aparte, para que el dueño juzgue el corte. ⚠ El detector se calibró para ≤ 3 px, y sólo un
 tercio de los dígitos lo son (2,8 px); el 64 % tiene 4 px. Por eso todo se da también por grosor.
 

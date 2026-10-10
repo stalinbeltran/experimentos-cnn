@@ -853,7 +853,8 @@ el detector de `delgadas.py` con su calibración → mapas recto · vector de cu
 siempre (180 / 1617 / 3823 a ciegas, 3 semillas).
 
 «Muy grueso», objetivo: **grosor típico** = 2 × mediana de la distancia de la tinta al borde. Sale en escalones
-(medido en los 5620): ≈ 2,8 px 1848 · 4 px 3581 · 4,5 px 1 · **≥ 5,7 px 155 (muy gruesos)**. ⚠ Sólo un tercio de los
+(medido en los 5620, con los grupos del script): ≈ 2,8 px 1883 · 4 px 3252 · 4,5 px 330 · **≥ 5,7 px 155 (muy
+gruesos)**. ⚠ Sólo un tercio de los
 dígitos cumple el «≤ 3 px» para el que se calibró el detector.
 
 ![estadísticas](imagenes/23-digitos-delgadas-1-estadisticas.png)
