@@ -510,3 +510,9 @@ punteadas (sus bordes son puntos sueltos); y nada de esto está probado en dígi
    a 0,18–0,31 en los cinco píxeles de cada extremo, bajo el mínimo de 0,35, y el giro no se mide. Sólo se mide arriba, donde la tangente es casi 0° y la rejilla
    ayuda; pero ahí la orientación se aplana hacia 0° y el giro sale 1,7–1,9 °/px (real 4,8): «recta». Con λ = 3, el giro
    se mide en 10 píxeles (2,9–4,6 °/px) y sale curva R ≈ 14.
+
+**El detector sobre bordes también detecta RECTAS, y es a propósito** (medido el 2026-10-10 con `bordes.py`, λ = 3, sobre
+el banco de `rect-lin`, con sondas sueltas): cada trozo del contorno es recto (|κ| < 2 °/px) o curvo. Rectas de 16 y 22
+px de largo: **sólo trozos rectos en el 86–87 %**, algún trozo curvo en el 8–10 %, nada en el 3–6 %. Rectas de 10 px:
+**nada en el 93 %** (no caben ±4 px para medir el giro a lo largo de un borde tan corto). Arcos R ≤ 27: sólo curvos 73 %,
+rectos y curvos 21 %, sólo rectos 6 %. Arcos R 40: sólo rectos 69 %.
