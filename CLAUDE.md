@@ -50,6 +50,9 @@ Lo que falta, por orden de lo que pidió o aceptó el dueño:
    **Orientación** (2026-10-10): el vector de curvatura κ·(−sin θ, cos θ) apunta al centro; error mediano 0° en la galería.
    ⚠ **Desde el 2026-10-10 el borde es de GABOR IMPAR, no morfológico** (regla de arriba; `bordes_gabor.py`): dígitos
    **0,938** val / **0,925** a ciegas sin suavizar. Lo de abajo se midió con el borde morfológico, ya retirado.
+   ⚠ **Y SIN binarizar, con el detector re-calibrado con la galería** (`gris_recalibrado.py`): kernel 9 · λ_b 8–12 →
+   **0,960–0,963** val / **0,946–0,957** a ciegas, por encima del binarizado; supera a rectas (0,955 / 0,947) en val, y a
+   ciegas sólo con λ_b 10–12. Verificado ejecutando (agente `verificador`) λ_b 8 y 10 · K 9.
    **Dígitos** (2026-10-10, `digitos_bordes.py`, REEMPLAZA a la variante «curvas» de `digitos.py`): sólo este detector →
    **0,889** val / 0,868 a ciegas (la vieja, 0,867 / 0,836; rectas, 0,955). La orientación aporta +0,011. Con ±1 px
    cambia el 10–11 % de las lecturas (rectas, 4–5 %).

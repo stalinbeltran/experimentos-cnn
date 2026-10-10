@@ -690,3 +690,44 @@ El compositor, el de siempre (3 semillas, 180 / 1617, 3823 a ciegas).
   trazos finos los dos bordes del trazo se juntan en una banda y el radio sale sobrestimado (arco R 9 → 13,6).
 - ⚠ **λ 6 y el binarizado se eligieron mirando val** (6 bordes × 3 σ); el número a ciegas no se usó para elegir y lo
   confirma (0,925). **Falta** la curva de desplazamientos con este borde (regla del 2026-10-09).
+
+### El borde GRIS, con el detector re-calibrado para él (2026-10-10, pedido del dueño)
+
+*«Prueba re-calibrar para no binarizar, varios Gabor (por si algo cambia).»* [`gris_recalibrado.py`](gris_recalibrado.py)
+(13 min en el dev, 0 $; [`resultados-gris-recalibrado.json`](resultados-gris-recalibrado.json)). Para cada Gabor impar de borde
+(λ_b 3–12 × kernel 5/7/9, sin binarizar ni suavizar) se re-calibran los cuatro números del detector que dependen del
+formato de la entrada —umbral de trazo TAU (0,1–0,5), suavizado de la energía σE (0,5/1), coherencia mínima (0,25/0,35)
+y el λ del Gabor PAR que lee las líneas (3/4)— **eligiendo sólo con la galería de 32 trazos**, nunca con los dígitos.
+
+![gris re-calibrado](imagenes/18-gris-recalibrado.png)
+
+| borde gris (Gabor impar) | calibración (TAU · σE · coh · λ par) | val (3 semillas) | a ciegas | px medibles |
+|---|---|---:|---:|---:|
+| λ_b 3 · K 5 | 0,3 · 1 · 0,25 · 3 | 0,938 | 0,919 | 106 |
+| λ_b 6 · K 5 | 0,1 · 1 · 0,35 · 3 | 0,938 | 0,929 | 179 |
+| λ_b 8 · K 7 | 0,2 · 1 · 0,35 · 3 | 0,956 | 0,951 | 133 |
+| **λ_b 8 · K 9** | 0,1 · 0,5 · 0,25 · **4** | **0,963** | 0,946 | 273 |
+| **λ_b 10 · K 9** | 0,1 · 0,5 · 0,25 · 3 | 0,960 | **0,957** | 215 |
+| λ_b 12 · K 9 | 0,1 · 0,5 · 0,25 · 3 | 0,962 | 0,956 | 215 |
+| *referencia: binarizado λ_b 6 · K 5 (calibración de antes)* | *0,5 · 1 · 0,35 · 3* | *0,938* | *0,925* | *73* |
+| *referencia: rectas (rect-bor, variante C)* | | *0,955* | *0,947* | |
+
+(las 18, en la figura y en el JSON)
+
+- **Re-calibrar arregla el borde gris en las 18 configuraciones**: de 0,39–0,64 (0,909 sólo en λ_b 4 · K 5) a
+  0,900–0,963. La causa era la que se midió: los píxeles con giro medible pasan de 4–12 (46 en λ_b 4 · K 5) a 106–286
+  por dígito.
+- **Y el gris re-calibrado supera al binarizado**: con kernel 9 y λ_b 8–12, **0,960–0,963 en val y 0,946–0,957 a
+  ciegas**, contra 0,938 / 0,925. Es la primera vez que el compositor **sólo con curvas** alcanza al de **rectas**
+  (0,955 / 0,947): en val, los tres; a ciegas, sólo λ_b 10 y 12 (0,957 y 0,956) — λ_b 8 · K 9 se queda en 0,946.
+  Me equivoqué en la predicción: esperaba que el gris no superase al binarizado.
+- ⚠ **Selección**: la calibración se eligió con la galería, pero el borde (λ_b, K) se elige entre 18 mirando val. Por
+  val gana λ_b 8 · K 9 (0,963), y su número a ciegas es **0,946**; λ_b 10 · K 9 da el mejor a ciegas (0,957). La meseta
+  K 9 · λ_b 8–12 es lo robusto, no un punto.
+- ⚠ **Dos bordes del rango**: K 9 es el mayor kernel probado y TAU 0,1 el menor umbral de la rejilla, y los mejores están
+  en los dos. Puede haber más arriba (K 11) y más abajo (TAU < 0,1); no se ha mirado.
+- Con λ_b ≥ 8 en un kernel de 9×9 no cabe medio periodo del seno por lado: el Gabor impar se comporta como una
+  **derivada suavizada** (un detector de escalón), más que como una onda.
+- En λ_b 8 · K 9 la galería eligió **λ 4** para el Gabor par que lee las líneas, no el λ 3 acordado: el borde gris es
+  una banda más ancha que el contorno de 1 px para el que se eligió λ 3. En λ_b 10–12 · K 9 se queda en 3.
+- **Falta**: la curva de desplazamientos con este borde, y mirar K 11 y TAU < 0,1.
