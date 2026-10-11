@@ -140,16 +140,18 @@ relativos); **puntuación = r**; el rizo es el de más puntuación de la mitad s
 
 | compuesto | rizos encontrados | candidatos por 2 |
 |---|---:|---:|
-| todos los candidatos | 100 % | 10,0 |
-| con acuerdo ≥ 2 de los 3 | 100 % | 8,6 |
+| todos los candidatos | 100 % | 10,1 |
+| con acuerdo ≥ 2 de los 3 | 97,9 % | 8,6 |
 | acuerdo = 3 | 23 % | 1,2 |
 | **el mejor (top-1)** | **74,5 %** | 1 |
 | los dos mejores (top-2) | 78,7 % | 2 |
-| top-1 de P solo · R solo · V solo | 30 · 32 · 11 % | 1 |
+| top-1 de P solo · R solo · V solo | 25,5 · 46,8 · 6,4 % | 1 |
 
 ![9 · compuesto](resultados/9-compuesto.png)
 
-**Qué dice.** Componer **sí** sirve, y se ve en la última fila: ninguno de los tres solo elige bien (30 / 32 / 11 %), y
+**Qué dice.** Componer **sí** sirve, y se ve en la última fila (⚠ esas tres cifras y la de acuerdo ≥ 2 estaban mal
+copiadas de la corrida anterior en el commit `d32ef53`; las de aquí son las de `9-compuesto.json`, y lo cazó el
+`verificador`): ninguno de los tres solo elige bien (25 / 47 / 6 %), y
 juntos eligen el 74,5 % con un candidato por dígito — **igual que la mejor CNN** (`c-base`, p 0,2, 74,5 %) y sin
 entrenar nada. Pero el reparto de méritos no es el esperado: P y R **proponen** (el rizo está entre sus candidatos el
 100 % de las veces), el **encierro elige**, y P y V **no ayudan a elegir**: la puntuación empezó como p + r + v (40 %)
