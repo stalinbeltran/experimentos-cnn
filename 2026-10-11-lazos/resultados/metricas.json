@@ -1,0 +1,272 @@
+{
+ "umbrales": {
+  "encontrados": 90.0,
+  "falsos": 10.0,
+  "centro_px": 1.5,
+  "cierre": 0.15,
+  "orientacion": 30.0,
+  "cerrado_0_6_9": 80.0,
+  "dos_en_8": 60.0,
+  "ninguno_1_7": 80.0
+ },
+ "detector_curvas": {
+  "lam": 6.0,
+  "tau": 0.6,
+  "sigma_e": 0.5,
+  "coh_min": 0.25,
+  "kappa_min": 2.0
+ },
+ "calibracion": [
+  {
+   "sigma_v": 1.0,
+   "v_min": 3,
+   "encontrados": 78.0,
+   "falsos": 0.0,
+   "centro_px": 0.58,
+   "cierre": 0.04,
+   "orientacion": 2.2,
+   "puntos": 89.0
+  },
+  {
+   "sigma_v": 1.0,
+   "v_min": 5,
+   "encontrados": 75.3,
+   "falsos": 0.0,
+   "centro_px": 0.57,
+   "cierre": 0.039,
+   "orientacion": 2.2,
+   "puntos": 87.7
+  },
+  {
+   "sigma_v": 1.0,
+   "v_min": 8,
+   "encontrados": 74.0,
+   "falsos": 0.0,
+   "centro_px": 0.57,
+   "cierre": 0.038,
+   "orientacion": 2.2,
+   "puntos": 87.0
+  },
+  {
+   "sigma_v": 1.0,
+   "v_min": 12,
+   "encontrados": 71.3,
+   "falsos": 0.0,
+   "centro_px": 0.56,
+   "cierre": 0.035,
+   "orientacion": 2.2,
+   "puntos": 85.7
+  },
+  {
+   "sigma_v": 1.5,
+   "v_min": 3,
+   "encontrados": 77.3,
+   "falsos": 0.0,
+   "centro_px": 0.57,
+   "cierre": 0.039,
+   "orientacion": 2.1,
+   "puntos": 88.7
+  },
+  {
+   "sigma_v": 1.5,
+   "v_min": 5,
+   "encontrados": 77.3,
+   "falsos": 0.0,
+   "centro_px": 0.57,
+   "cierre": 0.039,
+   "orientacion": 2.1,
+   "puntos": 88.7
+  },
+  {
+   "sigma_v": 1.5,
+   "v_min": 8,
+   "encontrados": 74.7,
+   "falsos": 0.0,
+   "centro_px": 0.56,
+   "cierre": 0.037,
+   "orientacion": 2.1,
+   "puntos": 87.3
+  },
+  {
+   "sigma_v": 1.5,
+   "v_min": 12,
+   "encontrados": 73.3,
+   "falsos": 0.0,
+   "centro_px": 0.56,
+   "cierre": 0.036,
+   "orientacion": 2.1,
+   "puntos": 86.7
+  }
+ ],
+ "elegida": {
+  "sigma_v": 1.0,
+  "v_min": 3
+ },
+ "sinteticos_prueba": {
+  "encontrados": 89.0,
+  "falsos": 0.0,
+  "centro_px": 0.63,
+  "cierre": 0.041,
+  "orientacion": 2.1,
+  "puntos": 94.5
+ },
+ "digitos_por_clase": {
+  "0": {
+   "n": 160,
+   "lazos_0": 0.6,
+   "lazos_1": 13.8,
+   "lazos_2": 48.1,
+   "lazos_3+": 37.5,
+   "con_cerrado": 99.4,
+   "cierre_medio": 0.62
+  },
+  "1": {
+   "n": 164,
+   "lazos_0": 83.5,
+   "lazos_1": 14.0,
+   "lazos_2": 2.4,
+   "lazos_3+": 0.0,
+   "con_cerrado": 0.0,
+   "cierre_medio": 0.09
+  },
+  "2": {
+   "n": 159,
+   "lazos_0": 23.9,
+   "lazos_1": 45.9,
+   "lazos_2": 23.3,
+   "lazos_3+": 6.9,
+   "con_cerrado": 39.0,
+   "cierre_medio": 0.36
+  },
+  "3": {
+   "n": 165,
+   "lazos_0": 4.2,
+   "lazos_1": 29.7,
+   "lazos_2": 46.1,
+   "lazos_3+": 20.0,
+   "con_cerrado": 58.2,
+   "cierre_medio": 0.4
+  },
+  "4": {
+   "n": 163,
+   "lazos_0": 27.0,
+   "lazos_1": 47.9,
+   "lazos_2": 17.8,
+   "lazos_3+": 7.4,
+   "con_cerrado": 54.6,
+   "cierre_medio": 0.5
+  },
+  "5": {
+   "n": 164,
+   "lazos_0": 2.4,
+   "lazos_1": 22.0,
+   "lazos_2": 55.5,
+   "lazos_3+": 20.1,
+   "con_cerrado": 67.1,
+   "cierre_medio": 0.47
+  },
+  "6": {
+   "n": 163,
+   "lazos_0": 6.1,
+   "lazos_1": 44.2,
+   "lazos_2": 29.4,
+   "lazos_3+": 20.2,
+   "con_cerrado": 71.8,
+   "cierre_medio": 0.61
+  },
+  "7": {
+   "n": 161,
+   "lazos_0": 13.7,
+   "lazos_1": 52.2,
+   "lazos_2": 26.1,
+   "lazos_3+": 8.1,
+   "con_cerrado": 59.6,
+   "cierre_medio": 0.46
+  },
+  "8": {
+   "n": 156,
+   "lazos_0": 16.0,
+   "lazos_1": 29.5,
+   "lazos_2": 26.9,
+   "lazos_3+": 27.6,
+   "con_cerrado": 71.8,
+   "cierre_medio": 0.66
+  },
+  "9": {
+   "n": 162,
+   "lazos_0": 10.5,
+   "lazos_1": 14.8,
+   "lazos_2": 29.6,
+   "lazos_3+": 45.1,
+   "con_cerrado": 78.4,
+   "cierre_medio": 0.64
+  }
+ },
+ "digitos_criterio": {
+  "cerrado_0": 99.4,
+  "cerrado_6": 71.8,
+  "cerrado_9": 78.4,
+  "dos_en_8": 26.9,
+  "ninguno_1": 83.5,
+  "ninguno_7": 13.7
+ },
+ "desplazamientos": {
+  "d": [
+   -4,
+   -3,
+   -2,
+   -1,
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "cambia_n_lazos_pc": [
+   0.7,
+   0.1,
+   0.0,
+   0.0,
+   0.0,
+   0.1,
+   0.4,
+   0.9,
+   3.0
+  ],
+  "error_centro_principal_px": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "recortados_pc": [
+   1.1,
+   0.1,
+   0.1,
+   0.0,
+   0.0,
+   1.5,
+   3.4,
+   6.2,
+   11.8
+  ]
+ },
+ "pasa": {
+  "1_encontrados": false,
+  "2_falsos": true,
+  "3_centro": true,
+  "4_cierre": true,
+  "5_orientacion": true,
+  "6_cerrado_0": true,
+  "6_cerrado_6": false,
+  "6_cerrado_9": false,
+  "7_dos_en_8": false,
+  "8_ninguno_1": true,
+  "8_ninguno_7": false
+ }
+}
