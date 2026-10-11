@@ -1,0 +1,431 @@
+{
+ "lineal (referencia) · rectas": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas",
+  "n": 512,
+  "val": 0.9546,
+  "val_rango": [
+   0.9511,
+   0.9567
+  ],
+  "ciega": 0.9466
+ },
+ "lineal (referencia) · delgado": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "delgado",
+  "n": 384,
+  "val": 0.9287,
+  "val_rango": [
+   0.9276,
+   0.9295
+  ],
+  "ciega": 0.9209
+ },
+ "lineal (referencia) · gris": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "gris",
+  "n": 384,
+  "val": 0.9596,
+  "val_rango": [
+   0.9592,
+   0.9604
+  ],
+  "ciega": 0.9569
+ },
+ "lineal (referencia) · rizo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rizo",
+  "n": 5,
+  "val": 0.3744,
+  "val_rango": [
+   0.3729,
+   0.3754
+  ],
+  "ciega": 0.3612
+ },
+ "lineal (referencia) · rectas + rizo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas + rizo",
+  "n": 517,
+  "val": 0.9577,
+  "val_rango": [
+   0.9561,
+   0.9598
+  ],
+  "ciega": 0.9503
+ },
+ "lineal (referencia) · delgado + rizo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "delgado + rizo",
+  "n": 389,
+  "val": 0.9349,
+  "val_rango": [
+   0.9332,
+   0.9369
+  ],
+  "ciega": 0.9246
+ },
+ "lineal (referencia) · gris + rizo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "gris + rizo",
+  "n": 389,
+  "val": 0.9654,
+  "val_rango": [
+   0.9635,
+   0.9685
+  ],
+  "ciega": 0.9583
+ },
+ "lineal (referencia) · rectas + gris": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas + gris",
+  "n": 896,
+  "val": 0.9631,
+  "val_rango": [
+   0.9623,
+   0.9641
+  ],
+  "ciega": 0.9595
+ },
+ "lineal (referencia) · rectas + delgado": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas + delgado",
+  "n": 896,
+  "val": 0.9563,
+  "val_rango": [
+   0.9549,
+   0.9573
+  ],
+  "ciega": 0.9499
+ },
+ "lineal (referencia) · gris + delgado": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "gris + delgado",
+  "n": 768,
+  "val": 0.9666,
+  "val_rango": [
+   0.9641,
+   0.9685
+  ],
+  "ciega": 0.9609
+ },
+ "lineal (referencia) · rectas + gris + rizo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas + gris + rizo",
+  "n": 901,
+  "val": 0.9647,
+  "val_rango": [
+   0.9617,
+   0.9672
+  ],
+  "ciega": 0.9615
+ },
+ "lineal (referencia) · rectas + gris + delgado": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "rectas + gris + delgado",
+  "n": 1280,
+  "val": 0.9641,
+  "val_rango": [
+   0.9635,
+   0.9647
+  ],
+  "ciega": 0.9575
+ },
+ "lineal (referencia) · todo": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "todo",
+  "n": 1285,
+  "val": 0.9654,
+  "val_rango": [
+   0.9635,
+   0.9666
+  ],
+  "ciega": 0.957
+ },
+ "MLP 256 · rectas": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas",
+  "n": 512,
+  "val": 0.961,
+  "val_rango": [
+   0.9592,
+   0.9623
+  ],
+  "ciega": 0.9575
+ },
+ "MLP 256 · delgado": {
+  "compositor": "MLP 256",
+  "caracteristicas": "delgado",
+  "n": 384,
+  "val": 0.9425,
+  "val_rango": [
+   0.9406,
+   0.9443
+  ],
+  "ciega": 0.9316
+ },
+ "MLP 256 · gris": {
+  "compositor": "MLP 256",
+  "caracteristicas": "gris",
+  "n": 384,
+  "val": 0.9672,
+  "val_rango": [
+   0.966,
+   0.9685
+  ],
+  "ciega": 0.9603
+ },
+ "MLP 256 · rizo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rizo",
+  "n": 5,
+  "val": 0.4236,
+  "val_rango": [
+   0.4199,
+   0.4273
+  ],
+  "ciega": 0.3912
+ },
+ "MLP 256 · rectas + rizo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas + rizo",
+  "n": 517,
+  "val": 0.9635,
+  "val_rango": [
+   0.9629,
+   0.9641
+  ],
+  "ciega": 0.9593
+ },
+ "MLP 256 · delgado + rizo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "delgado + rizo",
+  "n": 389,
+  "val": 0.947,
+  "val_rango": [
+   0.9456,
+   0.9487
+  ],
+  "ciega": 0.9348
+ },
+ "MLP 256 · gris + rizo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "gris + rizo",
+  "n": 389,
+  "val": 0.9709,
+  "val_rango": [
+   0.9697,
+   0.9716
+  ],
+  "ciega": 0.9629
+ },
+ "MLP 256 · rectas + gris": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas + gris",
+  "n": 896,
+  "val": 0.9709,
+  "val_rango": [
+   0.9703,
+   0.9722
+  ],
+  "ciega": 0.9679
+ },
+ "MLP 256 · rectas + delgado": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas + delgado",
+  "n": 896,
+  "val": 0.961,
+  "val_rango": [
+   0.9604,
+   0.9623
+  ],
+  "ciega": 0.9596
+ },
+ "MLP 256 · gris + delgado": {
+  "compositor": "MLP 256",
+  "caracteristicas": "gris + delgado",
+  "n": 768,
+  "val": 0.9699,
+  "val_rango": [
+   0.9678,
+   0.9716
+  ],
+  "ciega": 0.9654
+ },
+ "MLP 256 · rectas + gris + rizo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas + gris + rizo",
+  "n": 901,
+  "val": 0.9724,
+  "val_rango": [
+   0.9716,
+   0.9734
+  ],
+  "ciega": 0.9689
+ },
+ "MLP 256 · rectas + gris + delgado": {
+  "compositor": "MLP 256",
+  "caracteristicas": "rectas + gris + delgado",
+  "n": 1280,
+  "val": 0.9705,
+  "val_rango": [
+   0.9672,
+   0.9722
+  ],
+  "ciega": 0.9698
+ },
+ "MLP 256 · todo": {
+  "compositor": "MLP 256",
+  "caracteristicas": "todo",
+  "n": 1285,
+  "val": 0.9699,
+  "val_rango": [
+   0.9678,
+   0.9709
+  ],
+  "ciega": 0.9701
+ },
+ "bosque 500 · rectas": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas",
+  "n": 512,
+  "val": 0.9555,
+  "val_rango": [
+   0.9542,
+   0.9573
+  ],
+  "ciega": 0.9426
+ },
+ "bosque 500 · delgado": {
+  "compositor": "bosque 500",
+  "caracteristicas": "delgado",
+  "n": 384,
+  "val": 0.9462,
+  "val_rango": [
+   0.9425,
+   0.9493
+  ],
+  "ciega": 0.9296
+ },
+ "bosque 500 · gris": {
+  "compositor": "bosque 500",
+  "caracteristicas": "gris",
+  "n": 384,
+  "val": 0.9666,
+  "val_rango": [
+   0.9647,
+   0.9685
+  ],
+  "ciega": 0.9549
+ },
+ "bosque 500 · rizo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rizo",
+  "n": 5,
+  "val": 0.4706,
+  "val_rango": [
+   0.4675,
+   0.4725
+  ],
+  "ciega": 0.4276
+ },
+ "bosque 500 · rectas + rizo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas + rizo",
+  "n": 517,
+  "val": 0.9584,
+  "val_rango": [
+   0.9567,
+   0.9598
+  ],
+  "ciega": 0.9441
+ },
+ "bosque 500 · delgado + rizo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "delgado + rizo",
+  "n": 389,
+  "val": 0.9563,
+  "val_rango": [
+   0.9536,
+   0.9604
+  ],
+  "ciega": 0.9326
+ },
+ "bosque 500 · gris + rizo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "gris + rizo",
+  "n": 389,
+  "val": 0.9701,
+  "val_rango": [
+   0.9691,
+   0.9716
+  ],
+  "ciega": 0.9597
+ },
+ "bosque 500 · rectas + gris": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas + gris",
+  "n": 896,
+  "val": 0.9619,
+  "val_rango": [
+   0.9598,
+   0.9635
+  ],
+  "ciega": 0.9493
+ },
+ "bosque 500 · rectas + delgado": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas + delgado",
+  "n": 896,
+  "val": 0.9617,
+  "val_rango": [
+   0.961,
+   0.9629
+  ],
+  "ciega": 0.9464
+ },
+ "bosque 500 · gris + delgado": {
+  "compositor": "bosque 500",
+  "caracteristicas": "gris + delgado",
+  "n": 768,
+  "val": 0.9746,
+  "val_rango": [
+   0.9734,
+   0.9759
+  ],
+  "ciega": 0.962
+ },
+ "bosque 500 · rectas + gris + rizo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas + gris + rizo",
+  "n": 901,
+  "val": 0.9647,
+  "val_rango": [
+   0.9641,
+   0.9654
+  ],
+  "ciega": 0.9505
+ },
+ "bosque 500 · rectas + gris + delgado": {
+  "compositor": "bosque 500",
+  "caracteristicas": "rectas + gris + delgado",
+  "n": 1280,
+  "val": 0.9643,
+  "val_rango": [
+   0.9604,
+   0.9672
+  ],
+  "ciega": 0.9509
+ },
+ "bosque 500 · todo": {
+  "compositor": "bosque 500",
+  "caracteristicas": "todo",
+  "n": 1285,
+  "val": 0.9676,
+  "val_rango": [
+   0.9654,
+   0.9716
+  ],
+  "ciega": 0.9524
+ }
+}

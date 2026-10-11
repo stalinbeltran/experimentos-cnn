@@ -334,3 +334,41 @@ Lo que se lleva: **MLP 256 + otros + rizo (0,947 / 0,935)** es la combinación m
 varianza), y el bosque la que más sube en val. En ambos casos la salida «rizo» del detector de curvas cerradas, codificada
 como mejor candidato en 2×2 más la cuenta, es una feature que vale: la primera de este experimento que mejora el
 reconocimiento de dígitos.
+
+## Los detectores YA PROBADOS, solos y combinados (`nn/detectores.py`, pedido por el dueño el 2026-10-11)
+
+Cuatro familias, cada una el detector tal como quedó publicado en el boceto curvas-gabor, sin tocar su calibración:
+**rectas** (4 Gabor par integrados, 512), **delgado** (curvas sobre el dígito tal cual, 384), **gris** (curvas sobre el
+borde Gabor gris λ_b 10 · K 9, 384) y **rizo** (la salida compacta de este experimento, 5). Con tres compositores
+(`17-detectores.json`, figura `17-detectores.png`). Val / a ciegas:
+
+| características | lineal | MLP 256 | bosque 500 |
+|---|---:|---:|---:|
+| rectas | 0,955 / 0,947 | 0,961 / 0,958 | 0,956 / 0,943 |
+| delgado | 0,929 / 0,921 | 0,943 / 0,932 | 0,946 / 0,930 |
+| **gris** | 0,960 / 0,957 | 0,967 / 0,960 | 0,967 / 0,955 |
+| rizo solo | 0,374 / 0,361 | 0,424 / 0,391 | 0,471 / 0,428 |
+| rectas + rizo | 0,958 / 0,950 | 0,964 / 0,959 | 0,958 / 0,944 |
+| delgado + rizo | 0,935 / 0,925 | 0,947 / 0,935 | 0,956 / 0,933 |
+| **gris + rizo** | 0,965 / 0,958 | **0,971** / 0,963 | **0,970** / 0,960 |
+| rectas + gris | 0,963 / 0,960 | 0,971 / 0,968 | 0,962 / 0,949 |
+| gris + delgado | 0,967 / 0,961 | 0,970 / 0,965 | **0,975** / 0,962 |
+| **rectas + gris + rizo** | 0,965 / 0,962 | **0,972 / 0,969** | 0,965 / 0,951 |
+| rectas + gris + delgado | 0,964 / 0,958 | 0,971 / 0,970 | 0,964 / 0,951 |
+| todo | 0,965 / 0,957 | 0,970 / **0,970** | 0,968 / 0,952 |
+
+**Lo que sale:**
+1. **El gris es el mejor detector solo** (0,960 lineal, 0,967 no lineal), como ya decía el boceto; el delgado, que es el
+   que se usó en las secciones anteriores como «otros», es el **peor** de los tres viejos. Lo que allí parecía poco
+   margen era en parte eso.
+2. **El rizo contribuye en todas las combinaciones y con los tres compositores**: +0,3 a +1,0 en val al añadirlo a
+   cualquier familia (gris: 0,960 → 0,965 lineal, 0,967 → 0,971 MLP, 0,967 → 0,970 bosque). Con 5 números. A ciegas
+   suma menos (+0,1 a +0,5) pero no resta en ningún caso.
+3. **Rectas y gris se complementan** (0,963 lineal, 0,971 MLP, por encima de cada una), y el delgado aporta sobre el
+   gris con el bosque (0,975 val, el máximo de la tabla) pero poco a ciegas (0,962).
+4. **Lo mejor a ciegas**: MLP 256 con **rectas + gris + rizo (0,969)** o con todo (0,970) —a ciegas, que es lo que no se
+   ha mirado al elegir—. El bosque gana en val y pierde a ciegas en todas las filas: ajusta más a val.
+
+Resumen: de los detectores previos contribuyen **gris** (el que más), **rectas** (complementa al gris) y, poco pero
+siempre, el **rizo**; el **delgado** sólo aporta con el bosque y no a ciegas. La mejor combinación honesta hoy:
+**MLP 256 · rectas + gris + rizo: 0,972 val / 0,969 a ciegas** (la referencia del boceto era 0,960 / 0,957).
