@@ -11,7 +11,7 @@ el mejor— en celdas 8×8 = 128 características más. Se comparan: otros solos
 ⚠ Importa los módulos del boceto `docs/bocetos/2026-10-09-curvas-gabor` para «los otros detectores» tal cual están
 (es la referencia publicada; copiarlos aquí sería 6 ficheros); el detector de cerradas es el de este experimento.
 
-    python nn/digitos_cerradas.py   → resultados/13-digitos.json · 13-digitos-fallos.png · 13-digitos-cerradas.png  (~25 min)
+    python nn/digitos_cerradas.py [--rmin 0.85 --rmax 12 --sufijo b]   → resultados/13-digitos.json · 13-digitos-fallos.png · 13-digitos-cerradas.png  (~25 min)
 """
 from __future__ import annotations
 
@@ -40,6 +40,7 @@ from expcnn import exigir_dataset                                   # noqa: E402
 
 _YY, _XX = np.mgrid[0:32, 0:32] + 0.5
 R_MIN = 0.5
+SUFIJO = ""
 
 
 def mapas_cerradas(x: np.ndarray) -> tuple[np.ndarray, list[dict]]:
@@ -63,6 +64,10 @@ def caract_cerradas(img):
 
 
 def main() -> int:
+    global R_MIN, SUFIJO
+    import argparse
+    ap = argparse.ArgumentParser(); ap.add_argument("--rmin", type=float, default=0.5); ap.add_argument("--rmax", type=float, default=8.0)
+    ap.add_argument("--sufijo", default=""); a = ap.parse_args(); R_MIN, C2.RMAX, SUFIJO = a.rmin, a.rmax, a.sufijo
     torch.set_num_threads(2); t0 = time.time()
     DL.configurar(**json.loads((BOCETO / "resultados-delgadas.json").read_text())["elegida"])
     d = dict(np.load(exigir_dataset(EV.DATASET) / "datos.npz"))
@@ -73,7 +78,7 @@ def main() -> int:
     XB, cands = caract_cerradas(img)
     print(f"curvas cerradas: {XB.shape} en {time.time() - t0:.0f} s", flush=True)
     conjuntos = {"otros (delgado)": XA, "cerradas solas": XB, "otros + cerradas": np.concatenate([XA, XB], 1)}
-    out = {"n": {"train": len(tr), "val": len(va), "ciega": len(ex)}, "caracteristicas": {k: int(v.shape[1]) for k, v in conjuntos.items()}, "resultados": {}}
+    out = {"rmin": R_MIN, "rmax": C2.RMAX, "n": {"train": len(tr), "val": len(va), "ciega": len(ex)}, "caracteristicas": {k: int(v.shape[1]) for k, v in conjuntos.items()}, "resultados": {}}
     preds = {}
     for n, X in conjuntos.items():
         v, c = [], []
@@ -95,7 +100,7 @@ def main() -> int:
     out["confusiones_val_s0"] = dict(sorted(conf.items(), key=lambda z: -z[1])[:12])
     out["indices_fallos_val_s0"] = [int(va[j]) for j in f]
     out["cerradas_por_clase_val"] = {str(k): round(float(np.mean([len(cands[i]) for i in va[y[va] == k]])), 2) for k in range(10)}
-    (AQUI / "resultados" / "13-digitos.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
+    (AQUI / "resultados" / f"13{SUFIJO}-digitos.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
     print(json.dumps({k: out[k] for k in ("resultados", "fallos_val_s0", "confusiones_val_s0")}, indent=1, ensure_ascii=False), flush=True)
 
     # figura: los fallos de «otros + cerradas» en val, con las curvas cerradas que vio (cruz azul = la mejor, claras = las demás)
@@ -110,10 +115,10 @@ def main() -> int:
                 ax.plot(c["centro"][0] - 0.5, c["centro"][1] - 0.5, "+", color=EV.AZU if q == 0 else "#9fc2ec", ms=8 if q == 0 else 5, mew=1.6 if q == 0 else 1)
             ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5)
             ax.set_title(f"{y[i]}→{pv0[j]} · idx {i}" + ("" if pa0[j] != y[va][j] else " (otros acertaba)"), color=EV.NAR, fontsize=6.5, pad=2)
-    fig.suptitle(f"rizo-2 · 13 · los {len(f)} dígitos de val (1617) que FALLA el compositor «otros + curvas cerradas» (semilla 0, acierto "
+    fig.suptitle(f"rizo-2 · 13{SUFIJO} · los {len(f)} dígitos de val (1617) que FALLA el compositor «otros + curvas cerradas» (semilla 0, acierto "
                  f"{out['resultados']['otros + cerradas']['val']:.4f}) · «real→predicho» · cruz azul = la curva cerrada mejor, claras = las demás"
                  + (f" · se enseñan {n_max}" if len(f) > n_max else ""), fontsize=9.5)
-    fig.tight_layout(rect=(0, 0, 1, 0.965)); fig.savefig(AQUI / "resultados" / "13-digitos-fallos.png", dpi=95); plt.close(fig)
+    fig.tight_layout(rect=(0, 0, 1, 0.965)); fig.savefig(AQUI / "resultados" / f"13{SUFIJO}-digitos-fallos.png", dpi=95); plt.close(fig)
 
     # figura: un dígito de cada clase con sus curvas cerradas, para ver qué ve el compositor
     fig, axs = plt.subplots(3, 10, figsize=(14, 4.6))
@@ -124,8 +129,8 @@ def main() -> int:
             for q, c in enumerate(cs):
                 ax.plot(c["centro"][0] - 0.5, c["centro"][1] - 0.5, "+", color=EV.AZU if q == 0 else "#9fc2ec", ms=8 if q == 0 else 5, mew=1.6 if q == 0 else 1)
             ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5); ax.set_xticks([]); ax.set_yticks([]); ax.set_title(f"{k} · {len(cs)} cerradas", fontsize=7, pad=2)
-    fig.suptitle("rizo-2 · 13 · lo que el detector de curvas cerradas (compuesto2, encierro ≥ 0,5) ve en tres dígitos de cada clase: cruz azul = la mejor", fontsize=9.5)
-    fig.tight_layout(rect=(0, 0, 1, 0.95)); fig.savefig(AQUI / "resultados" / "13-digitos-cerradas.png", dpi=95)
+    fig.suptitle(f"rizo-2 · 13{SUFIJO} · lo que el detector de curvas cerradas (compuesto2, encierro ≥ {R_MIN}, rayos a {C2.RMAX:g} px) ve en tres dígitos de cada clase: cruz azul = la mejor", fontsize=9.5)
+    fig.tight_layout(rect=(0, 0, 1, 0.95)); fig.savefig(AQUI / "resultados" / f"13{SUFIJO}-digitos-cerradas.png", dpi=95)
     print(f"→ resultados/13-digitos.json · 13-digitos-fallos.png · 13-digitos-cerradas.png · {time.time() - t0:.0f} s")
     return 0
 

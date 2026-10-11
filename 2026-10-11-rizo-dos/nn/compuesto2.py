@@ -31,6 +31,7 @@ import rayos as RY                                                  # noqa: E402
 from expcnn import exigir_dataset                                   # noqa: E402
 
 B_ROD, META_ROD = PR.banco((0.85, 1.0), 0.5)
+RMAX = 8.0      # alcance de los rayos del encierro; `digitos_cerradas.py --rmax` lo sube para los lazos grandes (0, 6, 9)
 S_ROD = 0.6     # el umbral con el que el banco rodeado encuentra el 87 % (figura 11); elegir lo hace el compuesto
 
 
@@ -43,7 +44,7 @@ def mapa_rodeado(x):
 def compuesto2(x: np.ndarray) -> list[dict]:
     x = np.asarray(x) > 0
     best, idx = mapa_rodeado(x)
-    ys, xs = np.nonzero(~x); ch, _, _ = RY._rayos(x, ys, xs, 8.0); r = np.zeros(x.shape); r[ys, xs] = ch.mean(1)
+    ys, xs = np.nonzero(~x); ch, _, _ = RY._rayos(x, ys, xs, RMAX); r = np.zeros(x.shape); r[ys, xs] = ch.mean(1)
     cands = []
     for origen, lista in (("P'", PR.rizos(x, B_ROD, META_ROD, S_ROD)), ("R", RY.rizos(x, CP.F_R, 8.0, 99.0))):
         for c in lista:
