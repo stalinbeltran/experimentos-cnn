@@ -205,3 +205,37 @@ la suma (`12-compuesto2.json`):
 **78,7 % con un candidato por dígito**: cuatro puntos más que el compuesto anterior (74,5 %) y que la CNN, y el top-2
 llega al 89 %. Los candidatos son 8,2 por dígito (97,9 % de recall) y sigue eligiendo mejor el encierro que la propia
 plantilla rodeada. Los 10 fallos, de cerca, en `12-compuesto2-fallos.png`; los 48, en `12-compuesto2.png`.
+
+## TODOS los dígitos: el compuesto como detector de curvas cerradas + los otros detectores (`nn/digitos_cerradas.py`, 2026-10-11)
+
+Cadena del boceto curvas-gabor (detector DELGADO: recto · vector de curvatura · golpe, 384 características en celdas
+8×8 → compositor lineal, 180 train / 1617 val / 3823 a ciegas, 3 semillas) **más** dos mapas de curvas cerradas del
+compuesto (campana de altura = encierro en cada candidato, y otra sólo con el mejor; 128 características). Dos corridas:
+
+| características | val (1617) | a ciegas (3823) | fallos val s0 | arregla / rompe |
+|---|---:|---:|---:|---:|
+| otros (delgado), la referencia | **0,929** | **0,921** | 114 | — |
+| cerradas solas (encierro ≥ 0,5, rayos 8 px) | 0,733 | 0,723 | | |
+| otros + cerradas (≥ 0,5, 8 px) | 0,925 | 0,913 | 119 | 41 / 46 |
+| cerradas solas (encierro ≥ 0,85, rayos 12 px) | 0,502 | 0,495 | | |
+| otros + cerradas (≥ 0,85, 12 px) | 0,914 | 0,899 | 140 | 34 / 60 |
+
+**No ayuda: añadir las curvas cerradas deja el compositor igual o peor.** Arregla tantos como rompe (41/46) y con los
+candidatos más estrictos rompe más (34/60). Las cerradas solas clasifican el 73 % (y el 50 % si sólo se dejan las muy
+encerradas). Figuras: `13-digitos-fallos.png` (los 119 fallos de la primera corrida, con la cruz azul del mejor
+candidato), `13-digitos-cerradas.png` y `13b-*` (lo que el detector ve en tres dígitos de cada clase).
+
+**Por qué, mirando las figuras:**
+1. **El compositor lineal ya tiene esa información.** Sus vectores de curvatura → ← ↓ ↑ por celda dicen desde qué
+   lado gira cada trozo; un lazo es «curvatura hacia dentro por los cuatro lados», y el compositor lo aprende sin
+   necesitar que nadie le marque el centro. La feature nueva es redundante con las que había, y 128 números más sobre
+   180 ejemplos de entrenamiento meten ruido (de ahí que rompa).
+2. **El encierro premia estar PEGADO a la tinta, no estar en el centro del hueco** —lo que el dueño vio como «un punto
+   arriba y afuera de lo que un humano consideraría una curva cerrada»—: en un 0 el mejor candidato cae en el borde del
+   óvalo (donde todos los rayos chocan cerca), no en su centro (figura 13b, fila del 0). Con rayos a 12 px pasa igual.
+   Para una feature de dígito haría falta el centro del hueco (distancia a la tinta) además del encierro.
+3. **Los fallos del compositor no son de lazos** (figura 13): 8→9 (14), 1→3 (7), 8→3 (6), 9→3 (6), 2→1 (5)… son
+   dígitos gruesos, unos sin hueco y treses con panza cerrada — justo donde un detector de cerradas tampoco distingue.
+
+Lo que sí queda: el detector de curvas cerradas sirve como **feature para localizar** (el 78,7 % de los rizos del 2, y
+los lazos del 6, 8, 9 y 0 en la figura 13b), no para **clasificar** dígitos por encima de lo que ya hacen las curvas.
