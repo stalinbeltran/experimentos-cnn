@@ -119,3 +119,15 @@ tinta.
   En los 2 marca rizos también arriba, donde la cabeza se enrolla apretada (figura 4).
 - ⚠ **0,97 y 5 px se eligieron mirando este sondeo** (los mismos 2 y los mismos sintéticos): para la segunda vuelta van
   en un criterio escrito antes, y con otros datos para comprobar.
+
+## Caso señalado por el dueño: el 2 nº 50 (4.º de la primera fila de la figura 4) — un lazo que NO tiene sentido
+
+`python nn/caso.py 50` → [`resultados/caso-50.png`](resultados/caso-50.png).
+
+![caso 50](resultados/caso-50.png)
+
+El «lazo» tiene centro (21,5, 15,5), **radio 12 —el máximo permitido—**, cobertura 0,56 (cierre 0,11) y **5 votos de 85**.
+Los votos de los píxeles curvos están dispersos (figura, derecha): no hay un centro común. El pico pasó por el mínimo de 3
+votos, y la corona [0,6 R, 1,4 R] = 7–17 px abarca medio dígito y junta **la cabeza y la base del 2, que son dos curvas
+distintas**, en sectores distintos. Contar sectores con tinta no comprueba que sea un trazo continuo que gira. Es el
+pendiente del 2026-10-12 en el `CLAUDE.md` del repo (estrategias 1–3).

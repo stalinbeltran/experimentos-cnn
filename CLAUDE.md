@@ -22,6 +22,46 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
+## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
+
+> «Necesito que me ayudes observando los dígitos y aplicando distintas estrategias hasta hallar unas que nos permitan
+> detectar features como estos lazos y curvas. Debes evaluar varios, y medir su efectividad, y luego sugerir otros. Luego
+> me reportas tus avances y así continuamos.» — el dueño, 2026-10-11
+
+**Qué se pide**: un ciclo, no un experimento cerrado — **observar** los dígitos, **probar varias estrategias**, **medir** cada
+una con los mismos números, **sugerir** otras, y **reportar** al dueño antes de seguir. El reporte enseña figuras (con el
+dibujo que él pidió para los lazos: dígito en gris, cruz azul en el centro, arco delgado con el hueco hacia la abertura) y
+los enlaces directos al PNG (`raw.githubusercontent.com`, porque el visor de GitHub le fallaba).
+
+**De dónde se parte** (todo el 2026-10-10/11, 0 $):
+- **Curvas**: el detector DELGADO del boceto `docs/bocetos/2026-10-09-curvas-gabor/` (`delgadas.py`): 12 Gabor par λ 6
+  sobre la imagen, giro κ a ±4 px, trozos rectos/curvos con radio, centro y orientación (vector de curvatura). Sintéticos de
+  1–3 px: 99,7 % rectas, 97,7 % arcos. TAU recomendado 0,6 (`tau_comparar.py`), **sin confirmar por el dueño**.
+- **Lazos**: el experimento `lazos` (`2026-10-11-lazos/`). Votos por centro de curvatura: bien en lazos sintéticos limpios
+  (centro 0,6 px, cierre 0,04, orientación 2°), **mal en dígitos** (duplicados en óvalos, falsos en 7, el 8 sin sus dos
+  lazos). Caso señalado por el dueño, **el 2 nº 50 del dataset** (`nn/caso.py 50`): un «lazo» de radio 12 (el máximo
+  permitido) con 5 votos de 85 cuya corona ancha junta la cabeza y la base del 2 — **dos curvas distintas leídas como un
+  lazo**. Y el **radio mínimo que ve es ≈ 5 px** (giro a ±4 px): los rizos de los 2 se pierden; un **sondeo por rayos** los
+  recoge (`nn/rizos.py`: 11/12 huecos de los 2, 95 % de los 8).
+
+**Estrategias para empezar a probar** (de lo medido; ninguna probada aún):
+1. **Exigir CONTINUIDAD**: un lazo es UN trazo que gira, no tinta en sectores — seguir el trazo a lo largo del arco (la
+   cadena de trozos curvos con el mismo centro), en vez de contar sectores con cualquier tinta.
+2. **Votos relativos**: el pico debe juntar una fracción de los píxeles curvos (p. ej. ≥ 30 %), no ≥ 3 votos absolutos.
+3. **Corona estrecha y radio máximo relativo** al tamaño del dígito.
+4. **Explicar la tinta**: aceptar un lazo, quitar sus votos y su tinta, buscar el siguiente (óvalos, el 8).
+5. **Rizos por rayos** para los lazos de radio < 5 px, combinados con los de curvatura.
+6. **Multiescala**: giro a ±2/±4/±6 según el grosor y el radio.
+7. **Signo de la curvatura a lo largo del trazo** (C contra S): para separar la cabeza y la base del 2.
+8. **Aprendido**: un detector pequeño entrenado con sintéticos de verdad conocida (lazos, curvas, rectas a varios
+   grosores) — entrena-local, 0 $; la red ve la imagen, no reglas.
+
+**Cómo medir, para que las estrategias se puedan comparar**: (a) sintéticos con verdad (los de `lazos/nn/lazos.py`, más
+grosores 4–6 px como los dígitos); (b) en dígitos, lo esperable por clase (0/6/9 un lazo cerrado, 8 dos, 1/7 ninguno) y los
+huecos cerrados como verdad medible de los lazos cerrados; (c) **proponer al dueño etiquetar a mano ~50 dígitos** (lazos y
+curvas, con centro aproximado): es la única verdad de dígitos que no depende de suposiciones por clase. Cada estrategia
+nueva, con su criterio escrito antes (R13) si va a decidir algo.
+
 ## ⏳ PENDIENTE (2026-10-09): la línea de RECTAS — empieza aquí
 
 Dos experimentos cerrados el 2026-10-08 (`rect-lin`, `rect-bor`; reportes #38 y #39 del central) y un tanteo del 09 que
