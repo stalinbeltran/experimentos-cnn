@@ -906,3 +906,33 @@ píxeles de color (los que sí miden giro) también cae fuera. Qué cuesta cada 
 algo los dígitos. **Recortar a la tinta** quita todo el desborde y es lo que más sube en dígitos, pero **rompe las líneas
 de 1 px** (el giro se mide a ±4 px a lo largo de la tangente, y en una escalera oblicua de 1 px esos puntos caen fuera de
 la tinta): contradice el objetivo «sólo trazos delgados». Ninguno se ha aplicado todavía: decide el dueño.
+
+#### TAU 0,3 · 0,6 · 0,9, comparados sobre todos los dígitos (2026-10-11, pedido del dueño)
+
+[`tau_comparar.py`](tau_comparar.py) (5 min, 0 $; [`resultados-tau.json`](resultados-tau.json)). Sólo cambia TAU; lo
+demás, la calibración de `delgadas.py` y el compositor de siempre.
+
+![estadísticas](imagenes/24-tau-1-estadisticas.png)
+
+Los mismos 100 dígitos (10 por clase) con cada TAU —la línea negra es el borde del dígito; lo de fuera, desborde—:
+[TAU 0,3](imagenes/24-tau-2-detector-tau03.png) · [TAU 0,6](imagenes/24-tau-2-detector-tau06.png) ·
+[TAU 0,9](imagenes/24-tau-2-detector-tau09.png). Y los **165 dígitos de val que los tres no leen igual**, lado a lado:
+[`24-tau-3-discrepan.png`](imagenes/24-tau-3-discrepan.png).
+
+| | TAU 0,3 | **TAU 0,6** | TAU 0,9 |
+|---|---:|---:|---:|
+| val (3 semillas) | 0,929 | 0,931 | **0,934** |
+| **a ciegas** (3823, 3 semillas) | 0,921 | **0,929** | 0,903 |
+| máscara fuera de la tinta (val) | 36 % | 14 % | 5 % |
+| fallos en val, semilla 0 (sin muy gruesos) | 114 (110) | 111 (108) | 107 (106) |
+| a ciegas por grosor: 2,8 · 4 · 4,5 · ≥ 5,7 px | 0,934 · 0,923 · 0,861 · 0,867 | 0,937 · 0,931 · 0,874 · 0,917 | 0,938 · 0,887 · 0,861 · 0,942 |
+| desplazamiento −2 / −1 / +1 / +2 px | 0,82 · 0,90 · 0,90 · 0,83 | 0,85 · 0,91 · 0,91 · 0,84 | 0,74 · 0,89 · 0,91 · 0,84 |
+
+- **TAU 0,6 es el que mejor generaliza**: el mejor a ciegas (0,929, +0,008), igual o mejor que 0,3 en **todos** los grosores
+  a ciegas, y la curva de desplazamientos más alta. Quita casi dos tercios del desborde.
+- **TAU 0,9 gana en val pero pierde a ciegas** (0,903, −0,026 respecto de 0,6) y se hunde con los desplazamientos
+  hacia la izquierda (0,74 con −2 px): con un umbral tan alto, la máscara se queda sólo en la parte más fuerte del trazo y
+  la lectura depende de detalles que no se repiten en otros escritores. Mejora el 1 y el 8 en val (0,98 y 0,83) y los
+  muy gruesos a ciegas, pero cae en los de 4 px, que son la mayoría (0,887).
+- El ranking en val (0,9 > 0,6 > 0,3) y a ciegas (0,6 > 0,3 > 0,9) **no coinciden**: elegir por val habría elegido el que
+  peor generaliza.
