@@ -45,7 +45,8 @@ UMBRAL = {"1_encontrados_sint": (">=", 90), "2_falsos_sint": ("<=", 10), "3_cent
 class EstrategiaC:
     def __init__(self, brazo: str, p: float | None = None):
         self.brazo = brazo; carpeta = AQUI / "nn" / "pesos" / brazo
-        self.red = Rizo(**BRAZOS[brazo]); self.red.load_state_dict(torch.load(carpeta / "best.pt", map_location="cpu")); self.red.eval()
+        cfg = json.loads((carpeta / "config.json").read_text())
+        self.red = Rizo(**BRAZOS[cfg.get("arq", brazo)]); self.red.load_state_dict(torch.load(carpeta / "best.pt", map_location="cpu")); self.red.eval()
         self.p = p
 
     @torch.no_grad()
@@ -146,8 +147,8 @@ def main() -> int:
     est = {"R": lambda x: RY.rizos(x, **cal_r), "P": lambda x: PL.rizos(x, cal_p), "V": DT.estrategia_v}
     out = {"tolerancia_px": TOL, "calibracion": {"R": cal_r, "P": {"s": cal_p}, "V": "la de lazos (σ_v 1, V_min 3, rayos 0,97)"}}
     cal = SN.conjunto(150, 150, 101)
-    for brazo in BRAZOS:
-        if (AQUI / "nn" / "pesos" / brazo / "best.pt").exists():
+    for brazo in sorted(p.name for p in (AQUI / "nn" / "pesos").glob("*") if (p / "best.pt").exists()):
+        if True:
             c = EstrategiaC(brazo); out["calibracion"][f"C:{brazo}"] = c.calibrar(cal); est[f"C:{brazo}"] = c
             print(f"C {brazo}: p {c.p} → {out['calibracion'][f'C:{brazo}']['mejor']}", flush=True)
     nombres = list(est)
@@ -188,8 +189,15 @@ def main() -> int:
         rec = []
         for dd in DS:
             Xm = [mover(x, dx=dd) if eje == "horizontal" else mover(x, dy=dd) for x in X2]
-            no_rec = [xm.sum() == x.sum() for xm, x in zip(Xm, X2)]; rec.append(round(100 * (1 - float(np.mean(no_rec))), 1))
             Em = [{**e, "centro": [e["centro"][0] + (dd if eje == "horizontal" else 0), e["centro"][1] + (dd if eje == "vertical" else 0)]} for e in E_ok]
+            # «recortado» = se pierde tinta DEL RIZO (a ≤ R + 3 px de su centro): los dígitos tocan arriba y abajo, así que
+            # perder tinta de la base al subir el dígito no invalida la medida del rizo
+            no_rec = []
+            for xm, x, e in zip(Xm, X2, E_ok):
+                vuelta = mover(xm, dx=-dd) if eje == "horizontal" else mover(xm, dy=-dd)
+                py, px = np.nonzero((x > 0) & (vuelta == 0))
+                no_rec.append(not np.any(np.hypot(px + 0.5 - e["centro"][0], py + 0.5 - e["centro"][1]) <= e["radio"] + 3))
+            rec.append(round(100 * (1 - float(np.mean(no_rec))), 1))
             for n in nombres:
                 res = [est[n](x) for x in Xm]
                 m = medir_contra_verdad([r for r, ok in zip(res, no_rec) if ok], [e for e, ok in zip(Em, no_rec) if ok])

@@ -5,7 +5,7 @@ Un píxel de fondo es centro de un rizo si, de 36 rayos (cada 10°), una fracci�
 Y las distancias al choque son parejas (p90 − p10 ≤ DISP): un anillo alrededor, no tinta suelta; y el radio mediano
 ≥ 1,25 px (una muesca de un píxel en un trazo no es un rizo). Los píxeles que lo
 cumplen se agrupan (vecindad 8); cada grupo es un rizo: centro = el píxel de mejor puntuación del grupo (fracción que
-choca, y a igualdad menor dispersión), radio = mediana de la distancia al choque, cierre = (fracción − 0,5)/0,5,
+choca, y a igualdad menor dispersión), radio = mediana del punto medio del trazo a lo largo de cada rayo (del choque a la salida), cierre = (fracción − 0,5)/0,5,
 abertura = dirección media de los rayos que no chocan. Sin morfología: es una medida geométrica sobre la tinta.
 
     python nn/rayos.py   → resultados/cal-rayos.json (la calibración de F, RMAX y DISP con sintéticos, semilla 101)
@@ -18,8 +18,12 @@ import sys
 import time
 from pathlib import Path
 
+import warnings
+
 import numpy as np
 from scipy.ndimage import label
+
+warnings.filterwarnings("ignore", "All-NaN")
 
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI / "nn"))
@@ -40,8 +44,12 @@ def _rayos(x, ys, xs, rmax):
     ok = (ix >= 0) & (ix < x.shape[1]) & (iy >= 0) & (iy < x.shape[0])
     hit = np.zeros(ix.shape, bool); hit[ok] = x[iy[ok], ix[ok]]
     choca = hit.any(2)
-    dist = np.where(choca, ps[np.argmax(hit, axis=2)], np.nan)
-    return choca, dist
+    k1 = np.argmax(hit, axis=2); dist = np.where(choca, ps[k1], np.nan)
+    # dónde SALE del trazo el rayo (primer paso sin tinta después del choque): el radio al centro del trazo es la media
+    despues = np.cumsum(hit, axis=2) > 0                      # True desde el choque en adelante
+    sale = despues & ~hit; k2 = np.where(sale.any(2), np.argmax(sale, axis=2), hit.shape[2] - 1)
+    medio = np.where(choca, (ps[k1] + ps[k2]) / 2, np.nan)
+    return choca, dist, medio
 
 
 def rizos(x: np.ndarray, f: float = DEFECTO["f"], rmax: float = DEFECTO["rmax"], disp: float = DEFECTO["disp"]) -> list[dict]:
@@ -49,7 +57,7 @@ def rizos(x: np.ndarray, f: float = DEFECTO["f"], rmax: float = DEFECTO["rmax"],
     ys, xs = np.nonzero(~x)
     if len(ys) == 0:
         return []
-    choca, dist = _rayos(x, ys, xs, rmax)
+    choca, dist, _ = _rayos(x, ys, xs, rmax)
     frac = choca.mean(1)
     with np.errstate(all="ignore"):
         p10, p90 = np.nanpercentile(dist, 10, axis=1), np.nanpercentile(dist, 90, axis=1)
@@ -63,10 +71,10 @@ def rizos(x: np.ndarray, f: float = DEFECTO["f"], rmax: float = DEFECTO["rmax"],
     for z in range(1, n + 1):
         gy, gx = np.nonzero(lab == z)
         k = int(np.argmax(punt[gy, gx])); cy, cx = gy[k] + 0.5, gx[k] + 0.5
-        ch, di = _rayos(x, np.array([gy[k]]), np.array([gx[k]]), rmax)
+        ch, di, me = _rayos(x, np.array([gy[k]]), np.array([gx[k]]), rmax)
         fr = float(ch[0].mean()); libres = ANG[~ch[0]]
         ori = float(np.degrees(np.arctan2(np.sin(libres).mean(), np.cos(libres).mean())) % 360) if len(libres) else None
-        out.append({"centro": (float(cx), float(cy)), "radio": float(np.nanmedian(di[0])),
+        out.append({"centro": (float(cx), float(cy)), "radio": float(np.nanmedian(me[0])), "radio_hueco": float(np.nanmedian(di[0])),
                     "cierre": float(np.clip((fr - 0.5) / 0.5, 0, 1)), "orientacion": ori, "puntuacion": fr, "pixeles": int(len(gy))})
     return sorted(out, key=lambda r: -r["puntuacion"])
 

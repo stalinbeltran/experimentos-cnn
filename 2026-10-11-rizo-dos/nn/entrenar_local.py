@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """rizo-2 — entrena un brazo de la estrategia C con SINTÉTICOS (nunca con dígitos).
 
-    python nn/entrenar_local.py c-base [--epocas 12] [--n 24000]   → nn/pesos/c-base/{best.pt, config.json, metrics.jsonl}
+    python nn/entrenar_local.py <brazo> [--arq c-base|c-ancha] [--datos generico|dos] [--epocas N] [--n N]
+        → nn/pesos/<brazo>/{best.pt, config.json, metrics.jsonl}
+    brazos corridos: c-base (generico, 12 ép.) · c-ancha (generico, cortado en la ép. 5) · c-dos (--datos dos, 8 ép.)
 
 El nombre del script es el contrato con el freno (`cerrable.mjs` casa `entrenar_local.py`). Datos: `sinteticos.conjunto`
 con semilla 1 (entrenar) y 101 (validar: la misma semilla con la que se calibran R y P); 70 % positivos. Objetivo: mapa de
@@ -50,17 +52,18 @@ def perdida(out, Y):
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("brazo", choices=list(BRAZOS)); ap.add_argument("--epocas", type=int, default=12)
-    ap.add_argument("--n", type=int, default=24000); ap.add_argument("--semilla", type=int, default=1); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("brazo"); ap.add_argument("--arq", choices=list(BRAZOS), default="c-base"); ap.add_argument("--epocas", type=int, default=12)
+    ap.add_argument("--n", type=int, default=24000); ap.add_argument("--datos", choices=("generico", "dos"), default="generico"); ap.add_argument("--semilla", type=int, default=1); a = ap.parse_args()
     torch.manual_seed(a.semilla); torch.set_num_threads(2); t0 = time.time()
     destino = AQUI / "nn" / "pesos" / a.brazo; destino.mkdir(parents=True, exist_ok=True)
     n_pos = int(a.n * 0.7)
-    Xt, Yt = tensores(SN.conjunto(n_pos, a.n - n_pos, a.semilla)); Xv, Yv = tensores(SN.conjunto(700, 300, 101))
+    gen = SN if a.datos == "generico" else __import__("sinteticos_dos")
+    Xt, Yt = tensores(gen.conjunto(n_pos, a.n - n_pos, a.semilla)); Xv, Yv = tensores(gen.conjunto(700, 300, 101))
     print(f"datos: {len(Xt)} entrenar · {len(Xv)} validar ({time.time() - t0:.0f} s)", flush=True)
-    red = Rizo(**BRAZOS[a.brazo]); opt = torch.optim.Adam(red.parameters(), 2e-3)
+    red = Rizo(**BRAZOS[a.arq]); opt = torch.optim.Adam(red.parameters(), 2e-3)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, a.epocas)
-    (destino / "config.json").write_text(json.dumps({"brazo": a.brazo, **BRAZOS[a.brazo], "parametros": red.parametros(), "epocas": a.epocas,
-                                                      "n": a.n, "semilla": a.semilla, "lr": 2e-3}, indent=1) + "\n")
+    (destino / "config.json").write_text(json.dumps({"brazo": a.brazo, "arq": a.arq, **BRAZOS[a.arq], "parametros": red.parametros(), "epocas": a.epocas,
+                                                      "n": a.n, "semilla": a.semilla, "lr": 2e-3, "datos": a.datos}, indent=1) + "\n")
     print(f"{a.brazo}: {red.parametros()} parámetros", flush=True)
     mejor = float("inf"); log = open(destino / "metrics.jsonl", "w")
     for ep in range(1, a.epocas + 1):

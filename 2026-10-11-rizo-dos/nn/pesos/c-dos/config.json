@@ -1,0 +1,17 @@
+{
+ "brazo": "c-dos",
+ "arq": "c-base",
+ "c": [
+  32,
+  32,
+  64,
+  64,
+  32
+ ],
+ "parametros": 83621,
+ "epocas": 8,
+ "n": 16000,
+ "semilla": 1,
+ "lr": 0.002,
+ "datos": "dos"
+}
