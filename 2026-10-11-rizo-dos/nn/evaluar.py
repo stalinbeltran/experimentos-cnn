@@ -276,11 +276,14 @@ def main() -> int:
     fig.tight_layout(); fig.savefig(RES / "4-desplazamientos.png", dpi=100); plt.close(fig)
 
     # 5 · fallos de la mejor
-    mejor = orden[0]; fallos = [(e, r) for e, r, ok in zip(E_ok, R2[mejor], out["B_doses"][mejor]["encontrado"]) if not ok]
+    mejor = max(nombres, key=lambda n: out["B_doses"][n]["encontrados"] - out["B_doses"][n]["de_mas_pc"]); fallos = [(e, r) for e, r, ok in zip(E_ok, R2[mejor], out["B_doses"][mejor]["encontrado"]) if not ok]
     if fallos:
-        fig, axs = plt.subplots(1, len(fallos), figsize=(1.7 * len(fallos) + 1, 2.2), squeeze=False)
+        nc = min(12, len(fallos)); nf = int(np.ceil(len(fallos) / nc))
+        fig, axs = plt.subplots(nf, nc, figsize=(1.5 * nc + 0.5, 1.7 * nf + 0.6), squeeze=False)
         for ax, (e, r) in zip(axs.flat, fallos):
             dibujar(ax, IM[e["i"]], r, e, f"idx {e['i']}")
+        for ax in axs.flat[len(fallos):]:
+            ax.axis("off")
         fig.suptitle(f"rizo-2 · 5 · los doses que la mejor estrategia ({mejor}) NO encuentra: verde = etiqueta, azul = lo que vio", fontsize=9)
         fig.tight_layout(rect=(0, 0, 1, 0.9)); fig.savefig(RES / "5-fallos.png", dpi=100); plt.close(fig)
     for n in nombres:

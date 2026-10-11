@@ -68,7 +68,11 @@ los enlaces directos al PNG (`raw.githubusercontent.com`, porque el visor de Git
 
 ✅ **El 2026-10-11 se empezó por el RIZO SUPERIOR DEL 2** (encargo del dueño de ese día): el experimento `rizo-2`
 (id `rizo-2`) compara cuatro estrategias —rayos abiertos, plantillas, votos de curvatura (la referencia) y
-una CNN entrenada con sintéticos— contra **48 doses etiquetados a mano** por Claude. Lo que salió, en su README.
+una CNN entrenada con sintéticos— contra **48 doses etiquetados a mano** por Claude. **Lo que salió (tres vueltas, 0 $): NINGUNA pasa**. Lo mejor es la CNN genérica, 57 % de los doses con 32 % de falsos
+en 1/4/7 (figura 6 de su README); en sintéticos llega al 94 %. Dos hallazgos que valen para la siguiente: el hueco del
+rizo real es una **rendija de 1 px de radio inscrito** (mediana), y las etiquetas a ojo se van 1–2 px (afinadas por
+encierro). Siguiente vuelta sugerida: entrenar con dígitos reales usando el píxel más encerrado como verdad, y P como
+proponente + CNN como verificador. Detalle y figuras en su README.
 
 **Estrategias para empezar a probar** (de lo medido; las 2, 5 y 8 se prueban en `rizo-2`):
 1. **Exigir CONTINUIDAD**: un lazo es UN trazo que gira, no tinta en sectores — seguir el trazo a lo largo del arco (la

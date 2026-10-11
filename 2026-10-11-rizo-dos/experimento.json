@@ -8,7 +8,7 @@
   "usa_fv": false,
   "gasta": "entrena-local",
   "entrada": "nn/entrenar_local.py",
-  "reporte": null,
+  "reporte": "README.md",
   "plan": "REGLAS.md, instrucciones/02-criterio.md y las etiquetas (instrucciones/etiquetas-2.json), commiteados antes de medir",
   "linaje": "Copia (no importa) el detector de curvas delgado y el de lazos de `lazos` (nn/detector.py) como estrategia de referencia, y la idea de rayos de su sondeo nn/rizos.py, generalizada a rizos abiertos. Lo demás es nuevo."
 }

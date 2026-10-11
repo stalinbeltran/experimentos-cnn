@@ -1,0 +1,43 @@
+{
+ "rejilla": [
+  {
+   "encontrados": 88.7,
+   "negativos_limpios": 0.0,
+   "extra_por_positivo": 16.74,
+   "puntos": 10.85,
+   "s": 0.5
+  },
+  {
+   "encontrados": 87.3,
+   "negativos_limpios": 2.7,
+   "extra_por_positivo": 14.27,
+   "puntos": 16.45,
+   "s": 0.6
+  },
+  {
+   "encontrados": 72.7,
+   "negativos_limpios": 7.3,
+   "extra_por_positivo": 10.55,
+   "puntos": 18.89,
+   "s": 0.7
+  },
+  {
+   "encontrados": 64.0,
+   "negativos_limpios": 16.7,
+   "extra_por_positivo": 6.49,
+   "puntos": 27.35,
+   "s": 0.8
+  }
+ ],
+ "elegida": {
+  "s": 0.8
+ },
+ "mejor": {
+  "encontrados": 64.0,
+  "negativos_limpios": 16.7,
+  "extra_por_positivo": 6.49,
+  "puntos": 27.35,
+  "s": 0.8
+ },
+ "plantillas": 851
+}
