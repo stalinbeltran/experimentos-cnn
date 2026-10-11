@@ -41,7 +41,7 @@ def rizo(rng) -> dict:
     """Un rizo con cola y distractores, y su verdad."""
     while True:
         R, g, cob, ab = rng.uniform(2, 7), int(rng.integers(2, 7)), rng.uniform(0.5, 1.0), rng.uniform(0, 360)
-        if R - g / 2 < 1.25:                                   # sin hueco no hay rizo (los de los 2 reales tienen ≥ 1,5 px)
+        if R - g / 2 < 0.5:                                   # sin hueco no hay rizo; los de los 2 reales son rendijas (radio inscrito mediana 2 px, 10 % ≤ 1)
             continue
         m = R + g / 2 + 1
         cx, cy = rng.uniform(m, 32 - m, 2)

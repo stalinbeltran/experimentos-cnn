@@ -32,7 +32,7 @@ import sinteticos as SN                                             # noqa: E402
 ANG = np.deg2rad(np.arange(36) * 10 + 5); CA, SA = np.cos(ANG), np.sin(ANG)
 REJILLA = {"f": (0.6, 0.7, 0.8, 0.9), "rmax": (6.0, 8.0), "disp": (1.5, 2.5, 4.0)}
 DEFECTO = {"f": 0.7, "rmax": 8.0, "disp": 2.5}
-RADIO_MIN = 1.25          # un hueco de un píxel (una muesca en el trazo) no es un rizo: el radio mediano tiene que pasar de esto
+RADIO_MIN = 0.75          # un hueco de un píxel (una muesca en el trazo) no es un rizo: el radio mediano tiene que pasar de esto
 
 
 def _rayos(x, ys, xs, rmax):

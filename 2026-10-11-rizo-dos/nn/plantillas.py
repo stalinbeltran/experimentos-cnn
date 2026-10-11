@@ -45,7 +45,7 @@ def banco():
     tr, hu, va, meta = [], [], [], []
     for R in RADIOS:
         for g in GROSORES:
-            if R - g / 2 < 1.25:                                # el mismo hueco mínimo que los sintéticos y que R
+            if R - g / 2 < 0.5:                                # el mismo hueco mínimo que los sintéticos y que R
                 continue
             for cob in COBS:
                 for ab in (ABERTURAS if cob < 0.99 else (0,)):

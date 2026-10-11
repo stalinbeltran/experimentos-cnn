@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.." || exit 2
 PY=../.venv/bin/python
 [ -f resultados/cal-rayos.json ] || { echo "== rayos"; $PY nn/rayos.py; }
 [ -f resultados/cal-plantillas.json ] || { echo "== plantillas"; $PY nn/plantillas.py; }
-for b in c-dos; do
+for b in c-dos2; do
   echo "== entrenar $b"; $PY nn/entrenar_local.py "$b" --datos dos --epocas 8 --n 16000
 done
 echo "== FIN $(date -u +%H:%M:%S)"

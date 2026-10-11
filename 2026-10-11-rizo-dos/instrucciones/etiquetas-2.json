@@ -1,55 +1,823 @@
 {
- "_que": "El rizo superior de los 48 primeros 2 de val de uci-optdigits-orig-32px-r20261005, leído a mano por Claude sobre una rejilla de píxeles (2026-10-11), ANTES de correr ningún detector. centro = (x, y) del centro del hueco interior en píxeles (origen arriba-izquierda, centro de píxel en .5); radio = del centro a la mitad del trazo, px; cierre = fracción de vuelta más allá de media (0 = media vuelta, 1 = vuelta entera), a ojo; abertura = hacia dónde se abre, grados (0 = →, 90 = ↓, 135 = abajo-izquierda); ⚠ corregida el 2026-10-11 tras la primera evaluación: se habían escrito 215–230 pensando en y hacia arriba (abajo-izquierda era 220 en esa convención); la dirección física no cambia, el número sí (−90); dudoso = el rizo no está claro (no cuenta en los umbrales, se reporta aparte). Error estimado: ±1 px, ±0,5 radio, ±30°.",
+ "_que": "El rizo superior de los 48 primeros 2 de val de uci-optdigits-orig-32px-r20261005, leído a mano por Claude sobre una rejilla de píxeles (2026-10-11), ANTES de correr ningún detector. centro = (x, y) del centro del hueco interior en píxeles (origen arriba-izquierda, centro de píxel en .5); radio = del centro a la mitad del trazo, px; cierre = fracción de vuelta más allá de media (0 = media vuelta, 1 = vuelta entera), a ojo; abertura = hacia dónde se abre, grados (0 = →, 90 = ↓, 135 = abajo-izquierda); ⚠ corregida el 2026-10-11 tras la primera evaluación: se habían escrito 215–230 pensando en y hacia arriba (abajo-izquierda era 220 en esa convención); la dirección física no cambia, el número sí (−90); dudoso = el rizo no está claro (no cuenta en los umbrales, se reporta aparte). Error estimado: ±1 px, ±0,5 radio, ±30°. ⚠ AFINADAS el 2026-10-11 tras la segunda evaluación: al leer la rejilla el centro se anotó 1–2 px por encima del hueco real (medido: el píxel anotado caía SOBRE tinta en la mitad de los casos). `centro_manual` es lo leído a ojo; `centro` es el píxel de fondo, a ≤ 3 px de aquél (4–5 si no hay fondo tan cerca), más ENCERRADO (mayor fracción de 36 rayos que chocan con tinta antes de 8 px, y a igualdad más lejos de la tinta); `hueco_px` es su distancia a la tinta (radio inscrito) y `encierro` esa fracción. La primera afinación, sólo por distancia a la tinta, se iba al fondo abierto; se vio en la figura 0 y se cambió.",
  "dataset": "uci-optdigits-orig-32px-r20261005",
  "indice": "índice en el .npz (todas las particiones)",
  "etiquetas": [
-  {"i": 2,   "centro": [15.0, 7.0],  "radio": 4.0, "cierre": 0.3, "abertura": 125, "dudoso": false},
-  {"i": 12,  "centro": [13.5, 7.5],  "radio": 3.5, "cierre": 0.4, "abertura": 135, "dudoso": false},
-  {"i": 22,  "centro": [14.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 135, "dudoso": false},
-  {"i": 50,  "centro": [12.5, 7.0],  "radio": 3.5, "cierre": 0.3, "abertura": 125, "dudoso": false},
-  {"i": 51,  "centro": [16.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 54,  "centro": [14.5, 7.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 57,  "centro": [15.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 75,  "centro": [16.0, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 77,  "centro": [15.5, 9.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 84,  "centro": [14.0, 9.0],  "radio": 3.5, "cierre": 0.4, "abertura": 140, "dudoso": false},
-  {"i": 113, "centro": [12.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 115, "centro": [12.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 132, "centro": [13.0, 7.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 142, "centro": [15.0, 8.5],  "radio": 3.5, "cierre": 0.4, "abertura": 125, "dudoso": false},
-  {"i": 152, "centro": [13.0, 6.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 180, "centro": [12.0, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 181, "centro": [13.0, 7.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 184, "centro": [12.5, 9.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 187, "centro": [13.5, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 205, "centro": [13.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 207, "centro": [12.0, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 214, "centro": [14.0, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 241, "centro": [11.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 243, "centro": [11.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 244, "centro": [13.0, 9.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 258, "centro": [13.5, 8.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 268, "centro": [12.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 278, "centro": [12.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 306, "centro": [12.5, 9.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 307, "centro": [13.0, 8.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 310, "centro": [12.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 313, "centro": [12.0, 8.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 331, "centro": [12.5, 8.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 333, "centro": [13.0, 8.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 340, "centro": [13.5, 7.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 369, "centro": [13.0, 8.0],  "radio": 4.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 371, "centro": [13.5, 7.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 372, "centro": [13.0, 8.0],  "radio": 4.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 388, "centro": [13.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 398, "centro": [12.5, 7.0],  "radio": 3.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 408, "centro": [12.5, 8.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 436, "centro": [13.0, 8.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 440, "centro": [12.5, 9.0],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 443, "centro": [13.5, 8.5],  "radio": 4.0, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 461, "centro": [12.5, 12.0], "radio": 2.5, "cierre": 0.2, "abertura": 130, "dudoso": true},
-  {"i": 463, "centro": [13.0, 9.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 470, "centro": [12.0, 7.0],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false},
-  {"i": 501, "centro": [12.0, 7.5],  "radio": 3.5, "cierre": 0.4, "abertura": 130, "dudoso": false}
+  {
+   "i": 2,
+   "centro": [
+    16.5,
+    9.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.3,
+   "abertura": 125,
+   "dudoso": false,
+   "centro_manual": [
+    15.0,
+    7.0
+   ],
+   "hueco_px": 1.41,
+   "encierro": 1.0
+  },
+  {
+   "i": 12,
+   "centro": [
+    13.5,
+    10.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 135,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    7.5
+   ],
+   "hueco_px": 2.24,
+   "encierro": 0.89
+  },
+  {
+   "i": 22,
+   "centro": [
+    13.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 135,
+   "dudoso": false,
+   "centro_manual": [
+    14.0,
+    7.0
+   ],
+   "hueco_px": 2.24,
+   "encierro": 0.89
+  },
+  {
+   "i": 50,
+   "centro": [
+    13.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.3,
+   "abertura": 125,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 51,
+   "centro": [
+    18.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    16.0,
+    7.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 54,
+   "centro": [
+    16.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    14.5,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 57,
+   "centro": [
+    16.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    15.0,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 75,
+   "centro": [
+    17.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    16.0,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 77,
+   "centro": [
+    14.5,
+    6.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    15.5,
+    9.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.56
+  },
+  {
+   "i": 84,
+   "centro": [
+    11.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 140,
+   "dudoso": false,
+   "centro_manual": [
+    14.0,
+    9.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 113,
+   "centro": [
+    10.5,
+    5.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.58
+  },
+  {
+   "i": 115,
+   "centro": [
+    11.5,
+    4.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.56
+  },
+  {
+   "i": 132,
+   "centro": [
+    12.5,
+    7.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    7.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 142,
+   "centro": [
+    12.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 125,
+   "dudoso": false,
+   "centro_manual": [
+    15.0,
+    8.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.81
+  },
+  {
+   "i": 152,
+   "centro": [
+    11.5,
+    7.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    6.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.86
+  },
+  {
+   "i": 180,
+   "centro": [
+    14.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 181,
+   "centro": [
+    14.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    7.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.78
+  },
+  {
+   "i": 184,
+   "centro": [
+    11.5,
+    11.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    9.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.83
+  },
+  {
+   "i": 187,
+   "centro": [
+    12.5,
+    10.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 205,
+   "centro": [
+    11.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.86
+  },
+  {
+   "i": 207,
+   "centro": [
+    14.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.92
+  },
+  {
+   "i": 214,
+   "centro": [
+    12.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    14.0,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 241,
+   "centro": [
+    9.5,
+    10.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    11.0,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.86
+  },
+  {
+   "i": 243,
+   "centro": [
+    11.5,
+    11.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    11.5,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.92
+  },
+  {
+   "i": 244,
+   "centro": [
+    13.5,
+    10.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    9.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 258,
+   "centro": [
+    11.5,
+    10.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    8.5
+   ],
+   "hueco_px": 2.83,
+   "encierro": 0.94
+  },
+  {
+   "i": 268,
+   "centro": [
+    10.5,
+    9.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 278,
+   "centro": [
+    11.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 306,
+   "centro": [
+    11.5,
+    7.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    9.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.97
+  },
+  {
+   "i": 307,
+   "centro": [
+    14.5,
+    7.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    8.5
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.92
+  },
+  {
+   "i": 310,
+   "centro": [
+    13.5,
+    7.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    8.0
+   ],
+   "hueco_px": 1.41,
+   "encierro": 0.92
+  },
+  {
+   "i": 313,
+   "centro": [
+    10.5,
+    10.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    8.5
+   ],
+   "hueco_px": 1.41,
+   "encierro": 0.97
+  },
+  {
+   "i": 331,
+   "centro": [
+    13.5,
+    9.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    8.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.89
+  },
+  {
+   "i": 333,
+   "centro": [
+    10.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    8.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 340,
+   "centro": [
+    14.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    7.5
+   ],
+   "hueco_px": 2.83,
+   "encierro": 0.86
+  },
+  {
+   "i": 369,
+   "centro": [
+    13.5,
+    8.5
+   ],
+   "radio": 4.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    8.0
+   ],
+   "hueco_px": 2.83,
+   "encierro": 0.86
+  },
+  {
+   "i": 371,
+   "centro": [
+    13.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    7.5
+   ],
+   "hueco_px": 2.83,
+   "encierro": 0.83
+  },
+  {
+   "i": 372,
+   "centro": [
+    12.5,
+    8.5
+   ],
+   "radio": 4.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    8.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.86
+  },
+  {
+   "i": 388,
+   "centro": [
+    11.5,
+    8.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 398,
+   "centro": [
+    13.5,
+    9.5
+   ],
+   "radio": 3.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    7.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 408,
+   "centro": [
+    10.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    8.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 436,
+   "centro": [
+    13.5,
+    7.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    8.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 440,
+   "centro": [
+    12.5,
+    8.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.5,
+    9.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.86
+  },
+  {
+   "i": 443,
+   "centro": [
+    11.5,
+    9.5
+   ],
+   "radio": 4.0,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.5,
+    8.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 1.0
+  },
+  {
+   "i": 461,
+   "centro": [
+    13.5,
+    11.5
+   ],
+   "radio": 2.5,
+   "cierre": 0.2,
+   "abertura": 130,
+   "dudoso": true,
+   "centro_manual": [
+    12.5,
+    12.0
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.83
+  },
+  {
+   "i": 463,
+   "centro": [
+    12.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    13.0,
+    9.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.92
+  },
+  {
+   "i": 470,
+   "centro": [
+    12.5,
+    9.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    7.0
+   ],
+   "hueco_px": 2.0,
+   "encierro": 0.94
+  },
+  {
+   "i": 501,
+   "centro": [
+    12.5,
+    6.5
+   ],
+   "radio": 3.5,
+   "cierre": 0.4,
+   "abertura": 130,
+   "dudoso": false,
+   "centro_manual": [
+    12.0,
+    7.5
+   ],
+   "hueco_px": 1.0,
+   "encierro": 0.92
+  }
  ]
 }

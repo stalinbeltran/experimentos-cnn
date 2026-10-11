@@ -26,13 +26,13 @@ def _poli(puntos, g) -> np.ndarray:
 def dos(rng) -> dict:
     """Un 2: cabeza (arco) + diagonal + base; verdad = la cabeza."""
     while True:
-        g = int(rng.integers(3, 7)); R = rng.uniform(2.8, 5.0)
-        if R - g / 2 < 1.25:
+        g = int(rng.integers(3, 8)); R = rng.uniform(2.5, 5.0)
+        if R - g / 2 < 0.5:                                    # tercera vuelta: los huecos reales son RENDIJAS (radio inscrito mediana 2 px, 25 % ≤ 1,3)
             continue
         cx, cy = rng.uniform(9, 18), rng.uniform(5.5, 11)
         cob = rng.uniform(0.5, 0.8); ab = rng.uniform(100, 160)
         x = arco(cx, cy, R, cob, ab, g)
-        hueco = np.hypot(_XX - cx, _YY - cy) < max(R - g / 2 - 0.5, 0.5)
+        hueco = np.hypot(_XX - cx, _YY - cy) < max(R - g / 2 - 0.3, 0.5)
         # extremo derecho del arco (el de menor ángulo hacia la derecha): ab − (1−cob)·180 … elegir el que queda más a la derecha
         e1, e2 = ab - (1 - cob) * 180, ab + (1 - cob) * 180
         pts = [(cx + R * np.cos(np.deg2rad(e)), cy + R * np.sin(np.deg2rad(e))) for e in (e1, e2)]
@@ -52,8 +52,8 @@ def dos(rng) -> dict:
 def tres(rng) -> dict:
     """Un 3: su cabeza también es un rizo superior (positivo), con una panza debajo."""
     while True:
-        g = int(rng.integers(3, 7)); R = rng.uniform(2.8, 4.5)
-        if R - g / 2 < 1.25:
+        g = int(rng.integers(3, 8)); R = rng.uniform(2.5, 4.5)
+        if R - g / 2 < 0.5:
             continue
         cx, cy = rng.uniform(11, 19), rng.uniform(5.5, 9.5); cob = rng.uniform(0.5, 0.7); ab = rng.uniform(140, 200)
         x = arco(cx, cy, R, cob, ab, g)
