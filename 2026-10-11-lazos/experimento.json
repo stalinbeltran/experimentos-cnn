@@ -1,0 +1,14 @@
+{
+  "id": "lazos",
+  "titulo": "Detector de LAZOS sobre el detector de curvas delgado (Gabor par + giro): grado de cierre 0-1, centro y orientacion hacia la abertura; evaluado en digitos",
+  "pregunta": "¿Puede un detector de lazos construido sobre el detector de curvas delgado (cada píxel curvo vota por su centro de curvatura) encontrar los lazos de los dígitos con su centro, su grado de cierre (0 = media vuelta, abierto; 1 = vuelta completa) y la dirección de su abertura?",
+  "creado": "2026-10-11",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": "nn/lazos.py",
+  "reporte": null,
+  "plan": "REGLAS.md e instrucciones/02-criterio.md, commiteados antes de medir",
+  "linaje": "Usa el detector de curvas DELGADO del boceto docs/bocetos/2026-10-09-curvas-gabor (delgadas.py, con TAU 0,6 de tau_comparar.py), COPIADO en nn/detector.py. No importa nada del boceto ni de otro experimento."
+}
