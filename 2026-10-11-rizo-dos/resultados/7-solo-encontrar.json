@@ -1,0 +1,396 @@
+{
+ "R (F; rmax 8, sin exigir anillo)": [
+  {
+   "umbral": 0.5,
+   "encontrados": 83.0,
+   "centro_px": 0.0,
+   "radio_px": 0.75,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 6.53
+  },
+  {
+   "umbral": 0.6,
+   "encontrados": 78.7,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 76.6,
+   "candidatos_arriba_por_dos": 2.17
+  },
+  {
+   "umbral": 0.7,
+   "encontrados": 78.7,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 44.7,
+   "candidatos_arriba_por_dos": 1.43
+  },
+  {
+   "umbral": 0.8,
+   "encontrados": 78.7,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 31.9,
+   "candidatos_arriba_por_dos": 1.17
+  },
+  {
+   "umbral": 0.9,
+   "encontrados": 68.1,
+   "centro_px": 0.0,
+   "radio_px": 0.75,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 38.3,
+   "candidatos_arriba_por_dos": 1.32
+  }
+ ],
+ "R (F; calibrado, disp 4)": [
+  {
+   "umbral": 0.5,
+   "encontrados": 83.0,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 27.5,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 7.81
+  },
+  {
+   "umbral": 0.6,
+   "encontrados": 78.7,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 22.5,
+   "de_mas_pc": 87.2,
+   "candidatos_arriba_por_dos": 2.68
+  },
+  {
+   "umbral": 0.7,
+   "encontrados": 78.7,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 22.5,
+   "de_mas_pc": 59.6,
+   "candidatos_arriba_por_dos": 1.62
+  },
+  {
+   "umbral": 0.8,
+   "encontrados": 76.6,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 25.0,
+   "de_mas_pc": 31.9,
+   "candidatos_arriba_por_dos": 1.13
+  },
+  {
+   "umbral": 0.9,
+   "encontrados": 51.1,
+   "centro_px": 0.0,
+   "radio_px": 0.88,
+   "abertura_deg": 30.0,
+   "de_mas_pc": 25.5,
+   "candidatos_arriba_por_dos": 0.79
+  }
+ ],
+ "P (S)": [
+  {
+   "umbral": 0.6,
+   "encontrados": 91.5,
+   "centro_px": 1.41,
+   "radio_px": 1.0,
+   "abertura_deg": 40.0,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 13.74
+  },
+  {
+   "umbral": 0.7,
+   "encontrados": 91.5,
+   "centro_px": 1.41,
+   "radio_px": 1.0,
+   "abertura_deg": 40.0,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 12.15
+  },
+  {
+   "umbral": 0.8,
+   "encontrados": 91.5,
+   "centro_px": 1.41,
+   "radio_px": 1.0,
+   "abertura_deg": 40.0,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 9.0
+  },
+  {
+   "umbral": 0.85,
+   "encontrados": 87.2,
+   "centro_px": 1.41,
+   "radio_px": 1.0,
+   "abertura_deg": 40.0,
+   "de_mas_pc": 100.0,
+   "candidatos_arriba_por_dos": 6.23
+  },
+  {
+   "umbral": 0.9,
+   "encontrados": 74.5,
+   "centro_px": 1.41,
+   "radio_px": 1.0,
+   "abertura_deg": 40.0,
+   "de_mas_pc": 89.4,
+   "candidatos_arriba_por_dos": 3.51
+  }
+ ],
+ "V (V_min)": [
+  {
+   "umbral": 1,
+   "encontrados": 36.2,
+   "centro_px": 1.0,
+   "radio_px": 2.0,
+   "abertura_deg": 22.5,
+   "de_mas_pc": 55.3,
+   "candidatos_arriba_por_dos": 1.02
+  },
+  {
+   "umbral": 2,
+   "encontrados": 34.0,
+   "centro_px": 1.0,
+   "radio_px": 2.12,
+   "abertura_deg": 20.0,
+   "de_mas_pc": 46.8,
+   "candidatos_arriba_por_dos": 0.87
+  },
+  {
+   "umbral": 3,
+   "encontrados": 34.0,
+   "centro_px": 1.0,
+   "radio_px": 2.12,
+   "abertura_deg": 20.0,
+   "de_mas_pc": 40.4,
+   "candidatos_arriba_por_dos": 0.79
+  }
+ ],
+ "C:c-base (p)": [
+  {
+   "umbral": 0.02,
+   "encontrados": 74.5,
+   "centro_px": 1.41,
+   "radio_px": 1.21,
+   "abertura_deg": 17.18,
+   "de_mas_pc": 38.3,
+   "candidatos_arriba_por_dos": 1.21
+  },
+  {
+   "umbral": 0.05,
+   "encontrados": 74.5,
+   "centro_px": 1.41,
+   "radio_px": 1.21,
+   "abertura_deg": 17.18,
+   "de_mas_pc": 27.7,
+   "candidatos_arriba_por_dos": 1.04
+  },
+  {
+   "umbral": 0.1,
+   "encontrados": 74.5,
+   "centro_px": 1.41,
+   "radio_px": 1.21,
+   "abertura_deg": 17.18,
+   "de_mas_pc": 25.5,
+   "candidatos_arriba_por_dos": 1.0
+  },
+  {
+   "umbral": 0.2,
+   "encontrados": 74.5,
+   "centro_px": 1.41,
+   "radio_px": 1.21,
+   "abertura_deg": 17.18,
+   "de_mas_pc": 23.4,
+   "candidatos_arriba_por_dos": 0.98
+  },
+  {
+   "umbral": 0.3,
+   "encontrados": 72.3,
+   "centro_px": 1.41,
+   "radio_px": 1.2,
+   "abertura_deg": 17.22,
+   "de_mas_pc": 21.3,
+   "candidatos_arriba_por_dos": 0.94
+  },
+  {
+   "umbral": 0.5,
+   "encontrados": 66.0,
+   "centro_px": 1.41,
+   "radio_px": 1.21,
+   "abertura_deg": 17.18,
+   "de_mas_pc": 19.1,
+   "candidatos_arriba_por_dos": 0.85
+  }
+ ],
+ "C:c-ancha (p)": [
+  {
+   "umbral": 0.02,
+   "encontrados": 68.1,
+   "centro_px": 1.21,
+   "radio_px": 1.05,
+   "abertura_deg": 15.97,
+   "de_mas_pc": 38.3,
+   "candidatos_arriba_por_dos": 1.11
+  },
+  {
+   "umbral": 0.05,
+   "encontrados": 68.1,
+   "centro_px": 1.21,
+   "radio_px": 1.05,
+   "abertura_deg": 15.97,
+   "de_mas_pc": 31.9,
+   "candidatos_arriba_por_dos": 1.0
+  },
+  {
+   "umbral": 0.1,
+   "encontrados": 68.1,
+   "centro_px": 1.21,
+   "radio_px": 1.05,
+   "abertura_deg": 15.97,
+   "de_mas_pc": 29.8,
+   "candidatos_arriba_por_dos": 0.98
+  },
+  {
+   "umbral": 0.2,
+   "encontrados": 68.1,
+   "centro_px": 1.21,
+   "radio_px": 1.05,
+   "abertura_deg": 15.97,
+   "de_mas_pc": 27.7,
+   "candidatos_arriba_por_dos": 0.96
+  },
+  {
+   "umbral": 0.3,
+   "encontrados": 66.0,
+   "centro_px": 1.41,
+   "radio_px": 1.05,
+   "abertura_deg": 15.48,
+   "de_mas_pc": 27.7,
+   "candidatos_arriba_por_dos": 0.94
+  },
+  {
+   "umbral": 0.5,
+   "encontrados": 48.9,
+   "centro_px": 1.41,
+   "radio_px": 1.05,
+   "abertura_deg": 18.16,
+   "de_mas_pc": 21.3,
+   "candidatos_arriba_por_dos": 0.7
+  }
+ ],
+ "C:c-dos (p)": [
+  {
+   "umbral": 0.02,
+   "encontrados": 61.7,
+   "centro_px": 1.0,
+   "radio_px": 1.05,
+   "abertura_deg": 33.33,
+   "de_mas_pc": 27.7,
+   "candidatos_arriba_por_dos": 0.89
+  },
+  {
+   "umbral": 0.05,
+   "encontrados": 57.4,
+   "centro_px": 1.0,
+   "radio_px": 1.05,
+   "abertura_deg": 33.62,
+   "de_mas_pc": 27.7,
+   "candidatos_arriba_por_dos": 0.85
+  },
+  {
+   "umbral": 0.1,
+   "encontrados": 53.2,
+   "centro_px": 1.0,
+   "radio_px": 1.05,
+   "abertura_deg": 33.62,
+   "de_mas_pc": 23.4,
+   "candidatos_arriba_por_dos": 0.77
+  },
+  {
+   "umbral": 0.2,
+   "encontrados": 42.6,
+   "centro_px": 1.0,
+   "radio_px": 1.02,
+   "abertura_deg": 34.44,
+   "de_mas_pc": 21.3,
+   "candidatos_arriba_por_dos": 0.64
+  },
+  {
+   "umbral": 0.3,
+   "encontrados": 38.3,
+   "centro_px": 1.0,
+   "radio_px": 1.05,
+   "abertura_deg": 34.44,
+   "de_mas_pc": 17.0,
+   "candidatos_arriba_por_dos": 0.55
+  },
+  {
+   "umbral": 0.5,
+   "encontrados": 8.5,
+   "centro_px": 2.0,
+   "radio_px": 0.93,
+   "abertura_deg": 36.02,
+   "de_mas_pc": 8.5,
+   "candidatos_arriba_por_dos": 0.17
+  }
+ ],
+ "C:c-dos2 (p)": [
+  {
+   "umbral": 0.02,
+   "encontrados": 61.7,
+   "centro_px": 1.0,
+   "radio_px": 1.01,
+   "abertura_deg": 31.2,
+   "de_mas_pc": 25.5,
+   "candidatos_arriba_por_dos": 0.87
+  },
+  {
+   "umbral": 0.05,
+   "encontrados": 57.4,
+   "centro_px": 1.0,
+   "radio_px": 0.99,
+   "abertura_deg": 31.44,
+   "de_mas_pc": 23.4,
+   "candidatos_arriba_por_dos": 0.81
+  },
+  {
+   "umbral": 0.1,
+   "encontrados": 55.3,
+   "centro_px": 1.0,
+   "radio_px": 1.0,
+   "abertura_deg": 31.54,
+   "de_mas_pc": 23.4,
+   "candidatos_arriba_por_dos": 0.79
+  },
+  {
+   "umbral": 0.2,
+   "encontrados": 51.1,
+   "centro_px": 1.0,
+   "radio_px": 0.96,
+   "abertura_deg": 32.89,
+   "de_mas_pc": 21.3,
+   "candidatos_arriba_por_dos": 0.72
+  },
+  {
+   "umbral": 0.3,
+   "encontrados": 42.6,
+   "centro_px": 1.0,
+   "radio_px": 0.91,
+   "abertura_deg": 32.8,
+   "de_mas_pc": 21.3,
+   "candidatos_arriba_por_dos": 0.64
+  },
+  {
+   "umbral": 0.5,
+   "encontrados": 27.7,
+   "centro_px": 1.0,
+   "radio_px": 0.8,
+   "abertura_deg": 31.44,
+   "de_mas_pc": 17.0,
+   "candidatos_arriba_por_dos": 0.45
+  }
+ ]
+}

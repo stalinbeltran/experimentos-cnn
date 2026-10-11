@@ -95,3 +95,34 @@ por poco», dispara en todo (S 0,8 → 100 % de falsos; S 0,95 → 21 % encontra
 Los brazos `c-ancha` (genérico, cortado en la época 5 al ver la vuelta 1) y `c-dos` (compositor, huecos ≥ 1,25) se
 conservan con sus pesos. `resultados/vuelta2/` guarda `metricas.json` y las calibraciones de la vuelta 2 (etiquetas
 sin afinar, huecos ≥ 1,25); la vuelta 1 está en el commit `2a75a7e`.
+
+## Reevaluación con el criterio del dueño (2026-10-11, tarde): SÓLO cuenta encontrar el rizo
+
+> «No importa, para este experimento, diferenciar los 2 de los otros números. Lo importante es hallar el mayor
+> porcentaje posible de esos rizos que hallamos en muchos 2. Pero también se van a hallar en otros números.»
+
+Con eso, los umbrales 2, 11 y 12 del criterio (falsos y rizos de más) dejan de decidir; cada estrategia se lleva al
+umbral que **más rizos etiquetados encuentra** (≤ 2,5 px), y se reporta cuántos candidatos pone por 2 para que se vea
+el precio. `nn/evaluar.py` no cambia; esto es `resultados/7-solo-encontrar.{png,json}` (barrido hecho a mano, mismos
+47 doses, mismas funciones de medida).
+
+![7 · sólo encontrar](resultados/7-solo-encontrar.png)
+
+| estrategia (umbral) | **encontrados** | centro px | radio px | abertura ° | candidatos arriba por 2 |
+|---|---:|---:|---:|---:|---:|
+| **P plantillas (S 0,8)** | **91,5 %** | 1,41 | 1,0 | 40 | 9,0 |
+| R rayos (F 0,5) | 83,0 % | 0,0 | 0,75 | 30 | 6,5 |
+| C:c-base (p 0,2) | 74,5 % | 1,41 | 1,21 | 17 | 1,0 |
+| C:c-ancha (p 0,2) | 68,1 % | 1,21 | 1,05 | 16 | 1,0 |
+| C:c-dos2 / c-dos (p 0,02) | 61,7 % | 1,0 | 1,0 | 31–33 | 0,9 |
+| V votos (V_min 1) | 36,2 % | 1,0 | 2,0 | 22 | 1,0 |
+
+**Con este criterio ganan las plantillas (91,5 %), y los rayos pasan el 85 % por poco no (83 %).** Pero el precio está
+en la última columna: P y R lo consiguen diciendo que hay **6–9 rizos por dígito** en la mitad de arriba (uno de ellos
+cae donde está el de verdad). La CNN sigue dando **un** candidato por 2 y acierta 3 de cada 4. Son dos cosas distintas:
+P/R **localizan** (el de verdad está entre sus candidatos), la CNN **decide**. Por eso la sugerencia 2 de arriba —P o R
+proponen, la CNN puntúa— sigue siendo la que junta las dos virtudes, y con este criterio es la primera que probaría.
+
+Dos matices medidos: el **centro** de R es exacto (0 px: el píxel más encerrado por rayos es la misma medida con la que
+se afinaron las etiquetas, así que esto es en parte circular y hay que decirlo); y la abertura de P/R (30–40°) es peor
+que la de la CNN (16–17°).
