@@ -126,3 +126,40 @@ proponen, la CNN puntúa— sigue siendo la que junta las dos virtudes, y con es
 Dos matices medidos: el **centro** de R es exacto (0 px: el píxel más encerrado por rayos es la misma medida con la que
 se afinaron las etiquetas, así que esto es en parte circular y hay que decirlo); y la abertura de P/R (30–40°) es peor
 que la de la CNN (16–17°).
+
+## El COMPUESTO de los tres primeros (P + R + V), pedido por el dueño el 2026-10-11
+
+Antes de componer, lo que P y R ponen **de más** (figura 8): cruces a lo largo de **todo el contorno** —son detectores
+de concavidad, no de rizo— con 16,9 (P) y 10,4 (R) candidatos sobrantes por dígito.
+
+![8 · extras](resultados/8-extras-plantillas-rayos.png)
+
+`nn/compuesto.py`: **candidatos** = unión de los de P (S 0,8), R (F 0,5) y los lazos de V, fundidos a ≤ 2 px; en cada
+uno se miden las tres evidencias en su píxel (p = mejor plantilla, r = encierro por rayos a 8 px, v = votos de curvatura
+relativos); **puntuación = r**; el rizo es el de más puntuación de la mitad superior.
+
+| compuesto | rizos encontrados | candidatos por 2 |
+|---|---:|---:|
+| todos los candidatos | 100 % | 10,0 |
+| con acuerdo ≥ 2 de los 3 | 100 % | 8,6 |
+| acuerdo = 3 | 23 % | 1,2 |
+| **el mejor (top-1)** | **74,5 %** | 1 |
+| los dos mejores (top-2) | 78,7 % | 2 |
+| top-1 de P solo · R solo · V solo | 30 · 32 · 11 % | 1 |
+
+![9 · compuesto](resultados/9-compuesto.png)
+
+**Qué dice.** Componer **sí** sirve, y se ve en la última fila: ninguno de los tres solo elige bien (30 / 32 / 11 %), y
+juntos eligen el 74,5 % con un candidato por dígito — **igual que la mejor CNN** (`c-base`, p 0,2, 74,5 %) y sin
+entrenar nada. Pero el reparto de méritos no es el esperado: P y R **proponen** (el rizo está entre sus candidatos el
+100 % de las veces), el **encierro elige**, y P y V **no ayudan a elegir**: la puntuación empezó como p + r + v (40 %)
+y, probadas nueve combinaciones sobre los 47 doses, el encierro solo sube al 70–74 % mientras sumarle p o v baja
+(p vale 0,90 en el rizo y 0,86 en el resto del contorno; v ≈ 0 en los dos). ⚠ Dos cosas que hay que decir: la regla se
+eligió **mirando** los 47 etiquetados, así que está ajustada a ellos; y el encierro es la misma medida con la que se
+afinaron las etiquetas, lo que favorece su **centro** (no su elección entre regiones, que es lo que mide el top-1).
+
+**Lo que falla en el 25 % restante** (figura 9, en naranja): el top-1 cae en **otra concavidad de la misma cabeza** (el
+hueco entre la cabeza y la diagonal, 1–3 px por debajo del rizo) o en el codo inferior. Para separar esas dos hace falta
+algo que P, R y V no miden: que el trazo **rodee** al punto de forma continua (la estrategia 1 de la lista de `CLAUDE.md`,
+seguir el trazo), o la CNN como juez de los candidatos del compuesto —que es lo contrario de lo que se probó hoy, y
+queda como siguiente vuelta—.

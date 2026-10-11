@@ -1,0 +1,51 @@
+{
+ "umbrales": {
+  "p": 0.8,
+  "r": 0.5,
+  "v": 0.25
+ },
+ "doses": {
+  "todos": {
+   "encontrados_pc": 100.0,
+   "candidatos_arriba_por_dos": 10.11
+  },
+  "acuerdo>=2": {
+   "encontrados_pc": 97.9,
+   "candidatos_arriba_por_dos": 8.62
+  },
+  "acuerdo=3": {
+   "encontrados_pc": 23.4,
+   "candidatos_arriba_por_dos": 1.19
+  },
+  "top-1": {
+   "encontrados_pc": 74.5,
+   "candidatos_arriba_por_dos": 1.0
+  },
+  "top-2": {
+   "encontrados_pc": 78.7,
+   "candidatos_arriba_por_dos": 2.0
+  },
+  "top-1 solo P": {
+   "encontrados_pc": 25.5
+  },
+  "top-1 solo R": {
+   "encontrados_pc": 46.8
+  },
+  "top-1 solo V": {
+   "encontrados_pc": 6.4
+  }
+ },
+ "clases_acuerdo2_arriba_pc": {
+  "0": 100.0,
+  "1": 100.0,
+  "2": 100.0,
+  "3": 100.0,
+  "4": 100.0,
+  "5": 100.0,
+  "6": 100.0,
+  "7": 100.0,
+  "8": 100.0,
+  "9": 100.0
+ },
+ "ms_por_digito": 225.7
+}
