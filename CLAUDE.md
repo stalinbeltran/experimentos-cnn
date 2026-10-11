@@ -44,6 +44,20 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
    ⚠ Es una autorización para **acelerar**, no para gastar: una red de 32×32 entrena en minutos en el dev y alquilar no
    la acelera. Lo que gaste lleva su libro commiteado al alquilar y su freno (`/use exp-vast`), como siempre.
 
+## ✅ El mejor detector de CURVAS CERRADAS hasta ahora (dueño, 2026-10-11): el compuesto de `rizo-2`
+
+> «El resultado está MUY BIEN. Anota que este detector es el mejor hasta ahora para detectar curvas cerradas (nota que
+> al final, el radio no importa).» — el dueño, 2026-10-11
+
+Es `2026-10-11-rizo-dos/nn/compuesto2.py` (id `rizo-2`): **proponen** las plantillas RODEADAS (cobertura ≥ 0,85; las
+de media vuelta casan con cualquier curva) y los rayos (F 0,5); **elige** el ENCIERRO (fracción de 36 rayos que chocan
+con tinta antes de 8 px), sin entrenar nada. En los 47 doses etiquetados a mano acierta el rizo el 78,7 % con un
+candidato por dígito (89 % con dos), y 6 de los 10 fallos son la misma rendija con el centro en el fondo en vez de en la
+boca. **El radio no importa**: lo que decide es que el trazo rodee al punto, no cuánto mide el hueco (el banco «con el
+radio de los 2» no ayudó; el banco rodeado sí). ⚠ Lo que sí falla: en 4 de 47 elige otra concavidad de la misma cabeza
+(el hueco cabeza–diagonal), y a veces un punto arriba y fuera de lo que un humano llamaría curva cerrada; separar eso
+pide seguir el trazo, que ninguno de los tres mide. Detalle y figuras en su README.
+
 ## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
 
 > «Necesito que me ayudes observando los dígitos y aplicando distintas estrategias hasta hallar unas que nos permitan
