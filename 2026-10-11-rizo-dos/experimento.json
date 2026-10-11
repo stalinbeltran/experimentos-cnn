@@ -1,0 +1,14 @@
+{
+  "id": "rizo-2",
+  "titulo": "El RIZO SUPERIOR del 2: cuatro estrategias para detectarlo (rayos, plantillas, votos de curvatura, CNN entrenada con sinteticos), medidas con la misma verdad (48 doses etiquetados a mano) y en todas las clases",
+  "pregunta": "¿Cuál de cuatro estrategias detecta mejor el rizo superior de los 2 (su centro, radio, grado de cierre y abertura) en los dígitos de UCI de 32 px: sondeo por rayos, correlación con plantillas de rizo, votos por centro de curvatura, o una CNN pequeña entrenada sólo con rizos sintéticos?",
+  "creado": "2026-10-11",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": null,
+  "plan": "REGLAS.md, instrucciones/02-criterio.md y las etiquetas (instrucciones/etiquetas-2.json), commiteados antes de medir",
+  "linaje": "Copia (no importa) el detector de curvas delgado y el de lazos de `lazos` (nn/detector.py) como estrategia de referencia, y la idea de rayos de su sondeo nn/rizos.py, generalizada a rizos abiertos. Lo demás es nuevo."
+}

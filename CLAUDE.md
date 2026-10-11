@@ -22,6 +22,28 @@ lo que haga falta a su `nn/` y se deja `foveal-vision/src/fv/` intacto. Es instr
 dueño del 2026-09-03: *«estos son experimentos… si hay que hacer cambios al código tendremos
 que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas)»*.
 
+## ⚠ Reglas del dueño (2026-10-11): los resultados se ENSEÑAN en imágenes, y un detector se construye como haga falta
+
+> «Anota para claude que siempre me muestren los resultados en imágenes (raw de github, para evitar problemas de ayer).
+> Anota también que un detector podría emplear un compositor si acaso hace falta, o podría crearse empleando
+> entrenamiento de cnn. Lo importante es hallar la mejor solución. Tienes autorización para realizar los entrenamientos
+> y pruebas sin mi supervisión, y puedes gastar hasta $10 en entrenamientos paralelos con tal de acelerar la obtención
+> de resultados.» — el dueño, 2026-10-11
+
+1. **Todo resultado se enseña con una IMAGEN**, y el enlace es el del fichero crudo:
+   `https://raw.githubusercontent.com/stalinbeltran/experimentos-cnn/<hash>/<ruta>.png`. El visor de GitHub
+   (`github.com/…/blob/…`) le falló al dueño el 2026-10-10 desde el móvil; el `raw` abre el PNG a secas. Con `<hash>`
+   del commit, no `main`: un enlace a `main` cambia de contenido cuando cambia el fichero. La figura tiene que estar
+   **commiteada y empujada** antes de dar el enlace.
+2. **Un detector de features se construye con lo que mejor funcione**: puede ser un **compositor** (juntar detectores
+   más pequeños —curvas, rectas, rayos— con reglas) o una **CNN entrenada** (con sintéticos de verdad conocida o con
+   dígitos), o las dos cosas comparadas. No hay preferencia a priori: se mide cada estrategia con la misma verdad y los
+   mismos números y gana la que pase más umbrales. El primero que lo aplica es `rizo-2` (`2026-10-11-rizo-dos`).
+3. **Autorización para entrenar y probar sin supervisión, con tope de gasto: 10 $ por encargo** en entrenamientos
+   paralelos (Vast, `nn/vast.sh` con el modo `trabajo` del lanzador) si eso acorta el tiempo hasta tener resultados.
+   ⚠ Es una autorización para **acelerar**, no para gastar: una red de 32×32 entrena en minutos en el dev y alquilar no
+   la acelera. Lo que gaste lleva su libro commiteado al alquilar y su freno (`/use exp-vast`), como siempre.
+
 ## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
 
 > «Necesito que me ayudes observando los dígitos y aplicando distintas estrategias hasta hallar unas que nos permitan
@@ -44,7 +66,11 @@ los enlaces directos al PNG (`raw.githubusercontent.com`, porque el visor de Git
   lazo**. Y el **radio mínimo que ve es ≈ 5 px** (giro a ±4 px): los rizos de los 2 se pierden; un **sondeo por rayos** los
   recoge (`nn/rizos.py`: 11/12 huecos de los 2, 95 % de los 8).
 
-**Estrategias para empezar a probar** (de lo medido; ninguna probada aún):
+✅ **El 2026-10-11 se empezó por el RIZO SUPERIOR DEL 2** (encargo del dueño de ese día): el experimento `rizo-2`
+(`2026-10-11-rizo-dos/`) compara cuatro estrategias —rayos abiertos, plantillas, votos de curvatura (la referencia) y
+una CNN entrenada con sintéticos— contra **48 doses etiquetados a mano** por Claude. Lo que salió, en su README.
+
+**Estrategias para empezar a probar** (de lo medido; las 2, 5 y 8 se prueban en `rizo-2`):
 1. **Exigir CONTINUIDAD**: un lazo es UN trazo que gira, no tinta en sectores — seguir el trazo a lo largo del arco (la
    cadena de trozos curvos con el mismo centro), en vez de contar sectores con cualquier tinta.
 2. **Votos relativos**: el pico debe juntar una fracción de los píxeles curvos (p. ej. ≥ 30 %), no ≥ 3 votos absolutos.
