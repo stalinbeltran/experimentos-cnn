@@ -239,3 +239,34 @@ candidato), `13-digitos-cerradas.png` y `13b-*` (lo que el detector ve en tres d
 
 Lo que sí queda: el detector de curvas cerradas sirve como **feature para localizar** (el 78,7 % de los rizos del 2, y
 los lazos del 6, 8, 9 y 0 en la figura 13b), no para **clasificar** dígitos por encima de lo que ya hacen las curvas.
+
+## Más FONDO en el centro (`nn/cerradas_hueco.py`, pedido por el dueño el 2026-10-11)
+
+Al candidato del compuesto se le añade **h = el radio inscrito del hueco** (la mayor distancia a la tinta a ≤ 2 px del
+candidato; el candidato se MUEVE a ese píxel, el centro del hueco) y se exige h ≥ H. El encierro se mide ahí, con
+rayos de 8 px (como hasta ahora) o de **14 px**. Medido en los 47 doses (top-1) y dibujado sobre los 119 dígitos que
+falla el compositor (`14-hueco-*.png`, `14-hueco.json`):
+
+| h ≥ | rayos | doses: top-1 | doses: encontrados | candidatos por dígito (en los 119) |
+|---:|---:|---:|---:|---:|
+| 0 (actual) | 8 | **80,9 %** | 89,4 % | 2,5 |
+| 1,5 | 8 | 55,3 % | 59,6 % | 1,5 |
+| 2,5 | 8 | 21,3 % | 21,3 % | 0,5 — y pierde los 0 |
+| 0 | 14 | 78,7 % | 85,1 % | 3,1 |
+| 1,5 | 14 | 53,2 % | 55,3 % | 2,2 |
+| **2,5** | **14** | 21,3 % | 21,3 % | **0,7 — y sólo en lazos de verdad** |
+
+⚠ Primera versión fallida, que hay que contar: h medido **en el píxel propuesto** (que casi siempre está pegado a la
+tinta: h = 1) tiraba el 75 % de los rizos con h ≥ 1,5. El hueco se mide en su centro.
+
+**Tres cosas que salen:**
+1. **Mover el candidato al centro del hueco ya sube el top-1 de los doses de 76,6 a 80,9 %** sin exigir nada (fila 1).
+2. **Pedir fondo en el centro es un dial entre «rizo» y «lazo».** Con h ≥ 2,5 y rayos de 14 px el detector marca **sólo
+   lo que un humano llamaría curva cerrada**: los dos huecos del 8, el lazo del 6, 9 y 0, la panza cerrada de algunos 3 y
+   5; y **nada** en 1, 4, 7 ni en la mayoría de los 2 (figura `14-hueco-h2.5-a0-r14.png`). Pero los rizos del 2 son
+   rendijas (radio inscrito mediana 1 px) y se pierden casi todos (21 %). Con h ≥ 1,5 se queda a medio camino (55 %).
+3. **Los rayos largos hacen falta para los lazos grandes**: con 8 px, los 0 (centro a más de 8 px de la tinta) tienen
+   encierro bajo y con h ≥ 2,5 **desaparecen**; con 14 px vuelven (figura `14-hueco-h2.5-a0-r14.png`, fila de los 0).
+
+Qué se propone: **dos salidas del mismo detector**, no un umbral: «lazo» (h ≥ 2,5, rayos 14) y «rizo» (h ≥ 0, rayos 8,
+candidato en el centro del hueco), que es lo que el 2 tiene y el 8 no.

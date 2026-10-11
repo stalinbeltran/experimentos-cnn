@@ -1,0 +1,66 @@
+{
+ "h0-a0 (actual)": {
+  "h_min": 0.0,
+  "alfa": 0.0,
+  "rayos_px": 8,
+  "doses_top1_pc": 80.9,
+  "doses_encontrados_pc": 89.4,
+  "candidatos_por_digito_en_los_119": 2.52
+ },
+ "h1.5-a0": {
+  "h_min": 1.5,
+  "alfa": 0.0,
+  "rayos_px": 8,
+  "doses_top1_pc": 55.3,
+  "doses_encontrados_pc": 59.6,
+  "candidatos_por_digito_en_los_119": 1.48
+ },
+ "h2.5-a0": {
+  "h_min": 2.5,
+  "alfa": 0.0,
+  "rayos_px": 8,
+  "doses_top1_pc": 21.3,
+  "doses_encontrados_pc": 21.3,
+  "candidatos_por_digito_en_los_119": 0.54
+ },
+ "h0-a1": {
+  "h_min": 0.0,
+  "alfa": 1.0,
+  "rayos_px": 8,
+  "doses_top1_pc": 80.9,
+  "doses_encontrados_pc": 87.2,
+  "candidatos_por_digito_en_los_119": 2.46
+ },
+ "h0-a0-r14": {
+  "h_min": 0.0,
+  "alfa": 0.0,
+  "rayos_px": 14,
+  "doses_top1_pc": 78.7,
+  "doses_encontrados_pc": 85.1,
+  "candidatos_por_digito_en_los_119": 3.08
+ },
+ "h1.5-a0-r14": {
+  "h_min": 1.5,
+  "alfa": 0.0,
+  "rayos_px": 14,
+  "doses_top1_pc": 53.2,
+  "doses_encontrados_pc": 55.3,
+  "candidatos_por_digito_en_los_119": 2.2
+ },
+ "h2.5-a0-r14": {
+  "h_min": 2.5,
+  "alfa": 0.0,
+  "rayos_px": 14,
+  "doses_top1_pc": 21.3,
+  "doses_encontrados_pc": 21.3,
+  "candidatos_por_digito_en_los_119": 0.66
+ },
+ "h1.5-a1-r14": {
+  "h_min": 1.5,
+  "alfa": 1.0,
+  "rayos_px": 14,
+  "doses_top1_pc": 46.8,
+  "doses_encontrados_pc": 51.1,
+  "candidatos_por_digito_en_los_119": 2.16
+ }
+}
