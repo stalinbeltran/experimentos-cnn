@@ -189,3 +189,19 @@ la cobertura que **tienen** los rizos etiquetados) es casi tan malo como el actu
 sigue casando con cualquier curva desde su lado cóncavo. **Lo que discrimina no es que la plantilla se parezca al
 rizo; es que la plantilla exija ser rodeada** —que es lo mismo que mide el encierro por rayos—. Un rizo real de
 cobertura 0,65 casa con una plantilla de 0,85 porque la diagonal del 2 cierra el resto de la vuelta.
+
+## El compuesto con las plantillas RODEADAS como proponente (`nn/compuesto2.py`, 2026-10-11)
+
+Candidatos = plantillas rodeadas (cob ≥ 0,85, S 0,6) ∪ rayos (F 0,5); se elige por encierro, por la plantilla, o por
+la suma (`12-compuesto2.json`):
+
+| elige por | top-1 acierta | top-2 |
+|---|---:|---:|
+| **encierro r** | **78,7 %** | 89,4 % |
+| plantilla rodeada p' | 70,2 % | 80,9 % |
+| r + p' | 70,2 % | 83,0 % |
+| (sólo candidatos de P', por p') | 59,6 % | 74,5 % |
+
+**78,7 % con un candidato por dígito**: cuatro puntos más que el compuesto anterior (74,5 %) y que la CNN, y el top-2
+llega al 89 %. Los candidatos son 8,2 por dígito (97,9 % de recall) y sigue eligiendo mejor el encierro que la propia
+plantilla rodeada. Los 10 fallos, de cerca, en `12-compuesto2-fallos.png`; los 48, en `12-compuesto2.png`.

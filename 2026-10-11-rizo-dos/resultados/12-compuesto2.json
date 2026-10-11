@@ -1,0 +1,28 @@
+{
+ "banco": "cob ≥ 0,85, hueco ≥ 0,5",
+ "s_rodeado": 0.6,
+ "f_rayos": 0.5,
+ "doses": {
+  "todos": {
+   "encontrados_pc": 97.9,
+   "candidatos_arriba_por_dos": 8.19
+  },
+  "top-1 por encierro r": {
+   "top1_pc": 78.7,
+   "top2_pc": 89.4
+  },
+  "top-1 por plantilla rodeada p'": {
+   "top1_pc": 70.2,
+   "top2_pc": 80.9
+  },
+  "top-1 por r + p'": {
+   "top1_pc": 70.2,
+   "top2_pc": 83.0
+  },
+  "top-1 por solo candidatos de P', por p'": {
+   "top1_pc": 59.6,
+   "top2_pc": 74.5
+  }
+ },
+ "mejor_eleccion": "encierro r"
+}
