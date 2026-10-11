@@ -1,0 +1,282 @@
+{
+ "lineal (referencia) · otros": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "otros",
+  "val": 0.9287,
+  "val_rango": [
+   0.9276,
+   0.9295
+  ],
+  "ciega": 0.9209
+ },
+ "lineal (referencia) · otros + rizo (5)": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.9349,
+  "val_rango": [
+   0.9332,
+   0.9369
+  ],
+  "ciega": 0.9246
+ },
+ "lineal (referencia) · otros + las cinco (25)": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.9347,
+  "val_rango": [
+   0.9332,
+   0.9357
+  ],
+  "ciega": 0.9227
+ },
+ "lineal (referencia) · otros + rizo 8×8 (128)": {
+  "compositor": "lineal (referencia)",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.912,
+  "val_rango": [
+   0.9097,
+   0.9134
+  ],
+  "ciega": 0.9079
+ },
+ "MLP 64 · otros": {
+  "compositor": "MLP 64",
+  "caracteristicas": "otros",
+  "val": 0.9365,
+  "val_rango": [
+   0.9332,
+   0.9406
+  ],
+  "ciega": 0.9241
+ },
+ "MLP 64 · otros + rizo (5)": {
+  "compositor": "MLP 64",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.9412,
+  "val_rango": [
+   0.9382,
+   0.9443
+  ],
+  "ciega": 0.9299
+ },
+ "MLP 64 · otros + las cinco (25)": {
+  "compositor": "MLP 64",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.9398,
+  "val_rango": [
+   0.9363,
+   0.9425
+  ],
+  "ciega": 0.9269
+ },
+ "MLP 64 · otros + rizo 8×8 (128)": {
+  "compositor": "MLP 64",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.9132,
+  "val_rango": [
+   0.9097,
+   0.9171
+  ],
+  "ciega": 0.9084
+ },
+ "MLP 256 · otros": {
+  "compositor": "MLP 256",
+  "caracteristicas": "otros",
+  "val": 0.9425,
+  "val_rango": [
+   0.9406,
+   0.9443
+  ],
+  "ciega": 0.9316
+ },
+ "MLP 256 · otros + rizo (5)": {
+  "compositor": "MLP 256",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.947,
+  "val_rango": [
+   0.9456,
+   0.9487
+  ],
+  "ciega": 0.9348
+ },
+ "MLP 256 · otros + las cinco (25)": {
+  "compositor": "MLP 256",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.9423,
+  "val_rango": [
+   0.9419,
+   0.9425
+  ],
+  "ciega": 0.9335
+ },
+ "MLP 256 · otros + rizo 8×8 (128)": {
+  "compositor": "MLP 256",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.9165,
+  "val_rango": [
+   0.9153,
+   0.9177
+  ],
+  "ciega": 0.9187
+ },
+ "SVM RBF (C 10) · otros": {
+  "compositor": "SVM RBF (C 10)",
+  "caracteristicas": "otros",
+  "val": 0.927,
+  "val_rango": [
+   0.927,
+   0.927
+  ],
+  "ciega": 0.9189
+ },
+ "SVM RBF (C 10) · otros + rizo (5)": {
+  "compositor": "SVM RBF (C 10)",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.9332,
+  "val_rango": [
+   0.9332,
+   0.9332
+  ],
+  "ciega": 0.9236
+ },
+ "SVM RBF (C 10) · otros + las cinco (25)": {
+  "compositor": "SVM RBF (C 10)",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.9301,
+  "val_rango": [
+   0.9301,
+   0.9301
+  ],
+  "ciega": 0.9244
+ },
+ "SVM RBF (C 10) · otros + rizo 8×8 (128)": {
+  "compositor": "SVM RBF (C 10)",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.8819,
+  "val_rango": [
+   0.8819,
+   0.8819
+  ],
+  "ciega": 0.8747
+ },
+ "bosque 500 · otros": {
+  "compositor": "bosque 500",
+  "caracteristicas": "otros",
+  "val": 0.9462,
+  "val_rango": [
+   0.9425,
+   0.9493
+  ],
+  "ciega": 0.9296
+ },
+ "bosque 500 · otros + rizo (5)": {
+  "compositor": "bosque 500",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.9563,
+  "val_rango": [
+   0.9536,
+   0.9604
+  ],
+  "ciega": 0.9326
+ },
+ "bosque 500 · otros + las cinco (25)": {
+  "compositor": "bosque 500",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.9417,
+  "val_rango": [
+   0.9394,
+   0.9456
+  ],
+  "ciega": 0.9189
+ },
+ "bosque 500 · otros + rizo 8×8 (128)": {
+  "compositor": "bosque 500",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.919,
+  "val_rango": [
+   0.9153,
+   0.9215
+  ],
+  "ciega": 0.8879
+ },
+ "gradient boosting · otros": {
+  "compositor": "gradient boosting",
+  "caracteristicas": "otros",
+  "val": 0.885,
+  "val_rango": [
+   0.885,
+   0.885
+  ],
+  "ciega": 0.8637
+ },
+ "gradient boosting · otros + rizo (5)": {
+  "compositor": "gradient boosting",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.8899,
+  "val_rango": [
+   0.8899,
+   0.8899
+  ],
+  "ciega": 0.8744
+ },
+ "gradient boosting · otros + las cinco (25)": {
+  "compositor": "gradient boosting",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.8899,
+  "val_rango": [
+   0.8899,
+   0.8899
+  ],
+  "ciega": 0.8705
+ },
+ "gradient boosting · otros + rizo 8×8 (128)": {
+  "compositor": "gradient boosting",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.9023,
+  "val_rango": [
+   0.9023,
+   0.9023
+  ],
+  "ciega": 0.8857
+ },
+ "k vecinos (5) · otros": {
+  "compositor": "k vecinos (5)",
+  "caracteristicas": "otros",
+  "val": 0.8559,
+  "val_rango": [
+   0.8559,
+   0.8559
+  ],
+  "ciega": 0.837
+ },
+ "k vecinos (5) · otros + rizo (5)": {
+  "compositor": "k vecinos (5)",
+  "caracteristicas": "otros + rizo (5)",
+  "val": 0.8602,
+  "val_rango": [
+   0.8602,
+   0.8602
+  ],
+  "ciega": 0.8407
+ },
+ "k vecinos (5) · otros + las cinco (25)": {
+  "compositor": "k vecinos (5)",
+  "caracteristicas": "otros + las cinco (25)",
+  "val": 0.8559,
+  "val_rango": [
+   0.8559,
+   0.8559
+  ],
+  "ciega": 0.8321
+ },
+ "k vecinos (5) · otros + rizo 8×8 (128)": {
+  "compositor": "k vecinos (5)",
+  "caracteristicas": "otros + rizo 8×8 (128)",
+  "val": 0.8244,
+  "val_rango": [
+   0.8244,
+   0.8244
+  ],
+  "ciega": 0.7928
+ }
+}

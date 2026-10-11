@@ -304,3 +304,33 @@ mejor sola. ⚠ El margen entre semillas es ≈ 0,002, así que +0,006 es una se
 de botella es el compositor** (lineal, 180 ejemplos): una feature de 128 números lo rompe y una de 5 apenas le cabe; con
 más entrenamiento o un compositor que no sea lineal, las mismas salidas podrían valer más. Los fallos de la mejor
 combinación de 8×8: `15-variantes-fallos.png`.
+
+## Compositores NO lineales (`nn/compositores.py`, pedido por el dueño el 2026-10-11)
+
+Mismo protocolo (180 train / 1617 val / 3823 a ciegas, 3 semillas) y mismas características; cambia el compositor
+(`16-compositores.json`, figura `16-compositores.png`). Val / a ciegas:
+
+| compositor | otros (384) | + rizo compacto (5) | + las cinco (25) | + rizo 8×8 (128) |
+|---|---:|---:|---:|---:|
+| lineal (referencia) | 0,929 / 0,921 | 0,935 / 0,925 | 0,935 / 0,923 | 0,912 / 0,908 |
+| MLP 64 | 0,937 / 0,924 | 0,941 / 0,930 | 0,940 / 0,927 | 0,913 / 0,908 |
+| **MLP 256** | 0,943 / 0,932 | **0,947 / 0,935** | 0,942 / 0,934 | 0,917 / 0,919 |
+| SVM RBF | 0,927 / 0,919 | 0,933 / 0,924 | 0,930 / 0,924 | 0,882 / 0,875 |
+| **bosque aleatorio (500)** | 0,946 / 0,930 | **0,956 / 0,933** | 0,942 / 0,919 | 0,919 / 0,888 |
+| gradient boosting | 0,885 / 0,864 | 0,890 / 0,874 | 0,890 / 0,871 | 0,902 / 0,886 |
+| k vecinos (5) | 0,856 / 0,837 | 0,860 / 0,841 | 0,856 / 0,832 | 0,824 / 0,793 |
+
+**Lo que sale:**
+1. **Un compositor no lineal sube ~1,5 puntos sobre el lineal con las mismas características**: bosque 0,946 y MLP 256
+   0,943 contra 0,929 (a ciegas 0,930 / 0,932 contra 0,921). Boosting y k vecinos, peor que el lineal con 180 ejemplos.
+2. **El rizo compacto suma en TODOS los compositores que funcionan**: +1,0 punto con el bosque (0,946 → **0,956**, el
+   mejor val de todo el experimento), +0,45 con el MLP 256 (→ **0,947**, y el mejor a ciegas, **0,935**), +0,6 con el
+   lineal y el SVM. Cinco características bastan; las cinco variantes juntas (25) y el mapa 8×8 (128) siguen restando,
+   también con los no lineales: el cuello de botella no era sólo la linealidad, sino los 180 ejemplos.
+3. **La ganancia a ciegas es menor que en val** (bosque: +1,0 en val, +0,3 a ciegas), así que parte es ajuste a val.
+   ⚠ Rangos entre semillas ≈ 0,005 en el bosque y el MLP: el +1,0 del bosque está fuera del rango; el +0,3 a ciegas no.
+
+Lo que se lleva: **MLP 256 + otros + rizo (0,947 / 0,935)** es la combinación más honesta (mejor a ciegas, poca
+varianza), y el bosque la que más sube en val. En ambos casos la salida «rizo» del detector de curvas cerradas, codificada
+como mejor candidato en 2×2 más la cuenta, es una feature que vale: la primera de este experimento que mejora el
+reconocimiento de dígitos.
