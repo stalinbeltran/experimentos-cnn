@@ -80,7 +80,7 @@ curvatura, o una CNN pequeña entrenada sólo con rizos sintéticos?
 
 ## Qué NO hereda
 
-- **Se copió de:** `lazos` (`2026-10-11-lazos`): su `nn/detector.py` entero, la idea de los rayos de `nn/rizos.py`, el
+- **Se copió de:** `lazos` (`lazos`): su `nn/detector.py` entero, la idea de los rayos de `nn/rizos.py`, el
   generador de arcos sintéticos y el dibujo del dueño (`dibujar`).
 - **Qué se cambió a propósito:** (1) la verdad de los dígitos son **etiquetas a mano**, no lo esperable por clase;
   (2) los rayos admiten rizos **abiertos** (F calibrada, no 0,97) y exigen anillo (distancias parejas); (3) los

@@ -38,7 +38,7 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
 2. **Un detector de features se construye con lo que mejor funcione**: puede ser un **compositor** (juntar detectores
    más pequeños —curvas, rectas, rayos— con reglas) o una **CNN entrenada** (con sintéticos de verdad conocida o con
    dígitos), o las dos cosas comparadas. No hay preferencia a priori: se mide cada estrategia con la misma verdad y los
-   mismos números y gana la que pase más umbrales. El primero que lo aplica es `rizo-2` (`2026-10-11-rizo-dos`).
+   mismos números y gana la que pase más umbrales. El primero que lo aplica es `rizo-2` (`rizo-2`).
 3. **Autorización para entrenar y probar sin supervisión, con tope de gasto: 10 $ por encargo** en entrenamientos
    paralelos (Vast, `nn/vast.sh` con el modo `trabajo` del lanzador) si eso acorta el tiempo hasta tener resultados.
    ⚠ Es una autorización para **acelerar**, no para gastar: una red de 32×32 entrena en minutos en el dev y alquilar no
@@ -59,7 +59,7 @@ los enlaces directos al PNG (`raw.githubusercontent.com`, porque el visor de Git
 - **Curvas**: el detector DELGADO del boceto `docs/bocetos/2026-10-09-curvas-gabor/` (`delgadas.py`): 12 Gabor par λ 6
   sobre la imagen, giro κ a ±4 px, trozos rectos/curvos con radio, centro y orientación (vector de curvatura). Sintéticos de
   1–3 px: 99,7 % rectas, 97,7 % arcos. TAU recomendado 0,6 (`tau_comparar.py`), **sin confirmar por el dueño**.
-- **Lazos**: el experimento `lazos` (`2026-10-11-lazos/`). Votos por centro de curvatura: bien en lazos sintéticos limpios
+- **Lazos**: el experimento `lazos`. Votos por centro de curvatura: bien en lazos sintéticos limpios
   (centro 0,6 px, cierre 0,04, orientación 2°), **mal en dígitos** (duplicados en óvalos, falsos en 7, el 8 sin sus dos
   lazos). Caso señalado por el dueño, **el 2 nº 50 del dataset** (`nn/caso.py 50`): un «lazo» de radio 12 (el máximo
   permitido) con 5 votos de 85 cuya corona ancha junta la cabeza y la base del 2 — **dos curvas distintas leídas como un
@@ -67,7 +67,7 @@ los enlaces directos al PNG (`raw.githubusercontent.com`, porque el visor de Git
   recoge (`nn/rizos.py`: 11/12 huecos de los 2, 95 % de los 8).
 
 ✅ **El 2026-10-11 se empezó por el RIZO SUPERIOR DEL 2** (encargo del dueño de ese día): el experimento `rizo-2`
-(`2026-10-11-rizo-dos/`) compara cuatro estrategias —rayos abiertos, plantillas, votos de curvatura (la referencia) y
+(id `rizo-2`) compara cuatro estrategias —rayos abiertos, plantillas, votos de curvatura (la referencia) y
 una CNN entrenada con sintéticos— contra **48 doses etiquetados a mano** por Claude. Lo que salió, en su README.
 
 **Estrategias para empezar a probar** (de lo medido; las 2, 5 y 8 se prueban en `rizo-2`):
