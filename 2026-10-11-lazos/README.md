@@ -74,3 +74,48 @@ la orientación detectada en lazos sintéticos de abertura conocida se desvía �
 **por perímetro** (para no premiar coronas grandes), los candidatos a menos de R/2 se funden, los máximos son locales en
 3×3, y la orientación sólo se omite con el lazo **cerrado del todo** (36/36 sectores), no desde cierre 0,95 como decía el
 criterio — la evaluación de orientación usa cierre < 0,9, así que no cambia ninguna cifra.
+
+## Sondeo: los lazos MUY CERRADOS de radio pequeño (los rizos de los 2) — 2026-10-11, pedido del dueño
+
+*«Veo curvas de radio pequeño perderse. Tal vez esperamos una curva demasiado redonda. Checa si se pueden incluir estos
+lazos muy cerrados. Toma unos 2 como ejemplo.»* **Sondeo, no vuelta del criterio**: los números de abajo no pasan ni
+fallan nada; sirven para decidir la segunda vuelta. [`nn/rizos.py`](nn/rizos.py) (4 min, 0 $;
+[`resultados/rizos.json`](resultados/rizos.json)).
+
+**Por qué se pierden.** El detector de lazos vota con el giro κ, y el giro se mide comparando la orientación a ±4 px: una
+orientación sólo gira ±90° sin ambigüedad, así que κ ≤ 11,25 °/px y **el radio mínimo que ve es ≈ 5,1 px**. Un rizo de
+un 2 es un trazo de 4 px alrededor de un hueco de 1–4 px: radio ~2–3. De los 159 doses de val, 10 tienen hueco cerrado
+(12 huecos), y el detector de lazos **no encuentra ninguno**.
+
+**Medir el giro más cerca no lo arregla:**
+
+| giro a | huecos de los 2 | lazos sintéticos pequeños (R 2–4,5) | 1 sin lazo |
+|---|---:|---:|---:|
+| ±4 (el de ahora) | 0/12 | 0 % | 83,5 % |
+| ±3 y ±4 | 1/12 | 20,5 % | 61,0 % |
+| ±2 y ±4 | 1/12 | 46,5 % | 45,1 % |
+
+Ayuda en sintéticos finos, pero no en los rizos reales (en un trazo grueso enrollado el campo de orientación no tiene
+dirección clara) y mete lazos falsos en los 1.
+
+**Una señal directa sí lo hace: RAYOS.** Un píxel de fondo es centro de un rizo si casi todos los 36 rayos que salen de él
+chocan con tinta antes de 5 px. Los que lo cumplen se agrupan y cada grupo es un rizo, con centro, radio (distancia al
+choque), cierre (rayos que chocan) y orientación (los que no). Sin Gabor y sin morfología: una medida geométrica sobre la
+tinta.
+
+| rayos que chocan | huecos de los 2 | sintéticos pequeños muy cerrados | falsos (sintéticos) | % con rizo: 1 · 7 · 2 · 6 · 8 · 9 · 0 |
+|---|---:|---:|---:|---|
+| ≥ 0,94 | 11/12 | 95,8 % | 0 % | 7 · 24 · 28 · 69 · 99 · 78 · 11 |
+| **≥ 0,97** | **11/12** | **87,5 %** | 0 % | 4 · 16 · 20 · 64 · 95 · 75 · 7 |
+| = 1,0 | 7/12 | 70,8 % | 0 % | 1 · 1 · 11 · 56 · 90 · 70 · 3 |
+
+![los 2](resultados/4-rizos-doses.png)
+![por clase](resultados/5-rizos-clases.png)
+
+- **Sí se pueden incluir**, pero **no con el mecanismo de las curvas**: hace falta esta segunda señal. Con 0,97 encuentra
+  11 de los 12 huecos de los 2, el lazo bajo pequeño de casi todos los 8 (95 %) y el de la mayoría de 6 y 9; el 0 casi
+  no (su lazo es grande: no es un rizo, y lo sigue viendo el detector de lazos).
+- **El coste**: rizos en el 16 % de los 7 y el 18 % de los 3 con 0,97 (con 1,0 caen a 1 % y 9 %, pero se pierden huecos).
+  En los 2 marca rizos también arriba, donde la cabeza se enrolla apretada (figura 4).
+- ⚠ **0,97 y 5 px se eligieron mirando este sondeo** (los mismos 2 y los mismos sintéticos): para la segunda vuelta van
+  en un criterio escrito antes, y con otros datos para comprobar.
