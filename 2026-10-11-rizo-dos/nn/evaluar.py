@@ -254,7 +254,7 @@ def main() -> int:
 
     # 3 · por clase
     fig, ax = plt.subplots(figsize=(11, 4)); w = 0.8 / k
-    cols_ = ["#b9b8b4", NAR, AZU, VERDE, "#7c3aed", "#0f766e"]
+    cols_ = ["#b9b8b4", NAR, AZU, VERDE, "#7c3aed", "#0f766e", "#be185d", "#a16207"]   # ≥ nº de estrategias: con 7 y 6 colores se cayó (vuelta 3)
     for c, n in enumerate(nombres):
         ax.bar(np.arange(10) + (c - (k - 1) / 2) * w, [out["C_clases"][n][str(i)] for i in range(10)], w, color=cols_[c], label=n)
     ax.set_xticks(range(10)); ax.set_ylim(0, 105); ax.legend(frameon=False, fontsize=8, ncol=k)
