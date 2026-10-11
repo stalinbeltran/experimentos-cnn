@@ -165,3 +165,27 @@ hueco entre la cabeza y la diagonal, 1–3 px por debajo del rizo) o en el codo 
 algo que P, R y V no miden: que el trazo **rodee** al punto de forma continua (la estrategia 1 de la lista de `CLAUDE.md`,
 seguir el trazo), o la CNN como juez de los candidatos del compuesto —que es lo contrario de lo que se probó hoy, y
 queda como siguiente vuelta—.
+
+## Plantillas MÁS RODEADAS (pedido por el dueño, 2026-10-11)
+
+El banco actual, dibujado (`nn/plantillas_rodeadas.py` → figura `11-banco-actual.png`): 851 plantillas = radio
+{2,5…7} × grosor {3,4,5} × cobertura {0,55 · 0,7 · 0,85 · 1} × abertura cada 30°; trazo +1, hueco −1, vano −½. La
+figura 10 enseñó que las de **media vuelta** (0,55) casan con cualquier curva. Se probaron bancos que exigen más
+vuelta y/o más hueco, con los mismos 47 doses (`11-bancos.json`, figura `11-bancos-rodeados.png`):
+
+| banco (plantillas) | S | encontrados | candidatos por dígito | **top-1 arriba acierta** |
+|---|---:|---:|---:|---:|
+| actual, cob ≥ 0,55 (851) | 0,8 | 91,5 % | 18,2 | 29,8 % |
+| cob ≥ 0,7 (575) | 0,8 | 85,1 % | 4,7 | 61,7 % |
+| cob ≥ 0,7 (575) | 0,7 | 89,4 % | 10,1 | 61,7 % |
+| **cob ≥ 0,85 (299)** | 0,8 | 76,6 % | **2,5** | **72,3 %** |
+| cob ≥ 0,85 (299) | 0,6 | 87,2 % | 8,4 | 72,3 % |
+| cob 0,6–0,8, «como los 2» (828) | 0,8 | 91,5 % | 12,5 | 36,2 % |
+
+**Sí: quitar las de media vuelta arregla la mayor parte.** Con cob ≥ 0,85 el top-1 pasa del 30 % al **72 %** —a dos
+puntos del compuesto (74,5 %) y de la CNN— con 2,5 candidatos por dígito en vez de 18. Exigir hueco ≥ 1 px no cambia
+nada (las plantillas con hueco de medio píxel apenas pesan). Y la sorpresa: el banco «como los 2» (cob 0,6–0,8, que es
+la cobertura que **tienen** los rizos etiquetados) es casi tan malo como el actual (36 %), porque una C de 0,6–0,7
+sigue casando con cualquier curva desde su lado cóncavo. **Lo que discrimina no es que la plantilla se parezca al
+rizo; es que la plantilla exija ser rodeada** —que es lo mismo que mide el encierro por rayos—. Un rizo real de
+cobertura 0,65 casa con una plantilla de 0,85 porque la diagonal del 2 cierra el resto de la vuelta.

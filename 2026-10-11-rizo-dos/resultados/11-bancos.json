@@ -1,0 +1,176 @@
+{
+ "actual (cob 0,55–1; hueco ≥ 0,5)": {
+  "plantillas": 851,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 91.5,
+    "top1_pc": 31.9,
+    "candidatos_por_dos": 27.2
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 91.5,
+    "top1_pc": 31.9,
+    "candidatos_por_dos": 23.4
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 91.5,
+    "top1_pc": 29.8,
+    "candidatos_por_dos": 18.2
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 74.5,
+    "top1_pc": 29.8,
+    "candidatos_por_dos": 7.9
+   }
+  ]
+ },
+ "cob ≥ 0,7; hueco ≥ 0,5": {
+  "plantillas": 575,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 95.7,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 18.3
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 89.4,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 10.1
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 85.1,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 4.7
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 53.2,
+    "top1_pc": 48.9,
+    "candidatos_por_dos": 2.2
+   }
+  ]
+ },
+ "cob ≥ 0,7; hueco ≥ 1": {
+  "plantillas": 525,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 97.9,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 18.4
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 91.5,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 10.0
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 83.0,
+    "top1_pc": 61.7,
+    "candidatos_por_dos": 4.6
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 53.2,
+    "top1_pc": 48.9,
+    "candidatos_por_dos": 2.2
+   }
+  ]
+ },
+ "cob ≥ 0,85; hueco ≥ 0,5": {
+  "plantillas": 299,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 87.2,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 8.4
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 80.9,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 3.4
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 76.6,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 2.5
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 31.9,
+    "top1_pc": 31.9,
+    "candidatos_por_dos": 0.7
+   }
+  ]
+ },
+ "cob ≥ 0,85; hueco ≥ 1": {
+  "plantillas": 273,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 87.2,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 8.1
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 80.9,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 3.3
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 76.6,
+    "top1_pc": 72.3,
+    "candidatos_por_dos": 2.4
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 31.9,
+    "top1_pc": 31.9,
+    "candidatos_por_dos": 0.7
+   }
+  ]
+ },
+ "cob 0,6–0,8 (como los 2); hueco ≥ 0,5": {
+  "plantillas": 828,
+  "umbrales": [
+   {
+    "s": 0.6,
+    "encontrados_pc": 93.6,
+    "top1_pc": 38.3,
+    "candidatos_por_dos": 26.1
+   },
+   {
+    "s": 0.7,
+    "encontrados_pc": 93.6,
+    "top1_pc": 36.2,
+    "candidatos_por_dos": 20.5
+   },
+   {
+    "s": 0.8,
+    "encontrados_pc": 91.5,
+    "top1_pc": 36.2,
+    "candidatos_por_dos": 12.5
+   },
+   {
+    "s": 0.9,
+    "encontrados_pc": 63.8,
+    "top1_pc": 38.3,
+    "candidatos_por_dos": 4.3
+   }
+  ]
+ }
+}
