@@ -270,3 +270,37 @@ tinta: h = 1) tiraba el 75 % de los rizos con h ≥ 1,5. El hueco se mide en su 
 
 Qué se propone: **dos salidas del mismo detector**, no un umbral: «lazo» (h ≥ 2,5, rayos 14) y «rizo» (h ≥ 0, rayos 8,
 candidato en el centro del hueco), que es lo que el 2 tiene y el 8 no.
+
+## Cada salida como feature APARTE del compositor (`nn/digitos_variantes.py`, 2026-10-11)
+
+Cinco variantes del detector sobre los mismos candidatos (hueco medido en su centro; encierro ahí con rayos de 8, 14 o
+18 px): **rizo** (h ≥ 0, 8 px), **medio** (h ≥ 1,5, 14 px), **lazo** (h ≥ 2,5, 14 px), **amplia** (h ≥ 3,5, 18 px,
+para los 0) y **amplia floja** (encierro ≥ 0,7). Lo que cada una ve, en un dígito de cada clase: `15-variantes-mapas.png`.
+% de dígitos de val con algún candidato: la amplia marca el 97 % de los 0 y ≤ 34 % de todo lo demás; el lazo, el 99 %
+de los 0, 70–75 % de 6/8/9 y 0 % de los 1; el rizo, 100 % de los 8, 99 % de 6/9, 70 % de los 2 y 13 % de los 1.
+
+**Con la codificación de antes (dos mapas en celdas 8×8 = 128 características por variante): todas empeoran**, y
+cuantas más, peor (`15-variantes.json`): otros 0,929 → + rizo 0,912 · + medio 0,923 · + lazo 0,889 · + amplia 0,904 ·
++ rizo + lazo + amplia 0,876 · + las cinco **0,868**. Con 180 dígitos de entrenamiento, 128 números más por variante son
+ruido que el compositor lineal ajusta.
+
+**Con una codificación COMPACTA** (sólo el mapa del mejor candidato en celdas 2×2 o 4×4, más el número de candidatos:
+5 o 17 características por variante; `15b-compactas.json`, con los candidatos ya calculados):
+
+| compositor | val (1617) | a ciegas (3823) |
+|---|---:|---:|
+| otros (delgado), referencia | 0,9287 | 0,9209 |
+| otros + rizo (2×2) | **0,9349** | **0,9246** |
+| otros + medio (4×4) | **0,9355** | 0,9227 |
+| otros + las cinco (2×2) | 0,9347 | 0,9227 |
+| otros + rizo + lazo + amplia (2×2) | 0,9322 | 0,9239 |
+| otros + lazo (2×2) | 0,9293 | 0,9181 |
+| otros + amplia (2×2) | 0,9287 | 0,9188 |
+
+**Lo que sale:** codificadas de forma compacta, las curvas cerradas **sí suman, poco**: +0,6 puntos en val y +0,4 a
+ciegas con el rizo solo (0,9349 / 0,9246), y el medio igual; las que más ayudan son las que ven **más** dígitos (rizo,
+medio), no las más selectivas (lazo, amplia), que apenas mueven nada y a ciegas restan. Juntar las cinco no supera a la
+mejor sola. ⚠ El margen entre semillas es ≈ 0,002, así que +0,006 es una señal pequeña, no una declaración. **El cuello
+de botella es el compositor** (lineal, 180 ejemplos): una feature de 128 números lo rompe y una de 5 apenas le cabe; con
+más entrenamiento o un compositor que no sea lineal, las mismas salidas podrían valer más. Los fallos de la mejor
+combinación de 8×8: `15-variantes-fallos.png`.

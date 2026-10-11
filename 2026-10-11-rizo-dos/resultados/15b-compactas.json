@@ -1,0 +1,72 @@
+{
+ "celdas 2x2 · otros": {
+  "val": 0.9287,
+  "ciega": 0.9209,
+  "car": 384
+ },
+ "celdas 2x2 · otros + rizo (h0, 8px)": {
+  "val": 0.9349,
+  "ciega": 0.9246,
+  "car": 389
+ },
+ "celdas 2x2 · otros + medio (h1.5, 14px)": {
+  "val": 0.9307,
+  "ciega": 0.9222,
+  "car": 389
+ },
+ "celdas 2x2 · otros + lazo (h2.5, 14px)": {
+  "val": 0.9293,
+  "ciega": 0.9181,
+  "car": 389
+ },
+ "celdas 2x2 · otros + amplia (h3.5, 18px)": {
+  "val": 0.9287,
+  "ciega": 0.9188,
+  "car": 389
+ },
+ "celdas 2x2 · otros + rizo + lazo + amplia": {
+  "val": 0.9322,
+  "ciega": 0.9239,
+  "car": 399
+ },
+ "celdas 2x2 · otros + las cinco": {
+  "val": 0.9347,
+  "ciega": 0.9227,
+  "car": 409
+ },
+ "celdas 4x4 · otros": {
+  "val": 0.9287,
+  "ciega": 0.9209,
+  "car": 384
+ },
+ "celdas 4x4 · otros + rizo (h0, 8px)": {
+  "val": 0.9295,
+  "ciega": 0.9221,
+  "car": 401
+ },
+ "celdas 4x4 · otros + medio (h1.5, 14px)": {
+  "val": 0.9355,
+  "ciega": 0.9227,
+  "car": 401
+ },
+ "celdas 4x4 · otros + lazo (h2.5, 14px)": {
+  "val": 0.9177,
+  "ciega": 0.9118,
+  "car": 401
+ },
+ "celdas 4x4 · otros + amplia (h3.5, 18px)": {
+  "val": 0.9225,
+  "ciega": 0.9137,
+  "car": 401
+ },
+ "celdas 4x4 · otros + rizo + lazo + amplia": {
+  "val": 0.9153,
+  "ciega": 0.9112,
+  "car": 435
+ },
+ "celdas 4x4 · otros + las cinco": {
+  "val": 0.9062,
+  "ciega": 0.908,
+  "car": 469
+ }
+}

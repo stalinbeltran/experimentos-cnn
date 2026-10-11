@@ -1,0 +1,363 @@
+{
+ "variantes": {
+  "rizo (h0, 8px)": {
+   "h_min": 0.0,
+   "rayos_px": 8,
+   "encierro_min": 0.85,
+   "candidatos_por_digito_val": 1.97,
+   "por_clase_val_pc_con_alguno": {
+    "0": 36.2,
+    "1": 13.4,
+    "2": 69.8,
+    "3": 73.9,
+    "4": 90.2,
+    "5": 61.0,
+    "6": 98.8,
+    "7": 80.7,
+    "8": 100.0,
+    "9": 98.8
+   }
+  },
+  "medio (h1.5, 14px)": {
+   "h_min": 1.5,
+   "rayos_px": 14,
+   "encierro_min": 0.85,
+   "candidatos_por_digito_val": 2.57,
+   "por_clase_val_pc_con_alguno": {
+    "0": 100.0,
+    "1": 3.0,
+    "2": 57.9,
+    "3": 63.6,
+    "4": 83.4,
+    "5": 57.3,
+    "6": 90.2,
+    "7": 73.9,
+    "8": 93.6,
+    "9": 90.7
+   }
+  },
+  "lazo (h2.5, 14px)": {
+   "h_min": 2.5,
+   "rayos_px": 14,
+   "encierro_min": 0.85,
+   "candidatos_por_digito_val": 0.76,
+   "por_clase_val_pc_con_alguno": {
+    "0": 99.4,
+    "1": 0.0,
+    "2": 23.3,
+    "3": 31.5,
+    "4": 44.8,
+    "5": 30.5,
+    "6": 74.8,
+    "7": 40.4,
+    "8": 69.9,
+    "9": 72.8
+   }
+  },
+  "amplia (h3.5, 18px)": {
+   "h_min": 3.5,
+   "rayos_px": 18,
+   "encierro_min": 0.85,
+   "candidatos_por_digito_val": 0.37,
+   "por_clase_val_pc_con_alguno": {
+    "0": 97.5,
+    "1": 0.0,
+    "2": 3.1,
+    "3": 17.6,
+    "4": 11.7,
+    "5": 17.7,
+    "6": 27.6,
+    "7": 14.3,
+    "8": 32.1,
+    "9": 34.0
+   }
+  },
+  "amplia floja (h3.5, 18px, enc 0.7)": {
+   "h_min": 3.5,
+   "rayos_px": 18,
+   "encierro_min": 0.7,
+   "candidatos_por_digito_val": 0.54,
+   "por_clase_val_pc_con_alguno": {
+    "0": 97.5,
+    "1": 0.0,
+    "2": 10.1,
+    "3": 46.1,
+    "4": 20.9,
+    "5": 51.8,
+    "6": 31.3,
+    "7": 36.6,
+    "8": 32.7,
+    "9": 69.1
+   }
+  }
+ },
+ "resultados": {
+  "otros (delgado)": {
+   "caracteristicas": 384,
+   "val": 0.9287,
+   "val_rango": [
+    0.9276,
+    0.9295
+   ],
+   "ciega": 0.9209,
+   "fallos_val_s0": 114
+  },
+  "rizo (h0, 8px) sola": {
+   "caracteristicas": 128,
+   "val": 0.455,
+   "val_rango": [
+    0.4539,
+    0.4558
+   ],
+   "ciega": 0.3949,
+   "fallos_val_s0": 880
+  },
+  "otros + rizo (h0, 8px)": {
+   "caracteristicas": 512,
+   "val": 0.912,
+   "val_rango": [
+    0.9097,
+    0.9134
+   ],
+   "ciega": 0.9079,
+   "fallos_val_s0": 141
+  },
+  "medio (h1.5, 14px) sola": {
+   "caracteristicas": 128,
+   "val": 0.4638,
+   "val_rango": [
+    0.4632,
+    0.4644
+   ],
+   "ciega": 0.4446,
+   "fallos_val_s0": 867
+  },
+  "otros + medio (h1.5, 14px)": {
+   "caracteristicas": 512,
+   "val": 0.9227,
+   "val_rango": [
+    0.9208,
+    0.9258
+   ],
+   "ciega": 0.9146,
+   "fallos_val_s0": 120
+  },
+  "lazo (h2.5, 14px) sola": {
+   "caracteristicas": 128,
+   "val": 0.3465,
+   "val_rango": [
+    0.3457,
+    0.3482
+   ],
+   "ciega": 0.3266,
+   "fallos_val_s0": 1058
+  },
+  "otros + lazo (h2.5, 14px)": {
+   "caracteristicas": 512,
+   "val": 0.8885,
+   "val_rango": [
+    0.8868,
+    0.8905
+   ],
+   "ciega": 0.8933,
+   "fallos_val_s0": 183
+  },
+  "amplia (h3.5, 18px) sola": {
+   "caracteristicas": 128,
+   "val": 0.2253,
+   "val_rango": [
+    0.2214,
+    0.2276
+   ],
+   "ciega": 0.2108,
+   "fallos_val_s0": 1259
+  },
+  "otros + amplia (h3.5, 18px)": {
+   "caracteristicas": 512,
+   "val": 0.9041,
+   "val_rango": [
+    0.9029,
+    0.906
+   ],
+   "ciega": 0.901,
+   "fallos_val_s0": 152
+  },
+  "amplia floja (h3.5, 18px, enc 0.7) sola": {
+   "caracteristicas": 128,
+   "val": 0.2919,
+   "val_rango": [
+    0.2913,
+    0.2925
+   ],
+   "ciega": 0.2885,
+   "fallos_val_s0": 1145
+  },
+  "otros + amplia floja (h3.5, 18px, enc 0.7)": {
+   "caracteristicas": 512,
+   "val": 0.9126,
+   "val_rango": [
+    0.9097,
+    0.914
+   ],
+   "ciega": 0.9005,
+   "fallos_val_s0": 139
+  },
+  "otros + rizo + lazo": {
+   "caracteristicas": 640,
+   "val": 0.8827,
+   "val_rango": [
+    0.8806,
+    0.8856
+   ],
+   "ciega": 0.8867,
+   "fallos_val_s0": 193
+  },
+  "otros + rizo + lazo + amplia": {
+   "caracteristicas": 768,
+   "val": 0.8761,
+   "val_rango": [
+    0.8732,
+    0.8776
+   ],
+   "ciega": 0.8748,
+   "fallos_val_s0": 198
+  },
+  "otros + las cinco": {
+   "caracteristicas": 1024,
+   "val": 0.8675,
+   "val_rango": [
+    0.8633,
+    0.8714
+   ],
+   "ciega": 0.8594,
+   "fallos_val_s0": 208
+  }
+ },
+ "mejor_combinacion": "otros + medio (h1.5, 14px)",
+ "mejor_vs_otros_s0": {
+  "arregla": 36,
+  "rompe": 42
+ },
+ "indices_fallos_mejor_s0": [
+  2,
+  5,
+  29,
+  31,
+  37,
+  53,
+  57,
+  75,
+  92,
+  95,
+  161,
+  198,
+  211,
+  228,
+  238,
+  244,
+  254,
+  309,
+  354,
+  363,
+  418,
+  420,
+  421,
+  446,
+  448,
+  449,
+  457,
+  475,
+  482,
+  492,
+  502,
+  519,
+  521,
+  525,
+  529,
+  539,
+  551,
+  562,
+  576,
+  592,
+  599,
+  600,
+  604,
+  607,
+  614,
+  630,
+  633,
+  634,
+  638,
+  639,
+  645,
+  683,
+  691,
+  719,
+  738,
+  769,
+  780,
+  784,
+  792,
+  794,
+  813,
+  816,
+  829,
+  876,
+  879,
+  890,
+  898,
+  903,
+  905,
+  912,
+  917,
+  934,
+  940,
+  951,
+  962,
+  997,
+  998,
+  1018,
+  1024,
+  1038,
+  1057,
+  1074,
+  1103,
+  1118,
+  1119,
+  1185,
+  1195,
+  1299,
+  1341,
+  1398,
+  1405,
+  1418,
+  1454,
+  1468,
+  1488,
+  1491,
+  1529,
+  1542,
+  1575,
+  1581,
+  1582,
+  1595,
+  1597,
+  1606,
+  1611,
+  1646,
+  1658,
+  1662,
+  1666,
+  1670,
+  1688,
+  1690,
+  1723,
+  1727,
+  1729,
+  1737,
+  1765,
+  1781,
+  1784,
+  1790
+ ]
+}
