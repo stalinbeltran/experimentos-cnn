@@ -738,3 +738,23 @@ MLP 256 con aumento, 3 semillas; rizo = actual + huecos):
    completa da **0,9801 a ciegas, lo mejor medido hasta hoy** (0,9792 antes), con val 0,9862. Cuántas curvas hay de cada
    sentido y cuánto miden es información que las celdas no llevan y que generaliza a otros escritores.
 3. El 784 sigue en 8 en toda configuración sin rectas densas, y en 6 con ellas: no es cosa del gris.
+
+### Cómo queda repartido el peso (2026-10-12, `32-reparto-peso.json`)
+
+Cuota de ‖W‖² de la 1.ª capa y de sensibilidad (Σ|grad × entrada| en val) por grupo, 3 semillas:
+
+| configuración | rectas | gris celdas | gris-objetos | rizo |
+|---|---|---|---|---|
+| elegida: objetos ×1 (44) + gris (384) + rizo (15) | 0,17 / 0,15 | **0,77 / 0,80** | — | 0,06 / 0,06 |
+| objetos ×1 + gris sin recto (320) + gris-objetos (54) + rizo | 0,17 / 0,15 | 0,56 / 0,61 | **0,21 / 0,20** | 0,06 / 0,05 |
+| referencia: rectas 8×8 (512) + gris + rizo | **0,55 / 0,57** | 0,41 / 0,40 | — | 0,05 / 0,03 |
+| rectas 8×8 + gris + gris-objetos + rizo | 0,50 / 0,52 | 0,35 / 0,36 | 0,11 / 0,09 | 0,04 / 0,03 |
+
+(peso / sensibilidad). Y el peso **por feature**: en la elegida, rectas-objeto 0,070 · gris celdas 0,038 · rizo 0,079; con
+gris-objetos, éstos 0,072 (igual que las rectas-objeto y el rizo), y el gris en celdas 0,032.
+
+Lo que dice: **los tres grupos de objetos pesan lo mismo por número (≈0,07) y el doble que una celda del gris (≈0,035)**;
+la red se fía más de cada número-objeto que de cada celda. Lo que decide la cuota es la cuenta: el gris en celdas sigue
+siendo el 56 % con 320 números, y los 54 del gris-objetos valen el 21 %, más que los 44 de las rectas-objeto (17 %). El rizo
+se queda en el 6 % con 15. Si el objetivo es que el reparto sea más parejo sin quitar información, el mando es el número
+de celdas del gris, no el peso.

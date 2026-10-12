@@ -1,0 +1,94 @@
+{
+ "elegida: objetos ×1 + gris + rizo": {
+  "rectas": {
+   "n": 44,
+   "cuota_peso": 0.166,
+   "peso_por_feature": 0.0703,
+   "cuota_sensibilidad": 0.145
+  },
+  "gris celdas": {
+   "n": 384,
+   "cuota_peso": 0.771,
+   "peso_por_feature": 0.0375,
+   "cuota_sensibilidad": 0.8
+  },
+  "rizo": {
+   "n": 15,
+   "cuota_peso": 0.063,
+   "peso_por_feature": 0.0789,
+   "cuota_sensibilidad": 0.055
+  }
+ },
+ "objetos ×1 + gris sin recto + gris-objetos + rizo": {
+  "rectas": {
+   "n": 44,
+   "cuota_peso": 0.168,
+   "peso_por_feature": 0.0696,
+   "cuota_sensibilidad": 0.145
+  },
+  "gris celdas": {
+   "n": 320,
+   "cuota_peso": 0.561,
+   "peso_por_feature": 0.032,
+   "cuota_sensibilidad": 0.607
+  },
+  "gris-objetos": {
+   "n": 54,
+   "cuota_peso": 0.212,
+   "peso_por_feature": 0.0715,
+   "cuota_sensibilidad": 0.195
+  },
+  "rizo": {
+   "n": 15,
+   "cuota_peso": 0.059,
+   "peso_por_feature": 0.0723,
+   "cuota_sensibilidad": 0.053
+  }
+ },
+ "referencia: rectas 8×8 + gris + rizo": {
+  "rectas": {
+   "n": 512,
+   "cuota_peso": 0.547,
+   "peso_por_feature": 0.0139,
+   "cuota_sensibilidad": 0.565
+  },
+  "gris celdas": {
+   "n": 384,
+   "cuota_peso": 0.406,
+   "peso_por_feature": 0.0137,
+   "cuota_sensibilidad": 0.402
+  },
+  "rizo": {
+   "n": 15,
+   "cuota_peso": 0.048,
+   "peso_por_feature": 0.0413,
+   "cuota_sensibilidad": 0.033
+  }
+ },
+ "rectas 8×8 + gris + gris-objetos + rizo": {
+  "rectas": {
+   "n": 512,
+   "cuota_peso": 0.499,
+   "peso_por_feature": 0.012,
+   "cuota_sensibilidad": 0.52
+  },
+  "gris celdas": {
+   "n": 384,
+   "cuota_peso": 0.352,
+   "peso_por_feature": 0.0113,
+   "cuota_sensibilidad": 0.358
+  },
+  "gris-objetos": {
+   "n": 54,
+   "cuota_peso": 0.106,
+   "peso_por_feature": 0.0242,
+   "cuota_sensibilidad": 0.093
+  },
+  "rizo": {
+   "n": 15,
+   "cuota_peso": 0.043,
+   "peso_por_feature": 0.0351,
+   "cuota_sensibilidad": 0.029
+  }
+ }
+}
