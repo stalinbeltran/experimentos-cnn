@@ -664,3 +664,23 @@ orientación) y 4 a ×2, dibujadas con su longitud y su fuerza, frente a las 226
 
 ⚠ La longitud de un objeto de un solo pico es 15 px por construcción (L); es un suelo, no una medida. Y `NORMA` = 2,5
 se fijó a mano (el 784 da 2,13): si alguna vez un pico pasa de ahí, satura.
+
+### ✅ Decisión del dueño (2026-10-12): para las rectas, **objetos ×1** (44), porque baja el peso de las rectas
+
+Con eso el **gris** pasa a dominar el compositor (cuota 0,77). Queda pendiente medir esa configuración a ciegas con
+intención (hoy sale 0,9689; ver tabla de la opción 5) y qué hacer con la caída.
+
+### Cómo funciona el detector GRIS, etapa a etapa (`nn/gris_dibujo.py`, pedido por el dueño el 2026-10-12)
+
+`python nn/gris_dibujo.py --idx 784` → `28-gris-784.png`. Es la cadena del boceto curvas-gabor con la calibración «gris
+re-calibrado» (τ 0,1 · σ_E 0,5 · coh 0,25 · λ 3):
+1. el dígito; 2. **borde**: banco de Gabor **impar** (seno, λ_b 10, 9×9, 8 orientaciones), |respuesta| máxima normalizada
+por un escalón ideal → borde **gris** en la frontera del trazo (2–3 px, no binario); 3. **campo**: Gabor **par** (coseno,
+12 orientaciones, λ 3) sobre ese borde → energía E_max (dónde hay borde: umbral τ), orientación θ (media en ángulo doble)
+y coherencia (cuánto se cree θ); 4. **giro**: en cada píxel del borde se lee θ a ±4 px a lo largo de la tangente, κ = Δθ/8
+en °/px, medible sólo si los dos extremos siguen en el borde y son coherentes (en el 784, 222 de 493 px); 5. el **vector
+de curvatura** k = κ·(−sin θ, cos θ), que apunta al centro de la curva; 6. **seis mapas**: recto (|κ| < 2 °/px) · k→ ·
+k← · k↓ · k↑ (cada sentido, max(0, ·)) · golpe (coherencia < 0,25: esquina o cruce); 7. máximo en celdas 8×8 → 384.
+Lo que se ve en el 784: el lazo de abajo es casi todo «k←» y «k↑» (el centro queda a la izquierda y arriba de su borde
+derecho e inferior), el de arriba «k→» y «k↓»; «recto» sólo tiene 13 celdas (los dos flancos del cuello), y «golpe»
+marca el cruce de la cintura y las esquinas de los huecos.
