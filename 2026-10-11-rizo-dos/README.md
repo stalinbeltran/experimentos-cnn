@@ -501,3 +501,14 @@ cambiar el compositor sino el **tamaño relativo** de los grupos: o reducir las 
 números), o dar al rizo más números (un mapa 8×8 por candidato, como la variante de 128 de `digitos_variantes.py`, que
 en la tabla 15 no mejoró al compositor **lineal**; con el MLP y con aumento no está medido). Lo otro es no
 estandarizar por feature sino por grupo, para que cada grupo entre con la misma norma total.
+
+### Las rectas del 784 dibujadas como rectas (`nn/rectas_dibujo.py`, pedido por el dueño el 2026-10-12)
+
+`python nn/rectas_dibujo.py --idx 784` → `22-rectas-784.png`: cada celda 8×8 de la feature «rectas» se pinta como un
+segmento en la posición del máximo dentro de la celda, con la orientación de su Gabor (la dirección de la cresta se lee
+del kernel: 0° horizontal, 45° `\`, 90° vertical, 135° `/`), y con longitud y tono proporcionales al valor (el máximo del
+dígito, 2,13, se pinta de 15 px, que es la longitud del integrador). Suma de celdas por orientación, escala ×1 / ×2: 0°
+29,4 / 22,2 · 45° 31,5 / 23,7 · 90° 33,5 / 25,3 · 135° 29,8 / 19,7. Lo que se ve: a 135° ×2 una sola recta larga y
+oscura cruza el lazo de arriba por su flanco superior-izquierdo (la que la media de los 6 tiene ahí) y otra el cierre
+inferior-derecho; a 45° las rectas fuertes van por el cuerpo inclinado del dígito; a 0° las más largas están en el remate
+inferior y el superior, y a 90° en los dos flancos exteriores.
