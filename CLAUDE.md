@@ -58,6 +58,27 @@ radio de los 2» no ayudó; el banco rodeado sí). ⚠ Lo que sí falla: en 4 de
 (el hueco cabeza–diagonal), y a veces un punto arriba y fuera de lo que un humano llamaría curva cerrada; separar eso
 pide seguir el trazo, que ninguno de los tres mide. Detalle y figuras en su README.
 
+## 🏆 EL MEJOR RESULTADO DE RECONOCIMIENTO DE DÍGITOS HASTA HOY (dueño, 2026-10-12)
+
+> «Guarda que este es nuestro mejor resultado para reconocimiento de dígitos hasta el momento.» — el dueño, 2026-10-12
+
+**MLP 256 · rectas + gris + rizo, entrenado con AUMENTO: 0,9858 en val (1617) con la semilla 0, 0,9852 con 3 semillas;
+23 fallos, 21 de ellos en las tres semillas** (8→9 ×7, 3→9 ×3, 3→5 ×2). Movido ±4 px sigue en 0,94–0,96. Cómo se
+reproduce: `2026-10-11-rizo-dos/nn/resistencia.py` (método B) y `nn/fallos_mejor.py` (la lista y la figura 19,
+`resultados/19-fallos-mejor.{png,json}`). Qué es cada pieza:
+
+- **rectas**: 4 Gabor par (0/45/90/135) integrados en línea, 2 escalas, máximo en celdas 8×8 (boceto curvas-gabor,
+  `digitos.caract_rectas`; 512).
+- **gris**: el detector de curvas sobre el borde Gabor impar gris λ_b 10 · K 9 re-calibrado (τ 0,1 · σ_E 0,5 · coh 0,25 ·
+  λ 3): recto · κ→←↓↑ · golpe, celdas 8×8 (`digitos_bordes.caract` con `bordes_gabor.BordeGabor`; 384).
+- **rizo**: la salida «rizo» del compuesto de curvas cerradas de `rizo-2` (`compuesto2.py` + candidatos al centro del
+  hueco), compacta: mejor candidato en celdas 2×2 con su encierro, más la cuenta (5).
+- **compositor**: MLP de una capa oculta de 256, ReLU, dropout 0,3, Adam 3e-3, L2 1e-3, 400 pasos, entradas
+  estandarizadas; entrenado con los 180 de train **y 12 copias movidas** (±1, ±2, ±3 px en x y en y) de cada uno.
+
+⚠ Lo que NO está medido: **a ciegas (3823)** con aumento (sin aumento, la misma combinación da 0,972 / 0,969). Y la
+referencia anterior era el boceto: 0,960 / 0,957 con el compositor lineal.
+
 ## 📌 LOS MEJORES HASTA HOY (2026-10-12): detectores y compositores — para recordárselo al dueño cuando pregunte
 
 Medido en `rizo-2` (`2026-10-11-rizo-dos/nn/detectores.py`, `resultados/17-detectores.json`; 180 train / 1617 val /
