@@ -58,6 +58,26 @@ radio de los 2» no ayudó; el banco rodeado sí). ⚠ Lo que sí falla: en 4 de
 (el hueco cabeza–diagonal), y a veces un punto arriba y fuera de lo que un humano llamaría curva cerrada; separar eso
 pide seguir el trazo, que ninguno de los tres mide. Detalle y figuras en su README.
 
+## 📌 LOS MEJORES HASTA HOY (2026-10-12): detectores y compositores — para recordárselo al dueño cuando pregunte
+
+Medido en `rizo-2` (`2026-10-11-rizo-dos/nn/detectores.py`, `resultados/17-detectores.json`; 180 train / 1617 val /
+3823 a ciegas, 3 semillas; val / a ciegas):
+
+- **Detectores de features, de mejor a peor solo**: **gris** (curvas del boceto curvas-gabor sobre el borde Gabor impar
+  gris λ_b 10 · K 9 re-calibrado; 0,960 / 0,957 lineal) · **rectas** (4 Gabor par integrados, 2 escalas; 0,955 / 0,947)
+  · **delgado** (curvas sobre el dígito tal cual; 0,929 / 0,921) · **rizo** (la salida «rizo» del compuesto de curvas
+  cerradas, compacta: mejor candidato en celdas 2×2 + cuenta, 5 números; solo no clasifica, 0,37, pero **suma en toda
+  combinación**, +0,3 a +1,0 en val).
+- **Detector de curvas cerradas**: el **compuesto** `compuesto2.py` (plantillas rodeadas cob ≥ 0,85 ∪ rayos proponen; el
+  encierro por rayos elige; el candidato se mueve al centro del hueco). Rizos del 2: 80,9 % top-1. Dos salidas: «rizo»
+  (hueco libre, rayos 8 px) y «lazo» (hueco ≥ 2,5 px, rayos 14 px: sólo lazos de verdad, 0,7 por dígito).
+- **Compositores**: **MLP 256** (una capa oculta, dropout 0,3, Adam, 400 pasos) es el más honesto —mejor a ciegas y
+  poca varianza—; el **bosque aleatorio 500** gana en val y pierde a ciegas (ajusta a val); el lineal del boceto queda
+  ~1,5 puntos por debajo; boosting y k vecinos, peor que el lineal con 180 ejemplos.
+- **La mejor combinación honesta: MLP 256 · rectas + gris + rizo = 0,972 val / 0,969 a ciegas** (la referencia del
+  boceto era 0,960 / 0,957). Con todo (+ delgado): 0,970 / 0,970. El máximo en val, bosque · gris + delgado 0,975, cae
+  a 0,962 a ciegas.
+
 ## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
 
 > «Necesito que me ayudes observando los dígitos y aplicando distintas estrategias hasta hallar unas que nos permitan
