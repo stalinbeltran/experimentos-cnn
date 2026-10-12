@@ -692,3 +692,23 @@ de los 23 fallos (el 784 entre ellos: 8 en las 3 semillas) y abre 19–22 nuevos
 0,967 / 0,960, así que el aumento le da +1,1 / +0,9. Contra la configuración elegida (objetos ×1 + gris + rizo, 0,9829 /
 0,9689): a ciegas son **iguales**, o sea que en esa configuración las rectas-objeto y el rizo sólo aportan en val.
 Contra la referencia (0,9852 / 0,9792): −0,7 / −1,0 puntos.
+
+### ¿Quitar el canal «recto» del gris, ya que las rectas están en otro grupo? (2026-10-12, `30-gris-sin-recto.json`)
+
+El «recto» del gris son 64 de sus 384 (|κ| < 2 °/px y medible). Medido quitándolo, MLP 256 con aumento, 3 semillas:
+
+| configuración | n | val | a ciegas | fallos fig. 19 arreglados | nuevos | 784 |
+|---|---:|---:|---:|---:|---:|---|
+| gris solo | 384 | 0,9779 | 0,9690 | 7–8 | 19–22 | 8 |
+| gris SIN recto, solo | 320 | 0,9722 | 0,9640 | 6 | 27–30 | 8 |
+| objetos ×1 + gris + rizo (elegida) | 443 | 0,9829 | 0,9689 | 6–7 | 10–12 | 8 |
+| objetos ×1 + gris SIN recto + rizo | 379 | 0,9823 | **0,9629** | 6–8 | 12–13 | 8 |
+| rectas 8×8 + gris + rizo (referencia) | 911 | 0,9854 | 0,9792 | 2 | 2–3 | 6 |
+| rectas 8×8 + gris SIN recto + rizo | 847 | 0,9856 | 0,9776 | 3 | 2–4 | 6 |
+
+**No conviene quitarlo.** Solo, el gris pierde 0,6 / 0,5 puntos sin él. En la configuración elegida, val queda igual pero
+**a ciegas baja 0,6** (0,9689 → 0,9629): las rectas-objeto no sustituyen al «recto» del gris. Y hasta con las 512 rectas
+densas baja a ciegas (0,9792 → 0,9776). El motivo es que no son la misma cosa: las rectas Gabor miden **dónde hay un trazo
+recto** (energía de orientación en el trazo); el «recto» del gris dice **dónde el borde no gira**, medido en la misma
+cadena y con la misma máscara que las curvas, así que es el complemento de «k→ k← k↓ k↑»: para una celda, «hay borde y
+no es curvo» es información que los otros cuatro canales no llevan (su cero puede ser «recto» o «no medible»).

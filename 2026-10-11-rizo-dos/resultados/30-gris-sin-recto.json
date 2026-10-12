@@ -1,0 +1,146 @@
+{
+ "gris solo": {
+  "n": 384,
+  "val": 0.9779,
+  "val_rango": [
+   0.9765,
+   0.979
+  ],
+  "ciega": 0.969,
+  "fallos19_arreglados": [
+   7,
+   8,
+   7
+  ],
+  "fallos_nuevos": [
+   19,
+   19,
+   22
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "gris SIN recto solo": {
+  "n": 320,
+  "val": 0.9722,
+  "val_rango": [
+   0.9709,
+   0.9728
+  ],
+  "ciega": 0.964,
+  "fallos19_arreglados": [
+   6,
+   6,
+   6
+  ],
+  "fallos_nuevos": [
+   27,
+   27,
+   30
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "objetos ×1 + gris + rizo (elegida)": {
+  "n": 443,
+  "val": 0.9829,
+  "val_rango": [
+   0.9821,
+   0.9839
+  ],
+  "ciega": 0.9689,
+  "fallos19_arreglados": [
+   7,
+   6,
+   7
+  ],
+  "fallos_nuevos": [
+   10,
+   12,
+   12
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "objetos ×1 + gris SIN recto + rizo": {
+  "n": 379,
+  "val": 0.9823,
+  "val_rango": [
+   0.9814,
+   0.9827
+  ],
+  "ciega": 0.9629,
+  "fallos19_arreglados": [
+   6,
+   7,
+   8
+  ],
+  "fallos_nuevos": [
+   13,
+   12,
+   13
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "rectas 8×8 + gris + rizo (referencia)": {
+  "n": 911,
+  "val": 0.9854,
+  "val_rango": [
+   0.9852,
+   0.9858
+  ],
+  "ciega": 0.9792,
+  "fallos19_arreglados": [
+   2,
+   2,
+   2
+  ],
+  "fallos_nuevos": [
+   3,
+   2,
+   3
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "rectas 8×8 + gris SIN recto + rizo": {
+  "n": 847,
+  "val": 0.9856,
+  "val_rango": [
+   0.9852,
+   0.9864
+  ],
+  "ciega": 0.9776,
+  "fallos19_arreglados": [
+   3,
+   3,
+   3
+  ],
+  "fallos_nuevos": [
+   2,
+   4,
+   4
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ }
+}
