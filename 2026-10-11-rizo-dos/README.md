@@ -598,3 +598,15 @@ redundancia es lo que las hace estables a 1 px: contar menos quita la repetició
 rejilla fija (cuántos por orientación, longitud total, posición del más largo) es justo lo que evita que un pico cambie
 de celda; por eso el rizo compacto, con 5 números, es el grupo más estable al mover (ruido/señal 0,16 en `peso_grupos`).
 El criterio sigue siendo el mismo: val y ciega no bajen.
+
+### Cómo se obtiene la feature del rizo, etapa a etapa (`nn/rizo_dibujo.py`, pedido por el dueño el 2026-10-12)
+
+`python nn/rizo_dibujo.py --idx 784` → `25-rizo-784.png`, ocho paneles: 1 dígito · 2 plantillas rodeadas (299 anillos con
+cob ≥ 0,85, mejor correlación por píxel y sus picos, P') · 3 rayos (36 rayos de 8 px desde cada píxel de fondo, fracción que
+choca; regiones ≥ 0,5, R) · 4 unión P' ∪ R ordenada por encierro y sin duplicados a 2 px (24 candidatos crudos) · 5 el
+hueco: cada candidato salta al máximo de la distancia al trazo a ≤ 2 px y toma su altura h · 6 encierro en ese centro con
+rayos de 8 px, filtro h ≥ 0 y encierro ≥ 0,85, sin duplicados (5 rizos) · 7 mapa de campanas σ 1,5 con altura = encierro
+(todos, y sólo el mejor) · 8 lo que entra al compositor: máximo 2×2 del mapa del mejor + la cuenta = 5 números, aquí
+`[1,0 · 0,03 · 0 · 0 · 5]`. ⚠ Lo que enseña el último panel: de los dos huecos del 8, al compositor sólo le llega la
+**posición del mejor** (arriba a la izquierda); el de abajo sólo cuenta en el `5`, mezclado con los duplicados del mismo
+hueco. Es lo que limita al rizo a 0,881 en 8 contra 6.
