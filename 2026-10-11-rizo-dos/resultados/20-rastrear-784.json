@@ -1,0 +1,201 @@
+{
+ "idx": 784,
+ "real": 8,
+ "predicho": 6,
+ "semilla": 0,
+ "logits": [
+  -1.218000054359436,
+  -2.299999952316284,
+  -1.2130000591278076,
+  -0.014999999664723873,
+  -0.8550000190734863,
+  -1.3329999446868896,
+  4.006999969482422,
+  -2.634000062942505,
+  3.119999885559082,
+  -2.4240000247955322
+ ],
+ "prob": [
+  0.003700000001117587,
+  0.0013000000035390258,
+  0.003700000001117587,
+  0.012299999594688416,
+  0.0052999998442828655,
+  0.0032999999821186066,
+  0.6858000159263611,
+  0.0008999999845400453,
+  0.2827000021934509,
+  0.0010999999940395355
+ ],
+ "rizo_candidatos_filtrados": [
+  {
+   "centro_hueco": [
+    12.5,
+    9.5
+   ],
+   "h": 1.0,
+   "cierre": 0.7,
+   "orientacion": 150.0,
+   "r8": 1.0,
+   "r14": 1.0,
+   "r18": 1.0
+  },
+  {
+   "centro_hueco": [
+    16.5,
+    25.5
+   ],
+   "h": 1.0,
+   "cierre": 0.7,
+   "orientacion": 330.0,
+   "r8": 1.0,
+   "r14": 1.0,
+   "r18": 1.0
+  },
+  {
+   "centro_hueco": [
+    17.5,
+    21.5
+   ],
+   "h": 1.414,
+   "cierre": 0.7,
+   "orientacion": 60.0,
+   "r8": 1.0,
+   "r14": 1.0,
+   "r18": 1.0
+  },
+  {
+   "centro_hueco": [
+    11.5,
+    11.5
+   ],
+   "h": 2.0,
+   "cierre": 0.7,
+   "orientacion": 300.0,
+   "r8": 1.0,
+   "r14": 1.0,
+   "r18": 1.0
+  },
+  {
+   "centro_hueco": [
+    19.5,
+    24.5
+   ],
+   "h": 2.236,
+   "cierre": 0.7,
+   "orientacion": 180.0,
+   "r8": 1.0,
+   "r14": 1.0,
+   "r18": 1.0
+  }
+ ],
+ "rizo_candidatos_crudos": 24,
+ "ablacion": {
+  "rectas": {
+   "media train": {
+    "predicho": 8,
+    "logit6-logit8": -2.714
+   },
+   "media de los 8": {
+    "predicho": 8,
+    "logit6-logit8": -8.093
+   },
+   "media de los 6": {
+    "predicho": 6,
+    "logit6-logit8": 5.205
+   }
+  },
+  "gris": {
+   "media train": {
+    "predicho": 6,
+    "logit6-logit8": 2.982
+   },
+   "media de los 8": {
+    "predicho": 8,
+    "logit6-logit8": -2.16
+   },
+   "media de los 6": {
+    "predicho": 6,
+    "logit6-logit8": 7.347
+   }
+  },
+  "rizo": {
+   "media train": {
+    "predicho": 6,
+    "logit6-logit8": 1.403
+   },
+   "media de los 8": {
+    "predicho": 6,
+    "logit6-logit8": 0.784
+   },
+   "media de los 6": {
+    "predicho": 6,
+    "logit6-logit8": 1.718
+   }
+  }
+ },
+ "solo_un_grupo": {
+  "rectas": {
+   "predicho": 6,
+   "logit6-logit8": 3.382
+  },
+  "gris": {
+   "predicho": 8,
+   "logit6-logit8": -2.326
+  },
+  "rizo": {
+   "predicho": 9,
+   "logit6-logit8": -0.506
+  }
+ },
+ "atribucion_por_grupo": {
+  "rectas": 3.948,
+  "gris": -2.441,
+  "rizo": -0.509
+ },
+ "margen": 0.886,
+ "vecinos": [
+  {
+   "idx": 66,
+   "clase": 6,
+   "dist": 29.21
+  },
+  {
+   "idx": 684,
+   "clase": 8,
+   "dist": 29.47
+  },
+  {
+   "idx": 1443,
+   "clase": 8,
+   "dist": 29.79
+  },
+  {
+   "idx": 1085,
+   "clase": 6,
+   "dist": 29.8
+  },
+  {
+   "idx": 899,
+   "clase": 8,
+   "dist": 30.33
+  },
+  {
+   "idx": 880,
+   "clase": 6,
+   "dist": 30.49
+  }
+ ],
+ "dist_media_por_clase": {
+  "0": 37.2,
+  "1": 36.63,
+  "2": 35.82,
+  "3": 35.93,
+  "4": 40.77,
+  "5": 37.22,
+  "6": 33.07,
+  "7": 40.81,
+  "8": 35.58,
+  "9": 37.29
+ }
+}

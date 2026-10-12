@@ -415,3 +415,32 @@ implícito en el encierro (altura del rizo) y en los vectores de curvatura del g
 es grueso (cuatro valores: 0,1 · 0,4 · 0,7 · 1) y mal medido en rendijas, así que no aporta señal nueva. Para saber
 cuál, haría falta un cierre medido sobre el trazo (cuánto arco rodea de verdad al hueco), que ninguno de los detectores
 de hoy calcula.
+
+## RASTREO de un fallo: el idx 784, un 8 leído como 6 (`nn/rastrear.py`, pedido por el dueño el 2026-10-12)
+
+`python nn/rastrear.py --idx 784` entrena el mejor compositor (MLP 256 · rectas + gris + rizo, con aumento; semilla 0)
+y para ese dígito pinta: candidatos del rizo y logits; **ablación** por grupo (sustituir rectas / gris / rizo por la media
+de train, de los 8 o de los 6); **atribución** gradiente × entrada del margen logit 6 − logit 8, celda a celda sobre el
+dígito; la feature del rizo frente a las medias de clase; y los 6 vecinos más cercanos en train
+(`20-rastrear-784.json`, figura `20-rastrear-784.png`). Lo medido:
+
+| | |
+|---|---|
+| logits | 6: **4,01** · 8: 3,12 (margen +0,89; p(6) 0,69, p(8) 0,28). El resto por debajo de 0 |
+| rizo | encuentra **los dos huecos** (arriba en (12,9), abajo en (16,25), encierro 1,0 en los dos) · 5 rizos frente a 4,2 de media en los 8 y 2,7 en los 6 |
+| atribución por grupo | **rectas +3,95** (hacia el 6) · gris −2,44 (hacia el 8) · rizo −0,51 (hacia el 8) |
+| ablación | rectas ← media train: lee **8** (margen −2,7) · gris ← media train: lee 6 con más margen (+3,0) · rizo ← cualquier media: sigue 6 |
+| sólo un grupo (los otros dos a la media) | sólo rectas → **6** · sólo gris → **8** · sólo rizo → 9 |
+| vecinos en train | 1.º un **6** (idx 66), luego 8, 8, 6, 8, 6 · la clase más cercana en media es el 6 (33,1) y después el 8 (35,6) |
+
+**Por qué 6:** los dos detectores que miran la curva —el gris (vectores de curvatura) y el rizo— leen un 8, pero el grupo de
+**rectas** (Gabor en 4 orientaciones × 2 escalas, leído en celdas 8×8) lo lee como 6 con más fuerza, y gana por 0,89. Lo
+que más empuja son las rectas a **135° a escala ×2** (+1,52) y a 0° (+0,79), en las celdas del lado derecho del lazo
+inferior y del remate superior: el lazo de arriba es un bloque casi macizo (13 px de ancho con un hueco de 4×4) y a escala
+gruesa su contorno se lee como el trazo diagonal grueso con que un 6 arranca. Es un fallo de **composición**, no de
+detección: las features que distinguen (hueco arriba, curvatura) están, y el compositor las pesa menos que la textura de
+rectas. Falla en las 3 semillas, y su vecino más cercano en feature es un 6.
+
+⚠ Rastreo de **un** dígito y una semilla; la atribución grad × entrada es local (el margen es de 0,89 y la suma de las
+atribuciones, +1,0, no coincide exactamente con él porque la red no es lineal). Para generalizarlo habría que correrlo en
+los 23 fallos de la figura 19 (los 8→9 sobre todo).
