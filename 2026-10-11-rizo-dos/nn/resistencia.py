@@ -11,7 +11,7 @@ cambia de lectura respecto de d = 0. Cuatro métodos, acumulables:
   C  CELDAS MÁS GRUESAS: 4×4 en vez de 8×8 (la lectura cambia menos al mover 1–2 px), con aumento
   D  CONJUNTO EN PRUEBA: promediar los logits de 9 copias movidas (0, ±1 px en x e y) del dígito, con B
 
-    python nn/resistencia.py   → resultados/18-resistencia.json · 18-resistencia.png  (~50 min: el rizo se recalcula en cada copia movida)
+    python nn/resistencia.py   → resultados/18-resistencia.json · 18-resistencia.png  (~2 h: el rizo se calcula una vez por copia movida de val, 18 copias)
 """
 from __future__ import annotations
 
@@ -61,13 +61,19 @@ def gris(img, celdas):
     return F.adaptive_max_pool2d(m, celdas).flatten(2)[:, :6].flatten(1).numpy()
 
 
-def rizo(img):
-    C = [DV.candidatos(x) for x in img]
-    return CO.compacta(C, "rizo (h0, 8px)")
+def candidatos(img):
+    return [DV.candidatos(x) for x in img]
 
 
-def feats(img, celdas):
-    return np.concatenate([rectas(img, celdas), gris(img, celdas), rizo(img)], 1)
+def desplazar_candidatos(C, ex, ey):
+    """Los candidatos de la copia movida (ex, ey): los mismos, desplazados. Exacto si no se pierde tinta; cerca del
+    borde los rayos podrían ver otra cosa, y eso se acepta (la alternativa eran 9 cálculos del rizo por copia: 14 h)."""
+    return [[dict(c, centro_hueco=(c["centro_hueco"][0] + ex, c["centro_hueco"][1] + ey)) for c in cs
+             if 0 <= c["centro_hueco"][0] + ex < 32 and 0 <= c["centro_hueco"][1] + ey < 32] for cs in C]
+
+
+def feats(img, celdas, C):
+    return np.concatenate([rectas(img, celdas), gris(img, celdas), CO.compacta(C, "rizo (h0, 8px)")], 1)
 
 
 def mlp_logits(xtr, ytr, sem, oculta=256):
@@ -97,7 +103,8 @@ def main() -> int:
     Itr, Iva, ytr, yva = img[tr], img[va], y[tr], y[va]
     # entrenamiento: original y aumentado, en 8×8 y 4×4
     aum = [(0, 0)] + [(k, 0) for k in AUM] + [(0, k) for k in AUM]
-    Xtr = {c: {m: feats(mover(Itr, *m), c) for m in aum} for c in (8, 4)}
+    Ctr = {m: candidatos(mover(Itr, *m)) for m in aum}
+    Xtr = {c: {m: feats(mover(Itr, *m), c, Ctr[m]) for m in aum} for c in (8, 4)}
     print(f"entrenamiento: {len(aum)} copias × 2 rejillas ({time.time() - t0:.0f} s)", flush=True)
     # validación movida
     Xva, rec = {}, {}
@@ -105,13 +112,14 @@ def main() -> int:
         for dd in DS:
             m = (dd, 0) if eje == "x" else (0, dd); Im = mover(Iva, *m)
             rec[(eje, dd)] = np.array([a.sum() != b.sum() for a, b in zip(Im, Iva)])
+            Cm = candidatos(Im)
             for c in (8, 4):
-                Xva[(eje, dd, c)] = feats(Im, c)
-            # para el conjunto en prueba (D): las 9 copias ±1 de cada copia movida, sólo en 8×8
+                Xva[(eje, dd, c)] = feats(Im, c, Cm)
+            # para el conjunto en prueba (D): las 8 copias ±1 de cada copia movida (8×8); el rizo, desplazando los candidatos
             for ex in (-1, 0, 1):
                 for ey in (-1, 0, 1):
                     if (ex, ey) != (0, 0):
-                        Xva[(eje, dd, 8, ex, ey)] = feats(mover(Im, ex, ey), 8)
+                        Xva[(eje, dd, 8, ex, ey)] = feats(mover(Im, ex, ey), 8, desplazar_candidatos(Cm, ex, ey))
             print(f"val movida {eje} {dd:+d} ({time.time() - t0:.0f} s)", flush=True)
     metodos = {
         "A base (8×8)": {"celdas": 8, "aumento": False, "conjunto": False},
