@@ -1,0 +1,118 @@
+{
+ "rectas 8×8 (referencia, 512)": {
+  "n_rectas": 512,
+  "val": 0.9854,
+  "val_rango": [
+   0.9852,
+   0.9858
+  ],
+  "ciega": 0.9792,
+  "cuota_peso": {
+   "rectas": 0.547,
+   "gris": 0.406,
+   "rizo": 0.048
+  },
+  "fallos19_arreglados": [
+   2,
+   2,
+   2
+  ],
+  "fallos_nuevos": [
+   3,
+   2,
+   3
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "objetos ×1 (44)": {
+  "n_rectas": 44,
+  "val": 0.9829,
+  "val_rango": [
+   0.9821,
+   0.9839
+  ],
+  "ciega": 0.9689,
+  "cuota_peso": {
+   "rectas": 0.166,
+   "gris": 0.771,
+   "rizo": 0.063
+  },
+  "fallos19_arreglados": [
+   7,
+   6,
+   7
+  ],
+  "fallos_nuevos": [
+   10,
+   12,
+   12
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "objetos ×1 y ×2 (88)": {
+  "n_rectas": 88,
+  "val": 0.9843,
+  "val_rango": [
+   0.9833,
+   0.9852
+  ],
+  "ciega": 0.971,
+  "cuota_peso": {
+   "rectas": 0.245,
+   "gris": 0.695,
+   "rizo": 0.06
+  },
+  "fallos19_arreglados": [
+   9,
+   9,
+   9
+  ],
+  "fallos_nuevos": [
+   10,
+   13,
+   11
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "rectas 8×8 + objetos ×1 y ×2 (600)": {
+  "n_rectas": 600,
+  "val": 0.9878,
+  "val_rango": [
+   0.9876,
+   0.9882
+  ],
+  "ciega": 0.9787,
+  "cuota_peso": {
+   "rectas": 0.598,
+   "gris": 0.359,
+   "rizo": 0.043
+  },
+  "fallos19_arreglados": [
+   5,
+   6,
+   5
+  ],
+  "fallos_nuevos": [
+   2,
+   2,
+   2
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ }
+}

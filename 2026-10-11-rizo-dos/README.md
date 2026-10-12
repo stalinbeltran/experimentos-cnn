@@ -634,3 +634,33 @@ Medido con el compositor (`26-huecos.json`, `26-huecos-medida.png`; MLP 256, rec
 de rectas y gris, el grupo sigue siendo el 3–5 % del voto. La feature es más fiel —cuenta agujeros de verdad, y los dos
 del 8 llegan— y eso vale por sí mismo; lo que no hace es cambiar el equilibrio del compositor, que es el problema de
 `peso_grupos.py`. Mismo criterio: se queda si no baja, y no baja.
+
+### Opción 5, medida (`nn/rectas_objetos.py`, 2026-10-12): las rectas como OBJETOS, con la receta de los agujeros
+
+Los picos de «un voto» (L = 15) de la misma orientación, colineales (≤ 2 px en la perpendicular) y a ≤ 15 px a lo largo
+se agrupan: una recta. Cada recta es un objeto (centro, orientación, longitud = extensión de sus picos + 15, fuerza = el
+pico mayor), y por orientación se lee el mapa de todas (campana σ 1,5, altura = fuerza/2,5) en 3×3 + cuenta + longitud
+total: 44 números por escala. Figura `27-objetos-784.png`: el 784 queda en **14 rectas** a ×1 (2 · 5 · 3 · 4 por
+orientación) y 4 a ×2, dibujadas con su longitud y su fuerza, frente a las 226 celdas de la referencia. Medida con gris
+8×8 y rizo = actual + huecos 3×3 (15), MLP 256 con aumento, 3 semillas (`27-objetos.json`, `27-objetos-medida.png`):
+
+| rectas | n | val | a ciegas | cuota rectas / gris / rizo | fallos fig. 19 arreglados | nuevos | 784 |
+|---|---:|---:|---:|---|---:|---:|---|
+| 8×8 (referencia) | 512 | 0,9854 | **0,9792** | 0,55 / 0,41 / 0,05 | 2 | 2–3 | 6 |
+| objetos ×1 | 44 | 0,9829 | 0,9689 | 0,17 / 0,77 / 0,06 | 6–7 | 10–12 | 8 |
+| objetos ×1 y ×2 | 88 | 0,9843 | 0,9710 | 0,25 / 0,70 / 0,06 | **9** | 10–13 | 8 |
+| **8×8 + objetos ×1 y ×2** | 600 | **0,9878** [0,9876–0,9882] | 0,9787 | 0,60 / 0,36 / 0,04 | 5–6 | **2** | 6 |
+
+1. **Solas, las rectas-objeto cumplen lo que se buscaba y no el criterio**: con 88 números el grupo baja a 0,25 de la
+   masa, el 784 se lee como 8 en las 3 semillas y arregla 9 de los 23; pero abre 10–13 nuevos y **a ciegas cae 8
+   milésimas** (0,9792 → 0,9710), la peor caída de las tres opciones. Son 14 objetos por dígito: cada uno pesa mucho y
+   uno que se parta o se funda cambia la lectura.
+2. **Añadidas a las rectas 8×8 dan el mejor val hasta hoy: 0,9878**, 2,4 milésimas sobre la referencia y fuera de su
+   rango entre semillas; arregla 5–6 y abre sólo 2. A ciegas, igual (0,9787). O sea que las rectas-objeto **aportan
+   información que las celdas no tienen** (cuánto mide una recta y cuántas hay), pero no sustituyen a las celdas, y el
+   784 sigue en 6 porque la cuota de rectas incluso sube (0,60).
+3. **Las tres opciones dicen lo mismo**: todo lo que hace que las rectas cuenten menos arregla el 784 y baja a ciegas.
+   La redundancia de las 512 celdas no es sólo cuenta: es estabilidad, y a ciegas se paga quitarla.
+
+⚠ La longitud de un objeto de un solo pico es 15 px por construcción (L); es un suelo, no una medida. Y `NORMA` = 2,5
+se fijó a mano (el 784 da 2,13): si alguna vez un pico pasa de ahí, satura.

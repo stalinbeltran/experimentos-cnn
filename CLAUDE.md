@@ -76,8 +76,17 @@ reproduce: `2026-10-11-rizo-dos/nn/resistencia.py` (método B) y `nn/fallos_mejo
 - **compositor**: MLP de una capa oculta de 256, ReLU, dropout 0,3, Adam 3e-3, L2 1e-3, 400 pasos, entradas
   estandarizadas; entrenado con los 180 de train **y 12 copias movidas** (±1, ±2, ±3 px en x y en y) de cada uno.
 
-⚠ Lo que NO está medido: **a ciegas (3823)** con aumento (sin aumento, la misma combinación da 0,972 / 0,969). Y la
+✅ **A ciegas (3823) con aumento, medido el 2026-10-12: 0,9785** (`nn/menos_rectas.py`; sin aumento era 0,969). La
 referencia anterior era el boceto: 0,960 / 0,957 con el compositor lineal.
+
+**Y el mismo 2026-10-12, por la tarde, lo mejor en VAL subió a 0,9878** (3 semillas, rango 0,9876–0,9882; a ciegas
+0,9787, igual) añadiendo a lo de arriba dos grupos nuevos **sin quitar nada**: las **rectas como OBJETOS** (picos de «un
+voto» agrupados por colinealidad; por orientación y escala, 3×3 de todas + cuenta + longitud; 88) y los **agujeros**
+(un rizo por componente del fondo, 3×3 de todos + cuenta; 10). `2026-10-11-rizo-dos/nn/rectas_objetos.py`, fila «rectas
+8×8 + objetos» de `resultados/27-objetos.json`. ⚠ En val, no a ciegas: ahí no mueve. Lo que se probó para que las rectas
+**contaran menos** (celdas 4×4, un voto por recta, sólo objetos) reequilibra los grupos y arregla el 784, pero **baja a
+ciegas** (hasta 0,971): las 512 rectas densas son redundantes y esa redundancia es lo que las hace estables. El detalle,
+en el README de `rizo-2` § «Que las rectas cuenten MENOS».
 
 ## 📌 LOS MEJORES HASTA HOY (2026-10-12): detectores y compositores — para recordárselo al dueño cuando pregunte
 
