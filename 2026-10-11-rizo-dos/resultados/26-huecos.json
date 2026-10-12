@@ -1,0 +1,77 @@
+{
+ "rizo actual (2×2 mejor + cuenta, 5)": {
+  "n_rizo": 5,
+  "val": 0.9852,
+  "val_rango": [
+   0.9845,
+   0.9858
+  ],
+  "ciega": 0.9785,
+  "cuota_peso_rizo": 0.027,
+  "fallos19_arreglados": [
+   0,
+   1,
+   2
+  ],
+  "fallos_nuevos": [
+   0,
+   2,
+   4
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "huecos 3×3 + cuenta (10)": {
+  "n_rizo": 10,
+  "val": 0.9847,
+  "val_rango": [
+   0.9845,
+   0.9852
+  ],
+  "ciega": 0.9787,
+  "cuota_peso_rizo": 0.03,
+  "fallos19_arreglados": [
+   1,
+   2,
+   1
+  ],
+  "fallos_nuevos": [
+   3,
+   3,
+   3
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "rizo actual + huecos 3×3 (15)": {
+  "n_rizo": 15,
+  "val": 0.9854,
+  "val_rango": [
+   0.9852,
+   0.9858
+  ],
+  "ciega": 0.9792,
+  "cuota_peso_rizo": 0.048,
+  "fallos19_arreglados": [
+   2,
+   2,
+   2
+  ],
+  "fallos_nuevos": [
+   3,
+   2,
+   3
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ }
+}

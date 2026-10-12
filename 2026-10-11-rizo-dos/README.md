@@ -610,3 +610,27 @@ rayos de 8 px, filtro h ≥ 0 y encierro ≥ 0,85, sin duplicados (5 rizos) · 7
 `[1,0 · 0,03 · 0 · 0 · 5]`. ⚠ Lo que enseña el último panel: de los dos huecos del 8, al compositor sólo le llega la
 **posición del mejor** (arriba a la izquierda); el de abajo sólo cuenta en el `5`, mezclado con los duplicados del mismo
 hueco. Es lo que limita al rizo a 0,881 en 8 contra 6.
+
+## Pasarle TODOS los agujeros al compositor, en 3×3 (`nn/rizo_huecos.py`, pedido por el dueño el 2026-10-12)
+
+Al ver la figura 25 (*«logra identificar los agujeros del 8, pero sólo pasa 1»*): los rizos filtrados se **agrupan por
+agujero** —dos candidatos cuyo centro cae en la misma componente conexa del fondo son el mismo agujero, se queda el de
+mayor encierro; los del fondo exterior (concavidades abiertas) se agrupan por distancia ≤ 6 px—, un agujero → una campana
+σ 1,5 de altura = encierro, el mapa de **todos** se lee en **3×3** y se añade la **cuenta de agujeros**: 10 números. Sin
+agujeros, nueve ceros y un 0. Figura `26-huecos.png` (784: 5 rizos → 2 agujeros, cuenta 2 en vez de 5, y los dos huecos en
+el 3×3; el 6: 1; el 3 y el 9 idx 1562: 0). ⚠ Ese 9 tiene lazo cerrado y el detector **no lo ve** (0 candidatos pasan):
+eso es aguas arriba de esta feature y no lo arregla.
+
+Medido con el compositor (`26-huecos.json`, `26-huecos-medida.png`; MLP 256, rectas + gris + …, con aumento, 3 semillas):
+
+| grupo del rizo | n | val | a ciegas | cuota de peso del rizo | fallos fig. 19 arreglados | nuevos | 784 |
+|---|---:|---:|---:|---:|---:|---:|---|
+| actual: 2×2 del mejor + cuenta | 5 | 0,9852 | 0,9785 | 0,027 | 0–2 | 0–4 | 6 |
+| huecos 3×3 + cuenta de agujeros | 10 | 0,9847 | 0,9787 | 0,030 | 1–2 | 3 | 6 |
+| actual + huecos 3×3 | 15 | **0,9854** | **0,9792** | 0,048 | 2 | 2–3 | 6 |
+
+**No cambia nada medible**: ±0,5 milésimas en val y +0,7 a ciegas con los dos juntos, dentro del margen entre semillas
+(0,9845–0,9858). El compositor sí le da más peso (0,027 → 0,048) pero el 784 sigue en 6: con 10–15 números frente a 896
+de rectas y gris, el grupo sigue siendo el 3–5 % del voto. La feature es más fiel —cuenta agujeros de verdad, y los dos
+del 8 llegan— y eso vale por sí mismo; lo que no hace es cambiar el equilibrio del compositor, que es el problema de
+`peso_grupos.py`. Mismo criterio: se queda si no baja, y no baja.
