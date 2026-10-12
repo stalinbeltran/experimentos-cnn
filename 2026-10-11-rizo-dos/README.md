@@ -561,3 +561,8 @@ inclinados donde lo que distingue es la posición fina de las rectas: cinco 9 (6
 dos 2 → 1 (75, 461), 4 → 1 (247), dos 5 → 7 (633, 1575) y 1 → 8 (1723). En dos de los 9 (1562, 683) el rizo no ve el
 lazo o lo ve flojo, así que lo único que separaba 9 de 7 o de 1 era la recta fina del lazo, que a 4×4 se funde con el
 palo. Siguen mal en las dos variantes 18 de los 23.
+
+La misma figura con la opción 3 (`--celdas 4`): `22-rectas-784-4x4.png`. A 4×4 cada orientación y escala queda en 16
+segmentos (uno por celda) en vez de 64; la suma de celdas baja de 124 a 50 (×1) y de 91 a 36 (×2). La recta `/` larga del
+135° ×2 sobre el flanco superior-izquierdo sigue ahí, pero ahora es **una** celda, no cuatro: el mismo voto que en la media
+de los 6, sin la repetición que lo multiplicaba.

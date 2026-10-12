@@ -5,7 +5,8 @@ SEGMENTO en la posición del máximo dentro de la celda, con la orientación de 
 al valor (relativo al máximo del dígito). La dirección de cada cresta se lee del propio kernel (eje principal de su parte
 positiva), no de la etiqueta.
 
-    python nn/rectas_dibujo.py --idx 784   → resultados/22-rectas-784.png
+    python nn/rectas_dibujo.py --idx 784              → resultados/22-rectas-784.png
+    python nn/rectas_dibujo.py --idx 784 --celdas 4   → resultados/22-rectas-784-4x4.png  (la opción 3)
 """
 from __future__ import annotations
 
@@ -58,20 +59,20 @@ def celdas(m, n=8):
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--idx", type=int, required=True); ap.add_argument("--largo", type=float, default=D.L_INT, help="longitud del segmento de valor máximo, px")
+    ap = argparse.ArgumentParser(); ap.add_argument("--idx", type=int, required=True); ap.add_argument("--largo", type=float, default=D.L_INT, help="longitud del segmento de valor máximo, px"); ap.add_argument("--celdas", type=int, default=8, help="rejilla de celdas (8 = referencia; 4 = opción 3)")
     args = ap.parse_args()
     d = dict(np.load(exigir_dataset(EV.DATASET) / "datos.npz")); x = (d["imagenes"][args.idx] > 0).astype(np.uint8); real = int(d["etiquetas"][args.idx])
     dirs = [direccion(D.GABOR4[o, 0].numpy()) for o in range(4)]
     print("dirección de cada cresta (dx, dy; y hacia abajo):", {a: tuple(np.round(v, 2)) for a, v in zip(ANG, dirs)})
-    M = mapas(x); C = [celdas(M[e]) for e in range(2)]; vmax = max(v for e in range(2) for (_, _, _, v, _, _) in C[e])
+    M = mapas(x); C = [celdas(M[e], args.celdas) for e in range(2)]; vmax = max(v for e in range(2) for (_, _, _, v, _, _) in C[e])
     colores = ["#c2410c", "#1b7f3b", "#2a78d6", "#7c3aed"]
-    fig, axs = plt.subplots(2, 5, figsize=(17, 8.2))
+    fig, axs = plt.subplots(2, 5, figsize=(17, 9.4))
     for e in range(2):
         for col in range(5):
             ax = axs[e, col]; ax.imshow(np.where(x > 0, 1.0, np.nan), cmap=matplotlib.colors.ListedColormap(["#d9d8d4"]), vmin=0, vmax=1)
             ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5); ax.set_xticks([]); ax.set_yticks([])
-            for g in range(1, 8):
-                ax.axhline(g * 4 - 0.5, color="#eeeeee", lw=0.5, zorder=0); ax.axvline(g * 4 - 0.5, color="#eeeeee", lw=0.5, zorder=0)
+            for g in range(1, args.celdas):
+                ax.axhline(g * 32 / args.celdas - 0.5, color="#eeeeee", lw=0.5, zorder=0); ax.axvline(g * 32 / args.celdas - 0.5, color="#eeeeee", lw=0.5, zorder=0)
             orients = range(4) if col == 4 else [col]; suma = 0.0
             for (o, i, j, v, px, py) in C[e]:
                 if o not in orients or v <= 0:
@@ -79,10 +80,10 @@ def main() -> int:
                 suma += v; r = v / vmax; L = args.largo * r / 2; dx, dy = dirs[o]
                 ax.plot([px - dx * L, px + dx * L], [py - dy * L, py + dy * L], color=colores[o], alpha=0.15 + 0.85 * r, lw=0.8 + 2.4 * r, solid_capstyle="round")
             t = f"{ANG[col]}°" if col < 4 else "las cuatro"
-            ax.set_title(f"rectas {t} · escala ×{2 ** e}\nΣ celdas {suma:.1f}", fontsize=9)
-    fig.suptitle(f"rizo-2 · 22 · las RECTAS del idx {args.idx} (un {real}) dibujadas como rectas: cada celda 8×8 → un segmento en el máximo de la celda, "
+            ax.set_title(f"rectas {t} · escala ×{2 ** e} · celdas {args.celdas}×{args.celdas}\nΣ celdas {suma:.1f}", fontsize=9)
+    fig.suptitle(f"rizo-2 · 22 · las RECTAS del idx {args.idx} (un {real}) dibujadas como rectas: cada celda {args.celdas}×{args.celdas} → un segmento en el máximo de la celda, "
                  f"con la orientación de su Gabor;\nlongitud y tono ∝ valor de la feature (máx {vmax:.2f} = {args.largo:.0f} px); la cresta de cada ángulo se lee del kernel", fontsize=10)
-    fig.tight_layout(rect=(0, 0, 1, 0.95), h_pad=2.5); fig.savefig(AQUI / "resultados" / f"22-rectas-{args.idx}.png", dpi=100); print(f"→ resultados/22-rectas-{args.idx}.png")
+    fig.tight_layout(rect=(0, 0, 1, 0.95), h_pad=5); nombre = f"22-rectas-{args.idx}" + ("" if args.celdas == 8 else f"-{args.celdas}x{args.celdas}") + ".png"; fig.savefig(AQUI / "resultados" / nombre, dpi=100); print(f"→ resultados/{nombre}")
     return 0
 
 
