@@ -512,3 +512,44 @@ dígito, 2,13, se pinta de 15 px, que es la longitud del integrador). Suma de ce
 oscura cruza el lazo de arriba por su flanco superior-izquierdo (la que la media de los 6 tiene ahí) y otra el cierre
 inferior-derecho; a 45° las rectas fuertes van por el cuerpo inclinado del dígito; a 0° las más largas están en el remate
 inferior y el superior, y a 90° en los dos flancos exteriores.
+
+## Que las rectas cuenten MENOS: tres opciones a probar (orden del dueño, 2026-10-12)
+
+De `peso_grupos.py`: rectas y gris pesan igual por feature, pero son 512 contra 384, y una recta larga enciende de 4 a 8
+celdas seguidas, así que **una recta se cuenta varias veces**. Las rectas que ve son válidas; lo que sobra es la cuenta.
+El dueño decidió probar, en este orden:
+
+3. **Celdas 4×4 en vez de 8×8 sólo para las rectas** (512 → 128). `nn/menos_rectas.py`. ✅ empezado el 2026-10-12.
+4. **Un solo voto por recta**: supresión del no máximo a lo largo de la recta (en la perpendicular, picos; a lo largo,
+   un máximo por segmento conexo), para que una recta larga valga una celda y no cuatro. Mismo tamaño, mucho más ralo.
+   ⏳ pendiente.
+5. **Rectas como OBJETOS, como los rizos**: extraer segmentos (posición, orientación, longitud, grosor) y resumirlos por
+   orientación y escala (cuántos, longitud total, 2×2 del más largo). ⏳ pendiente; con más números que el rizo, que a
+   5 apenas vota (3 %).
+
+Criterio para las tres, escrito antes de mirar: que **val y ciega no bajen** respecto de la referencia (0,985 val con
+aumento; ciega con aumento no medida aún: la mide la primera corrida) **y** que se arreglen fallos de la figura 19 sin
+abrir otros tantos. Que el 784 pase a 8 no es el criterio: es un dígito.
+
+### Opción 3, medida (`nn/menos_rectas.py`, 2026-10-12): el 784 pasa a 8, pero val BAJA y se abren más fallos de los que cierra
+
+`23-menos-rectas.json`, figura `23-menos-rectas.png`. MLP 256 con aumento, 3 semillas, gris 8×8 y rizo iguales:
+
+| rectas | n | val | a ciegas | cuota de peso rectas / gris / rizo | fallos fig. 19 arreglados | fallos nuevos | 784 |
+|---|---:|---:|---:|---|---:|---:|---|
+| 8×8 (referencia) | 512 | **0,9852** | 0,9785 | 0,56 / 0,42 / 0,03 | 0–2 | 0–4 | 6, 6, 6 |
+| **4×4** | 128 | 0,9825 | **0,9789** | 0,41 / 0,56 / 0,03 | 4–6 | **10–11** | **8, 8, 8** |
+| 4×4, una escala | 64 | 0,9810 | 0,9772 | 0,28 / 0,68 / 0,04 | 4–5 | 12–13 | 8, 8, 8 |
+
+1. **Reequilibra como se predijo**: con 128 rectas la cuota de peso pasa de 0,56 a 0,41 y el gris de 0,42 a 0,56. Y el
+   784 se lee como 8 en las 3 semillas.
+2. **Pero no mejora**: val baja 2,7 milésimas (0,9852 → 0,9825, fuera del rango entre semillas de la referencia,
+   0,9845–0,9858) y a ciegas queda igual (0,9785 → 0,9789, +0,4 milésimas, dentro del ruido). De los 23 fallos arregla 4–6
+   y **abre 10–11 nuevos**: las rectas a 8×8 resolvían más dígitos de los que confundían.
+3. Con una sola escala (64) es peor aún: val 0,9810, 12–13 fallos nuevos. La escala ×2 aporta.
+
+**Lectura**: el criterio escrito antes (val y ciega no bajen, y arreglar sin abrir otros tantos) **no se cumple**. Lo
+que el 784 necesitaba —que las rectas pesen menos— se lo quita a otros dígitos que las necesitaban finas. Reducir celdas
+quita posición, no repeticiones: la opción 4 (un voto por recta) es la que ataca lo segundo sin tocar lo primero, y es
+la siguiente. ⚠ Primera medida a ciegas del compositor con aumento: 0,9785 (en val 0,985; la tabla de `detectores.py`
+daba 0,969 a ciegas sin aumento, así que el aumento también sube a ciegas, +1,0).
