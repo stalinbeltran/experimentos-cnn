@@ -791,3 +791,27 @@ pegado a la derecha, con el trazo izquierdo descendiendo en diagonal — la silu
 de esta configuración (gris-objetos 0,54 · rectas 0,38 · agujeros 0,08), dos agujeros no bastan contra esa silueta.
 El responsable es el **reparto**, y la salida barata es subirle el peso al grupo de agujeros (o darle más números), no
 tocar el detector.
+
+### Los mismos 9 ochos SIN rectas (`33c-ochos-sin-rectas.{png,json}`, 2026-10-12)
+
+Compositor «todo objetos» con rectas (108), sin rectas (gris-objetos + agujeros, 64) y sólo agujeros (10); media de 3
+semillas del margen logit 8 − logit 9:
+
+| idx | con rectas | sin rectas | sólo agujeros |
+|---:|---|---|---|
+| 816 | 9 (−3,7) | 9 (−5,5) | **8** (+2,4) |
+| 890 | 9 (−7,4) | 9 (−6,7) | 9 (−3,2) · un agujero |
+| 898 | 9 (−5,4) | 9 (−5,9) | 9 (−2,7) · un agujero |
+| 1423 | **8** (+0,4) | **8** (+2,0) | **8** (+3,0) |
+| 1468 | 9 (−0,7) | 2 (−1,7) | 3 (+3,0) |
+| 1491 | 9 (−2,4) | 9 (−3,2) | **8** (+5,1) |
+| 1511 | 9 (−2,7) | **8** (+0,9) | **8** (+2,8) |
+| 1529 | 9 (−3,9) | 9 (−4,0) | **8** (+3,1) |
+| 1542 | 9 (−1,2) | **8** (+1,6) | **8** (+2,0) |
+| val / ciega | 0,9637 / 0,9527 | 0,9441 / 0,9394 | 0,4945 / 0,4817 |
+
+**Las rectas no son el responsable principal**: sin ellas sólo cambian 2 de los 9 (1511 y 1542 pasan a 8; 1468 se va a
+2), y 5 siguen en 9 con márgenes iguales o peores. Quien dice 9 es el **gris-objetos** (la silueta: lazo grande arriba,
+lazo chico abajo a la derecha, diagonal a la izquierda). Y **sólo los agujeros** leen 8 en 7 de los 9 —los dos que no,
+890 y 898, son los que de verdad tienen un agujero—, aunque solos clasifiquen al 0,49. O sea que el grupo pequeño tiene
+la respuesta correcta para estos y el grande lo tapa: el responsable es el reparto, como decía la figura 33b.
