@@ -372,3 +372,26 @@ borde Gabor gris λ_b 10 · K 9, 384) y **rizo** (la salida compacta de este exp
 Resumen: de los detectores previos contribuyen **gris** (el que más), **rectas** (complementa al gris) y, poco pero
 siempre, el **rizo**; el **delgado** sólo aporta con el bosque y no a ciegas. La mejor combinación honesta hoy:
 **MLP 256 · rectas + gris + rizo: 0,972 val / 0,969 a ciegas** (la referencia del boceto era 0,960 / 0,957).
+
+## Resistencia a los DESPLAZAMIENTOS, y cómo dársela (`nn/resistencia.py`, pedido por el dueño el 2026-10-12)
+
+Compositor MLP 256 · rectas + gris + rizo. Val movida d = −4…+4 px (sin recortados; en vertical los dígitos tocan
+arriba y abajo, así que sólo d = ±1 es medible), 3 semillas (`18-resistencia.json`, figura `18-resistencia.png`):
+
+| método | d = 0 | x ±1 | x ±2 | x ±3 | x ±4 | y ±1 | cambian a x ±4 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| A base (180 tal cual, celdas 8×8) | 0,972 | 0,963 / 0,962 | 0,894 / 0,918 | 0,618 / 0,804 | **0,301 / 0,561** | 0,951 / 0,921 | 70 % / 44 % |
+| **B aumento** (copias movidas ±1–3 px, 180 × 13) | **0,985** | 0,985 / 0,985 | 0,982 / 0,977 | 0,977 / 0,968 | **0,957 / 0,939** | 0,979 / 0,952 | 4 % / 6 % |
+| C celdas 4×4 + aumento | 0,984 | 0,985 / 0,984 | 0,984 / 0,980 | 0,975 / 0,973 | 0,953 / 0,956 | 0,958 / 0,968 | 4 % / 4 % |
+| D conjunto en prueba (±1) + aumento | **0,986** | 0,985 / 0,985 | 0,983 / 0,981 | 0,975 / 0,969 | 0,959 / 0,941 | 0,979 / 0,976 | 4 % / 5 % |
+
+**Lo que sale:**
+1. **El compositor base NO resiste**: a 3 px pierde 15–35 puntos y a 4 px lee mal 1 de cada 2 dígitos (70 % cambian de
+   lectura a −4). Los detectores son convolucionales y se mueven con el dígito; lo que no se mueve son las **celdas fijas**
+   en las que se leen (el mismo fallo que el boceto encontró en los gemelos del 5).
+2. **El aumento lo arregla casi entero y, de paso, sube el acierto sin mover: 0,972 → 0,985.** Con 13 copias movidas de
+   cada uno de los 180 dígitos, a ±4 px queda en 0,94–0,96 y sólo cambian de lectura el 4–6 %. Es la mejora más grande
+   de todo el experimento, y es gratis: mismo detector, mismas features, más ejemplos de los que ya había.
+3. Celdas 4×4 y el conjunto en prueba **añaden poco sobre el aumento** (±0,3 puntos; D da el mejor d = 0, 0,986, y la
+   mejor y ±1). Lo que da la resistencia es ver los dígitos movidos al entrenar, no leerlos más grueso.
+4. ⚠ Sólo val: el aumento no se ha medido a ciegas (3823), y el +1,3 en d = 0 hay que confirmarlo ahí.

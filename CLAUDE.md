@@ -77,6 +77,9 @@ Medido en `rizo-2` (`2026-10-11-rizo-dos/nn/detectores.py`, `resultados/17-detec
 - **La mejor combinación honesta: MLP 256 · rectas + gris + rizo = 0,972 val / 0,969 a ciegas** (la referencia del
   boceto era 0,960 / 0,957). Con todo (+ delgado): 0,970 / 0,970. El máximo en val, bosque · gris + delgado 0,975, cae
   a 0,962 a ciegas.
+- **Y con AUMENTO (2026-10-12, `resistencia.py`): 0,985 en val sin mover, y 0,94–0,96 movido ±4 px** (el base caía a
+  0,30–0,56): entrenar el MLP con 13 copias movidas ±1–3 px de cada dígito. Es la mejora más grande del experimento.
+  ⚠ Medido sólo en val; a ciegas, pendiente.
 
 ## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
 
