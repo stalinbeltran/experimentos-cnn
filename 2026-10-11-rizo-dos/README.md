@@ -395,3 +395,23 @@ arriba y abajo, así que sólo d = ±1 es medible), 3 semillas (`18-resistencia.
 3. Celdas 4×4 y el conjunto en prueba **añaden poco sobre el aumento** (±0,3 puntos; D da el mejor d = 0, 0,986, y la
    mejor y ±1). Lo que da la resistencia es ver los dígitos movidos al entrenar, no leerlos más grueso.
 4. ⚠ Sólo val: el aumento no se ha medido a ciegas (3823), y el +1,3 en d = 0 hay que confirmarlo ahí.
+
+### Y pasándole lo CERRADO de la curva (métodos E/F, 2026-10-12)
+
+Al rizo compacto se le añaden 4 números del mejor candidato: el **cierre** de la plantilla que casa (0 = media vuelta …
+1 = vuelta entera), cos y sin de su **abertura**, y la media del cierre de todos los candidatos (`compositores.cerrado`).
+Misma medida (`18-resistencia.json`):
+
+| método | d = 0 | x ±2 | x ±4 | y ±1 | cambian a x ±4 |
+|---|---:|---:|---:|---:|---:|
+| A base | 0,972 | 0,894 / 0,918 | 0,301 / 0,561 | 0,951 / 0,921 | 70 % / 44 % |
+| E base + cerrado | 0,972 | 0,899 / 0,919 | 0,298 / 0,564 | 0,944 / 0,929 | 70 % / 44 % |
+| B aumento | **0,985** | 0,982 / 0,977 | 0,957 / 0,939 | 0,979 / 0,952 | 4 % / 6 % |
+| F aumento + cerrado | 0,984 | 0,983 / 0,978 | 0,954 / 0,938 | 0,972 / 0,952 | 5 % / 6 % |
+
+**No cambia nada**: ni el acierto sin mover (0,972 → 0,972; 0,985 → 0,984) ni la resistencia (diferencias de ±0,3
+puntos, dentro del margen entre semillas). Dos lecturas posibles, y no se distinguen con esto: (a) lo cerrado ya está
+implícito en el encierro (altura del rizo) y en los vectores de curvatura del gris; (b) el cierre que da la plantilla
+es grueso (cuatro valores: 0,1 · 0,4 · 0,7 · 1) y mal medido en rendijas, así que no aporta señal nueva. Para saber
+cuál, haría falta un cierre medido sobre el trazo (cuánto arco rodea de verdad al hueco), que ninguno de los detectores
+de hoy calcula.
