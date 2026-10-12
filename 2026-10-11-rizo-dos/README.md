@@ -779,3 +779,15 @@ etapa. Confusiones más frecuentes: **8→9 ×9, 9→7 ×8**, 2→1 ×4, 3→9 �
 objetos encima (segmentos = rectas, círculos = curvas por sentido, × = golpe, + = agujero), en `33-todo-objetos-fallos.png`;
 la lista con «real → predicho» y en cuántas semillas falla, en el JSON. De los 23 de la referencia arregla 8–10 (el 784
 entre ellos, en las 3 semillas) y abre 44–45.
+
+### Los 9 ochos que «todo objetos» lee como 9 (`33b-ochos-como-nueve.png`, 2026-10-12)
+
+Arriba todos los objetos, abajo sólo el detector de agujeros. ⚠ **Corrige lo que se dijo al presentar la figura 33**
+(«en varios el agujero de abajo no aparece»): **en 7 de los 9 el detector encuentra los DOS agujeros** (816, 1423, 1468,
+1491, 1511, 1529, 1542). Sólo en 890 (lazo de abajo macizo, sin hueco) y 898 (hueco de abajo de 1–2 px) hay uno. O sea
+que el responsable **no es el detector de agujeros**: la cuenta dice 2 y el compositor lee 9 igual. Lo que tienen en
+común los nueve es la forma: lazo de arriba grande y redondo (círculos → y ← grandes arriba), lazo de abajo pequeño y
+pegado a la derecha, con el trazo izquierdo descendiendo en diagonal — la silueta de un 9 con cola. Con la cuota de peso
+de esta configuración (gris-objetos 0,54 · rectas 0,38 · agujeros 0,08), dos agujeros no bastan contra esa silueta.
+El responsable es el **reparto**, y la salida barata es subirle el peso al grupo de agujeros (o darle más números), no
+tocar el detector.
