@@ -1,0 +1,25 @@
+{
+ "gris solo, MLP 256, con aumento": {
+  "val": 0.9779,
+  "val_rango": [
+   0.9765,
+   0.979
+  ],
+  "ciega": 0.969,
+  "fallos19_arreglados": [
+   7,
+   8,
+   7
+  ],
+  "fallos_nuevos": [
+   19,
+   19,
+   22
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ }
+}

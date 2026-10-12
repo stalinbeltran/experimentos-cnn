@@ -684,3 +684,11 @@ k← · k↓ · k↑ (cada sentido, max(0, ·)) · golpe (coherencia < 0,25: esq
 Lo que se ve en el 784: el lazo de abajo es casi todo «k←» y «k↑» (el centro queda a la izquierda y arriba de su borde
 derecho e inferior), el de arriba «k→» y «k↓»; «recto» sólo tiene 13 celdas (los dos flancos del cuello), y «golpe»
 marca el cruce de la cintura y las esquinas de los huecos.
+
+### Sólo el gris (2026-10-12, `29-gris-solo.json`)
+
+MLP 256 con aumento, 3 semillas, sin rectas ni rizo: **val 0,9779** (0,9765–0,9790) · **a ciegas 0,9690**. Arregla 7–8
+de los 23 fallos (el 784 entre ellos: 8 en las 3 semillas) y abre 19–22 nuevos. Sin aumento (`detectores.py`) era
+0,967 / 0,960, así que el aumento le da +1,1 / +0,9. Contra la configuración elegida (objetos ×1 + gris + rizo, 0,9829 /
+0,9689): a ciegas son **iguales**, o sea que en esa configuración las rectas-objeto y el rizo sólo aportan en val.
+Contra la referencia (0,9852 / 0,9792): −0,7 / −1,0 puntos.
