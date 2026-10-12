@@ -8,10 +8,16 @@ Protocolo de `detectores.py`: 180 train (con aumento ±1–3 px, 13 copias) / 16
 Por variante: acierto val y ciega, cuota de peso y de sensibilidad por grupo, qué pasa con los 23 fallos de la figura 19
 (cuántos se arreglan, cuántos nuevos) y qué lee del idx 784.
 
-    python nn/menos_rectas.py   → resultados/23-menos-rectas.json · 23-menos-rectas.png  (~5 min)
+Opción **4** (`--opcion 4`): UN VOTO POR RECTA. Sobre el mapa integrado de cada orientación, un píxel sobrevive sólo si es
+el máximo en una ventana alargada en la dirección de su recta (3 px de ancho, L px de largo): una recta larga deja un pico
+cada L px en vez de encender todas las celdas por las que pasa. Mismo tamaño (512), más ralo. L = 15 (el integrador) y 31.
+
+    python nn/menos_rectas.py              → resultados/23-menos-rectas.json · 23-menos-rectas.png  (~5 min)
+    python nn/menos_rectas.py --opcion 4   → resultados/24-un-voto.json · 24-un-voto.png
 """
 from __future__ import annotations
 
+import argparse
 import json
 import pickle
 import sys
@@ -37,6 +43,39 @@ import gris_recalibrado as GR                                       # noqa: E402
 from expcnn import exigir_dataset                                   # noqa: E402
 
 IDX = 784
+DIRS = {0: (1, 0), 1: (1, 1), 2: (0, 1), 3: (-1, 1)}          # dirección de la cresta de cada Gabor (leída del kernel en rectas_dibujo.py)
+
+
+@torch.no_grad()
+def mapas_rectas(img):
+    """Los mapas integrados (n, 4, H, W) a las dos escalas, antes de leerlos en celdas: lo que hace R.rectas por dentro."""
+    xt = torch.from_numpy(img.astype(np.float32)[:, None]); out = []
+    for e in range(2):
+        xe = xt if e == 0 else torch.nn.functional.avg_pool2d(xt, 2 ** e)
+        m = torch.nn.functional.relu(torch.nn.functional.conv2d(xe, D.GABOR4, padding=4)); out.append(torch.nn.functional.conv2d(m, D.INTEG, padding=D.L_INT // 2, groups=4))
+    return out
+
+
+@torch.no_grad()
+def un_voto(m, L, ancho=1):
+    """Supresión del no máximo con ventana alargada: para la orientación o, el píxel queda si es el máximo entre los
+    desplazados t·dir (t = −L/2…L/2) y s·normal (s = −ancho…ancho). Devuelve el mapa con sólo los picos."""
+    n, _, H, W = m.shape; out = torch.zeros_like(m); P = L // 2 + ancho + 1
+    for o, (dx, dy) in DIRS.items():
+        mo = torch.nn.functional.pad(m[:, o], (P, P, P, P)); mx = torch.full_like(m[:, o], -1.0)
+        nx, ny = -dy, dx
+        for t in range(-(L // 2), L // 2 + 1):
+            for s_ in range(-ancho, ancho + 1):
+                ox, oy = round(t * dx / np.hypot(dx, dy) + s_ * nx / np.hypot(nx, ny)), round(t * dy / np.hypot(dx, dy) + s_ * ny / np.hypot(nx, ny))
+                if (ox, oy) == (0, 0):
+                    continue
+                mx = torch.maximum(mx, mo[:, P + oy:P + oy + H, P + ox:P + ox + W])
+        out[:, o] = torch.where((m[:, o] > mx) & (m[:, o] > 0), m[:, o], torch.zeros_like(m[:, o]))
+    return out
+
+
+def rectas_un_voto(img, L, celdas=8):
+    return torch.cat([torch.nn.functional.adaptive_max_pool2d(un_voto(m, max(3, L // 2 ** e)), celdas).flatten(1) for e, m in enumerate(mapas_rectas(img))], 1).numpy()   # a ×2 la ventana se escala con la imagen
 
 
 def rectas_variante(img, nombre):
@@ -46,13 +85,18 @@ def rectas_variante(img, nombre):
         return R.rectas(img, 4)
     if nombre == "4×4, una escala (máx ×1, ×2)":
         r = R.rectas(img, 4); return np.maximum(r[:, :64], r[:, 64:])
+    if nombre.startswith("un voto, L = "):
+        return rectas_un_voto(img, int(nombre.split("= ")[1]))
     raise ValueError(nombre)
 
 
-VARIANTES = ["8×8 (referencia)", "4×4", "4×4, una escala (máx ×1, ×2)"]
+OPCIONES = {"3": (["8×8 (referencia)", "4×4", "4×4, una escala (máx ×1, ×2)"], "23-menos-rectas", "opción 3: las rectas en celdas 4×4 en vez de 8×8 (gris 8×8 y rizo iguales)"),
+            "4": (["8×8 (referencia)", "un voto, L = 15", "un voto, L = 31"], "24-un-voto", "opción 4: UN VOTO por recta (supresión del no máximo a lo largo de la recta; celdas 8×8)")}
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser(); ap.add_argument("--opcion", default="3", choices=list(OPCIONES)); args = ap.parse_args()
+    VARIANTES, SALIDA, TITULO = OPCIONES[args.opcion]
     torch.set_num_threads(2); t0 = time.time(); GR.configurar(**R.CAL_GRIS)
     d = dict(np.load(exigir_dataset(EV.DATASET) / "datos.npz"))
     img, y, part = (d["imagenes"] > 0).astype(np.uint8), d["etiquetas"].astype(int), d["particion"]
@@ -87,7 +131,7 @@ def main() -> int:
         out["variantes"][nombre] = res
         print(f"{nombre:32s} rectas {n:3d} · val {res['val']:.4f} [{res['val_rango'][0]:.4f}–{res['val_rango'][1]:.4f}] · ciega {res['ciega']:.4f} · cuota peso {res['cuota_peso']} · "
               f"arregla {r['fallos19_arreglados']} de 23 · nuevos {r['fallos_nuevos']} · 784→{r['idx784']}  ({time.time() - t0:.0f} s)", flush=True)
-    (AQUI / "resultados" / "23-menos-rectas.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
+    (AQUI / "resultados" / f"{SALIDA}.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
     fig, axs = plt.subplots(1, 3, figsize=(15, 4.6)); V = out["variantes"]; nombres = list(V); xs = np.arange(len(nombres))
     axs[0].bar(xs - 0.2, [V[n]["val"] for n in nombres], 0.4, color="#2a78d6", label="val (1617)"); axs[0].bar(xs + 0.2, [V[n]["ciega"] for n in nombres], 0.4, color="#52514e", label="a ciegas (3823)")
     for i, n in enumerate(nombres):
@@ -100,8 +144,8 @@ def main() -> int:
     axs[2].bar(xs + 0.2, [np.mean(V[n]["fallos_nuevos_por_semilla"]) for n in nombres], 0.4, color="#c2410c", label="fallos nuevos"); axs[2].legend(fontsize=7, frameon=False); axs[2].set_title("fallos en val (media de 3 semillas)", fontsize=9)
     for ax in axs:
         ax.set_xticks(xs); ax.set_xticklabels([f"rectas {n}\n({V[n]['n_rectas']})" for n in nombres], fontsize=8); ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("rizo-2 · 23 · opción 3: las rectas en celdas 4×4 en vez de 8×8 (gris 8×8 y rizo iguales) · MLP 256, con aumento", fontsize=10)
-    fig.tight_layout(); fig.savefig(AQUI / "resultados" / "23-menos-rectas.png", dpi=100); print("→ resultados/23-menos-rectas.json · 23-menos-rectas.png")
+    fig.suptitle(f"rizo-2 · {SALIDA.split(chr(45))[0]} · {TITULO} · MLP 256, con aumento", fontsize=10)
+    fig.tight_layout(); fig.savefig(AQUI / "resultados" / f"{SALIDA}.png", dpi=100); print(f"→ resultados/{SALIDA}.json · {SALIDA}.png")
     return 0
 
 

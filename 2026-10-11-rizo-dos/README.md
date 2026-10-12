@@ -566,3 +566,35 @@ La misma figura con la opción 3 (`--celdas 4`): `22-rectas-784-4x4.png`. A 4×4
 segmentos (uno por celda) en vez de 64; la suma de celdas baja de 124 a 50 (×1) y de 91 a 36 (×2). La recta `/` larga del
 135° ×2 sobre el flanco superior-izquierdo sigue ahí, pero ahora es **una** celda, no cuatro: el mismo voto que en la media
 de los 6, sin la repetición que lo multiplicaba.
+
+### Opción 4, medida (`nn/menos_rectas.py --opcion 4`, 2026-10-12): UN VOTO por recta reequilibra más, arregla más y estropea más
+
+Supresión del no máximo con ventana alargada sobre el mapa integrado de cada orientación (3 px de ancho, L px de largo
+en la dirección de la recta; a ×2 la ventana se escala con la imagen): una recta larga deja un pico cada L px. Celdas 8×8,
+512 números, pero ralos: en el 784 quedan 14 celdas no nulas de 256 a ×1 (la referencia tiene 226), y dibujadas
+(`22-rectas-784-voto15.png`) son un trazado de 16 segmentos que se lee como el dígito. `24-un-voto.json`, figuras
+`24-un-voto.png` y `24b-un-voto-fallos.png`; MLP 256 con aumento, 3 semillas:
+
+| rectas | val | a ciegas | cuota de peso rectas / gris / rizo | fallos fig. 19 arreglados | fallos nuevos | 784 |
+|---|---:|---:|---|---:|---:|---|
+| 8×8 (referencia) | **0,9852** | **0,9785** | 0,56 / 0,42 / 0,03 | 0–2 | 0–4 | 6, 6, 6 |
+| un voto, L = 15 | 0,9831 | 0,9740 | 0,25 / 0,71 / 0,04 | **7–9** | 12–13 | 8, 8, 8 |
+| un voto, L = 31 | 0,9821 | 0,9735 | 0,25 / 0,71 / 0,04 | 7–9 | 14–15 | 8, 8, 8 |
+
+1. **Reequilibra de verdad**: la cuota de peso de las rectas cae de 0,56 a 0,25, y el gris pasa a mandar (0,71). Es el
+   efecto buscado, mayor que con 4×4 (0,41).
+2. **Arregla más que la 4×4** (7–9 de 23, frente a 4–6; semilla 0: 27, 449, 784, 1100, 1152, 1662, 1765: cuatro 9, un 8, un
+   7 y dos 3), **pero estropea más** (12–13 nuevos; semilla 0: dos 8 → 9 y 8 → 1, tres 5 → 7/4, dos 9, dos 3, un 1).
+   Val baja 2 milésimas y **a ciegas baja 4,5** (0,9785 → 0,9740): es la peor a ciegas de las tres variantes.
+3. L = 31 (un voto por recta entera) es igual o peor que L = 15 en todo: el voto único no aporta sobre el voto cada 15 px.
+
+**Por qué estropea, leído de los nuevos fallos**: un mapa ralo leído en **celdas fijas** es frágil por construcción. Un
+pico cae en una celda o en la vecina según 1 px, y con 14 celdas no nulas cada una de ellas pesa mucho; el aumento lo
+compensa en parte en val (los 12 nuevos) y menos a ciegas. Es el mismo fallo que la figura 18 midió en el compositor base
+sin aumento, concentrado en las pocas celdas que sobreviven. Las rectas densas de la referencia son redundantes, y esa
+redundancia es lo que las hace estables a 1 px: contar menos quita la repetición **y** la estabilidad a la vez.
+
+**Lectura para la opción 5**: convertir los picos en OBJETOS (posición continua, orientación, longitud) y resumirlos sin
+rejilla fija (cuántos por orientación, longitud total, posición del más largo) es justo lo que evita que un pico cambie
+de celda; por eso el rizo compacto, con 5 números, es el grupo más estable al mover (ruido/señal 0,16 en `peso_grupos`).
+El criterio sigue siendo el mismo: val y ciega no bajen.

@@ -1,0 +1,193 @@
+{
+ "variantes": {
+  "8×8 (referencia)": {
+   "n_rectas": 512,
+   "val": 0.9852,
+   "val_rango": [
+    0.9845,
+    0.9858
+   ],
+   "ciega": 0.9785,
+   "cuota_peso": {
+    "rectas": 0.557,
+    "gris": 0.416,
+    "rizo": 0.027
+   },
+   "cuota_sensibilidad": {
+    "rectas": 0.574,
+    "gris": 0.409,
+    "rizo": 0.017
+   },
+   "fallos19_arreglados_por_semilla": [
+    0,
+    1,
+    2
+   ],
+   "fallos_nuevos_por_semilla": [
+    0,
+    2,
+    4
+   ],
+   "idx784_por_semilla": [
+    6,
+    6,
+    6
+   ],
+   "fallos_val_s0": [
+    27,
+    77,
+    409,
+    420,
+    446,
+    449,
+    492,
+    563,
+    784,
+    816,
+    852,
+    890,
+    898,
+    903,
+    1100,
+    1152,
+    1468,
+    1542,
+    1602,
+    1632,
+    1662,
+    1729,
+    1765
+   ]
+  },
+  "un voto, L = 15": {
+   "n_rectas": 512,
+   "val": 0.9831,
+   "val_rango": [
+    0.9827,
+    0.9833
+   ],
+   "ciega": 0.974,
+   "cuota_peso": {
+    "rectas": 0.253,
+    "gris": 0.707,
+    "rizo": 0.04
+   },
+   "cuota_sensibilidad": {
+    "rectas": 0.235,
+    "gris": 0.736,
+    "rizo": 0.029
+   },
+   "fallos19_arreglados_por_semilla": [
+    7,
+    9,
+    9
+   ],
+   "fallos_nuevos_por_semilla": [
+    12,
+    13,
+    13
+   ],
+   "idx784_por_semilla": [
+    8,
+    8,
+    8
+   ],
+   "fallos_val_s0": [
+    77,
+    409,
+    420,
+    446,
+    448,
+    492,
+    563,
+    633,
+    738,
+    779,
+    794,
+    816,
+    852,
+    890,
+    898,
+    903,
+    1119,
+    1468,
+    1491,
+    1542,
+    1572,
+    1575,
+    1578,
+    1602,
+    1632,
+    1723,
+    1729,
+    1790
+   ]
+  },
+  "un voto, L = 31": {
+   "n_rectas": 512,
+   "val": 0.9821,
+   "val_rango": [
+    0.9814,
+    0.9827
+   ],
+   "ciega": 0.9735,
+   "cuota_peso": {
+    "rectas": 0.251,
+    "gris": 0.71,
+    "rizo": 0.04
+   },
+   "cuota_sensibilidad": {
+    "rectas": 0.232,
+    "gris": 0.739,
+    "rizo": 0.03
+   },
+   "fallos19_arreglados_por_semilla": [
+    7,
+    9,
+    9
+   ],
+   "fallos_nuevos_por_semilla": [
+    14,
+    15,
+    14
+   ],
+   "idx784_por_semilla": [
+    8,
+    8,
+    8
+   ],
+   "fallos_val_s0": [
+    77,
+    247,
+    409,
+    420,
+    446,
+    461,
+    492,
+    563,
+    606,
+    633,
+    738,
+    779,
+    794,
+    816,
+    852,
+    890,
+    898,
+    903,
+    1119,
+    1468,
+    1491,
+    1542,
+    1572,
+    1575,
+    1578,
+    1602,
+    1632,
+    1723,
+    1729,
+    1790
+   ]
+  }
+ }
+}
