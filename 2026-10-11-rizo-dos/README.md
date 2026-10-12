@@ -712,3 +712,29 @@ densas baja a ciegas (0,9792 → 0,9776). El motivo es que no son la misma cosa:
 recto** (energía de orientación en el trazo); el «recto» del gris dice **dónde el borde no gira**, medido en la misma
 cadena y con la misma máscara que las curvas, así que es el complemento de «k→ k← k↓ k↑»: para una celda, «hay borde y
 no es curvo» es información que los otros cuatro canales no llevan (su cero puede ser «recto» o «no medible»).
+
+### El gris (sin «recto») como OBJETOS, con la receta de los agujeros (`nn/gris_objetos.py`, 2026-10-12)
+
+Cada píxel curvo del borde se asigna al **sentido dominante** de su vector k (→ ← ↓ ↑); las componentes conexas dentro de
+cada sentido son **una curva** (objeto: centro, longitud en px, fuerza = |κ| máx / 6); por sentido, 3×3 de todas + cuenta +
+longitud; el golpe igual, 3×3 + cuenta: **54 números** (contra 320 del gris sin recto en 8×8). Figura `31-gris-objetos-784.png`:
+el 784 queda en 14 curvas (6 → · 3 ← · 3 ↓ · 2 ↑) y 7 golpes. Medida (`31-gris-objetos.json`, `31-gris-objetos-medida.png`;
+MLP 256 con aumento, 3 semillas; rizo = actual + huecos):
+
+| configuración | n | val | a ciegas | fallos fig. 19 arreglados | nuevos | 784 |
+|---|---:|---:|---:|---:|---:|---|
+| objetos ×1 + gris + rizo (elegida) | 443 | 0,9829 | 0,9689 | 6–7 | 10–12 | 8 |
+| objetos ×1 + gris sin recto + rizo | 379 | 0,9823 | 0,9629 | 6–8 | 12–13 | 8 |
+| objetos ×1 + **gris-objetos** + rizo (sustituye) | 113 | 0,9678 | 0,9529 | 10–11 | 39–40 | 8, 8, 6 |
+| objetos ×1 + gris sin recto + gris-objetos + rizo (añade) | 433 | 0,9800 | **0,9711** | 8 | 16–18 | 8 |
+| rectas 8×8 + gris-objetos + rizo | 581 | 0,9870 | 0,9774 | 7 | 4–6 | 6 |
+| rectas 8×8 + gris + gris-objetos + rizo | 965 | 0,9862 | **0,9801** | 3–4 | 2–3 | 6 |
+| gris-objetos solo | 54 | 0,9419 | 0,9326 | 7–8 | 78–79 | 6 |
+
+1. **Como sustituto, no**: 54 números en vez de 320 pierden 1,5 / 1,6 puntos (0,9678 / 0,9529) y abren 39 fallos. Es el
+   mismo patrón que con las rectas: los objetos resumen demasiado y cada uno pesa demasiado.
+2. **Como añadido, sí, y a ciegas**: sobre el gris sin recto en la configuración elegida sube a ciegas 0,8 puntos
+   (0,9629 → 0,9711, por encima incluso de la elegida con recto, 0,9689) aunque baje 0,2 en val; y sobre la referencia
+   completa da **0,9801 a ciegas, lo mejor medido hasta hoy** (0,9792 antes), con val 0,9862. Cuántas curvas hay de cada
+   sentido y cuánto miden es información que las celdas no llevan y que generaliza a otros escritores.
+3. El 784 sigue en 8 en toda configuración sin rectas densas, y en 6 con ellas: no es cosa del gris.

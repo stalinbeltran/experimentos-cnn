@@ -1,0 +1,170 @@
+{
+ "objetos ×1 + gris + rizo (elegida)": {
+  "n": 443,
+  "val": 0.9829,
+  "val_rango": [
+   0.9821,
+   0.9839
+  ],
+  "ciega": 0.9689,
+  "fallos19_arreglados": [
+   7,
+   6,
+   7
+  ],
+  "fallos_nuevos": [
+   10,
+   12,
+   12
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "objetos ×1 + gris SIN recto + rizo": {
+  "n": 379,
+  "val": 0.9823,
+  "val_rango": [
+   0.9814,
+   0.9827
+  ],
+  "ciega": 0.9629,
+  "fallos19_arreglados": [
+   6,
+   7,
+   8
+  ],
+  "fallos_nuevos": [
+   13,
+   12,
+   13
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "objetos ×1 + GRIS-OBJETOS + rizo": {
+  "n": 113,
+  "val": 0.9678,
+  "val_rango": [
+   0.9672,
+   0.9685
+  ],
+  "ciega": 0.9529,
+  "fallos19_arreglados": [
+   11,
+   10,
+   10
+  ],
+  "fallos_nuevos": [
+   39,
+   39,
+   40
+  ],
+  "idx784": [
+   8,
+   8,
+   6
+  ]
+ },
+ "objetos ×1 + gris sin recto + GRIS-OBJETOS + rizo": {
+  "n": 433,
+  "val": 0.98,
+  "val_rango": [
+   0.9796,
+   0.9808
+  ],
+  "ciega": 0.9711,
+  "fallos19_arreglados": [
+   8,
+   8,
+   8
+  ],
+  "fallos_nuevos": [
+   18,
+   18,
+   16
+  ],
+  "idx784": [
+   8,
+   8,
+   8
+  ]
+ },
+ "rectas 8×8 + GRIS-OBJETOS + rizo": {
+  "n": 581,
+  "val": 0.987,
+  "val_rango": [
+   0.9864,
+   0.9876
+  ],
+  "ciega": 0.9774,
+  "fallos19_arreglados": [
+   7,
+   7,
+   7
+  ],
+  "fallos_nuevos": [
+   5,
+   4,
+   6
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "rectas 8×8 + gris + GRIS-OBJETOS + rizo": {
+  "n": 965,
+  "val": 0.9862,
+  "val_rango": [
+   0.9858,
+   0.987
+  ],
+  "ciega": 0.9801,
+  "fallos19_arreglados": [
+   3,
+   4,
+   3
+  ],
+  "fallos_nuevos": [
+   3,
+   2,
+   3
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ },
+ "GRIS-OBJETOS solo": {
+  "n": 54,
+  "val": 0.9419,
+  "val_rango": [
+   0.9419,
+   0.9419
+  ],
+  "ciega": 0.9326,
+  "fallos19_arreglados": [
+   7,
+   8,
+   8
+  ],
+  "fallos_nuevos": [
+   78,
+   79,
+   79
+  ],
+  "idx784": [
+   6,
+   6,
+   6
+  ]
+ }
+}
