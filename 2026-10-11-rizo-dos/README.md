@@ -758,3 +758,24 @@ la red se fía más de cada número-objeto que de cada celda. Lo que decide la c
 siendo el 56 % con 320 números, y los 54 del gris-objetos valen el 21 %, más que los 44 de las rectas-objeto (17 %). El rizo
 se queda en el 6 % con 15. Si el objetivo es que el reparto sea más parejo sin quitar información, el mando es el número
 de celdas del gris, no el peso.
+
+## ✅ Decisión del dueño (2026-10-12): TODO OBJETOS — «responsables» identificables (`nn/todo_objetos.py`)
+
+*«La idea es tener una especie de responsables claramente identificables. Cuando un dígito no sea correctamente
+identificado, vamos a los objetos y hallamos cuáles son los responsables de la falla. Por supuesto, un porcentaje no va a
+ser identificado, porque depende de los detalles que estamos dejando de lado en esta etapa.»*
+
+Compositor sólo con objetos: **rectas-objeto ×1 (44) + gris-objetos (54) + agujeros 3×3 + cuenta (10) = 108 números**
+(sin celdas de ninguna clase; el rizo «actual» 2×2 también queda fuera). MLP 256 con aumento, 3 semillas
+(`33-todo-objetos.json`):
+
+| | val | a ciegas | cuota de peso rectas / gris-obj / agujeros | fallos val (s0) | en las 3 semillas |
+|---|---:|---:|---|---:|---:|
+| todo objetos (108) | **0,9637** (0,9629–0,9647) | **0,9527** | 0,38 / 0,54 / 0,08 | 59 | 53 |
+| referencia celdas (911) | 0,9852 | 0,9792 | | 23 | 21 |
+
+Es decir, **2,2 puntos menos en val y 2,7 a ciegas**: el precio de dejar los detalles, que el dueño da por asumido en esta
+etapa. Confusiones más frecuentes: **8→9 ×9, 9→7 ×8**, 2→1 ×4, 3→9 ×4, 5→7 ×4, 2→9 ×3. Los 59 fallos, cada uno con sus
+objetos encima (segmentos = rectas, círculos = curvas por sentido, × = golpe, + = agujero), en `33-todo-objetos-fallos.png`;
+la lista con «real → predicho» y en cuántas semillas falla, en el JSON. De los 23 de la referencia arregla 8–10 (el 784
+entre ellos, en las 3 semillas) y abre 44–45.
