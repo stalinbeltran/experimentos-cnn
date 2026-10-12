@@ -58,7 +58,7 @@ def candidatos(x) -> list[dict]:
             ch, _, _ = RY._rayos(np.asarray(x) > 0, ys, xs, float(a))
             for c, f in zip(cs, ch.mean(1)):
                 c[f"r{a}"] = float(f)
-    return [{k: c[k] for k in ("centro_hueco", "h", *[f"r{a}" for a in ALCANCES])} for c in cs]
+    return [{k: c[k] for k in ("centro_hueco", "h", "cierre", "orientacion", *[f"r{a}" for a in ALCANCES])} for c in cs]
 
 
 def filtrar(cs, hmin, alcance, rmin):

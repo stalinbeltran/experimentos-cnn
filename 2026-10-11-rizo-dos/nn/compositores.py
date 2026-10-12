@@ -45,6 +45,20 @@ def compacta(C, n, celdas=2):
     return np.concatenate([p, np.array([[len(DV.filtrar(cs, hmin, al, rmin))] for cs in C], np.float32)], 1)
 
 
+def cerrado(C, n="rizo (h0, 8px)"):
+    """Lo CERRADO de la curva (pedido del dueño, 2026-10-12): del mejor candidato, el cierre de la plantilla que casa
+    (0 = media vuelta … 1 = vuelta entera), cos y sin de su abertura, y la media del cierre de todos; 4 números."""
+    hmin, al, rmin = DV.VARIANTES[n]; out = []
+    for cs in C:
+        f = DV.filtrar(cs, hmin, al, rmin)
+        if not f:
+            out.append([0.0, 0.0, 0.0, 0.0]); continue
+        m = f[0]; ab = np.deg2rad(m["orientacion"]) if m.get("orientacion") is not None else None
+        out.append([m.get("cierre", 0.0), float(np.cos(ab)) if ab is not None else 0.0, float(np.sin(ab)) if ab is not None else 0.0,
+                    float(np.mean([c.get("cierre", 0.0) for c in f]))])
+    return np.array(out, np.float32)
+
+
 def mlp(xtr, ytr, sem, oculta):
     torch.manual_seed(sem); mu, sd = xtr.mean(0), xtr.std(0) + 1e-6
     red = torch.nn.Sequential(torch.nn.Linear(xtr.shape[1], oculta), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(oculta, 10))

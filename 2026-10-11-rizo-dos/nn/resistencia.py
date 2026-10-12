@@ -10,12 +10,15 @@ cambia de lectura respecto de d = 0. Cuatro métodos, acumulables:
   B  AUMENTO: entrenar también con copias movidas ±1, ±2, ±3 px en x y en y (180 × 13)
   C  CELDAS MÁS GRUESAS: 4×4 en vez de 8×8 (la lectura cambia menos al mover 1–2 px), con aumento
   D  CONJUNTO EN PRUEBA: promediar los logits de 9 copias movidas (0, ±1 px en x e y) del dígito, con B
+  E/F  + lo CERRADO de la curva (cierre y abertura del mejor rizo, media del cierre: 4 números), base y con aumento
+       (pedido del dueño, 2026-10-12). Los candidatos del rizo se cachean en resultados/18-candidatos.pkl.
 
     python nn/resistencia.py   → resultados/18-resistencia.json · 18-resistencia.png  (~2 h: el rizo se calcula una vez por copia movida de val, 18 copias)
 """
 from __future__ import annotations
 
 import json
+import pickle
 import sys
 import time
 from pathlib import Path
@@ -72,8 +75,14 @@ def desplazar_candidatos(C, ex, ey):
              if 0 <= c["centro_hueco"][0] + ex < 32 and 0 <= c["centro_hueco"][1] + ey < 32] for cs in C]
 
 
-def feats(img, celdas, C):
-    return np.concatenate([rectas(img, celdas), gris(img, celdas), CO.compacta(C, "rizo (h0, 8px)")], 1)
+def feats(img, celdas, C, cerrado=False):
+    f = [rectas(img, celdas), gris(img, celdas), CO.compacta(C, "rizo (h0, 8px)")]
+    if cerrado:
+        f.append(CO.cerrado(C))
+    return np.concatenate(f, 1)
+
+
+CACHE = AQUI / "resultados" / "18-candidatos.pkl"
 
 
 def mlp_logits(xtr, ytr, sem, oculta=256):
@@ -103,8 +112,13 @@ def main() -> int:
     Itr, Iva, ytr, yva = img[tr], img[va], y[tr], y[va]
     # entrenamiento: original y aumentado, en 8×8 y 4×4
     aum = [(0, 0)] + [(k, 0) for k in AUM] + [(0, k) for k in AUM]
-    Ctr = {m: candidatos(mover(Itr, *m)) for m in aum}
-    Xtr = {c: {m: feats(mover(Itr, *m), c, Ctr[m]) for m in aum} for c in (8, 4)}
+    cache = pickle.loads(CACHE.read_bytes()) if CACHE.exists() else {}
+    Ctr = {}
+    for m in aum:
+        if ("tr", m) not in cache:
+            cache[("tr", m)] = candidatos(mover(Itr, *m))
+        Ctr[m] = cache[("tr", m)]
+    Xtr = {(c, z): {m: feats(mover(Itr, *m), c, Ctr[m], z) for m in aum} for c in (8, 4) for z in (False, True)}
     print(f"entrenamiento: {len(aum)} copias × 2 rejillas ({time.time() - t0:.0f} s)", flush=True)
     # validación movida
     Xva, rec = {}, {}
@@ -112,32 +126,37 @@ def main() -> int:
         for dd in DS:
             m = (dd, 0) if eje == "x" else (0, dd); Im = mover(Iva, *m)
             rec[(eje, dd)] = np.array([a.sum() != b.sum() for a, b in zip(Im, Iva)])
-            Cm = candidatos(Im)
+            if ("va", eje, dd) not in cache:
+                cache[("va", eje, dd)] = candidatos(Im); CACHE.write_bytes(pickle.dumps(cache))
+            Cm = cache[("va", eje, dd)]
             for c in (8, 4):
-                Xva[(eje, dd, c)] = feats(Im, c, Cm)
+                for z in (False, True):
+                    Xva[(eje, dd, c, z)] = feats(Im, c, Cm, z)
             # para el conjunto en prueba (D): las 8 copias ±1 de cada copia movida (8×8); el rizo, desplazando los candidatos
             for ex in (-1, 0, 1):
                 for ey in (-1, 0, 1):
                     if (ex, ey) != (0, 0):
-                        Xva[(eje, dd, 8, ex, ey)] = feats(mover(Im, ex, ey), 8, desplazar_candidatos(Cm, ex, ey))
+                        Xva[(eje, dd, 8, False, ex, ey)] = feats(mover(Im, ex, ey), 8, desplazar_candidatos(Cm, ex, ey))
             print(f"val movida {eje} {dd:+d} ({time.time() - t0:.0f} s)", flush=True)
     metodos = {
         "A base (8×8)": {"celdas": 8, "aumento": False, "conjunto": False},
         "B aumento ±1–3 px": {"celdas": 8, "aumento": True, "conjunto": False},
         "C celdas 4×4 + aumento": {"celdas": 4, "aumento": True, "conjunto": False},
         "D conjunto en prueba (±1) + aumento": {"celdas": 8, "aumento": True, "conjunto": True},
+        "E base + CERRADO": {"celdas": 8, "aumento": False, "conjunto": False, "cerrado": True},
+        "F aumento + CERRADO": {"celdas": 8, "aumento": True, "conjunto": False, "cerrado": True},
     }
     out = {"d": DS, "recortados_pc": {eje: [round(100 * float(rec[(eje, dd)].mean()), 1) for dd in DS] for eje in ("x", "y")}, "metodos": {}}
     for n, cfg in metodos.items():
-        c = cfg["celdas"]; copias = aum if cfg["aumento"] else [(0, 0)]
-        X = np.concatenate([Xtr[c][m] for m in copias]); Y = np.concatenate([ytr] * len(copias))
+        c = cfg["celdas"]; z = cfg.get("cerrado", False); copias = aum if cfg["aumento"] else [(0, 0)]
+        X = np.concatenate([Xtr[(c, z)][m] for m in copias]); Y = np.concatenate([ytr] * len(copias))
         res = {"x": {"acierto": [], "cambian": []}, "y": {"acierto": [], "cambian": []}}
         for sem in D.SEMILLAS:
             lg = mlp_logits(X, Y, sem)
             def pred(eje, dd):
-                L = lg(Xva[(eje, dd, c)])
+                L = lg(Xva[(eje, dd, c, z)])
                 if cfg["conjunto"]:
-                    L = L + sum(lg(Xva[(eje, dd, 8, ex, ey)]) for ex in (-1, 0, 1) for ey in (-1, 0, 1) if (ex, ey) != (0, 0))
+                    L = L + sum(lg(Xva[(eje, dd, 8, False, ex, ey)]) for ex in (-1, 0, 1) for ey in (-1, 0, 1) if (ex, ey) != (0, 0))
                 return L.argmax(1)
             p0 = pred("x", 0)
             for eje in ("x", "y"):
@@ -152,7 +171,7 @@ def main() -> int:
         a0 = out["metodos"][n]["x"]["acierto"][4]
         print(f"{n:38s} d=0 {a0:.4f} · x {out['metodos'][n]['x']['acierto']} · y {out['metodos'][n]['y']['acierto']} · cambian x {out['metodos'][n]['x']['cambian_pc']}  ({time.time() - t0:.0f} s)", flush=True)
     (AQUI / "resultados" / "18-resistencia.json").write_text(json.dumps(out, indent=1, ensure_ascii=False) + "\n")
-    fig, axs = plt.subplots(2, 2, figsize=(12, 7.6)); cols = ["#52514e", "#c2410c", "#2a78d6", "#1b7f3b"]
+    fig, axs = plt.subplots(2, 2, figsize=(12, 7.6)); cols = ["#52514e", "#c2410c", "#2a78d6", "#1b7f3b", "#9a9a9a", "#7c3aed"]
     for j, eje in enumerate(("x", "y")):
         for (n, m), col in zip(out["metodos"].items(), cols):
             axs[0, j].plot(DS, m[eje]["acierto"], "o-", color=col, label=n, ms=4); axs[1, j].plot(DS, m[eje]["cambian_pc"], "o-", color=col, ms=4)
