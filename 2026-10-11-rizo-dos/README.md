@@ -456,3 +456,48 @@ da 1,0 ahí. Lo que la media de los 8 tiene y el 784 no es el 135° **en el cent
 8; 0,1–0,3 en el 784, cuya cintura es casi horizontal). A escala ×2 además el hueco de arriba (4×4 px) se difumina y el
 lazo se ve como una barra `/` gruesa, como el trazo del 6. O sea que la feature hace lo que es: energía de orientación por
 posición; lo que distingue un 8 inclinado y macizo de un 6 es el hueco, que las rectas no ven y el gris y el rizo sí.
+
+## Por qué el compositor pesa MÁS las rectas que el gris y el rizo (`nn/peso_grupos.py`, pedido por el dueño el 2026-10-12)
+
+Cinco medidas sobre el compositor MLP 256 · rectas + gris + rizo con aumento, 3 semillas (`21-peso-grupos.json`, figura
+`21-peso-grupos.png`; la comparación con/sin aumento en `21b-con-sin-aumento.json`):
+
+| medida | rectas (512) | gris (384) | rizo (5) |
+|---|---:|---:|---:|
+| ‖W‖² de la 1.ª capa, total | **7,39** | 5,51 | 0,35 |
+| ‖W‖² **por feature** | 0,0144 | 0,0144 | **0,071** |
+| sensibilidad media en val, Σ\|grad × entrada\| | **12,9** | 9,2 | 0,39 |
+| acierto en val SIN ese grupo (a la media) | **0,952** (−3,3) | 0,969 (−1,6) | 0,984 (−0,1) |
+| acierto en val SÓLO con ese grupo | 0,961 | 0,952 | 0,290 |
+| 8 contra 6, logística con ese grupo solo | 0,988 | **0,991** | 0,881 |
+| ruido/señal del aumento (var. entre copias / entre dígitos) | 0,71 | **1,34** | 0,16 |
+| ceros en train | 13,6 % | **73,5 %** | 29,4 % |
+| F de Fisher por feature (mediana) | **13,2** | 4,2 | 9,1 |
+| F de Fisher, suma del grupo | **7.717** | 2.158 | 54 |
+
+**Lo que sale, en orden de importancia:**
+1. **Rectas y gris pesan IGUAL por feature (0,0144 las dos).** La red no prefiere una recta a una curva: lo que hay es que
+   las rectas son 512 números y el gris 384, y con el mismo peso por número el grupo grande suma más (1,34× en ‖W‖² y en
+   sensibilidad, que es casi exactamente 512/384 = 1,33). **La ventaja de las rectas es de cuenta, no de preferencia.**
+2. **El gris es RALO: el 73,5 % de sus features son cero** (sólo hay curvatura donde hay un borde curvo medible; la media
+   de un 8 ocupa pocas celdas), y por feature separa las clases **3 veces peor** que una recta (F 4,2 frente a 13,2). Su
+   información está concentrada en pocas celdas decisivas; la de las rectas, repartida en muchas celdas que informan
+   un poco cada una. Con `weight_decay` y 400 pasos, el MLP reparte el peso por utilidad por feature, así que un grupo
+   de muchos votos débiles acumula más peso que uno de pocos votos fuertes **aunque el segundo sea mejor detector solo**
+   (gris 0,960 contra rectas 0,955 con el lineal, tabla de `detectores.py`). En 8 contra 6 los dos separan igual de bien
+   (0,991 / 0,988): el 784 no se pierde por falta de información en el gris, sino porque su voto tiene menos masa.
+3. **El rizo pesa 5 veces más por feature (0,071) y es el más estable al mover (ruido/señal 0,16)**: la red se fía de
+   cada uno de sus números más que de ninguna recta. Pero son **5 números** que resumen sólo el mejor candidato (2×2) y
+   la cuenta, así que su voto total es el 3 % de la sensibilidad y no puede dar la vuelta a un margen de 0,89. Solo
+   separa 8 de 6 al 0,881: la cuenta de rizos (5 en el 784, 4,2 de media en los 8, 2,7 en los 6) solapa.
+4. ⚠ **El aumento NO es lo que inclina hacia las rectas, al contrario** (`21b`): sin aumento el peso por feature era
+   0,0119 rectas / 0,0094 gris / 0,025 rizo, y la sensibilidad 11,6 / 6,6 / 0,19. El aumento **igualó** rectas y gris
+   por feature y multiplicó por 2,8 el peso del rizo. La hipótesis «el gris se mueve más al desplazar (1,34) y por eso
+   se le desconfía» se midió y es **falsa**: el desequilibrio ya está en los 180 sin mover, y viene de la cuenta y de la
+   ralez.
+
+**Qué se sigue de aquí** (sin probar): si se quiere que el compositor escuche más al gris y al rizo, lo barato no es
+cambiar el compositor sino el **tamaño relativo** de los grupos: o reducir las rectas (una escala, o celdas 4×4: 128–256
+números), o dar al rizo más números (un mapa 8×8 por candidato, como la variante de 128 de `digitos_variantes.py`, que
+en la tabla 15 no mejoró al compositor **lineal**; con el MLP y con aumento no está medido). Lo otro es no
+estandarizar por feature sino por grupo, para que cada grupo entre con la misma norma total.

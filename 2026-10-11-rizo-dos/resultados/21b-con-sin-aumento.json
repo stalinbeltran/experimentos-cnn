@@ -1,0 +1,46 @@
+{
+ "sin aumento": {
+  "sens": {
+   "rectas": 11.5569,
+   "gris": 6.5735,
+   "rizo": 0.1928
+  },
+  "sin": {
+   "rectas": 0.9481,
+   "gris": 0.9549,
+   "rizo": 0.9705
+  },
+  "solo": {
+   "rectas": 0.952,
+   "gris": 0.9454,
+   "rizo": 0.2915
+  },
+  "w": {
+   "rectas": 0.0119,
+   "gris": 0.0094,
+   "rizo": 0.0252
+  }
+ },
+ "con aumento": {
+  "sens": {
+   "rectas": 12.8811,
+   "gris": 9.1832,
+   "rizo": 0.3855
+  },
+  "sin": {
+   "rectas": 0.9524,
+   "gris": 0.9693,
+   "rizo": 0.9839
+  },
+  "solo": {
+   "rectas": 0.9612,
+   "gris": 0.9516,
+   "rizo": 0.29
+  },
+  "w": {
+   "rectas": 0.0144,
+   "gris": 0.0144,
+   "rizo": 0.071
+  }
+ }
+}
