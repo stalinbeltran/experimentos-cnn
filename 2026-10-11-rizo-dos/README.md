@@ -553,3 +553,11 @@ que el 784 necesitaba —que las rectas pesen menos— se lo quita a otros dígi
 quita posición, no repeticiones: la opción 4 (un voto por recta) es la que ataca lo segundo sin tocar lo primero, y es
 la siguiente. ⚠ Primera medida a ciegas del compositor con aumento: 0,9785 (en val 0,985; la tabla de `detectores.py`
 daba 0,969 a ciegas sin aumento, así que el aumento también sube a ciegas, +1,0).
+
+**Quiénes son** (`nn/menos_rectas_fallos.py`, figura `23b-menos-rectas-fallos.png`, semilla 0; `n` en la tabla es el
+número de features de rectas que entran al compositor): la 4×4 **arregla 5** —idx 27 (7, leído 9), 420 (6, leído 5),
+**784 (8, leído 6)**, 1662 (9, leído 5) y 1765 (3, leído 5)— y **estropea 11**, que son casi todos trazos finos e
+inclinados donde lo que distingue es la posición fina de las rectas: cinco 9 (683 y 738 → 1; 1562 y 1572 → 7; 1658 → 8),
+dos 2 → 1 (75, 461), 4 → 1 (247), dos 5 → 7 (633, 1575) y 1 → 8 (1723). En dos de los 9 (1562, 683) el rizo no ve el
+lazo o lo ve flojo, así que lo único que separaba 9 de 7 o de 1 era la recta fina del lazo, que a 4×4 se funde con el
+palo. Siguen mal en las dos variantes 18 de los 23.
