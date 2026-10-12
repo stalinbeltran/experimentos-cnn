@@ -444,3 +444,15 @@ rectas. Falla en las 3 semillas, y su vecino más cercano en feature es un 6.
 ⚠ Rastreo de **un** dígito y una semilla; la atribución grad × entrada es local (el margen es de 0,89 y la suma de las
 atribuciones, +1,0, no coincide exactamente con él porque la red no es lineal). Para generalizarlo habría que correrlo en
 los 23 fallos de la figura 19 (los 8→9 sobre todo).
+
+### ¿Tiene sentido que sea la recta 135°? (2026-10-12, figura `20b-gabor135-784.png`)
+
+Sí, y es una ambigüedad real a esa escala, no un artefacto. Medido con el kernel: en este proyecto «135°» es la cresta
+que sube hacia la derecha (`/`). El 784 es un 8 **inclinado** (lazo de arriba a la izquierda, lazo de abajo a la derecha),
+así que su silueta exterior tiene dos tramos `/` largos: el flanco superior-izquierdo del lazo de arriba y el inferior-
+derecho del de abajo. En las celdas 8×8 a escala ×2 esos dos tramos caen **exactamente donde la media de los 6 de train
+tiene su 135°** (el gancho con que arranca el 6 arriba a la izquierda, 1,1–1,2, y el cierre abajo a la derecha), y el 784
+da 1,0 ahí. Lo que la media de los 8 tiene y el 784 no es el 135° **en el centro** (el cruce de la cintura, 0,9–1,0 en los
+8; 0,1–0,3 en el 784, cuya cintura es casi horizontal). A escala ×2 además el hueco de arriba (4×4 px) se difumina y el
+lazo se ve como una barra `/` gruesa, como el trazo del 6. O sea que la feature hace lo que es: energía de orientación por
+posición; lo que distingue un 8 inclinado y macizo de un 6 es el hueco, que las rectas no ven y el gris y el rizo sí.
