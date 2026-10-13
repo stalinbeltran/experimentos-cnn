@@ -60,6 +60,15 @@ def features(img, C):
 def dibujar(ax, x, cs, continuo=False, sin_huecos=False, suaves=False, cresta=""):
     """Como todo_objetos.dibujar_objetos, pero admite el mapa continuo (se pinta en gris por valor) y sin huecos."""
     import todo_objetos as TO
+    if cresta in ("lazos-solo", "lazos+conc"):
+        ax.imshow(np.where(x > 0.05, x, np.nan), cmap="Greys", vmin=0, vmax=1.6); ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5); ax.axis("off")
+        import digitos_bordes as DB
+        ob = GO.objetos(DB.mapas_bordes(x, R.GRIS))
+        for c in ob["curvas"]:
+            ax.add_patch(plt.Circle((c["cx"] - 0.5, c["cy"] - 0.5), 0.6 + 0.1 * c["largo"], fill=False, color=GO.COLORES[c["s"]], lw=0.5 + 1.5 * c["fuerza"]))
+        for z in CC.objetos(np.asarray(x, np.float32))["lazos"]:
+            ax.plot(np.append(z["pts"][:, 0], z["pts"][0, 0]) - 0.5, np.append(z["pts"][:, 1], z["pts"][0, 1]) - 0.5, "-", color="#111", lw=2); ax.plot(z["cx"] - 0.5, z["cy"] - 0.5, "+", color="#111", ms=9, mew=2)
+        return
     if cresta:
         CC.pintar(ax, np.asarray(x, np.float32))
         if suaves:
@@ -106,7 +115,7 @@ def main() -> int:
     ap.add_argument("--continuo", action="store_true", help="rectas y gris leen el mapa CONTINUO (sin binarizar); el umbral sólo se usa si hay huecos")
     ap.add_argument("--sin-huecos", action="store_true", help="sólo rectas + gris (98 números): sin el grupo de huecos, que exige binario")
     ap.add_argument("--variante", default="", help="opciones de huecos_suaves separadas por coma (CENTRAR,UNO_POR_CELDA,SIN_RENDIJAS,PONDERAR)")
-    ap.add_argument("--cresta", default="", help="curvas sobre la CRESTA (cresta_curvas): 'solo' sustituye al gris (54 números); 'lazos' añade además los lazos (10); 'mas-gris' las suma al gris")
+    ap.add_argument("--cresta", default="", help="cresta_curvas: 'solo' = curvas de la cresta en vez del gris (54); 'lazos' = curvas + lazos (64); 'mas-gris' = gris + curvas + lazos; 'lazos-solo' = gris + SÓLO los lazos de la cresta (10) en lugar de los huecos de rayos; 'lazos+conc' = idem + concavidades suaves (10)")
     ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
     a = ap.parse_args(); RH.VAR = a.var; HS.configurar(**{k: True for k in a.variante.split(",") if k})
@@ -124,11 +133,14 @@ def main() -> int:
     if a.cresta:
         def feats(im, C):
             cc = CC.caract(im); partes = [RO.rectas_objetos(im, (0,))]; g = {"rectas-objeto ×1": (0, 44)}; n = 44
-            if a.cresta == "mas-gris":
+            if a.cresta in ("mas-gris", "lazos-solo", "lazos+conc"):
                 partes.append(GO.gris_objetos(im)); g["gris-objetos"] = (n, n + 54); n += 54
-            partes.append(cc[:, :54]); g["cresta-curvas"] = (n, n + 54); n += 54
-            if a.cresta in ("lazos", "mas-gris"):
+            if a.cresta in ("solo", "lazos", "mas-gris"):
+                partes.append(cc[:, :54]); g["cresta-curvas"] = (n, n + 54); n += 54
+            if a.cresta in ("lazos", "mas-gris", "lazos-solo", "lazos+conc"):
                 partes.append(cc[:, 54:64]); g["cresta-lazos"] = (n, n + 10); n += 10
+            if a.cresta == "lazos+conc":
+                partes.append(HS.caract(im)[:, 10:20]); g["concavidades suaves"] = (n, n + 10); n += 10
             if a.huecos_suaves:
                 partes.append(HS.caract(im)); g["huecos suaves"] = (n, n + 20); n += 20
             feats.grupos = g

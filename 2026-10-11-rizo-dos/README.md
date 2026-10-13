@@ -995,3 +995,19 @@ cuyo hueco de tinta está partido por un puente (la cresta da un lazo donde la t
 engaña), 4 con el triángulo de arriba cerrado en tinta que el adelgazado abre, y 0/9 con una rotura de 1–2 px en el
 mapa. Los «de más» (4 de 779) son 4 y 6 que el mapa cierra. → **Se queda como detector de lazos**; su uso en el
 compositor es otra pregunta (§ 44–45).
+
+**47 · El compositor con los LAZOS de la cresta en lugar de los huecos de rayos** (el dueño, 2026-10-13: «que use los
+lazos de la cresta»). Mapa suave continuo; rectas + gris + lazos (10 números: 3×3 + cuenta), y además las concavidades
+de los rayos suaves v4 (10), porque el grupo sustituido traía huecos Y concavidades:
+
+| grupos | n | val | a ciegas | fallos |
+|---|---|---|---|---|
+| rectas + gris + huecos suaves v4 (huecos + concavidades por rayos) | 118 | 0,9804 | **0,9711** | 32 |
+| rectas + gris + **lazos de la cresta** | 108 | 0,9707 | 0,9588 | 45 |
+| rectas + gris + lazos de la cresta + concavidades suaves v4 | 118 | 0,9784 | 0,9670 | 35 |
+
+Los lazos solos pierden 1,2 puntos a ciegas; con las concavidades recuperan casi todo (−0,4). Es decir, la mitad del
+valor del grupo de rayos estaba en las **concavidades** (la panza del 3 y del 5, el entrante del 7), que los lazos no
+representan. El detector de lazos es más limpio (§ 46) pero su resumen para el compositor —3×3 con fuerza fija 1 y la
+cuenta— lleva menos información que el de rayos, que gradúa cada hueco por su encierro. Lo que probar si se quiere
+cerrar la brecha: fuerza = área del lazo o su encierro, y los lazos que el mapa deja abiertos por 1–2 px (§ 46).

@@ -1,0 +1,264 @@
+{
+ "nombre": "suave-gris-lazos-conc",
+ "entrada": "delgados-k3x3.npz",
+ "umbral": 0.5,
+ "engrosar": 0,
+ "var": "rizo (h0, 8px)",
+ "continuo": true,
+ "sin_huecos": false,
+ "huecos_suaves": false,
+ "variante": "CENTRAR,UNO_POR_CELDA,SIN_RENDIJAS,PONDERAR",
+ "cresta": "lazos+conc",
+ "n": 118,
+ "grosor_medio_px": 2.6978996740859977,
+ "val": 0.9784,
+ "val_rango": [
+  0.9777,
+  0.979
+ ],
+ "ciega": 0.967,
+ "cuota_peso": {
+  "rectas-objeto ×1": 0.331,
+  "gris-objetos": 0.437,
+  "cresta-lazos": 0.114,
+  "concavidades suaves": 0.117
+ },
+ "objetos_por_digito_val": {
+  "rectas": 15.826839826839826,
+  "lazos por dígito": 0.481756329536438
+ },
+ "fallos_s0": 35,
+ "fallan_en_las_3": 34,
+ "confusiones": {
+  "8→9": 7,
+  "2→1": 3,
+  "4→1": 3,
+  "4→8": 3,
+  "9→3": 3,
+  "4→9": 2,
+  "3→9": 2,
+  "9→5": 2,
+  "5→7": 2,
+  "6→1": 1,
+  "3→0": 1,
+  "5→3": 1,
+  "6→8": 1,
+  "2→3": 1,
+  "7→2": 1,
+  "9→8": 1,
+  "3→5": 1
+ },
+ "segundos": 481,
+ "fallos": [
+  {
+   "idx": 75,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 77,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 95,
+   "real": 6,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 171,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 198,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 238,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 250,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 409,
+   "real": 3,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 421,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 427,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 446,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 454,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 1
+  },
+  {
+   "idx": 492,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 496,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 502,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 510,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 884,
+   "real": 7,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 890,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 898,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 903,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1038,
+   "real": 9,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1058,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1146,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1152,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1285,
+   "real": 9,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1423,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1468,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1529,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1575,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1581,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1589,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1632,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1658,
+   "real": 9,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1724,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1729,
+   "real": 3,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  }
+ ]
+}
