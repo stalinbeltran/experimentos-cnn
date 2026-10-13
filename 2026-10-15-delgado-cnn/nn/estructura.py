@@ -2,7 +2,7 @@
 """delg-cnn — dibuja la ESTRUCTURA de la red de sólo kernels que hay en nn/pesos/kernels: el flujo de capas, los
 kernels aprendidos de la primera capa y la activación de cada capa sobre un dígito real.
 
-    python nn/estructura.py [--idx 1327]   → resultados/3-estructura.png
+    python nn/estructura.py [--idx 1327] [--pesos k3x3]   → resultados/3-estructura-<pesos>.png
 """
 from __future__ import annotations
 
@@ -21,10 +21,11 @@ from entrenar_local import SoloKernels  # noqa: E402
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--idx", type=int, default=1327); a = ap.parse_args()
-    pesos = AQUI / "nn" / "pesos" / "kernels"
+    ap = argparse.ArgumentParser(); ap.add_argument("--idx", type=int, default=1327)
+    ap.add_argument("--pesos", default="k3x3", help="carpeta nn/pesos/<pesos>"); a = ap.parse_args()
+    pesos = AQUI / "nn" / "pesos" / a.pesos
     cfg = json.loads((pesos / "config.json").read_text())
-    red = SoloKernels(cfg["capas"], cfg["canales"]); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
+    red = SoloKernels(cfg["capas"], cfg["canales"], cfg.get("kernel", 3)); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
     convs = [m for m in red.red if isinstance(m, torch.nn.Conv2d)]
     d = np.load(exigir_dataset("uci-optdigits-orig-32px-r20261005") / "datos.npz")
     x = torch.from_numpy((d["imagenes"][a.idx] > 0).astype(np.float32))[None, None]
@@ -40,7 +41,7 @@ def main() -> int:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.patches import FancyBboxPatch
-    C = cfg["canales"]; L = len(convs)
+    C = cfg["canales"]; L = len(convs); K = cfg.get("kernel", 3)
     fig = plt.figure(figsize=(15, 9.5))
     NC = max(L + 2, C + 1)
     gs = fig.add_gridspec(3, NC, height_ratios=[1.15, 1, 1], hspace=0.45, wspace=0.25)
@@ -50,10 +51,10 @@ def main() -> int:
     cajas = [("entrada\ntinta 32×32\n1 canal", "#dddddd")]
     rf = 1
     for i, m in enumerate(convs):
-        rf += 2
+        rf += K - 1
         npar = sum(p.numel() for p in m.parameters())
         ultima = i == L - 1
-        cajas.append((f"conv {i + 1}\n3×3, {m.in_channels}→{m.out_channels} can.\n{npar} par.\n"
+        cajas.append((f"conv {i + 1}\n{K}×{K}, {m.in_channels}→{m.out_channels} can.\n{npar} par.\n"
                       f"{'sigmoide' if ultima else 'ReLU'}\ncampo {rf}×{rf}", "#f6c89f" if not ultima else "#f08a5d"))
     cajas.append(("salida M\n32×32 ∈ [0,1]\nlínea media", "#cfe3f7"))
     for i, (txt, col) in enumerate(cajas):
@@ -62,7 +63,7 @@ def main() -> int:
         if i < len(cajas) - 1:
             ax.annotate("", xy=(i + 1.08, 0.5), xytext=(i + 0.92, 0.5), arrowprops=dict(arrowstyle="->", lw=1.4))
     ntot = sum(p.numel() for p in red.parameters())
-    ax.set_title(f"delg-cnn · SOLO KERNELS: {L} convoluciones 3×3 con relleno (sin pooling, sin capa densa) · "
+    ax.set_title(f"delg-cnn · SOLO KERNELS [{a.pesos}]: {L} convoluciones {K}×{K} con relleno (sin pooling, sin capa densa) · "
                  f"{ntot} parámetros · campo receptivo final {rf}×{rf} px · entrenada con {cfg['n']} trazos "
                  f"sintéticos de 3–6 px, {cfg['epocas']} épocas, {cfg['segundos']} s", fontsize=10)
 
@@ -74,7 +75,7 @@ def main() -> int:
             axk.text(j, i, f"{val:+.2f}", ha="center", va="center", fontsize=6.5)
         axk.set_xticks([]); axk.set_yticks([]); axk.set_title(f"kernel 1.{c + 1}", fontsize=8)
     axt = fig.add_subplot(gs[1, C:]); axt.axis("off")
-    axt.text(0, 0.5, f"los {C} kernels 3×3 de la\nprimera capa (rojo +, azul −).\nLas capas 2–{L} tienen {C}×{C}\n"
+    axt.text(0, 0.5, f"los {C} kernels {K}×{K} de la\nprimera capa (rojo +, azul −).\nLas capas 2–{L} tienen {C}×{C}\n"
              f"kernels cada una y la última\n{C}×1: no caben legibles.", fontsize=8.5, va="center")
 
     # fila 3: activación de cada capa (canal de mayor energía) sobre el dígito
@@ -87,7 +88,7 @@ def main() -> int:
     axm = fig.add_subplot(gs[2, L]); axm.imshow(M, cmap="magma", vmin=0, vmax=1, interpolation="nearest")
     axm.set_title(f"salida M (conv {L} + sigmoide)", fontsize=8); axm.set_xticks([]); axm.set_yticks([])
     [fig.add_subplot(gs[2, k]).axis("off") for k in range(L + 1, NC)]
-    out = AQUI / "resultados" / "3-estructura.png"; fig.savefig(out, dpi=120, bbox_inches="tight")
+    out = AQUI / "resultados" / f"3-estructura-{a.pesos}.png"; fig.savefig(out, dpi=120, bbox_inches="tight")
     print(f"→ {out.relative_to(AQUI)}")
     return 0
 

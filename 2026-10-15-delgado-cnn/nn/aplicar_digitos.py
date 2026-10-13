@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """delg-cnn — pasa dígitos REALES de UCI (val) por la red de sólo kernels y enseña tinta y salida M, sin binarizar.
 
-    python nn/aplicar_digitos.py [--n 30] [--semilla 1]   → resultados/2-digitos-<n>.png
+    python nn/aplicar_digitos.py [--n 30] [--semilla 1] [--pesos k3x3]   → resultados/2-digitos-<n>-<pesos>.png
 """
 from __future__ import annotations
 
@@ -25,15 +25,16 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=30)
     ap.add_argument("--semilla", type=int, default=1)
+    ap.add_argument("--pesos", default="k3x3", help="carpeta nn/pesos/<pesos>")
     a = ap.parse_args()
     d = np.load(exigir_dataset(DATASET) / "datos.npz")
     idx_val = np.flatnonzero(d["particion"] == "val")
     rng = np.random.default_rng(a.semilla)
     idx = np.sort(rng.choice(idx_val, a.n, replace=False))
     X = (d["imagenes"][idx] > 0).astype(np.float32)
-    pesos = AQUI / "nn" / "pesos" / "kernels"
+    pesos = AQUI / "nn" / "pesos" / a.pesos
     cfg = json.loads((pesos / "config.json").read_text())
-    red = SoloKernels(cfg["capas"], cfg["canales"]); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
+    red = SoloKernels(cfg["capas"], cfg["canales"], cfg.get("kernel", 3)); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
     with torch.no_grad():
         M = red(torch.from_numpy(X)[:, None])[:, 0].numpy()
 
@@ -51,9 +52,9 @@ def main() -> int:
             ax.imshow((X, M)[k][j], cmap=("Greys", "magma")[k], vmin=0, vmax=(1.6, 1)[k], interpolation="nearest")
             if k == 0:
                 ax.set_title(f"{d['etiquetas'][idx[j]]}  (val {idx[j]})", fontsize=7)
-    fig.suptitle(f"delg-cnn · {a.n} dígitos de val al azar (semilla {a.semilla}): tinta y salida M de la red de sólo kernels "
-                 f"({cfg['capas']} conv × {cfg['canales']}, entrenada con {cfg['n']} trazos sintéticos)", fontsize=8)
-    fig.tight_layout(); out = AQUI / "resultados" / f"2-digitos-{a.n}.png"; fig.savefig(out, dpi=130)
+    fig.suptitle(f"delg-cnn · {a.n} dígitos de val al azar (semilla {a.semilla}): tinta y salida M de la red de sólo kernels [{a.pesos}] "
+                 f"({cfg['capas']} conv {cfg.get('kernel', 3)}×{cfg.get('kernel', 3)} × {cfg['canales']}, entrenada con {cfg['n']} trazos sintéticos)", fontsize=8)
+    fig.tight_layout(); out = AQUI / "resultados" / f"2-digitos-{a.n}-{a.pesos}.png"; fig.savefig(out, dpi=130)
     print(f"→ {out.relative_to(AQUI)}")
     return 0
 
