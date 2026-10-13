@@ -1,0 +1,17 @@
+{
+ "trazos": 600,
+ "rectas_reales": 318,
+ "etiqueta": "antes",
+ "rectas-objeto": {
+  "detecciones": 10712,
+  "cobertura": 0.969,
+  "precision": 0.032,
+  "por_trazo": 17.85
+ },
+ "cresta": {
+  "detecciones": 442,
+  "cobertura": 0.937,
+  "precision": 0.708,
+  "por_trazo": 0.74
+ }
+}

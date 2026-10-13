@@ -15,8 +15,9 @@ Cómo:
      K_GOLPE → GOLPE en ese punto.
   fuerza de un arco = ángulo barrido / 180° (acotado a 1); de un lazo, 1; de una recta, largo / 32.
 
-Números para el compositor (caract): como gris_objetos, 4 sentidos × (3×3 del máximo de fuerza + cuenta + largo/32) = 44,
-golpes 3×3 + cuenta = 10, y LAZOS 3×3 (fuerza = 1, campana en el centro) + cuenta = 10 → 64.
+Números para el compositor (caract): arcos 4 sentidos × (3×3 del máximo de fuerza + cuenta + largo/32) = 44,
+golpes 3×3 + cuenta = 10, LAZOS 3×3 (fuerza = 1, campana en el centro) + cuenta = 10, y desde el 2026-10-13 RECTAS
+4 orientaciones (0/45/90/135°) × (3×3 + cuenta + largo/32) = 44 → 108. caract(M)[:, :64] es lo de antes.
 
     python nn/cresta_curvas.py --entrada /ruta/delgados-k3x3.npz --de resultados/43-huecos-falsos-<variante>.json
         → resultados/45-cresta-<de>.png      (los mismos 48 dígitos, con arcos, rectas, golpes y lazos)
@@ -42,6 +43,7 @@ AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 
 UMBRAL = 0.4; SIGMA = 1.5; K_MIN = 0.07; K_GOLPE = 0.45; L_MIN = 4; CELDAS = 3
+BARRIDO_MIN = 20.0; L_RECTA = 5.0   # y una recta más corta que 6 px no es una recta: el 89 % de las falsas medían < 6 px (sobre 600 sintéticos)   # 2026-10-13 (mejora de rectas): un run curvo que barre < 20° no es un arco; se funde con las rectas vecinas
 SENTIDOS = ["k→", "k←", "k↓", "k↑"]; COLORES = ["#c2410c", "#2a78d6", "#1b7f3b", "#7c3aed"]; COLOR_LAZO = "#111111"; COLOR_RECTA = "#8a8a8a"
 _YY, _XX = np.mgrid[0:32, 0:32] + 0.5
 VEC8 = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
@@ -171,6 +173,30 @@ def curvatura(p, lazo):
     return k, normal
 
 
+def segmentar(ps, k, nrm):
+    """Parte un tramo suavizado en runs [(clase, i, j)] con clase +1/−1 (arco) o 0 (recta): primero por el signo de κ
+    con |κ| ≥ K_MIN, luego los runs curvos que barren < BARRIDO_MIN se reclasifican como recta y se funden con sus
+    vecinos rectos. La MISMA función se aplica a la verdad sintética (curvas_comparar / rectas_comparar)."""
+    n = len(ps); cl = np.where(np.abs(k) >= K_MIN, np.sign(k), 0).astype(int)
+    paso = np.hypot(*np.gradient(ps, axis=0).T)
+    runs, i = [], 0
+    while i < n:
+        j = i
+        while j < n and cl[j] == cl[i]:
+            j += 1
+        runs.append([int(cl[i]), i, j]); i = j
+    for r in runs:                                                  # arcos demasiado cortos → recta
+        if r[0] != 0 and np.degrees(np.sum(np.abs(k[r[1]:r[2]]) * paso[r[1]:r[2]])) < BARRIDO_MIN:
+            r[0] = 0
+    out = []
+    for r in runs:                                                  # fundir rectas consecutivas
+        if out and out[-1][0] == 0 and r[0] == 0:
+            out[-1][2] = r[2]
+        else:
+            out.append(r)
+    return [tuple(r) for r in out]
+
+
 def _sentido(nx, ny):
     return (0 if nx > 0 else 1) if abs(nx) >= abs(ny) else (2 if ny > 0 else 3)   # y crece hacia abajo
 
@@ -195,21 +221,21 @@ def objetos(M: np.ndarray) -> dict:
         # golpes: picos de |κ|
         for i in np.flatnonzero((np.abs(k) >= K_GOLPE) & (np.abs(k) >= np.maximum(np.roll(np.abs(k), 1), np.roll(np.abs(k), -1)))):
             golpes.append({"cx": float(ps[i, 0]), "cy": float(ps[i, 1])})
-        # runs por clase: +1 / −1 (arco) / 0 (recta)
-        cl = np.where(np.abs(k) >= K_MIN, np.sign(k), 0).astype(int); i = 0
-        while i < n:
-            j = i
-            while j < n and cl[j] == cl[i]:
-                j += 1
-            if j - i >= L_MIN:
-                seg = ps[i:j]; largo = float(np.sum(np.hypot(*np.diff(seg, axis=0).T)))
-                if cl[i] == 0:
-                    rectas.append({"cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "fuerza": min(largo / 32, 1.0), "pts": seg})
-                else:
-                    barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
-                    arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
-                                  "fuerza": min(barrido / 180, 1.0), "pts": seg})
-            i = j
+        for c, i, j in segmentar(ps, k, nrm):
+            if j - i < L_MIN:
+                continue
+            seg = ps[i:j]; largo = float(np.sum(np.hypot(*np.diff(seg, axis=0).T)))
+            if c == 0:
+                if largo < L_RECTA:
+                    continue
+                # la recta se representa por su AJUSTE: segmento sobre el eje principal, con su orientación en grados
+                m = seg.mean(0); ev, vec = np.linalg.eigh(np.cov((seg - m).T)); v = vec[:, 1]; t = (seg - m) @ v
+                ang = float(np.degrees(np.arctan2(v[1], v[0])) % 180); pts = np.stack([m + t.min() * v, m + t.max() * v])
+                rectas.append({"cx": float(m[0]), "cy": float(m[1]), "largo": largo, "ang": ang, "o": int(round(ang / 45)) % 4, "fuerza": min(largo / 32, 1.0), "pts": pts})
+            else:
+                barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
+                arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
+                              "fuerza": min(barrido / 180, 1.0), "pts": seg})
     return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos}
 
 
@@ -221,7 +247,7 @@ def _mapa(objs, altura, sig=1.5):
 
 
 def caract(M: np.ndarray) -> np.ndarray:
-    """(n,32,32) → (n,64): 4 sentidos × (3×3 + cuenta + largo/32) · golpes 3×3 + cuenta · lazos 3×3 + cuenta."""
+    """(n,32,32) → (n,108): arcos 44 · golpes 10 · lazos 10 · rectas 44."""
     out = []
     for m in np.asarray(M, np.float32):
         ob = objetos(m); f = []
@@ -230,6 +256,9 @@ def caract(M: np.ndarray) -> np.ndarray:
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda o: o["fuerza"]))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(a["largo"] for a in cs) / 32])
         f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["golpes"], lambda o: 1.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.append(len(ob["golpes"]))
         f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["lazos"], lambda o: 1.0, 2.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.append(len(ob["lazos"]))
+        for o in range(4):
+            rs = [r for r in ob["rectas"] if r["o"] == o]
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
         out.append(f)
     return np.array(out, np.float32)
 

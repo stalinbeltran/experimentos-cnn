@@ -41,16 +41,12 @@ def _remuestrear(p, paso=1.0):
 def arcos_reales(p):
     """Los arcos de la polilínea real con la regla de cresta_curvas: [{s, cx, cy, barrido, pts}]."""
     ps = CC._suavizar(_remuestrear(p), False); k, nrm = CC.curvatura(ps, False); n = len(ps)
-    cl = np.where(np.abs(k) >= CC.K_MIN, np.sign(k), 0).astype(int); i = 0; out = []
-    while i < n:
-        j = i
-        while j < n and cl[j] == cl[i]:
-            j += 1
-        if cl[i] != 0 and j - i >= CC.L_MIN:
+    out = []
+    for c, i, j in CC.segmentar(ps, k, nrm):
+        if c != 0 and j - i >= CC.L_MIN:
             seg = ps[i:j]; barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
             if barrido >= 20:                                       # un arco de menos de 20° no es una curva que haya que detectar
                 out.append({"s": CC._sentido(nm[0], nm[1]), "nm": nm / (np.hypot(*nm) + 1e-9), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "barrido": barrido, "pts": seg})
-        i = j
     return out
 
 
