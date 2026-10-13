@@ -815,3 +815,25 @@ semillas del margen logit 8 − logit 9:
 lazo chico abajo a la derecha, diagonal a la izquierda). Y **sólo los agujeros** leen 8 en 7 de los 9 —los dos que no,
 890 y 898, son los que de verdad tienen un agujero—, aunque solos clasifiquen al 0,49. O sea que el grupo pequeño tiene
 la respuesta correcta para estos y el grande lo tapa: el responsable es el reparto, como decía la figura 33b.
+
+### Con MÁS dígitos de entrenamiento (`nn/mas_digitos.py`, 2026-10-13, unidad `rizo2-mas-digitos2`, 37 min)
+
+«Todo objetos» (108) entrenado con los 180 de train y con 180 + los 3823 extra (otros escritores; 4003 dígitos, 52.039
+filas con aumento), evaluado en val; 3 semillas (`34-mas-digitos.json`, figura `34-mas-digitos.png`). ⚠ Sin conjunto a
+ciegas en la segunda fila: extra está en train.
+
+| train | val | fallos val | de los 59 arreglados | nuevos | cuota agujeros | ochos bien (de 9) |
+|---|---:|---:|---:|---:|---:|---:|
+| 180 | 0,9637 | 57–60 | — | — | 0,079 | 1 |
+| **4003** | **0,9833** (0,9827–0,9845) | **25–28** | 41–42 | 8–10 | 0,072 | **4** |
+
+1. **Con 22× más dígitos, todo objetos sube 2 puntos** (0,9637 → 0,9833) y queda a 2 milésimas de la referencia en
+   celdas entrenada con 180 (0,9852): los objetos no son peores features, son features que **necesitan más ejemplos**
+   para que el compositor aprenda a combinarlas. Arregla 41–42 de los 59 fallos.
+2. **Los ochos: de 1 a 4 bien** (1423, 1491, 1511, 1542), y en 890 y 898 —los de un solo agujero— el margen pasa de
+   −7,4 / −5,4 a casi 0. Pero **la cuota de peso de los agujeros NO sube** (0,079 → 0,072): no aprende «los agujeros
+   importan más» como regla general, aprende con más ejemplos **cuándo** dos agujeros con silueta de 9 son un 8. 816 y
+   1529 siguen en 9 con los dos agujeros vistos, y 1468 se va a 3.
+3. Lo que queda por decidir: para esta línea, el conjunto de entrenamiento de 180 era una **regla del boceto** (el
+   compositor se entrena con pocos para que las features hagan el trabajo). Con objetos, 180 no bastan; con 4003 se
+   pierde la medida a ciegas. Una partición nueva (p. ej. 2000 train / 1617 val / ~2000 ciegas) daría las dos cosas.
