@@ -837,3 +837,16 @@ ciegas en la segunda fila: extra está en train.
 3. Lo que queda por decidir: para esta línea, el conjunto de entrenamiento de 180 era una **regla del boceto** (el
    compositor se entrena con pocos para que las features hagan el trabajo). Con objetos, 180 no bastan; con 4003 se
    pierde la medida a ciegas. Una partición nueva (p. ej. 2000 train / 1617 val / ~2000 ciegas) daría las dos cosas.
+
+### Modo normal (180 de train) SIN agujeros: sólo rectas-objeto + gris-objetos (`35-sin-agujeros.{json,png}`, 2026-10-13)
+
+| | n | val | a ciegas | cuota rectas / gris-obj / agujeros | fallos val | de los 59 arreglados | nuevos | ochos bien (de 9) |
+|---|---:|---:|---:|---|---:|---:|---:|---:|
+| todo objetos | 108 | 0,9637 | 0,9527 | 0,38 / 0,54 / 0,08 | 57–60 | — | — | 1 |
+| **sin agujeros** | 98 | 0,9612 | **0,9430** | 0,41 / 0,59 / — | 60–65 | 8–9 | 10–14 | **0** |
+
+Los 10 números de agujeros valen **0,25 puntos en val y 1,0 a ciegas**, más que su 8 % de peso sugiere: de todo el
+compositor es el grupo que más rinde por número. Sin ellos los 9 ochos se leen 9 **todos**, y el margen empeora en 8 de
+los 9 (816: −3,7 → −6,2; 1423, el único que acertaba: +0,4 → −0,35). Las confusiones de la semilla 0 sin agujeros: 8→9
+×10, 2→1 ×7, 9→7 ×5, 3→9 ×4, 5→7 ×4, 1→8 ×4. O sea que los agujeros sí están haciendo su parte en los ochos; lo que no
+pueden es ganar solos contra la silueta.
