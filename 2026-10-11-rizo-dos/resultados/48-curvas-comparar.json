@@ -1,0 +1,22 @@
+{
+ "trazos": 600,
+ "arcos_reales": 607,
+ "tolerancia_px": {
+  "cresta": 1.5,
+  "gris": 2.5
+ },
+ "fraccion": 0.5,
+ "angulo_sentido": 60.0,
+ "cresta": {
+  "detecciones": 485,
+  "cobertura": 0.815,
+  "precision": 0.812,
+  "por_trazo": 0.81
+ },
+ "gris": {
+  "detecciones": 2096,
+  "cobertura": 0.74,
+  "precision": 0.34,
+  "por_trazo": 3.49
+ }
+}

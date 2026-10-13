@@ -116,6 +116,7 @@ def main() -> int:
     ap.add_argument("--sin-huecos", action="store_true", help="sólo rectas + gris (98 números): sin el grupo de huecos, que exige binario")
     ap.add_argument("--variante", default="", help="opciones de huecos_suaves separadas por coma (CENTRAR,UNO_POR_CELDA,SIN_RENDIJAS,PONDERAR)")
     ap.add_argument("--cresta", default="", help="cresta_curvas: 'solo' = curvas de la cresta en vez del gris (54); 'lazos' = curvas + lazos (64); 'mas-gris' = gris + curvas + lazos; 'lazos-solo' = gris + SÓLO los lazos de la cresta (10) en lugar de los huecos de rayos; 'lazos+conc' = idem + concavidades suaves (10)")
+    ap.add_argument("--conc-suaves", action="store_true", help="añade las concavidades de huecos_suaves (10) a cualquier modo --cresta")
     ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
     a = ap.parse_args(); RH.VAR = a.var; HS.configurar(**{k: True for k in a.variante.split(",") if k})
@@ -139,7 +140,7 @@ def main() -> int:
                 partes.append(cc[:, :54]); g["cresta-curvas"] = (n, n + 54); n += 54
             if a.cresta in ("lazos", "mas-gris", "lazos-solo", "lazos+conc"):
                 partes.append(cc[:, 54:64]); g["cresta-lazos"] = (n, n + 10); n += 10
-            if a.cresta == "lazos+conc":
+            if a.cresta == "lazos+conc" or a.conc_suaves:
                 partes.append(HS.caract(im)[:, 10:20]); g["concavidades suaves"] = (n, n + 10); n += 10
             if a.huecos_suaves:
                 partes.append(HS.caract(im)); g["huecos suaves"] = (n, n + 20); n += 20
