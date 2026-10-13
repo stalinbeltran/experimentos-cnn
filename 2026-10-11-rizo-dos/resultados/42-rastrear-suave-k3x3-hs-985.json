@@ -1,0 +1,179 @@
+{
+ "idx": 985,
+ "real": 3,
+ "predicho": 0,
+ "logits": [
+  4.340000152587891,
+  -3.190000057220459,
+  -1.75,
+  3.0799999237060547,
+  -2.2200000286102295,
+  -3.3399999141693115,
+  -1.1799999475479126,
+  -3.319999933242798,
+  1.1799999475479126,
+  -2.319999933242798
+ ],
+ "margen": 1.26,
+ "ablacion_por_grupo": {
+  "rectas": {
+   "predice": 3,
+   "margen": -0.68
+  },
+  "gris": {
+   "predice": 0,
+   "margen": 3.66
+  },
+  "huecos": {
+   "predice": 3,
+   "margen": -1.22
+  }
+ },
+ "atribucion_por_grupo": {
+  "rectas": 1.93,
+  "gris": -2.82,
+  "huecos": 2.35
+ },
+ "top": [
+  {
+   "n": 49,
+   "grupo": "gris",
+   "nombre": "curva k→ →",
+   "atribucion": -2.36,
+   "valor": 0.981,
+   "z": 2.5,
+   "media_3": 0.726,
+   "media_0": 0.008
+  },
+  {
+   "n": 16,
+   "grupo": "rectas",
+   "nombre": "recta 45° →",
+   "atribucion": -1.2,
+   "valor": 0.539,
+   "z": 1.9,
+   "media_3": 0.369,
+   "media_0": 0.057
+  },
+  {
+   "n": 103,
+   "grupo": "huecos",
+   "nombre": "cerrado →",
+   "atribucion": 0.95,
+   "valor": 0.812,
+   "z": 2.04,
+   "media_3": 0.201,
+   "media_0": 0.657
+  },
+  {
+   "n": 27,
+   "grupo": "rectas",
+   "nombre": "recta 90° →",
+   "atribucion": 0.85,
+   "valor": 0.633,
+   "z": 1.35,
+   "media_3": 0.167,
+   "media_0": 0.775
+  },
+  {
+   "n": 96,
+   "grupo": "gris",
+   "nombre": "golpe ↘",
+   "atribucion": -0.71,
+   "valor": 0.983,
+   "z": 1.6,
+   "media_3": 0.547,
+   "media_0": 0.03
+  },
+  {
+   "n": 102,
+   "grupo": "huecos",
+   "nombre": "cerrado ·",
+   "atribucion": 0.68,
+   "valor": 0.812,
+   "z": 1.01,
+   "media_3": 0.285,
+   "media_0": 0.852
+  },
+  {
+   "n": 63,
+   "grupo": "gris",
+   "nombre": "curva k← ↘",
+   "atribucion": -0.59,
+   "valor": 0.98,
+   "z": 1.19,
+   "media_3": 0.883,
+   "media_0": 0.469
+  },
+  {
+   "n": 13,
+   "grupo": "rectas",
+   "nombre": "recta 45° ↗",
+   "atribucion": 0.56,
+   "valor": 0.537,
+   "z": 2.55,
+   "media_3": 0.191,
+   "media_0": 0.284
+  },
+  {
+   "n": 105,
+   "grupo": "huecos",
+   "nombre": "cerrado ↓",
+   "atribucion": 0.55,
+   "valor": 0.813,
+   "z": 1.44,
+   "media_3": 0.336,
+   "media_0": 0.675
+  },
+  {
+   "n": 62,
+   "grupo": "gris",
+   "nombre": "curva k← ↓",
+   "atribucion": 0.52,
+   "valor": 0.007,
+   "z": -1.39,
+   "media_3": 0.693,
+   "media_0": 0.302
+  },
+  {
+   "n": 15,
+   "grupo": "rectas",
+   "nombre": "recta 45° ·",
+   "atribucion": -0.49,
+   "valor": 0.539,
+   "z": 1.09,
+   "media_3": 0.511,
+   "media_0": 0.149
+  },
+  {
+   "n": 12,
+   "grupo": "rectas",
+   "nombre": "recta 45° ↑",
+   "atribucion": 0.47,
+   "valor": 0.537,
+   "z": 1.38,
+   "media_3": 0.292,
+   "media_0": 0.572
+  },
+  {
+   "n": 28,
+   "grupo": "rectas",
+   "nombre": "recta 90° ↙",
+   "atribucion": 0.46,
+   "valor": 0.311,
+   "z": 2.62,
+   "media_3": 0.01,
+   "media_0": 0.067
+  },
+  {
+   "n": 9,
+   "grupo": "rectas",
+   "nombre": "recta 0° cuenta",
+   "atribucion": 0.45,
+   "valor": 1.0,
+   "z": -1.74,
+   "media_3": 2.444,
+   "media_0": 1.932
+  }
+ ]
+}
