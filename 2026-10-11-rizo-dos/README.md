@@ -979,3 +979,19 @@ cresta al gris **baja** (0,9730): 64 números más con 180 ejemplos de train es 
 no coinciden aquí: la redundancia del gris (dos bordes por trazo) es lo que lo hace estable, como ya pasó con las 512
 rectas densas (§ «Que las rectas cuenten MENOS»). Se queda como **visualización** y como detector de lazos para mirar,
 no como entrada del compositor.
+
+**46 · ¿Detecta bien los LAZOS la cresta?** (regla del dueño: un detector se juzga por su feature, no por el
+compositor). Verdad = huecos cerrados de la **tinta original** (792 en val, área ≥ 3 px). `nn/lazos_comparar.py`:
+
+| detector | detecciones | cobertura | precisión (en tinta) | precisión (tinta o mapa) | falsos | duplicados |
+|---|---|---|---|---|---|---|
+| **cresta** (ciclos del grafo) | 779 | 0,949 | **0,972** | **0,995** | **4** | 5 |
+| huecos suaves v4 (rayos, continuo) | 1.425 | **0,987** | 0,552 | 0,651 | 498 | 5 |
+| `compuesto2` «lazo» (rayos 14 px, M > 0,5) | 961 | 0,847 | 0,698 | 0,698 | 290 | 0 |
+
+La cresta es el detector de lazos **bien definido**: en 1, 2, 3, 5 y 7 (sin huecos en la tinta) emite **0–2** lazos
+en total, donde los rayos emiten 67–121 por clase. Lo que le falta (54 dígitos, figura `46-lazos-comparar.png`): 8
+cuyo hueco de tinta está partido por un puente (la cresta da un lazo donde la tinta tiene dos: es la verdad la que
+engaña), 4 con el triángulo de arriba cerrado en tinta que el adelgazado abre, y 0/9 con una rotura de 1–2 px en el
+mapa. Los «de más» (4 de 779) son 4 y 6 que el mapa cierra. → **Se queda como detector de lazos**; su uso en el
+compositor es otra pregunta (§ 44–45).

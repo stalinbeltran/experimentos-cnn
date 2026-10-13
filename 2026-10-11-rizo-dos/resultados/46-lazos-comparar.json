@@ -1,0 +1,610 @@
+{
+ "huecos_tinta_val": 792,
+ "detectores": {
+  "cresta": {
+   "det": 779,
+   "en_tinta": 757,
+   "en_mapa_solo": 18,
+   "falsos": 4,
+   "dupl": 5,
+   "cubiertos": 752,
+   "cobertura": 0.949,
+   "precision_tinta": 0.972,
+   "precision_tinta_o_mapa": 0.995
+  },
+  "suaves": {
+   "det": 1425,
+   "en_tinta": 787,
+   "en_mapa_solo": 140,
+   "falsos": 498,
+   "dupl": 5,
+   "cubiertos": 782,
+   "cobertura": 0.987,
+   "precision_tinta": 0.552,
+   "precision_tinta_o_mapa": 0.651
+  },
+  "compuesto2-lazo": {
+   "det": 961,
+   "en_tinta": 671,
+   "en_mapa_solo": 0,
+   "falsos": 290,
+   "dupl": 0,
+   "cubiertos": 671,
+   "cobertura": 0.847,
+   "precision_tinta": 0.698,
+   "precision_tinta_o_mapa": 0.698
+  }
+ },
+ "por_clase": {
+  "0": {
+   "digitos": 160,
+   "huecos_tinta": 155,
+   "cresta": {
+    "det": 152,
+    "falsos": 0,
+    "cubiertos": 150
+   },
+   "suaves": {
+    "det": 173,
+    "falsos": 6,
+    "cubiertos": 154
+   },
+   "compuesto2-lazo": {
+    "det": 78,
+    "falsos": 3,
+    "cubiertos": 75
+   }
+  },
+  "1": {
+   "digitos": 164,
+   "huecos_tinta": 1,
+   "cresta": {
+    "det": 0,
+    "falsos": 0,
+    "cubiertos": 0
+   },
+   "suaves": {
+    "det": 67,
+    "falsos": 13,
+    "cubiertos": 1
+   },
+   "compuesto2-lazo": {
+    "det": 1,
+    "falsos": 1,
+    "cubiertos": 0
+   }
+  },
+  "2": {
+   "digitos": 159,
+   "huecos_tinta": 2,
+   "cresta": {
+    "det": 0,
+    "falsos": 0,
+    "cubiertos": 0
+   },
+   "suaves": {
+    "det": 119,
+    "falsos": 101,
+    "cubiertos": 0
+   },
+   "compuesto2-lazo": {
+    "det": 52,
+    "falsos": 52,
+    "cubiertos": 0
+   }
+  },
+  "3": {
+   "digitos": 165,
+   "huecos_tinta": 1,
+   "cresta": {
+    "det": 2,
+    "falsos": 0,
+    "cubiertos": 0
+   },
+   "suaves": {
+    "det": 95,
+    "falsos": 88,
+    "cubiertos": 0
+   },
+   "compuesto2-lazo": {
+    "det": 50,
+    "falsos": 50,
+    "cubiertos": 0
+   }
+  },
+  "4": {
+   "digitos": 163,
+   "huecos_tinta": 23,
+   "cresta": {
+    "det": 21,
+    "falsos": 0,
+    "cubiertos": 17
+   },
+   "suaves": {
+    "det": 121,
+    "falsos": 88,
+    "cubiertos": 23
+   },
+   "compuesto2-lazo": {
+    "det": 109,
+    "falsos": 87,
+    "cubiertos": 22
+   }
+  },
+  "5": {
+   "digitos": 164,
+   "huecos_tinta": 1,
+   "cresta": {
+    "det": 1,
+    "falsos": 0,
+    "cubiertos": 1
+   },
+   "suaves": {
+    "det": 79,
+    "falsos": 67,
+    "cubiertos": 1
+   },
+   "compuesto2-lazo": {
+    "det": 21,
+    "falsos": 20,
+    "cubiertos": 1
+   }
+  },
+  "6": {
+   "digitos": 163,
+   "huecos_tinta": 159,
+   "cresta": {
+    "det": 160,
+    "falsos": 0,
+    "cubiertos": 158
+   },
+   "suaves": {
+    "det": 167,
+    "falsos": 4,
+    "cubiertos": 159
+   },
+   "compuesto2-lazo": {
+    "det": 157,
+    "falsos": 1,
+    "cubiertos": 156
+   }
+  },
+  "7": {
+   "digitos": 161,
+   "huecos_tinta": 0,
+   "cresta": {
+    "det": 0,
+    "falsos": 0,
+    "cubiertos": 0
+   },
+   "suaves": {
+    "det": 105,
+    "falsos": 86,
+    "cubiertos": 0
+   },
+   "compuesto2-lazo": {
+    "det": 56,
+    "falsos": 56,
+    "cubiertos": 0
+   }
+  },
+  "8": {
+   "digitos": 156,
+   "huecos_tinta": 292,
+   "cresta": {
+    "det": 285,
+    "falsos": 4,
+    "cubiertos": 272
+   },
+   "suaves": {
+    "det": 308,
+    "falsos": 12,
+    "cubiertos": 288
+   },
+   "compuesto2-lazo": {
+    "det": 270,
+    "falsos": 3,
+    "cubiertos": 267
+   }
+  },
+  "9": {
+   "digitos": 162,
+   "huecos_tinta": 158,
+   "cresta": {
+    "det": 158,
+    "falsos": 0,
+    "cubiertos": 154
+   },
+   "suaves": {
+    "det": 191,
+    "falsos": 33,
+    "cubiertos": 156
+   },
+   "compuesto2-lazo": {
+    "det": 167,
+    "falsos": 17,
+    "cubiertos": 150
+   }
+  }
+ },
+ "fallos_cresta": [
+  [
+   18,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   82,
+   6,
+   0,
+   0,
+   1
+  ],
+  [
+   87,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   121,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   134,
+   4,
+   0,
+   0,
+   1
+  ],
+  [
+   144,
+   4,
+   0,
+   0,
+   1
+  ],
+  [
+   171,
+   4,
+   0,
+   0,
+   1
+  ],
+  [
+   238,
+   4,
+   0,
+   0,
+   1
+  ],
+  [
+   244,
+   2,
+   1,
+   0,
+   0
+  ],
+  [
+   248,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   253,
+   8,
+   1,
+   1,
+   2
+  ],
+  [
+   400,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   414,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   450,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   473,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   482,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   500,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   508,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   513,
+   8,
+   2,
+   1,
+   2
+  ],
+  [
+   674,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   675,
+   9,
+   1,
+   1,
+   2
+  ],
+  [
+   683,
+   9,
+   2,
+   1,
+   1
+  ],
+  [
+   715,
+   9,
+   1,
+   1,
+   2
+  ],
+  [
+   738,
+   9,
+   2,
+   1,
+   1
+  ],
+  [
+   746,
+   4,
+   1,
+   0,
+   0
+  ],
+  [
+   768,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   769,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   773,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   775,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   794,
+   8,
+   1,
+   1,
+   2
+  ],
+  [
+   813,
+   9,
+   1,
+   0,
+   0
+  ],
+  [
+   831,
+   0,
+   1,
+   0,
+   0
+  ],
+  [
+   852,
+   8,
+   1,
+   1,
+   2
+  ],
+  [
+   903,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   1082,
+   0,
+   1,
+   0,
+   0
+  ],
+  [
+   1096,
+   9,
+   2,
+   1,
+   2
+  ],
+  [
+   1099,
+   0,
+   1,
+   0,
+   0
+  ],
+  [
+   1105,
+   0,
+   1,
+   0,
+   0
+  ],
+  [
+   1149,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   1163,
+   6,
+   1,
+   0,
+   0
+  ],
+  [
+   1187,
+   0,
+   2,
+   1,
+   2
+  ],
+  [
+   1195,
+   8,
+   2,
+   1,
+   1
+  ],
+  [
+   1305,
+   8,
+   3,
+   2,
+   2
+  ],
+  [
+   1325,
+   8,
+   3,
+   2,
+   2
+  ],
+  [
+   1340,
+   8,
+   3,
+   2,
+   3
+  ],
+  [
+   1363,
+   8,
+   3,
+   1,
+   2
+  ],
+  [
+   1542,
+   8,
+   1,
+   1,
+   2
+  ],
+  [
+   1632,
+   3,
+   0,
+   0,
+   1
+  ],
+  [
+   1646,
+   9,
+   0,
+   0,
+   1
+  ],
+  [
+   1654,
+   2,
+   1,
+   0,
+   0
+  ],
+  [
+   1668,
+   1,
+   1,
+   0,
+   0
+  ],
+  [
+   1690,
+   3,
+   1,
+   0,
+   0
+  ],
+  [
+   1749,
+   6,
+   1,
+   1,
+   2
+  ],
+  [
+   1758,
+   3,
+   0,
+   0,
+   1
+  ]
+ ]
+}
