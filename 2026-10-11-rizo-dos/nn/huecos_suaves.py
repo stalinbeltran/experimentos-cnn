@@ -28,8 +28,8 @@ import torch.nn.functional as F
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI.parent))
 
-R_CERRADO = 14.0;   # 14 y no 8: el hueco de un 0 grande queda a 9–10 px de sus paredes y con 8 px no se cerraba (idx 0, medido 2026-10-13)
-# N_RAYOS = 36; PASO = 0.5; CELDAS = 3; NMS = 3; MIN_FUERZA = 0.2
+R_CERRADO = 14.0   # 14 y no 8: el hueco de un 0 grande queda a 9–10 px de sus paredes y con 8 px no se cerraba (idx 0, medido 2026-10-13)
+N_RAYOS = 36; PASO = 0.5; CELDAS = 3; NMS = 3; MIN_FUERZA = 0.2
 _YY, _XX = np.mgrid[0:32, 0:32] + 0.5
 
 
