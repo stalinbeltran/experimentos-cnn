@@ -957,3 +957,25 @@ idx 0 no se cerraba) y la concavidad con percentil 35 y no `media − p10` (marc
 4. **Pared ponderada por distancia** (propuesta 4): una pared a 13 px cierra menos que una a 2 px (`PONDERAR`).
 
 Orden: los más rápidos primero, medidos con `nn/huecos_suaves_falsos.py --variante …` y luego con el compositor.
+
+### 44–45 · curvas sobre la CRESTA en vez del borde (2026-10-13, «procede» del dueño)
+
+`nn/cresta_curvas.py`: esqueleto de M > 0,4, grafo de racimos, curvatura con signo por tramo → arcos (uno por panza, con
+su sentido), rectas, golpes y **lazos** (ciclos del grafo = huecos sin rayos). Es la representación **intuitiva**
+(`resultados/45-cresta-*.png`): una panza, un arco; los 3 y 4 que engañaban al detector de rayos no tienen lazo.
+**Pero como números para el compositor es PEOR que el gris** (mismo protocolo, mapa suave continuo):
+
+| grupos | n | val | a ciegas | fallos |
+|---|---|---|---|---|
+| rectas + gris + huecos suaves v4 (el mejor) | 118 | **0,9804** | **0,9711** | 32 |
+| rectas + **cresta** + huecos suaves v4 | 118 | 0,9650 | 0,9501 | 56 |
+| rectas + cresta + **lazos** (sin rayos) | 108 | 0,9466 | 0,9332 | 89 |
+| rectas + gris + cresta + lazos + huecos suaves v4 | 182 | 0,9730 | 0,9666 | 44 |
+
+Por qué, medido: (1) la cresta da **pocos objetos** (2–4 arcos por dígito contra 8–15 del gris) y el 3×3 con el máximo
+por celda pierde casi toda la posición; (2) los lazos salen en **0,48 por dígito** cuando debería haber ~0,55: un lazo
+con una rotura de 1–2 px en el mapa (9 de idx 119, 8 de idx 1763) no cierra, y los rayos sí lo cerraban; (3) sumar
+cresta al gris **baja** (0,9730): 64 números más con 180 ejemplos de train es ruido. Lo intuitivo y lo discriminativo
+no coinciden aquí: la redundancia del gris (dos bordes por trazo) es lo que lo hace estable, como ya pasó con las 512
+rectas densas (§ «Que las rectas cuenten MENOS»). Se queda como **visualización** y como detector de lazos para mirar,
+no como entrada del compositor.
