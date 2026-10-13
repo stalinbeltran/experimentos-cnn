@@ -101,7 +101,7 @@ def main() -> int:
     # cuántos objetos ve cada grupo, de media por dígito de val (para leer el efecto del adelgazado sin el compositor)
     nobj = {"rectas": float(np.mean([len(RO.objetos(x)[0]) for x in img[va]])),
             "huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))}
-    out = {"nombre": a.nombre, "entrada": a.entrada, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "n": int(X.shape[1]),
+    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "n": int(X.shape[1]),
            "grosor_medio_px": float(np.mean([2 * np.percentile(ndimage.distance_transform_edt(x)[x > 0], 75) for x in img[va] if x.any()])),
            "val": round(float(np.mean(r["val"])), 4), "val_rango": [round(min(r["val"]), 4), round(max(r["val"]), 4)], "ciega": round(float(np.mean(r["ciega"])), 4),
            "cuota_peso": {g: round(float(np.mean([c[g] for c in r["cuota"]])), 3) for g in GRUPOS}, "objetos_por_digito_val": nobj,
