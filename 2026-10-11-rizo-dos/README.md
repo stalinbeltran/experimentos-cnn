@@ -1028,3 +1028,27 @@ detector de curvas. El compositor sin gris (rectas + curvas de la cresta + lazos
 
 Es el precio de la regla: menos acierto hoy, y **responsables identificables** (cada arco es una panza real). Lo que
 queda por hacer es la REPRESENTACIÓN del arco para el compositor (barrido, radio, extremos; 4×4), no el detector.
+
+### 49–50 · Las RECTAS, medidas y mejoradas; y el compositor SÓLO con objetos de la cresta (2026-10-13)
+
+`nn/rectas_comparar.py` (verdad: tramos rectos ≥ 6 px de la línea media sintética): **rectas-objeto** (Gabor par)
+cobertura 0,964 · precisión **0,026** (17,9 por trazo: casi ninguna es una recta); **cresta** 0,937 · 0,708 antes y
+**0,909 · 0,798** después de: arcos de < 20° fundidos en rectas (`segmentar`, la misma regla para la verdad), recta =
+ajuste de línea ≥ 5 px con orientación (la verdad exige 6: el esqueleto pierde 1,04 px por extremo, mediana medida).
+Figura `50-rectas-comparar-despues.png`, y `49-rectas-*.png` sobre los fallos. `cresta_curvas.caract` da ahora 108
+números (rectas 44 + arcos 44 + golpes 10 + lazos 10).
+
+El compositor SÓLO con objetos de la cresta (`--cresta todo`):
+
+| grupos | n | val | a ciegas | fallos |
+|---|---|---|---|---|
+| rectas-objeto + gris + huecos de rayos v4 (el mejor) | 118 | 0,9804 | 0,9711 | 32 |
+| cresta: rectas + arcos + golpes + lazos | 108 | 0,8705 | 0,8638 | 210 |
+| cresta: ídem + concavidades suaves v4 | 118 | 0,9188 | 0,9068 | 134 |
+
+Los tres detectores de la cresta son los mejor definidos de los que hay (rectas 0,91/0,80 · curvas 0,80/0,83 · lazos
+0,95/0,97 contra la verdad) y el compositor que los consume es el peor: **el cuello de botella es la REPRESENTACIÓN**
+(3×3 con el máximo por celda y una cuenta, pensada para detectores que emiten 10–20 objetos; la cresta emite 2–5). Las
+confusiones lo dicen: 1→7 ×29 (el 1 grueso sale con dos crestas paralelas → «dos rectas»), 5→4/5→3. Siguiente paso:
+representar cada objeto con lo que lo define (extremos, orientación, barrido, radio, longitud) en una rejilla más fina
+o como lista ordenada, y arreglar la doble cresta de los 1 en la entrada (`delg-cnn`).
