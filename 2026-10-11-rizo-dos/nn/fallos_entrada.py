@@ -38,7 +38,8 @@ def main() -> int:
     ap.add_argument("--umbral", type=float, default=0.5); ap.add_argument("--engrosar", type=int, default=0)
     ap.add_argument("--continuo", action="store_true"); ap.add_argument("--sin-huecos", action="store_true"); ap.add_argument("--huecos-suaves", action="store_true")
     a = ap.parse_args(); GR.configurar(**R.CAL_GRIS)
-    res = json.loads((AQUI / "resultados" / f"40-entrada-{a.nombre}.json").read_text()); RH.VAR = res.get("var", RH.VAR)
+    import huecos_suaves as HS
+    res = json.loads((AQUI / "resultados" / f"40-entrada-{a.nombre}.json").read_text()); RH.VAR = res.get("var", RH.VAR); HS.configurar(**{k: True for k in res.get("variante", "").split(",") if k})
     d = np.load(exigir_dataset(EV.DATASET) / "datos.npz"); tinta = (d["imagenes"] > 0).astype(np.uint8)
     if a.entrada:
         mapa = np.load(a.entrada)[a.clave].astype(np.float32); img = mapa if a.continuo else TE.engrosar((mapa > a.umbral).astype(np.uint8), a.engrosar)

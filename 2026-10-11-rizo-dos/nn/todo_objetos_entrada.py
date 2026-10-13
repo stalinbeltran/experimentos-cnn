@@ -73,7 +73,7 @@ def dibujar(ax, x, cs, continuo=False, sin_huecos=False, suaves=False):
     for g in ob["golpes"]:
         ax.plot(g["cx"] - 0.5, g["cy"] - 0.5, "x", color="k", ms=4, mew=1)
     if suaves:
-        cer, con = HS.mapas(np.asarray(x, np.float32)[None])
+        cer, con = HS.mapas(np.asarray(x, np.float32)[None]); HS.M_ACTUAL = np.asarray(x, np.float32)
         for o in HS.objetos(cer[0]):
             ax.plot(o["cx"] - 0.5, o["cy"] - 0.5, "+", color=EV.AZU, ms=4 + 8 * o["fuerza"], mew=2)
         for o in HS.objetos(con[0]):
@@ -97,9 +97,10 @@ def main() -> int:
     ap.add_argument("--umbral", type=float, default=0.5); ap.add_argument("--engrosar", type=int, default=0)
     ap.add_argument("--continuo", action="store_true", help="rectas y gris leen el mapa CONTINUO (sin binarizar); el umbral sólo se usa si hay huecos")
     ap.add_argument("--sin-huecos", action="store_true", help="sólo rectas + gris (98 números): sin el grupo de huecos, que exige binario")
+    ap.add_argument("--variante", default="", help="opciones de huecos_suaves separadas por coma (CENTRAR,UNO_POR_CELDA,SIN_RENDIJAS,PONDERAR)")
     ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
-    a = ap.parse_args(); RH.VAR = a.var
+    a = ap.parse_args(); RH.VAR = a.var; HS.configurar(**{k: True for k in a.variante.split(",") if k})
     torch.set_num_threads(2); t0 = time.time(); GR.configurar(**R.CAL_GRIS)
     d = dict(np.load(exigir_dataset(EV.DATASET) / "datos.npz")); y, part = d["etiquetas"].astype(int), d["particion"]
     if a.entrada:
@@ -149,7 +150,7 @@ def main() -> int:
     nobj = {"rectas": float(np.mean([len(RO.objetos(x)[0]) for x in img[va]]))}
     if not a.sin_huecos:
         nobj.update({"huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))})   # con suaves: suma de fuerzas
-    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "n": int(X.shape[1]),
+    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "variante": a.variante, "n": int(X.shape[1]),
            "grosor_medio_px": float(np.mean([2 * np.percentile(ndimage.distance_transform_edt(x)[x > 0], 75) for x in binario[va] if x.any()])),
            "val": round(float(np.mean(r["val"])), 4), "val_rango": [round(min(r["val"]), 4), round(max(r["val"]), 4)], "ciega": round(float(np.mean(r["ciega"])), 4),
            "cuota_peso": {g: round(float(np.mean([c[g] for c in r["cuota"]])), 3) for g in grupos}, "objetos_por_digito_val": nobj,

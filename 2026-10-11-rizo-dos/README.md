@@ -945,3 +945,15 @@ suave por mapa (20 números, la forma de `huecos_separados`). Dos calibraciones 
 idx 0 no se cerraba) y la concavidad con percentil 35 y no `media − p10` (marcaba el exterior de toda pared). Figura:
 `resultados/41-huecos-suaves.png`. Los fallos que quedan (35): `8→9` ×8 (los de siempre: lazo inferior pequeño),
 `4→1/9`, `9→3`; ver `40-entrada-suave-k3x3-hs-fallos.png`.
+
+### ⏳ PENDIENTES del detector de huecos suaves (el dueño, 2026-10-13, tras ver `43-huecos-falsos.png`)
+
+1. **Eliminar los huecos de los 1 gruesos**: el adelgazado deja dos crestas paralelas con una rendija entre ellas, y
+   esa rendija cuenta como hueco (349 «huecos» en los 1 de val). Es un fallo de la ENTRADA (`delg-cnn`), no del
+   detector; mientras tanto, el detector puede descartar regiones cuyo radio inscrito sea < 1 px (`SIN_RENDIJAS`).
+2. **Centrar el centro del hueco**: el objeto se ponía en el máximo local, que en un hueco alargado cae en un extremo y
+   lo visualiza deformado. Pasar al centroide de la región (`CENTRAR`).
+3. **Un hueco por celda 3×3** (propuesta 3): quita los duplicados (408 en val) y acota la cuenta a 9 (`UNO_POR_CELDA`).
+4. **Pared ponderada por distancia** (propuesta 4): una pared a 13 px cierra menos que una a 2 px (`PONDERAR`).
+
+Orden: los más rápidos primero, medidos con `nn/huecos_suaves_falsos.py --variante …` y luego con el compositor.
