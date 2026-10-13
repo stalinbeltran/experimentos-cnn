@@ -6,7 +6,7 @@ Primera pieza (2026-10-13): curvas «naturales», como hechas a mano, y su engro
 Una curva nace de un modelo de bolígrafo: se avanza a pasos de 0,25 px con un rumbo cuya
 curvatura es ruido suavizado (así la curva ondula sin esquinas), con un tirón hacia el centro
 cuando se acerca al borde del lienzo de 32×32. La presión (grosor) también varía despacio a lo
-largo del trazo, entre `g_min` y `g_max` (3–5 px desde el 2026-10-13: ni los bloques de los 1 gruesos ni hilos de 2 px, regla del dueño). La verdad es la polilínea de puntos (sub-píxel).
+largo del trazo, entre `g_min` y `g_max` (3–6 px desde el 2026-10-13: el grosor medido en UCI val es mediana 4,5, p90 6; ni los bloques de los 1 gruesos ni hilos de 2 px, regla del dueño). La verdad es la polilínea de puntos (sub-píxel).
 
 El engrosado es la unión de discos de radio g(t)/2 centrados en cada punto de la polilínea:
 la tinta queda centrada en la línea media por construcción, que es lo que la red debe aprender.
@@ -35,7 +35,7 @@ def _suave(rng, n: int, escala: float, sigma_pasos: float) -> np.ndarray:
 
 
 def curva_natural(rng, largo_px: float | None = None, paso: float = 0.25,
-                  g_min: float = 3.0, g_max: float = 5.0, margen: float = 1.5) -> dict:
+                  g_min: float = 3.0, g_max: float = 6.0, margen: float = 1.5) -> dict:
     """Una curva a mano alzada dentro del lienzo: puntos (n,2) en píxeles y grosor (n,) por punto."""
     L = largo_px if largo_px is not None else rng.uniform(14, 40)
     n = int(L / paso)
