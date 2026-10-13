@@ -3,7 +3,7 @@
 entrada alternativa con los objetos que vieron los detectores encima (como en todo_objetos: segmentos = rectas, círculos
 = curvas del gris por sentido, × = golpe, + = agujero).
 
-    python nn/fallos_entrada.py --nombre delgado-k3x3 --entrada /ruta/delgados-k3x3.npz [--umbral 0.5] [--engrosar 0]
+    python nn/fallos_entrada.py --nombre delgado-k3x3 --entrada /ruta/delgados-k3x3.npz [--umbral 0.5] [--engrosar 0] [--continuo] [--sin-huecos]
         → resultados/40-entrada-<nombre>-fallos.png
 """
 from __future__ import annotations
@@ -36,11 +36,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--nombre", required=True); ap.add_argument("--entrada", default=None); ap.add_argument("--clave", default="M")
     ap.add_argument("--umbral", type=float, default=0.5); ap.add_argument("--engrosar", type=int, default=0)
+    ap.add_argument("--continuo", action="store_true"); ap.add_argument("--sin-huecos", action="store_true")
     a = ap.parse_args(); GR.configurar(**R.CAL_GRIS)
     res = json.loads((AQUI / "resultados" / f"40-entrada-{a.nombre}.json").read_text()); RH.VAR = res.get("var", RH.VAR)
     d = np.load(exigir_dataset(EV.DATASET) / "datos.npz"); tinta = (d["imagenes"] > 0).astype(np.uint8)
-    img = TE.engrosar((np.load(a.entrada)[a.clave].astype(np.float32) > a.umbral).astype(np.uint8), a.engrosar) if a.entrada else tinta
-    todos = pickle.loads((AQUI / "resultados" / f"40-candidatos-{a.nombre}.pkl").read_bytes())["todos"]
+    if a.entrada:
+        mapa = np.load(a.entrada)[a.clave].astype(np.float32); img = mapa if a.continuo else TE.engrosar((mapa > a.umbral).astype(np.uint8), a.engrosar)
+    else:
+        img = tinta
+    todos = [None] * len(img) if a.sin_huecos else pickle.loads((AQUI / "resultados" / f"40-candidatos-{a.nombre}.pkl").read_bytes())["todos"]
     fallos = sorted(res["fallos"], key=lambda f: (f["real"], f["predicho"]))
     cols = 8; filas = int(np.ceil(len(fallos) / cols))
     fig, axs = plt.subplots(filas, 2 * cols, figsize=(2 * cols * 1.45, filas * 1.75 + 1.0)); axs = np.atleast_2d(axs)
@@ -49,7 +53,7 @@ def main() -> int:
     for k, f in enumerate(fallos):
         i = f["idx"]; r, c = divmod(k, cols); a0, a1 = axs[r, 2 * c], axs[r, 2 * c + 1]
         RA.pintar_digito(a0, tinta[i]); a0.set_xlim(-0.5, 31.5); a0.set_ylim(31.5, -0.5)
-        TO.dibujar_objetos(a1, img[i], todos[i]); a1.set_xlim(-0.5, 31.5); a1.set_ylim(31.5, -0.5)
+        TE.dibujar(a1, img[i], todos[i], a.continuo, a.sin_huecos); a1.set_xlim(-0.5, 31.5); a1.set_ylim(31.5, -0.5)
         col = EV.NAR if f["semillas_que_fallan"] == 3 else "#b45309"
         a0.set_title(f"{f['real']}→{f['predicho']} · idx {i}", color=col, fontsize=7.5, pad=2)
         a1.set_title(f"{f['semillas_que_fallan']}/3 semillas", color=col, fontsize=7, pad=2)

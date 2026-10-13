@@ -1,7 +1,7 @@
 #!/bin/sh
 # rizo-2 — las cuatro corridas de todo_objetos_entrada.py (2026-10-13): referencia + adelgazado tal cual + dos ajustes.
 # Dos lotes (uno por vCPU), cada uno como unidad:
-#   ENTRADA=/ruta/delgados-k3x3.npz COORD_HOME=~/src/telegram-coordinator "$COORD_HOME/scripts/desacoplar-persistente.sh" rizo2-entradas-a sh nn/correr-entradas.sh a
+#   COORD_HOME=~/src/telegram-coordinator "$COORD_HOME/scripts/desacoplar-persistente.sh" rizo2-entradas-a env ENTRADA=/ruta/delgados-k3x3.npz sh nn/correr-entradas.sh a
 #   COORD_HOME=~/src/telegram-coordinator "$COORD_HOME/scripts/desacoplar-persistente.sh" rizo2-entradas-b sh nn/correr-entradas.sh b
 # Estado: ls resultados/40-entrada-*.json · systemctl status rizo2-entradas-a rizo2-entradas-b · /tmp/rizo2-entradas-{a,b}.log
 set -u
