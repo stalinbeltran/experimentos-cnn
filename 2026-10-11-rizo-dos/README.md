@@ -1011,3 +1011,20 @@ valor del grupo de rayos estaba en las **concavidades** (la panza del 3 y del 5,
 representan. El detector de lazos es más limpio (§ 46) pero su resumen para el compositor —3×3 con fuerza fija 1 y la
 cuenta— lleva menos información que el de rayos, que gradúa cada hueco por su encierro. Lo que probar si se quiere
 cerrar la brecha: fuerza = área del lazo o su encierro, y los lazos que el mapa deja abiertos por 1–2 px (§ 46).
+
+### 48 · Las CURVAS de la cresta contra la verdad, y el compositor SIN gris (2026-10-13)
+
+Regla del dueño: un detector se juzga por su feature. `nn/curvas_comparar.py` sobre 600 trazos sintéticos con línea media
+conocida (607 arcos reales ≥ 20°): **cresta cobertura 0,815 · precisión 0,812** (0,8 objetos por trazo) contra **gris
+0,740 · 0,340** (3,5 por trazo). Por barrido: 45–180° la cresta da 0,94–1,00 en las dos; falla en < 45° (frontera con
+la recta, 0,52) y en > 180° (ahí falla la medida del sentido, no el detector). → **La cresta sustituye al gris** como
+detector de curvas. El compositor sin gris (rectas + curvas de la cresta + lazos + concavidades suaves v4, 118):
+
+| corrida | n | val | a ciegas | fallos |
+|---|---|---|---|---|
+| suave-k3x3-hs-v4 | 118 | 0.9804 | 0.9711 | 32 |
+| suave-gris-lazos-conc | 118 | 0.9784 | 0.967 | 35 |
+| suave-cresta-lazos-conc | 118 | 0.9604 | 0.9448 | 63 |
+
+Es el precio de la regla: menos acierto hoy, y **responsables identificables** (cada arco es una panza real). Lo que
+queda por hacer es la REPRESENTACIÓN del arco para el compositor (barrido, radio, extremos; 4×4), no el detector.
