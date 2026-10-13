@@ -49,7 +49,7 @@ que copiarlo localmente (pero si vale la pena, y eso depende de nuestras pruebas
 > «El resultado está MUY BIEN. Anota que este detector es el mejor hasta ahora para detectar curvas cerradas (nota que
 > al final, el radio no importa).» — el dueño, 2026-10-11
 
-Es `2026-10-11-rizo-dos/nn/compuesto2.py` (id `rizo-2`): **proponen** las plantillas RODEADAS (cobertura ≥ 0,85; las
+Es `nn/compuesto2.py` de `rizo-2`: **proponen** las plantillas RODEADAS (cobertura ≥ 0,85; las
 de media vuelta casan con cualquier curva) y los rayos (F 0,5); **elige** el ENCIERRO (fracción de 36 rayos que chocan
 con tinta antes de 8 px), sin entrenar nada. En los 47 doses etiquetados a mano acierta el rizo el 78,7 % con un
 candidato por dígito (89 % con dos), y 6 de los 10 fallos son la misma rendija con el centro en el fondo en vez de en la
@@ -64,7 +64,7 @@ pide seguir el trazo, que ninguno de los tres mide. Detalle y figuras en su READ
 
 **MLP 256 · rectas + gris + rizo, entrenado con AUMENTO: 0,9858 en val (1617) con la semilla 0, 0,9852 con 3 semillas;
 23 fallos, 21 de ellos en las tres semillas** (8→9 ×7, 3→9 ×3, 3→5 ×2). Movido ±4 px sigue en 0,94–0,96. Cómo se
-reproduce: `2026-10-11-rizo-dos/nn/resistencia.py` (método B) y `nn/fallos_mejor.py` (la lista y la figura 19,
+reproduce: `nn/resistencia.py` de `rizo-2` (método B) y `nn/fallos_mejor.py` (la lista y la figura 19,
 `resultados/19-fallos-mejor.{png,json}`). Qué es cada pieza:
 
 - **rectas**: 4 Gabor par (0/45/90/135) integrados en línea, 2 escalas, máximo en celdas 8×8 (boceto curvas-gabor,
@@ -82,7 +82,7 @@ referencia anterior era el boceto: 0,960 / 0,957 con el compositor lineal.
 **Y el mismo 2026-10-12, por la tarde, lo mejor en VAL subió a 0,9878** (3 semillas, rango 0,9876–0,9882; a ciegas
 0,9787, igual) añadiendo a lo de arriba dos grupos nuevos **sin quitar nada**: las **rectas como OBJETOS** (picos de «un
 voto» agrupados por colinealidad; por orientación y escala, 3×3 de todas + cuenta + longitud; 88) y los **agujeros**
-(un rizo por componente del fondo, 3×3 de todos + cuenta; 10). `2026-10-11-rizo-dos/nn/rectas_objetos.py`, fila «rectas
+(un rizo por componente del fondo, 3×3 de todos + cuenta; 10). `nn/rectas_objetos.py` de `rizo-2`, fila «rectas
 8×8 + objetos» de `resultados/27-objetos.json`. ⚠ En val, no a ciegas: ahí no mueve. Lo que se probó para que las rectas
 **contaran menos** (celdas 4×4, un voto por recta, sólo objetos) reequilibra los grupos y arregla el 784, pero **baja a
 ciegas** (hasta 0,971): las 512 rectas densas son redundantes y esa redundancia es lo que las hace estables. El detalle,
@@ -96,12 +96,12 @@ objetos (54) y **huecos cerrados y concavidades exteriores por separado** (3×3 
 **0,9775 val / 0,9592 a ciegas** (180 de train, aumento, 3 semillas), contra 0,9852 / 0,9792 de la referencia en celdas:
 ese es el precio asumido de dejar los detalles en esta etapa. Lo medido por el camino y lo que NO ayudó (celdas 4×4, un
 voto por recta, quitar el «recto» del gris, 22× más dígitos de entrenamiento, el prior por cuenta de huecos) está en el
-README de `2026-10-11-rizo-dos` § «Que las rectas cuenten MENOS» y siguientes. ⚠ **Los huecos van separados de las
+README de `rizo-2` § «Que las rectas cuenten MENOS» y siguientes. ⚠ **Los huecos van separados de las
 concavidades** (`rizo_huecos.huecos_separados`): mezclados, «cuenta 2» era un 8 el 36 % de las veces; separados, el 79 %.
 
 ## 📌 LOS MEJORES HASTA HOY (2026-10-12): detectores y compositores — para recordárselo al dueño cuando pregunte
 
-Medido en `rizo-2` (`2026-10-11-rizo-dos/nn/detectores.py`, `resultados/17-detectores.json`; 180 train / 1617 val /
+Medido en `rizo-2` (`nn/detectores.py`, `resultados/17-detectores.json`; 180 train / 1617 val /
 3823 a ciegas, 3 semillas; val / a ciegas):
 
 - **Detectores de features, de mejor a peor solo**: **gris** (curvas del boceto curvas-gabor sobre el borde Gabor impar

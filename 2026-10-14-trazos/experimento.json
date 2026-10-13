@@ -1,0 +1,14 @@
+{
+  "id": "trazos",
+  "titulo": "Recuperar los TRAZOS del boligrafo de un digito estatico: linea media + grafo + continuidad en los cruces, medido con sinteticos de verdad conocida y con digitos de UCI etiquetados a mano",
+  "pregunta": "¿Se pueden recuperar de un bitmap de 32 px los trazos con que se escribio el digito (cuantos, por donde pasan, donde empiezan y acaban, donde se cruzan) con un metodo sin entrenar, y con que acierto?",
+  "creado": "2026-10-13",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "no",
+  "entrada": "nn/trazos.py",
+  "reporte": "README.md",
+  "plan": "REGLAS.md e instrucciones/02-criterio.md commiteados el 2026-10-13, ANTES de escribir nn/trazos.py; las etiquetas de trazos de 50 digitos de val (instrucciones/etiquetas-trazos.json) se escriben antes de correr nada",
+  "linaje": "Copia (no importa) el generador de sinteticos de rizo-2 (nn/sinteticos.py: arcos, rectas, grosor 2-6) extendido a trazos completos con verdad de polilinea; la transformada de distancia de rizo_huecos.py; y el campo de orientacion del gris (curvas.campo) como direccion de referencia en los cruces. Lo demas es nuevo."
+}
