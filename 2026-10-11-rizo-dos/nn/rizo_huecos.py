@@ -42,11 +42,11 @@ import digitos as D                                                 # noqa: E402
 import gris_recalibrado as GR                                       # noqa: E402
 from expcnn import exigir_dataset                                   # noqa: E402
 
-VAR = "rizo (h0, 8px)"; CELDAS = 3; D_EXT = 6.0
+VAR = "rizo (h0, 8px)"; CELDAS = 3; D_EXT = 6.0; AREA_MIN = 3   # 2026-10-13: un hueco cerrado de 1–2 px es una mota, no un agujero (ochos de train con «3+»)
 EJEMPLOS = (784, 66, 1562, 1765, 27, 1723)                         # 8 (2 agujeros) · 6 (1) · 9 sin rizo visto · 3 (0) · 7 (0) · 1 (0)
 
 
-def agujeros(x, cs):
+def agujeros(x, cs, area_min=0):
     """Los rizos filtrados, agrupados por AGUJERO: uno por componente conexa del fondo (el de mayor encierro); los del
     fondo exterior, por distancia. Devuelve la lista de agujeros (dicts de rizo) y, para cada rizo, su grupo."""
     lab, n = label(np.asarray(x) == 0); borde = set(np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))) - {0}
@@ -54,6 +54,8 @@ def agujeros(x, cs):
     for c in sorted(cs, key=lambda c: -c["r8"]):
         cx, cy = int(c["centro_hueco"][0]), int(c["centro_hueco"][1]); comp = int(lab[cy, cx])
         if comp and comp not in borde:
+            if area_min and int((lab == comp).sum()) < area_min:
+                continue
             clave = ("hueco", comp)
             if clave in [g[0] for g in grupos]:
                 grupos[[g[0] for g in grupos].index(clave)][1].append(c); continue
@@ -73,12 +75,12 @@ def mapa(ags):
     return m
 
 
-def huecos_separados(img, C, celdas=CELDAS):
+def huecos_separados(img, C, celdas=CELDAS, area_min=AREA_MIN):
     """2026-10-13: los huecos CERRADOS y las CONCAVIDADES exteriores por separado (3×3 + cuenta cada uno; 20 números).
     Medido ese día: con la cuenta mezclada, «cuenta 2» era un 8 el 36 % de las veces en val; sólo cerrados, el 79 %."""
     out = []
     for x, cs in zip(img, C):
-        _, grupos = agujeros(x, DV.filtrar(cs, *DV.VARIANTES[VAR]))
+        _, grupos = agujeros(x, DV.filtrar(cs, *DV.VARIANTES[VAR]), area_min)
         cerr = [m[0] for cl, m in grupos if cl[0] == "hueco"]; conc = [m[0] for cl, m in grupos if cl[0] == "ext"]
         f = []
         for ags in (cerr, conc):

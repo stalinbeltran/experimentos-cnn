@@ -880,3 +880,29 @@ Es la primera vez que el grupo de agujeros «pesa» en este compositor, y lo hiz
    **mande** sobre la silueta hace falta o bien que train tenga ochos con silueta de 9 (hay pocos, y más muestras no
    los crea), o bien un compositor que no sea una suma: una primera decisión por cuenta de huecos (0 / 1 / 2) que
    restrinja las clases, y el MLP dentro de cada rama. Es lo que un «responsable» identificable permite escribir.
+
+### Las dos ideas que faltaban, medidas (2026-10-13, `37-dos-etapas.json`)
+
+Todo objetos (rectas-objeto ×1 + gris-objetos + huecos cerrados y concavidades aparte), 180 de train, aumento, 3 semillas:
+
+| variante | val | a ciegas | cuota agujeros | fallos val | ochos bien (de 9) |
+|---|---:|---:|---:|---:|---:|
+| separados, sin área mínima | 0,9728 | 0,9582 | 0,170 | 42–46 | 1 |
+| **+ área mínima 3 px** (una mota de 1–2 px no es un hueco) | **0,9775** | **0,9592** | 0,161 | **36–37** | 2 |
+| + prior log P(clase \| huecos cerrados) de train, λ = 1 | 0,9765 | 0,9574 | | 37–39 | **6** |
+| + prior, λ = 2 | 0,9709 | 0,9522 | | 46–48 | 6 |
+| + máscara dura (clases vistas en train con esa cuenta) | 0,9728 | 0,9553 | | 44 | 2 |
+
+1. **El área mínima se queda** (`AREA_MIN = 3` en `rizo_huecos.huecos_separados`): +0,5 en val, 36 fallos en vez de 44,
+   y en train la tabla cuenta × clase queda limpia — con 2+ huecos cerrados, 13 de 14 son 8 (el otro es un 0); con 0,
+   ningún 8. Medido en los 18 ochos de train: los «3+» eran motas de 1–2 px (idx 1443: áreas 49, 40, 1, 1).
+2. **El compositor en dos etapas (prior por cuenta de huecos) arregla los ochos y cuesta en el resto**: 6 de los 9 pasan
+   a 8 (816, 1423, 1468, 1491, 1511, 1529; 890 y 898 tienen un solo hueco de verdad, 1542 sigue), pero val baja 0,1 y
+   ciega 0,2, y con λ = 2 baja más. El prior de «0 huecos» castiga al 8 (ningún 8 de train tiene 0), y eso pierde los
+   ochos de lazo macizo y algún otro. La máscara dura no aporta. Es un **trade-off**, no una mejora neta: con 180
+   ejemplos el prior es grueso (Laplace sobre 18 por clase).
+3. Lo que queda de esos ochos ya no es de los huecos: 890 y 898 son ochos con un hueco, indistinguibles de un 9 por
+   esa vía; para ellos el responsable es la silueta, que es el «porcentaje que depende de los detalles».
+
+⚠ `todo_objetos.py` sigue usando `huecos` (mezclados, 10); la configuración vigente es con `huecos_separados` (20, área
+≥ 3): val 0,9775 / ciega 0,9592.
