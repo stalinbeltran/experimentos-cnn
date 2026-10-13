@@ -88,6 +88,17 @@ voto» agrupados por colinealidad; por orientación y escala, 3×3 de todas + cu
 ciegas** (hasta 0,971): las 512 rectas densas son redundantes y esa redundancia es lo que las hace estables. El detalle,
 en el README de `rizo-2` § «Que las rectas cuenten MENOS».
 
+## 🧩 LA LÍNEA «TODO OBJETOS» (decisión del dueño, 2026-10-12/13): responsables identificables
+
+El dueño eligió trabajar con un compositor hecho **sólo de objetos** —rectas como objetos (×1, 44), curvas del gris como
+objetos (54) y **huecos cerrados y concavidades exteriores por separado** (3×3 + cuenta cada uno, área mínima 3 px; 20)—,
+118 números, para que cuando un dígito falle se pueda ir a los objetos y nombrar al responsable. Vigente:
+**0,9775 val / 0,9592 a ciegas** (180 de train, aumento, 3 semillas), contra 0,9852 / 0,9792 de la referencia en celdas:
+ese es el precio asumido de dejar los detalles en esta etapa. Lo medido por el camino y lo que NO ayudó (celdas 4×4, un
+voto por recta, quitar el «recto» del gris, 22× más dígitos de entrenamiento, el prior por cuenta de huecos) está en el
+README de `2026-10-11-rizo-dos` § «Que las rectas cuenten MENOS» y siguientes. ⚠ **Los huecos van separados de las
+concavidades** (`rizo_huecos.huecos_separados`): mezclados, «cuenta 2» era un 8 el 36 % de las veces; separados, el 79 %.
+
 ## 📌 LOS MEJORES HASTA HOY (2026-10-12): detectores y compositores — para recordárselo al dueño cuando pregunte
 
 Medido en `rizo-2` (`2026-10-11-rizo-dos/nn/detectores.py`, `resultados/17-detectores.json`; 180 train / 1617 val /

@@ -906,3 +906,8 @@ Todo objetos (rectas-objeto ×1 + gris-objetos + huecos cerrados y concavidades 
 
 ⚠ `todo_objetos.py` sigue usando `huecos` (mezclados, 10); la configuración vigente es con `huecos_separados` (20, área
 ≥ 3): val 0,9775 / ciega 0,9592.
+
+### ✅ Decisión del dueño (2026-10-13): huecos SEPARADOS de las concavidades, con área mínima 3 px
+
+Configuración vigente de «todo objetos»: rectas-objeto ×1 (44) + gris-objetos (54) + `huecos_separados` (20) = 118:
+**0,9775 val / 0,9592 a ciegas**. Anotado también en el CLAUDE.md del repo.
