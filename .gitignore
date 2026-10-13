@@ -15,3 +15,6 @@ __pycache__/
 # los volcados intermedios no.
 /tmp/
 *.log
+
+# cachés de candidatos de rizo-2 (se regeneran, ~35 min cada uno)
+*-candidatos*.pkl
