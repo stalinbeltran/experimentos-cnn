@@ -850,3 +850,33 @@ compositor es el grupo que más rinde por número. Sin ellos los 9 ochos se leen
 los 9 (816: −3,7 → −6,2; 1423, el único que acertaba: +0,4 → −0,35). Las confusiones de la semilla 0 sin agujeros: 8→9
 ×10, 2→1 ×7, 9→7 ×5, 3→9 ×4, 5→7 ×4, 1→8 ×4. O sea que los agujeros sí están haciendo su parte en los ochos; lo que no
 pueden es ganar solos contra la silueta.
+
+### Por qué los agujeros no se hacían más representativos — y una causa medida (2026-10-13, `36-agujeros-separados.json`)
+
+**La cuenta estaba sucia.** `agujeros()` suma los huecos CERRADOS y las CONCAVIDADES exteriores (el gancho de un 7, la
+boca de un 3 o un 5) en la misma cuenta. Medido en val: de los 349 dígitos con cuenta 2, sólo 125 son 8 (**36 %**); 45 son
+3, 46 son 9, 32 son 7. Con sólo huecos cerrados, de 153 con cuenta 2, 121 son 8 (**79 %**). En train, 9 de 34 (26 %)
+frente a 9 de 12 (75 %). Un compositor no puede fiarse de una regla que acierta 1 de 3 veces, y más muestras no la
+limpian.
+
+`rizo_huecos.huecos_separados`: cerrados y concavidades **aparte**, cada uno 3×3 + cuenta (20 números). Todo objetos,
+180 de train, aumento, 3 semillas:
+
+| agujeros | n | val | a ciegas | cuota agujeros | fallos val | de los 59 arreglados | nuevos | ochos bien |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| mezclados (10) | 108 | 0,9637 | 0,9527 | 0,079 | 57–60 | — | — | 1 |
+| **cerrados y concavidades aparte (20)** | 118 | **0,9728** | **0,9582** | **0,170** | 42–46 | 25–27 | 10–12 | 1 |
+
+**La cuota de peso del grupo se dobla (0,08 → 0,17) y el compositor sube 0,9 en val y 0,6 a ciegas** sin tocar nada más.
+Es la primera vez que el grupo de agujeros «pesa» en este compositor, y lo hizo limpiando la feature, no añadiendo datos.
+
+**Y aun así los 9 ochos siguen en 9** (1 bien, ahora el 1468). Lo que queda es de otra clase, y son dos cosas:
+1. **La firma del 8 en train no es estable**: de los 18 ochos, 9 tienen 2 huecos cerrados, 5 tienen 1 (lazo macizo) y
+   4 tienen 3 o más (huecos partidos o diminutos). Con la mitad de los 8 sin la firma, «2 huecos ⇒ 8» no es una regla
+   que train obligue a aprender. Lo primero a mirar son esos 4 con 3+: si son huecos de 1–2 px, un tamaño mínimo los
+   quita.
+2. **El compositor es aditivo**: el logit es una suma, y 98 números de silueta que apuntan a 9 de forma consistente
+   pesan más que un número de agujeros, por limpio que sea, mientras en train la silueta baste. Para que un agujero
+   **mande** sobre la silueta hace falta o bien que train tenga ochos con silueta de 9 (hay pocos, y más muestras no
+   los crea), o bien un compositor que no sea una suma: una primera decisión por cuenta de huecos (0 / 1 / 2) que
+   restrinja las clases, y el MLP dentro de cada rama. Es lo que un «responsable» identificable permite escribir.

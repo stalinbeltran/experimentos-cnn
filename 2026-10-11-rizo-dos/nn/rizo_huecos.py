@@ -73,6 +73,20 @@ def mapa(ags):
     return m
 
 
+def huecos_separados(img, C, celdas=CELDAS):
+    """2026-10-13: los huecos CERRADOS y las CONCAVIDADES exteriores por separado (3×3 + cuenta cada uno; 20 números).
+    Medido ese día: con la cuenta mezclada, «cuenta 2» era un 8 el 36 % de las veces en val; sólo cerrados, el 79 %."""
+    out = []
+    for x, cs in zip(img, C):
+        _, grupos = agujeros(x, DV.filtrar(cs, *DV.VARIANTES[VAR]))
+        cerr = [m[0] for cl, m in grupos if cl[0] == "hueco"]; conc = [m[0] for cl, m in grupos if cl[0] == "ext"]
+        f = []
+        for ags in (cerr, conc):
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(mapa(ags))[None], celdas)[0].numpy().ravel().tolist()); f.append(len(ags))
+        out.append(f)
+    return np.array(out, np.float32)
+
+
 def huecos(img, C, celdas=CELDAS):
     out = []
     for x, cs in zip(img, C):
