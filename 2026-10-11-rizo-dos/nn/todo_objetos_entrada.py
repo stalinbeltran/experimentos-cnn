@@ -6,6 +6,7 @@ adelgazado por otro experimento. Sin --entrada corre sobre la tinta original: es
 
     python nn/todo_objetos_entrada.py --nombre tinta
     python nn/todo_objetos_entrada.py --nombre delgado-k3x3 --entrada /ruta/delgados-k3x3.npz --clave M --umbral 0.5 [--engrosar 2] [--var "medio (h1.5, 14px)"]
+    python nn/todo_objetos_entrada.py --nombre suave-k3x3-hs --entrada /ruta/delgados-k3x3.npz --continuo --huecos-suaves   (118: huecos suaves)
     python nn/todo_objetos_entrada.py --nombre suave-k3x3 --entrada /ruta/delgados-k3x3.npz --continuo --sin-huecos   (2026-10-13, el dueño:
         «no uses el de huecos, y usa suavizados»: rectas y gris leen el mapa continuo; 98 números; referencia: --nombre tinta-sh --sin-huecos)
         → resultados/40-entrada-<nombre>.json · 40-entrada-<nombre>-muestra.png
@@ -43,6 +44,7 @@ import rastrear as RA                                               # noqa: E402
 import rectas_objetos as RO                                         # noqa: E402
 import resistencia as R                                             # noqa: E402
 import rizo_huecos as RH                                            # noqa: E402
+import huecos_suaves as HS                                          # noqa: E402
 import digitos as D                                                 # noqa: E402
 import gris_recalibrado as GR                                       # noqa: E402
 from expcnn import exigir_dataset                                   # noqa: E402
@@ -54,7 +56,7 @@ def features(img, C):
     return np.concatenate([RO.rectas_objetos(img, (0,)), GO.gris_objetos(img), RH.huecos_separados(img, C)], 1)
 
 
-def dibujar(ax, x, cs, continuo=False, sin_huecos=False):
+def dibujar(ax, x, cs, continuo=False, sin_huecos=False, suaves=False):
     """Como todo_objetos.dibujar_objetos, pero admite el mapa continuo (se pinta en gris por valor) y sin huecos."""
     import todo_objetos as TO
     if continuo:
@@ -70,7 +72,13 @@ def dibujar(ax, x, cs, continuo=False, sin_huecos=False):
         ax.add_patch(plt.Circle((c["cx"] - 0.5, c["cy"] - 0.5), 0.6 + 0.1 * c["largo"], fill=False, color=GO.COLORES[c["s"]], lw=0.5 + 1.5 * c["fuerza"]))
     for g in ob["golpes"]:
         ax.plot(g["cx"] - 0.5, g["cy"] - 0.5, "x", color="k", ms=4, mew=1)
-    if not sin_huecos and cs is not None:
+    if suaves:
+        cer, con = HS.mapas(np.asarray(x, np.float32)[None])
+        for o in HS.objetos(cer[0]):
+            ax.plot(o["cx"] - 0.5, o["cy"] - 0.5, "+", color=EV.AZU, ms=4 + 8 * o["fuerza"], mew=2)
+        for o in HS.objetos(con[0]):
+            ax.plot(o["cx"] - 0.5, o["cy"] - 0.5, "+", color="#1a9c7a", ms=3 + 6 * o["fuerza"], mew=1.2)
+    elif not sin_huecos and cs is not None:
         ags, _ = RH.agujeros((x > 0.5).astype(np.uint8), DV.filtrar(cs, *DV.VARIANTES[RH.VAR]))
         for q in ags:
             ax.plot(q["centro_hueco"][0] - 0.5, q["centro_hueco"][1] - 0.5, "+", color=EV.AZU, ms=9, mew=2)
@@ -89,6 +97,7 @@ def main() -> int:
     ap.add_argument("--umbral", type=float, default=0.5); ap.add_argument("--engrosar", type=int, default=0)
     ap.add_argument("--continuo", action="store_true", help="rectas y gris leen el mapa CONTINUO (sin binarizar); el umbral sólo se usa si hay huecos")
     ap.add_argument("--sin-huecos", action="store_true", help="sólo rectas + gris (98 números): sin el grupo de huecos, que exige binario")
+    ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
     a = ap.parse_args(); RH.VAR = a.var
     torch.set_num_threads(2); t0 = time.time(); GR.configurar(**R.CAL_GRIS)
@@ -102,11 +111,15 @@ def main() -> int:
     img = engrosar(img, a.engrosar) if not a.continuo else img
     binario = (img > (a.umbral if a.continuo else 0)).astype(np.uint8)         # lo que leen los huecos y el grosor
     grupos = dict(GRUPOS) if not a.sin_huecos else {k: v for k, v in GRUPOS.items() if "huecos" not in k}
-    feats = (lambda im, C: features(im, C)) if not a.sin_huecos else (lambda im, C: np.concatenate([RO.rectas_objetos(im, (0,)), GO.gris_objetos(im)], 1))
+    if a.huecos_suaves:
+        grupos = {**{k: v for k, v in GRUPOS.items() if "huecos" not in k}, "huecos suaves": (98, 118)}
+        feats = lambda im, C: np.concatenate([RO.rectas_objetos(im, (0,)), GO.gris_objetos(im), HS.caract(im)], 1)
+    else:
+        feats = (lambda im, C: features(im, C)) if not a.sin_huecos else (lambda im, C: np.concatenate([RO.rectas_objetos(im, (0,)), GO.gris_objetos(im)], 1))
     tr, va, ex = [np.flatnonzero(part == p) for p in ("train", "val", "extra")]
     aum = [(0, 0)] + [(k, 0) for k in R.AUM] + [(0, k) for k in R.AUM]
     cache_f = AQUI / "resultados" / f"40-candidatos-{a.nombre}.pkl"
-    if a.sin_huecos:
+    if a.sin_huecos or a.huecos_suaves:
         cache = {"todos": [None] * len(img)}
         for m in aum[1:]:
             cache[("tr", m)] = [None] * len(tr)
@@ -135,8 +148,8 @@ def main() -> int:
     # cuántos objetos ve cada grupo, de media por dígito de val (para leer el efecto del adelgazado sin el compositor)
     nobj = {"rectas": float(np.mean([len(RO.objetos(x)[0]) for x in img[va]]))}
     if not a.sin_huecos:
-        nobj.update({"huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))})
-    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "n": int(X.shape[1]),
+        nobj.update({"huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))})   # con suaves: suma de fuerzas
+    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "n": int(X.shape[1]),
            "grosor_medio_px": float(np.mean([2 * np.percentile(ndimage.distance_transform_edt(x)[x > 0], 75) for x in binario[va] if x.any()])),
            "val": round(float(np.mean(r["val"])), 4), "val_rango": [round(min(r["val"]), 4), round(max(r["val"]), 4)], "ciega": round(float(np.mean(r["ciega"])), 4),
            "cuota_peso": {g: round(float(np.mean([c[g] for c in r["cuota"]])), 3) for g in grupos}, "objetos_por_digito_val": nobj,
@@ -148,7 +161,7 @@ def main() -> int:
     ids = va[np.linspace(0, len(va) - 1, 12).astype(int)]
     fig, axs = plt.subplots(2, 6, figsize=(6 * 1.9, 2 * 2.15 + 0.9))
     for ax, i in zip(axs.flat, ids):
-        ax.axis("off"); dibujar(ax, img[i], todos[i], a.continuo, a.sin_huecos); ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5)
+        ax.axis("off"); dibujar(ax, img[i], todos[i], a.continuo, a.sin_huecos, a.huecos_suaves); ax.set_xlim(-0.5, 31.5); ax.set_ylim(31.5, -0.5)
         ax.set_title(f"{y[i]} · idx {i}", fontsize=7.5, pad=2)
     fig.suptitle(f"rizo-2 · 40 · todo objetos sobre entrada «{a.nombre}» (umbral {a.umbral}, engrosar {a.engrosar}): val {out['val']:.4f} · ciega {out['ciega']:.4f}\n"
                  "segmentos = rectas · círculos = curvas del gris por sentido · × = golpe · + = agujero", fontsize=9)
