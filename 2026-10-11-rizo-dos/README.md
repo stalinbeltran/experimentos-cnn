@@ -911,3 +911,37 @@ Todo objetos (rectas-objeto ×1 + gris-objetos + huecos cerrados y concavidades 
 
 Configuración vigente de «todo objetos»: rectas-objeto ×1 (44) + gris-objetos (54) + `huecos_separados` (20) = 118:
 **0,9775 val / 0,9592 a ciegas**. Anotado también en el CLAUDE.md del repo.
+
+## 40–41 · TODO OBJETOS sobre el dígito ADELGAZADO por `delg-cnn` (2026-10-13)
+
+El experimento `delg-cnn` entrena una red de sólo kernels (6 conv 3×3 × 8, 2.489 parámetros, sólo trazos sintéticos de
+3–6 px) que devuelve un **mapa continuo de línea media** M ∈ [0,1] por dígito. Aquí se mide qué hacen los detectores de
+«todo objetos» con ese mapa como entrada (`nn/todo_objetos_entrada.py`; el `.npz` lo produce `exportar_delgados.py` de
+aquel experimento y se pasa por ruta, como dato). Mismo protocolo que el vigente (180 de train con aumento, MLP 256, 3
+semillas). Los JSON y las figuras de fallos, en `resultados/40-entrada-<nombre>*`.
+
+| entrada | huecos | n | val | a ciegas | fallos val |
+|---|---|---|---|---|---|
+| tinta (referencia, mismo script) | binarios (`rizo_huecos`) | 118 | 0,9775 | 0,9592 | 36 |
+| M > 0,5 (binarizado) tal cual | binarios | 118 | 0,9749 | 0,9589 | 42 |
+| M > 0,5 + engrosar 2 px | binarios | 118 | 0,9602 | 0,9586 | 64 |
+| M > 0,5, huecos con rayos de 14 px | binarios | 118 | 0,9744 | 0,9576 | 40 |
+| tinta | sin huecos | 98 | 0,9612 | 0,9430 | 65 |
+| **M continuo** (rectas y gris sin binarizar) | sin huecos | 98 | 0,9664 | 0,9519 | 55 |
+| tinta | **suaves** (`huecos_suaves`) | 118 | 0,9707 | 0,9583 | 48 |
+| **M continuo** | **suaves** | 118 | **0,9781** | **0,9715** | **35** |
+
+**Lo que sale:** binarizar el mapa no aporta (los escalones de 1 px meten curvas y golpes espurios); el mapa **continuo**
+gana ya sin huecos (+0,5 val, +0,9 ciega sobre la tinta sin huecos), y con el detector de **huecos suaves** —pedido por
+el dueño ese día: «no uses el de huecos, y usa suavizados» → «genera un detector de huecos que funcione con dígitos
+suavizados»— da **0,9781 / 0,9715**: el mejor a ciegas de toda la línea «todo objetos» (**+1,2 puntos** sobre el
+vigente 0,9592) con el mismo val. La cuota de peso del grupo de huecos sube de 0,16 a 0,26. ⚠ Sobre la **tinta**, los
+huecos suaves son peores que los binarios (0,9707): el detector está pensado para el mapa continuo, no para tinta gruesa.
+
+`nn/huecos_suaves.py` — sin binarizar en ningún paso: desde cada píxel, 36 rayos de hasta 14 px devuelven su *pared* (el
+máximo de M por el camino, bilineal); **cerrado** = (1−M)·percentil 10 de las paredes; **concavidad** =
+(1−M)·percentil 35·(1−percentil 10); objetos = máximos locales (supresión 3 px) con su altura como fuerza; 3×3 + cuenta
+suave por mapa (20 números, la forma de `huecos_separados`). Dos calibraciones medidas: alcance 14 y no 8 (el 0 del
+idx 0 no se cerraba) y la concavidad con percentil 35 y no `media − p10` (marcaba el exterior de toda pared). Figura:
+`resultados/41-huecos-suaves.png`. Los fallos que quedan (35): `8→9` ×8 (los de siempre: lazo inferior pequeño),
+`4→1/9`, `9→3`; ver `40-entrada-suave-k3x3-hs-fallos.png`.

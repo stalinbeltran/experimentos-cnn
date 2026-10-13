@@ -1,0 +1,264 @@
+{
+ "nombre": "suave-k3x3-hs",
+ "entrada": "delgados-k3x3.npz",
+ "umbral": 0.5,
+ "engrosar": 0,
+ "var": "rizo (h0, 8px)",
+ "continuo": true,
+ "sin_huecos": false,
+ "huecos_suaves": true,
+ "n": 118,
+ "grosor_medio_px": 2.6978996740859977,
+ "val": 0.9781,
+ "val_rango": [
+  0.9777,
+  0.9784
+ ],
+ "ciega": 0.9715,
+ "cuota_peso": {
+  "rectas-objeto ×1": 0.324,
+  "gris-objetos": 0.42,
+  "huecos suaves": 0.255
+ },
+ "objetos_por_digito_val": {
+  "rectas": 15.826839826839826,
+  "huecos cerrados": 1.1506495475769043,
+  "concavidades": 1.6176202297210693
+ },
+ "fallos_s0": 35,
+ "fallan_en_las_3": 33,
+ "confusiones": {
+  "8→9": 8,
+  "4→1": 3,
+  "4→9": 3,
+  "9→3": 3,
+  "3→0": 2,
+  "3→9": 2,
+  "1→8": 2,
+  "2→1": 1,
+  "2→9": 1,
+  "6→1": 1,
+  "5→3": 1,
+  "3→8": 1,
+  "6→8": 1,
+  "2→3": 1,
+  "4→8": 1,
+  "7→2": 1,
+  "5→2": 1,
+  "5→7": 1,
+  "9→8": 1
+ },
+ "segundos": 424,
+ "fallos": [
+  {
+   "idx": 75,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 77,
+   "real": 2,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 95,
+   "real": 6,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 171,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 198,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 250,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 309,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 409,
+   "real": 3,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 410,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 421,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 427,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 446,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 448,
+   "real": 3,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 492,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 496,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 502,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 510,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 884,
+   "real": 7,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 890,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 898,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 903,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 985,
+   "real": 3,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1058,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1117,
+   "real": 1,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1146,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1152,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1423,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1468,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1529,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1575,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1581,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1589,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1632,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1658,
+   "real": 9,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1737,
+   "real": 1,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  }
+ ]
+}
