@@ -1,0 +1,14 @@
+{
+  "id": "delg-cnn",
+  "titulo": "Una CNN que devuelve la forma DELGADA y SUAVE del digito (linea media como mapa continuo, sin binarizar), entrenada solo con trazos sinteticos de verdad conocida",
+  "pregunta": "¿Puede una CNN pequena, entrenada solo con trazos sinteticos (recta, arco, rizo, cruces; grosor 2-6 px) a predecir un mapa continuo de su linea media, devolver la forma delgada de los digitos reales de UCI mejor que las alternativas de dig-delg, conservando la topologia (sin perder ni inventar agujeros) y abriendo los lazos que la tinta gruesa cierra?",
+  "creado": "2026-10-13",
+  "estado": "abierto",
+  "dataset": "uci-optdigits-orig-32px-r20261005",
+  "usa_fv": false,
+  "gasta": "entrena-local",
+  "entrada": "nn/entrenar_local.py",
+  "reporte": "README.md",
+  "plan": "REGLAS.md e instrucciones/02-criterio.md commiteados el 2026-10-13, antes de escribir una linea de nn/",
+  "linaje": "Copia (no importa) el generador de trazos sinteticos que escriba `trazos` (o, si aun no existe, arco/recta de rizo-2 nn/sinteticos.py), las cuatro medidas de dig-delg (delgadez, dentro de la tinta, cobertura, topologia) y la red Rizo de rizo-2 nn/modelo.py como punto de partida. Lo demas es nuevo."
+}
