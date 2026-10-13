@@ -39,10 +39,18 @@ def curva_natural(rng, largo_px: float | None = None, paso: float = 0.25,
     """Una curva a mano alzada dentro del lienzo: puntos (n,2) en píxeles y grosor (n,) por punto."""
     L = largo_px if largo_px is not None else rng.uniform(14, 40)
     n = int(L / paso)
-    kappa = _suave(rng, n, escala=rng.uniform(0.04, 0.22), sigma_pasos=rng.uniform(6, 20))   # rad/px
-    # a veces un lazo: una curvatura de fondo que da ~1 vuelta en el trazo
-    if rng.random() < 0.3:
-        kappa = kappa + rng.choice([-1, 1]) * rng.uniform(0.15, 0.35)
+    tipo = rng.choice(["recta", "curva", "lazo"], p=[0.3, 0.45, 0.25])
+    if tipo == "recta":                                   # casi recta: curvatura ínfima
+        kappa = _suave(rng, n, escala=rng.uniform(0.0, 0.03), sigma_pasos=rng.uniform(10, 25))
+    elif tipo == "curva":
+        kappa = _suave(rng, n, escala=rng.uniform(0.04, 0.18), sigma_pasos=rng.uniform(6, 20))
+    else:                                                 # UNA vuelta como mucho (el lazo del 6, el 9, el 2)
+        kappa = _suave(rng, n, escala=0.05, sigma_pasos=15) + rng.choice([-1, 1]) * rng.uniform(0.15, 0.3)
+    # radio mínimo 3 px: un lazo más cerrado queda macizo con cualquier grosor y no aporta
+    kappa = np.clip(kappa, -1 / 3, 1 / 3)
+    # y nunca más de ~1,15 vueltas en total: varias vueltas en el mismo sitio no se distinguen
+    giro = np.cumsum(np.abs(kappa)) * paso
+    kappa[giro > 1.15 * 2 * np.pi] = 0
     g = np.clip(rng.uniform(g_min, g_max) + _suave(rng, n, escala=0.6, sigma_pasos=15), g_min, g_max)
 
     p = np.array([rng.uniform(6, N - 6), rng.uniform(6, N - 6)])
@@ -63,7 +71,7 @@ def curva_natural(rng, largo_px: float | None = None, paso: float = 0.25,
     dentro = (pts.min(1) >= margen) & (pts.max(1) <= N - margen)
     corte = np.argmin(dentro) if not dentro.all() else n
     pts, g = pts[:corte], g[:corte]
-    return {"puntos": pts, "grosor": g}
+    return {"puntos": pts, "grosor": g, "tipo": str(tipo)}
 
 
 def engrosar(puntos: np.ndarray, grosor: np.ndarray) -> np.ndarray:
@@ -80,18 +88,18 @@ def main() -> int:
     import matplotlib.pyplot as plt
     rng = np.random.default_rng(7)
     muestras = []
-    while len(muestras) < 16:
+    while len(muestras) < 20:
         c = curva_natural(rng)
         if len(c["puntos"]) * 0.25 >= 10:            # descarta trazos que el borde dejó cortos
             muestras.append(c)
-    fig, axs = plt.subplots(2, 8, figsize=(16, 4.6))
+    fig, axs = plt.subplots(2, 10, figsize=(18, 4.4))
     for ax, c in zip(axs.flat, muestras):
         tinta = engrosar(c["puntos"], c["grosor"])
         ax.imshow(tinta, cmap="Greys", vmin=0, vmax=1.6, extent=(0, N, N, 0), interpolation="nearest")
         ax.plot(c["puntos"][:, 0], c["puntos"][:, 1], "-", color="#e8432b", lw=1.2)
         ax.plot(c["puntos"][0, 0], c["puntos"][0, 1], "o", color="#2a78d6", ms=3)
         ax.set_xticks([]); ax.set_yticks([])
-        ax.set_title(f"L {len(c['puntos']) * 0.25:.0f} px · g {c['grosor'].min():.1f}–{c['grosor'].max():.1f}", fontsize=7)
+        ax.set_title(f"{c['tipo']} · L {len(c['puntos']) * 0.25:.0f} px · g {c['grosor'].min():.1f}–{c['grosor'].max():.1f}", fontsize=7)
     fig.suptitle("delg-cnn · curvas a mano alzada (rojo: línea media, punto azul: inicio) y su engrosado (gris) · 32×32", fontsize=9)
     fig.tight_layout(); (AQUI / "resultados").mkdir(exist_ok=True)
     out = AQUI / "resultados" / "0-curvas-muestra.png"
