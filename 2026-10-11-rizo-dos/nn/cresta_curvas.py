@@ -232,6 +232,10 @@ def segmentar(ps, k, nrm):
     for r in runs:                                                  # arcos demasiado cortos → recta
         if r[0] != 0 and np.degrees(np.sum(np.abs(k[r[1]:r[2]]) * paso[r[1]:r[2]])) < BARRIDO_MIN:
             r[0] = 0
+    # ⚠ Probado y DESCARTADO el 2026-10-14 (idx 947): reclasificar como arco una «recta» que acumula ≥ 20° de giro con
+    # signo consistente. En 600 sintéticos bajó rectas 0,913/0,799 → 0,892/0,743 y curvas 0,801/0,833 → 0,782/0,823, y
+    # el 947 no cambió: su giro de 41° es el ZIGZAG de la doble cresta de un 1 grueso (signos alternos), un fallo de
+    # la ENTRADA (delg-cnn, pendiente 1), no de esta regla.
     out = []
     for r in runs:                                                  # fundir rectas consecutivas
         if out and out[-1][0] == 0 and r[0] == 0:
