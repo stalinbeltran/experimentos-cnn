@@ -52,7 +52,7 @@ class Entrantes(unittest.TestCase):
 
     def test_caract_da_196_y_los_152_primeros_son_los_de_antes(self):
         m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m); b = CC.bloques()
-        self.assertEqual(f.shape, (1, 286)); self.assertEqual(b["cruces"], (276, 286)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
+        self.assertEqual(f.shape, (1, 374)); self.assertEqual(b["cruces"], (276, 286)); self.assertEqual(b["restos"], (286, 330)); self.assertEqual(b["rectas_todo"], (330, 374)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
         c = f[0, 200:204].tolist()                                   # cuentas por → ← ↓ ↑
         self.assertEqual(sum(c), 2.0); self.assertEqual(c[1], 0.0, "ninguna abre a la izquierda, donde no hay barra")
         self.assertGreater(c[0], 0.0, "la de encima de la barra abre a la derecha; la de debajo cae en diagonal (→ o ↓, la regla de cuadrantes decide)")
@@ -81,6 +81,18 @@ class Entrantes(unittest.TestCase):
         self.assertEqual(CC.objetos(mapa([(4, 16), (28, 16)]))["cruces"], [])
         tr, _ = CC.tramos(X); self.assertEqual(len(CC.cruces(tr, brazo_min=50)), 0, "con brazo mínimo imposible no hay cruz")
         f = CC.caract(X[None])[0]; self.assertEqual(f[285], 1.0); self.assertGreater(f[276 + 4], 0.9, "la X cae en la celda central (gaussiana muestreada en centros de píxel: < 1)")
+
+
+    def test_todo_tramo_produce_objeto(self):
+        """Un trozo corto (3 px) que no llega a recta es un RESTO; y la cresta entera queda cubierta por algún objeto."""
+        ob = CC.objetos(mapa([(10, 16), (13, 16)]))                 # 3 px: menos que L_RECTA
+        self.assertEqual(ob["rectas"], []); self.assertEqual(len(ob["restos"]), 1); self.assertEqual(ob["restos"][0]["o"], 0)
+        m = np.maximum(mapa([(4, 4), (28, 28)]), mapa([(16, 16), (13, 20), (12, 24)]))   # diagonal larga + un rabo corto y curvo
+        ob = CC.objetos(m); tr, _ = CC.tramos(m); P = np.concatenate([t["pts"] for t in tr])
+        Q = [a["pts"] for a in ob["arcos"]] + [r["pts"] for r in ob["restos"]] + [np.linspace(r["pts"][0], r["pts"][1], 40) for r in ob["rectas"]]
+        dmin = np.sqrt(((P[:, None, :] - np.concatenate(Q)[None, :, :]) ** 2).sum(-1)).min(1)
+        self.assertGreater(float((dmin <= 1.0).mean()), 0.9, "toda la cresta está a ≤ 1 px de algún objeto (sólo quedan fuera los 2 extremos: el ajuste de la recta los recorta ~1,5 px)")
+        f = CC.caract(m[None])[0]; b = CC.bloques(); self.assertGreater(float(np.abs(f[b["restos"][0]:b["restos"][1]]).sum()), 0.0)
 
 
 if __name__ == "__main__":

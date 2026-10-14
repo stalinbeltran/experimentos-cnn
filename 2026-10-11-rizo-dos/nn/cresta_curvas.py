@@ -258,8 +258,21 @@ def _sentido(nx, ny):
 
 def objetos(M: np.ndarray) -> dict:
     """{'arcos': [{s, cx, cy, largo, fuerza, pts}], 'rectas': [...], 'golpes': [{cx, cy}], 'lazos': [{cx, cy, largo, area, pts}]}"""
-    arcos, rectas, golpes, lazos = [], [], [], []
+    arcos, rectas, golpes, lazos, restos = [], [], [], [], []
     tr, puros = tramos(M)
+
+    def resto(seg):
+        """2026-10-15 (el dueño: «corrige para que funcione con todo tramo»): lo que no llega a recta ni a arco no se tira,
+        es un RESTO con centro, largo y orientación (como una recta): un tramo de la cresta sin objeto era invisible para el
+        compositor (medido: el 17 % de la cresta en val, § 71–73). Las rectas y arcos medidos contra la verdad no cambian."""
+        seg = np.asarray(seg, np.float32)
+        if len(seg) < 2:
+            return
+        largo = float(np.sum(np.hypot(*np.diff(seg, axis=0).T))); m = seg.mean(0); v = seg[-1] - seg[0]
+        if largo < 0.5:
+            return
+        ang = float(np.degrees(np.arctan2(v[1], v[0])) % 180)
+        restos.append({"cx": float(m[0]), "cy": float(m[1]), "largo": largo, "ang": ang, "o": int(round(ang / 45)) % 4, "fuerza": min(largo / 32, 1.0), "pts": seg})
     for poly in [c["pts"] for c in puros] + ciclos_del_grafo(tr):
         if len(poly) < 4:
             continue
@@ -271,18 +284,18 @@ def objetos(M: np.ndarray) -> dict:
     for t in empalmar(tr):
         p = t["pts"]
         if len(p) < 3:
-            continue
+            resto(p); continue
         ps = _suavizar(p, False); k, nrm = curvatura(ps, False); n = len(ps)
         # golpes: picos de |κ|
         for i in np.flatnonzero((np.abs(k) >= K_GOLPE) & (np.abs(k) >= np.maximum(np.roll(np.abs(k), 1), np.roll(np.abs(k), -1)))):
             golpes.append({"cx": float(ps[i, 0]), "cy": float(ps[i, 1])})
         for c, i, j in segmentar(ps, k, nrm):
             if j - i < L_MIN:
-                continue
+                resto(ps[i:j]); continue
             seg = ps[i:j]; largo = float(np.sum(np.hypot(*np.diff(seg, axis=0).T)))
             if c == 0:
                 if largo < L_RECTA:
-                    continue
+                    resto(seg); continue
                 # la recta se representa por su AJUSTE: segmento sobre el eje principal, con su orientación en grados
                 m = seg.mean(0); ev, vec = np.linalg.eigh(np.cov((seg - m).T)); v = vec[:, 1]; t = (seg - m) @ v
                 ang = float(np.degrees(np.arctan2(v[1], v[0])) % 180); pts = np.stack([m + t.min() * v, m + t.max() * v])
@@ -292,7 +305,7 @@ def objetos(M: np.ndarray) -> dict:
                 arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
                               "fuerza": min(barrido / 180, 1.0), "pts": seg})
     conc = concavidades(arcos, lazos); esq = esquinas(tr, lazos); crz = cruces(tr)   # ⚠ sobre los tramos SIN empalmar: el empalmado pasa POR el nodo y la barra se queda sin pareja
-    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq), "cruces": crz}
+    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq), "cruces": crz, "restos": restos}
 
 
 def _dentro(p, poly):
@@ -495,9 +508,9 @@ def bloque_cruces(crz) -> list[float]:
 
 
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 286 (44·10·10·44·44·44·4·4·36·36·10); con 4×4, 412. Los 152 primeros son los de antes."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 374 (44·10·10·44·44·44·4·4·36·36·10·44·44); con 4×4, 522. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10)):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10), ("restos", 4 * (c + 2)), ("rectas_todo", 4 * (c + 2))):
         out[g] = (n, n + k); n += k
     return out
 
@@ -506,7 +519,8 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
     """(n,32,32) → (n,204) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura)
     · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección)
     · entrantes60 36 (el dueño, 2026-10-15: CONOS de ±60° alrededor de la horizontal —derecha, izquierda— y el resto vertical —abajo, arriba—; 3×3 de PRESENCIA por cono, sin magnitud; siempre 3×3)
-    · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia) · cruces 10 (3×3 de presencia + cuenta; el dueño, 2026-10-15).
+    · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia) · cruces 10 (3×3 de presencia + cuenta; el dueño, 2026-10-15)
+    · restos 44 (los trozos de cresta que no son recta ni arco, como rectas: 4 orient. × (3×3 + cuenta + largo/32)) · rectas_todo 44 (rectas ∪ restos). 2026-10-15.
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -532,6 +546,10 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
                 cs = [c for c in ob["entrantes"] if cono(c) == o]
                 f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, altura, 2.0))[None], 3)[0].numpy().ravel().tolist())
         f.extend(bloque_cruces(ob["cruces"]))
+        for lista in (ob["restos"], ob["rectas"] + ob["restos"]):                                               # restos · rectas_todo
+            for o in range(4):
+                rs = [r for r in lista if r["o"] == o]
+                f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
         out.append(f)
     return np.array(out, np.float32)
 
@@ -541,6 +559,8 @@ def pintar(ax, m):
     ob = objetos(m)
     for r in ob["rectas"]:
         ax.plot(r["pts"][:, 0] - 0.5, r["pts"][:, 1] - 0.5, "-", color=COLOR_RECTA, lw=1.2, alpha=0.8)
+    for r in ob["restos"]:
+        ax.plot(r["pts"][:, 0] - 0.5, r["pts"][:, 1] - 0.5, "-", color="#d6a21a", lw=1.2, alpha=0.9)        # restos: ocre
     for a in ob["arcos"]:
         ax.plot(a["pts"][:, 0] - 0.5, a["pts"][:, 1] - 0.5, "-", color=COLORES[a["s"]], lw=1.2 + 2.4 * a["fuerza"], solid_capstyle="round")
     for z in ob["lazos"]:
