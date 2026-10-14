@@ -1164,6 +1164,34 @@ que son justo pares con el mismo juego de aberturas en distinto sitio. La cuenta
 ciegas; los dos juntos no suman (0,8866 / 0,8796). Lo que la cuota también dice: con 4 números el compositor vuelve a
 cargar sobre las curvas (0,36 → 0,42–0,47).
 
+### 60 · Los fallos de 3 y 5 con sus entrantes, y qué los distingue (2026-10-15)
+
+`60-fallos-3-5-entrantes.png`: los 30 fallos de val con real 3 o 5 de la corrida `cresta-entrantes` (13 treses, 17
+cincos; 5→3 ×8, 3→9 ×6, 3→7 ×3, 5→7 ×3), tinta y cresta con sus entrantes. Y la firma de **todos** los 3 y 5 de val,
+aciertos contra fallos (entrantes por dígito, y qué direcciones de abertura aparecen arriba y abajo del dígito):
+
+| | n | entr./dígito | cuenta media → ← ↓ ↑ | fuerza máx. media → ← ↓ ↑ | arriba (cy < 16), lo más frecuente | abajo |
+|---|---:|---:|---|---|---|---|
+| 3 aciertan | 152 | 2,63 | 0,52 · 1,20 · 0,65 · 0,26 | 0,17 · 0,45 · 0,29 · 0,13 | ↓ 50 · →↓ 33 · ← 30 · ←→ 27 | ← 97 · ↑ 32 |
+| 3 fallan | 13 | 2,08 | 0,23 · 1,08 · 0,62 · 0,15 | **0,05 · 0,31 · 0,10 · 0,10** | ↓ 8 · ← 2 · ∅ 2 | ← 7 · ←→ 3 |
+| 5 aciertan | 147 | 2,42 | **0,99** · 0,69 · 0,37 · 0,37 | **0,43** · 0,37 · 0,07 · 0,07 | **→ 81 · →↓ 36** · ∅ 5 | ← 85 · ↑ 36 · ∅ 13 |
+| 5 fallan | 17 | 2,82 | **0,41** · 0,71 · 0,88 · 0,82 | **0,16** · 0,33 · 0,21 · 0,27 | **↑↓ 6** · →↓ 2 · ←↑↓ 2 · ↓ 2 | ← 7 · ∅ 5 · ↑ 4 |
+
+Lo que sale:
+1. **El 5 se reconoce por UN entrante que abre a la derecha arriba** (la región bajo la barra): lo tiene el 99 % de los
+   que aciertan (cuenta 0,99, fuerza 0,43) y sólo el 41 % de los que fallan (fuerza 0,16). Los 5 que fallan tienen en
+   su lugar un par **↑↓ arriba** (6 de 17): la barra se junta al palo en una T y las dos esquinas de la barra salen
+   abriendo arriba y abajo, no a la derecha — o el palo sobresale por encima de la barra (como el idx 5 del § 57) y el
+   entrante bueno se parte en dos. Con eso el 5 lleva la firma de un 3 (← abajo, nada → arriba) y se lee 5→3.
+2. **Los 3 que fallan son 3 «planos»**: menos entrantes (2,08 contra 2,63) y **tres veces más débiles** (fuerza → 0,05,
+   ↓ 0,10 contra 0,17 y 0,29): panzas de 4–11 px² que apenas se distinguen de una recta con quiebro, y de ahí el 3→7
+   y el 3→9 (el 9 también es «arco arriba + ← abajo» cuando el lazo no cierra).
+3. ⚠ **El empate diagonal reparte la señal del 5 en dos cajones.** El entrante bajo la barra abre hacia abajo-derecha,
+   y la regla de cuadrantes (`|vx| ≥ |vy|` → horizontal) lo manda a **→ en 90 cincos y a ↓ en 14, y a los dos en 40**
+   (dos entrantes). Lo mismo le pasa al 3 arriba (↓ 50 · →↓ 33 · ← 30): una misma panza cae en tres firmas distintas
+   según 1–2 px. Cuatro direcciones duras son pocas para una abertura que es un ángulo continuo: **8 direcciones, o
+   repartir el peso entre las dos vecinas (cos del ángulo)**, es el siguiente cambio barato de la representación.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
