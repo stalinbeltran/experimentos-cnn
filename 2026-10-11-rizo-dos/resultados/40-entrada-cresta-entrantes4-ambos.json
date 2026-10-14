@@ -1,0 +1,1182 @@
+{
+ "nombre": "cresta-entrantes4-ambos",
+ "entrada": "delgados-k3x3.npz",
+ "umbral": 0.5,
+ "engrosar": 0,
+ "var": "rizo (h0, 8px)",
+ "continuo": true,
+ "sin_huecos": false,
+ "huecos_suaves": false,
+ "variante": "",
+ "cresta": "todo",
+ "conc_cresta": false,
+ "entrantes": false,
+ "entrantes4": "ambos",
+ "celdas": 3,
+ "n": 116,
+ "grosor_medio_px": 2.6978996740859977,
+ "val": 0.8866,
+ "val_rango": [
+  0.885,
+  0.8874
+ ],
+ "ciega": 0.8796,
+ "cuota_peso": {
+  "cresta-rectas": 0.234,
+  "cresta-curvas": 0.424,
+  "cresta-golpes": 0.023,
+  "cresta-lazos": 0.149,
+  "entrantes-4dir": 0.073,
+  "entrantes-4dir-cuenta": 0.097
+ },
+ "objetos_por_digito_val": {
+  "rectas": 15.826839826839826,
+  "lazos por dígito": 0.481756329536438
+ },
+ "fallos_s0": 182,
+ "fallan_en_las_3": 166,
+ "confusiones": {
+  "2→7": 17,
+  "4→1": 13,
+  "8→9": 10,
+  "5→1": 8,
+  "1→7": 7,
+  "5→3": 7,
+  "5→2": 7,
+  "8→6": 7,
+  "7→3": 6,
+  "5→7": 6,
+  "0→6": 6,
+  "3→7": 5,
+  "6→8": 5,
+  "3→9": 5,
+  "7→1": 5,
+  "4→7": 5,
+  "2→3": 4,
+  "7→9": 3,
+  "4→6": 3,
+  "4→8": 3,
+  "2→1": 3,
+  "6→0": 3,
+  "4→0": 3,
+  "1→6": 3,
+  "0→9": 3,
+  "9→3": 3,
+  "6→1": 2,
+  "0→8": 2,
+  "9→5": 2,
+  "4→5": 2,
+  "3→2": 2,
+  "1→3": 2,
+  "8→3": 2,
+  "9→8": 2,
+  "1→4": 2,
+  "8→5": 2,
+  "9→1": 2,
+  "3→1": 1,
+  "5→9": 1,
+  "4→9": 1,
+  "5→8": 1,
+  "2→6": 1,
+  "7→4": 1,
+  "0→3": 1,
+  "7→5": 1,
+  "1→2": 1,
+  "3→5": 1
+ },
+ "segundos": 110,
+ "fallos": [
+  {
+   "idx": 21,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 43,
+   "real": 7,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 61,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 75,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 77,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 83,
+   "real": 3,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 86,
+   "real": 7,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 87,
+   "real": 4,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 88,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 91,
+   "real": 3,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 95,
+   "real": 6,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 101,
+   "real": 0,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 108,
+   "real": 7,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 118,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 119,
+   "real": 9,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 120,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 134,
+   "real": 4,
+   "predicho": 5,
+   "semillas_que_fallan": 1
+  },
+  {
+   "idx": 143,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 144,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 162,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 189,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 190,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 191,
+   "real": 7,
+   "predicho": 1,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 192,
+   "real": 3,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 198,
+   "real": 4,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 200,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 204,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 205,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 207,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 217,
+   "real": 3,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 225,
+   "real": 4,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 228,
+   "real": 4,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 238,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 239,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 1
+  },
+  {
+   "idx": 243,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 244,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 250,
+   "real": 4,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 280,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 283,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 304,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 314,
+   "real": 6,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 324,
+   "real": 4,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 345,
+   "real": 3,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 353,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 363,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 389,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 390,
+   "real": 4,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 398,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 408,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 410,
+   "real": 4,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 418,
+   "real": 5,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 421,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 427,
+   "real": 4,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 436,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 440,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 443,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 444,
+   "real": 6,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 454,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 496,
+   "real": 4,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 500,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 506,
+   "real": 5,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 510,
+   "real": 4,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 521,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 531,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 549,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 551,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 556,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 573,
+   "real": 2,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 580,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 586,
+   "real": 1,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 587,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 618,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 639,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 648,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 663,
+   "real": 7,
+   "predicho": 4,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 674,
+   "real": 8,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 678,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 689,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 715,
+   "real": 9,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 723,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 731,
+   "real": 1,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 736,
+   "real": 1,
+   "predicho": 4,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 768,
+   "real": 8,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 769,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 1
+  },
+  {
+   "idx": 773,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 775,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 790,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 795,
+   "real": 9,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 827,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 840,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 842,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 864,
+   "real": 6,
+   "predicho": 0,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 890,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 898,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 902,
+   "real": 0,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 903,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 922,
+   "real": 7,
+   "predicho": 1,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 930,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 938,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 947,
+   "real": 1,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 956,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 973,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 981,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 983,
+   "real": 7,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1003,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1038,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1064,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1077,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1080,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1082,
+   "real": 0,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1096,
+   "real": 9,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1105,
+   "real": 0,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1107,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1118,
+   "real": 3,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1119,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1129,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1146,
+   "real": 9,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1149,
+   "real": 8,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1244,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1250,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1285,
+   "real": 9,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1309,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1354,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1364,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1384,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1417,
+   "real": 2,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1419,
+   "real": 4,
+   "predicho": 6,
+   "semillas_que_fallan": 1
+  },
+  {
+   "idx": 1433,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1439,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1440,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1442,
+   "real": 7,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1466,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1486,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1496,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1502,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1516,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1525,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1527,
+   "real": 7,
+   "predicho": 1,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1530,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1549,
+   "real": 4,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1557,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1562,
+   "real": 9,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1564,
+   "real": 1,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1575,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1576,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1592,
+   "real": 0,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1611,
+   "real": 4,
+   "predicho": 5,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1628,
+   "real": 4,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1632,
+   "real": 3,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1643,
+   "real": 5,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1649,
+   "real": 7,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1654,
+   "real": 2,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1657,
+   "real": 7,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1668,
+   "real": 1,
+   "predicho": 4,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1673,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1675,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1678,
+   "real": 1,
+   "predicho": 6,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1687,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1692,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1695,
+   "real": 8,
+   "predicho": 9,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1699,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1705,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1712,
+   "real": 3,
+   "predicho": 2,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1716,
+   "real": 0,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1720,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1722,
+   "real": 0,
+   "predicho": 8,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1723,
+   "real": 1,
+   "predicho": 2,
+   "semillas_que_fallan": 2
+  },
+  {
+   "idx": 1726,
+   "real": 3,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1727,
+   "real": 3,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1738,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1741,
+   "real": 5,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1742,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1747,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1749,
+   "real": 6,
+   "predicho": 8,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1766,
+   "real": 1,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1769,
+   "real": 5,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1771,
+   "real": 6,
+   "predicho": 1,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1776,
+   "real": 5,
+   "predicho": 3,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1782,
+   "real": 2,
+   "predicho": 7,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1789,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1790,
+   "real": 8,
+   "predicho": 5,
+   "semillas_que_fallan": 3
+  },
+  {
+   "idx": 1796,
+   "real": 8,
+   "predicho": 6,
+   "semillas_que_fallan": 3
+  }
+ ]
+}

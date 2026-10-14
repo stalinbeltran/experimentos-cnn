@@ -396,15 +396,16 @@ def _mapa(objs, altura, sig=1.5):
 
 
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 196 (44·10·10·44·44·44); con 4×4, 322. Los 152 primeros son los de antes."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 204 (44·10·10·44·44·44·4·4); con 4×4, 330. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2))):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4)):
         out[g] = (n, n + k); n += k
     return out
 
 
 def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
-    """(n,32,32) → (n,196) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura).
+    """(n,32,32) → (n,204) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura)
+    · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -423,6 +424,8 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
         for o in range(4):                                          # entrantes (arco ∪ esquina), misma representación que las concavidades
             cs = [c for c in ob["entrantes"] if c["o"] == o]
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
+        f.extend([max([c["fuerza"] for c in ob["entrantes"] if c["o"] == o], default=0.0) for o in range(4)])   # entrantes4: → ← ↓ ↑
+        f.extend([float(sum(c["o"] == o for c in ob["entrantes"])) for o in range(4)])                           # entrantes4n
         out.append(f)
     return np.array(out, np.float32)
 

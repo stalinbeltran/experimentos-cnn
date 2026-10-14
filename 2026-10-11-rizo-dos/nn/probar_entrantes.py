@@ -52,7 +52,11 @@ class Entrantes(unittest.TestCase):
 
     def test_caract_da_196_y_los_152_primeros_son_los_de_antes(self):
         m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m); b = CC.bloques()
-        self.assertEqual(f.shape, (1, 196)); self.assertEqual(b["entrantes"], (152, 196))
+        self.assertEqual(f.shape, (1, 204)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
+        c = f[0, 200:204].tolist()                                   # cuentas por → ← ↓ ↑
+        self.assertEqual(sum(c), 2.0); self.assertEqual(c[1], 0.0, "ninguna abre a la izquierda, donde no hay barra")
+        self.assertGreater(c[0], 0.0, "la de encima de la barra abre a la derecha; la de debajo cae en diagonal (→ o ↓, la regla de cuadrantes decide)")
+        self.assertTrue(all((f[0, 196 + o] > 0) == (c[o] > 0) for o in range(4)), "fuerza > 0 exactamente donde hay cuenta")
         self.assertEqual(float(np.abs(f[0, b["concavidades"][0]:b["concavidades"][1]]).sum()), 0.0, "sin arco, el bloque de concavidades va vacío")
         self.assertGreater(float(np.abs(f[0, 152:196]).sum()), 0.0, "…y el de entrantes, no")
 

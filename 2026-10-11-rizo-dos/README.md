@@ -1139,6 +1139,31 @@ dígito por dónde hay rectas y lo lee por qué encierran. Con los dos bloques, 
 compositor (0,9804 / 0,9711, 118 números con rectas-objeto + gris + rayos), y los fallos que quedan son los de siempre
 (8→9, 5→3, 6→8) más las esquinas falsas de los trazos gruesos.
 
+### 59 · Los entrantes reducidos a 4 posibilidades: arriba, abajo, derecha e izquierda (pedido por el dueño el 2026-10-15)
+
+En vez de los 44 números del § 58, **uno por dirección de abertura** (→ ← ↓ ↑): la fuerza máxima (área/60) del entrante
+que abre hacia ahí, o la cuenta de los que abren hacia ahí, o los dos (`caract` → 204: `entrantes4` en 196–199,
+`entrantes4n` en 200–203; `--entrantes4 fuerza|cuenta|ambos`). Lanzador `nn/correr-entrantes4.sh` (unidad
+`rizo2-entrantes4`, `Result=success`, `NRestarts=0`). Mismo protocolo, misma entrada:
+
+| corrida | entrantes como | n | val | a ciegas | fallos (3 sem.) | cuota del bloque |
+|---|---|---|---|---|---|---|
+| cresta todo sin concavidades (§ 49–50) | — | 108 | 0,8705 | 0,8638 | 210 | — |
+| cresta-cc-3x3 (§ 55) | concavidades de arco, 44 | 152 | 0,8697 | 0,8612 | 207 | 0,17 |
+| cresta-entrantes4-fuerza | **4**: fuerza máx. por dirección | 112 | 0,8827 [0,881–0,884] | 0,8748 | 192 (182) | 0,10 |
+| cresta-entrantes4-cuenta | **4**: cuenta por dirección | 112 | 0,8885 [0,887–0,890] | 0,8708 | 183 (168) | 0,13 |
+| cresta-entrantes4-ambos | 8: los dos | 116 | 0,8866 [0,885–0,887] | 0,8796 | 182 (166) | 0,07 + 0,10 |
+| cresta-entrantes (§ 58) | 44: 4 dir. × (3×3 + cuenta + abertura) | 152 | **0,9140** | **0,8993** | 135 | 0,26 |
+
+**Cuatro números ya valen más que las 44 concavidades de arco** (+1,2 a +1,8 en val sobre el § 55, y 15–25 fallos
+menos), lo que confirma que lo que importa es *qué encierra* y no *si lo cierra un arco*. **Pero sin la posición se
+pierden 2,5–3 puntos** respecto de los 44 del § 58 (0,9140 → 0,8827–0,8885; 135 → 182–192 fallos): un entrante que
+abre a la derecha arriba (la barra del 5) y uno que abre a la derecha abajo (la panza del 3) son el mismo número. Las
+confusiones lo dicen: vuelve el **2→7** (×18–22, en el § 58 no estaba entre las seis primeras) y el 4→1 (×13–15),
+que son justo pares con el mismo juego de aberturas en distinto sitio. La cuenta lee mejor en val y la fuerza mejor a
+ciegas; los dos juntos no suman (0,8866 / 0,8796). Lo que la cuota también dice: con 4 números el compositor vuelve a
+cargar sobre las curvas (0,36 → 0,42–0,47).
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
