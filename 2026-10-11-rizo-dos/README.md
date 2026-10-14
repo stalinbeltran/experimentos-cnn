@@ -1192,6 +1192,20 @@ Lo que sale:
    según 1–2 px. Cuatro direcciones duras son pocas para una abertura que es un ángulo continuo: **8 direcciones, o
    repartir el peso entre las dos vecinas (cos del ángulo)**, es el siguiente cambio barato de la representación.
 
+### 61 · Los mismos 30 fallos con el feature «entrantes a 4 direcciones» calculado por dígito (2026-10-15)
+
+`61-fallos-3-5-feature-4dir.png`: sólo el dígito delgado con sus entrantes (color = cuadrante; etiqueta = cuadrante y
+ángulo real de la abertura) y, debajo, los 4 números que recibiría el compositor (fuerza máxima por abertura → ← ↓ ↑ y
+la cuenta). Leído dígito a dígito, los fallos caen en cuatro grupos:
+1. **El 5 pierde su → y lo gana ↑** (idx 418, 421, 521, 633, 636): el palo sobresale por encima de la barra, y la esquina
+   barra–muñón de arriba abre hacia arriba-derecha (−50°) con brazos de 10 px, así que sale **grande** (↑ 0,9) mientras
+   el entrante bueno, bajo la barra, sale pequeño o no sale. Geométricamente es una esquina; como feature del 5 es ruido.
+2. **El → cae en ↓ por el empate diagonal** (1129, 1322, 1699, 1776): el entrante bajo la barra abre a +45…+55° y la
+   regla de cuadrantes lo manda a ↓ (↓ 0,90 y → 0,00 en el 1322). § 60 punto 3.
+3. **Los 3 planos** (83, 91, 143, 189, 190, 192, 217): todo entre 0,10 y 0,25; ninguna abertura domina. Y los 3 grandes
+   con ↑ fuerte (389: ↑ 1,00 · ← 0,84) se van a 9.
+4. **El 5 sin panza** (1738 → 0,97 y ← 0,00; 506 con la panza cerrada en lazo): sin el ← de abajo, es un 7 o un 8.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
