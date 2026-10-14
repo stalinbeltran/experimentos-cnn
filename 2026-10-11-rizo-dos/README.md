@@ -1206,6 +1206,35 @@ la cuenta). Leído dígito a dígito, los fallos caen en cuatro grupos:
    con ↑ fuerte (389: ↑ 1,00 · ← 0,84) se van a 9.
 4. **El 5 sin panza** (1738 → 0,97 y ← 0,00; 506 con la panza cerrada en lazo): sin el ← de abajo, es un 7 o un 8.
 
+### 62–66 · Los entrantes en 4 CONOS de ±60°, con posición y SIN magnitud: el mejor sólo-cresta (el dueño, 2026-10-15)
+
+Camino del día, por orden: `62-aciertos-3-feature-4dir.png` (24 treses acertados con el feature a 4 direcciones: firma
+«← fuerte + esquina → en el medio»); `63-entrantes-3x3-al-compositor.png` (el bloque de 44 del § 58 tal como lo recibe el
+compositor: una mancha cae en dos celdas, el 60 % son ceros); `64-entrantes-H-V.png` (dos clases, horizontal ±60° sin
+lado y vertical: **el 3 y el 5 quedan con la misma firma**, porque la panza ← del 3 y el entrante → del 5 caen en la
+misma celda); y de ahí la forma final, pedida por el dueño: **cuatro CONOS con lado** —derecha e izquierda = abertura a
+±60° de la horizontal; abajo y arriba = el resto— y, como observó que ni el ángulo fino ni la magnitud aportan, **sólo
+PRESENCIA** en 3×3 por cono (gaussiana de altura 1, σ = 2 px, máximo por celda): 36 números (`cresta_curvas.cono`,
+`--entrantes60 presencia|fuerza`; `65-entrantes-conos60.png`; lanzador `nn/correr-entrantes60.sh`, unidad
+`rizo2-entrantes60`, `Result=success`, `NRestarts=0`; 7 tests en `probar_entrantes.py`).
+
+| corrida | entrantes como | n | val | a ciegas | fallos (3 sem.) | cuota |
+|---|---|---:|---|---:|---|---:|
+| cresta-cc-3x3 (§ 55) | concavidades de arco, 4 dir. × 3×3 × fuerza | 152 | 0,8697 | 0,8612 | 207 | 0,17 |
+| cresta-entrantes4-cuenta (§ 59) | 4 números, sin posición | 112 | 0,8885 | 0,8708 | 183 | 0,13 |
+| cresta-entrantes (§ 58) | 4 dir. a 45° × (3×3 fuerza + cuenta + abertura) | 152 | 0,9140 | 0,8993 | 135 | 0,26 |
+| cresta-entrantes60-fuerza | 4 conos ±60° × 3×3 **fuerza** | 144 | 0,9114 [0,911–0,912] | 0,8953 | 143 (134) | 0,19 |
+| **cresta-entrantes60-presencia** | 4 conos ±60° × 3×3 **presencia** | 144 | **0,9227** [0,922–0,923] | **0,9001** | **124** (115) | 0,26 |
+
+Lo que sale:
+1. **Es el mejor sólo-cresta hasta hoy**: +0,9 en val y +0,1 a ciegas sobre el § 58 con 8 números menos, y 11 fallos
+   menos. El rango entre semillas es el más estrecho de toda la línea (0,0012).
+2. **La magnitud NO aporta, como dijo el dueño — medido**: la misma rejilla con fuerza en vez de presencia pierde 1,1 en
+   val y 0,5 a ciegas (0,9114 / 0,8953) y 19 fallos. Un entrante pequeño de un 3 plano vale tanto como uno grande.
+3. **El cono de ±60° arregla el empate diagonal**: 5→3 pasa de 8 (§ 58) a 2; la confusión dominante es ahora **4→1**
+   (×10), que es de la entrada (el 1 grueso con doble cresta, punto 2 del plan), no de esta feature.
+4. **Lo que sigue sin verse** es la panza de un 3 plano (3→9 ×6) y el 8→9 (×7): un lazo que no cierra.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
