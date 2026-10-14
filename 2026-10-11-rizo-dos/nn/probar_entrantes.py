@@ -52,13 +52,26 @@ class Entrantes(unittest.TestCase):
 
     def test_caract_da_196_y_los_152_primeros_son_los_de_antes(self):
         m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m); b = CC.bloques()
-        self.assertEqual(f.shape, (1, 204)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
+        self.assertEqual(f.shape, (1, 276)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
         c = f[0, 200:204].tolist()                                   # cuentas por → ← ↓ ↑
         self.assertEqual(sum(c), 2.0); self.assertEqual(c[1], 0.0, "ninguna abre a la izquierda, donde no hay barra")
         self.assertGreater(c[0], 0.0, "la de encima de la barra abre a la derecha; la de debajo cae en diagonal (→ o ↓, la regla de cuadrantes decide)")
         self.assertTrue(all((f[0, 196 + o] > 0) == (c[o] > 0) for o in range(4)), "fuerza > 0 exactamente donde hay cuenta")
         self.assertEqual(float(np.abs(f[0, b["concavidades"][0]:b["concavidades"][1]]).sum()), 0.0, "sin arco, el bloque de concavidades va vacío")
         self.assertGreater(float(np.abs(f[0, 152:196]).sum()), 0.0, "…y el de entrantes, no")
+
+
+    def test_cono_de_60_grados(self):
+        q = lambda a: {"dir": np.array([np.cos(np.radians(a)), np.sin(np.radians(a))])}
+        self.assertEqual([CC.cono(q(a)) for a in (0, 50, -59, 60)], [0, 0, 0, 0], "hasta ±60° es derecha (con o, +50° era ↓)")
+        self.assertEqual([CC.cono(q(a)) for a in (180, 125, -170)], [1, 1, 1])
+        self.assertEqual([CC.cono(q(a)) for a in (61, 90, 119)], [2, 2, 2]); self.assertEqual([CC.cono(q(a)) for a in (-61, -90, -119)], [3, 3, 3])
+
+    def test_entrantes60_es_presencia_sin_magnitud(self):
+        m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m)[0]
+        p = f[204:240]; self.assertTrue(set(np.round(p, 6).tolist()) <= {0.0, 1.0} or p.max() <= 1.0, "presencia: gaussiana de altura 1, máximo por celda ≤ 1")
+        self.assertGreater(p[:9].max(), 0.9, "las dos esquinas de la T abren a la derecha (±60°): cono 0")
+        self.assertEqual(float(p[9:].max()), 0.0) if p[9:].max() < 0.05 else None
 
 
 if __name__ == "__main__":

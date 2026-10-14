@@ -388,6 +388,21 @@ def entrantes(conc: list[dict], esq: list[dict]) -> list[dict]:
     return out
 
 
+CONO_H = 60.0   # 2026-10-15 (el dueño): un entrante es HORIZONTAL si su abertura está a ±60° de la horizontal; si no, vertical
+
+
+def cono(q) -> int:
+    """Clase de abertura con cono ancho: 0 → derecha (|θ| ≤ 60°), 1 ← izquierda (|θ| ≥ 120°), 2 ↓ abajo, 3 ↑ arriba (θ en
+    grados desde la derecha, positivo hacia abajo). Contra `o`, que parte a 45°: aquí un entrante a +50° es → y no ↓."""
+    ang = np.degrees(np.arctan2(q["dir"][1], q["dir"][0]))
+    if abs(ang) <= CONO_H:
+        return 0
+    if abs(ang) >= 180 - CONO_H:
+        return 1
+    return 2 if ang > 0 else 3
+
+
+
 def _mapa(objs, altura, sig=1.5):
     m = np.zeros((32, 32), np.float32)
     for o in objs:
@@ -396,16 +411,18 @@ def _mapa(objs, altura, sig=1.5):
 
 
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 204 (44·10·10·44·44·44·4·4); con 4×4, 330. Los 152 primeros son los de antes."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 276 (44·10·10·44·44·44·4·4·36·36); con 4×4, 402. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4)):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36)):
         out[g] = (n, n + k); n += k
     return out
 
 
 def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
     """(n,32,32) → (n,204) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura)
-    · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección).
+    · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección)
+    · entrantes60 36 (el dueño, 2026-10-15: CONOS de ±60° alrededor de la horizontal —derecha, izquierda— y el resto vertical —abajo, arriba—; 3×3 de PRESENCIA por cono, sin magnitud; siempre 3×3)
+    · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -426,6 +443,10 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
         f.extend([max([c["fuerza"] for c in ob["entrantes"] if c["o"] == o], default=0.0) for o in range(4)])   # entrantes4: → ← ↓ ↑
         f.extend([float(sum(c["o"] == o for c in ob["entrantes"])) for o in range(4)])                           # entrantes4n
+        for altura in (lambda q: 1.0, lambda q: q["fuerza"]):                                                     # entrantes60 · entrantes60f
+            for o in range(4):
+                cs = [c for c in ob["entrantes"] if cono(c) == o]
+                f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, altura, 2.0))[None], 3)[0].numpy().ravel().tolist())
         out.append(f)
     return np.array(out, np.float32)
 
