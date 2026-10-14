@@ -1,0 +1,101 @@
+
+=== idx 101 · real 0 · predicho 8 · logits: 0:+3.1 1:-2.7 2:-1.3 3:-0.7 4:-3.6 5:-3.8 6:+2.1 7:-4.4 8:+4.1 9:-1.5 · p(pred) 0.66 p(real) 0.24
+OBJETOS:
+  recta  90° |  centro (23.0,18.0) largo  5.0 px
+  resto  135° \ centro (12.5, 8.5) largo  1.3 px
+  resto  90° |  centro (10.3,23.0) largo  3.2 px
+  resto  90° |  centro ( 9.6,15.1) largo  1.0 px
+  arco   k←     centro (20.3,10.4) largo  8.8 px · barrido 59°
+  arco   k↑     centro (21.2,26.4) largo 12.1 px · barrido 112°
+  arco   k↑     centro (12.8,26.9) largo  4.1 px · barrido 44°
+  arco   k→     centro ( 9.3,18.5) largo  4.0 px · barrido 26°
+  lazo          centro (17.0,19.4) área 238 px²
+ENTRADAS NO NULAS (65 de 144):
+  recta 90° | · arriba-izq               = 0.00
+  recta 90° | · arriba-centro            = 0.00
+  recta 90° | · arriba-der               = 0.00
+  recta 90° | · centro-izq               = 0.06
+  recta 90° | · centro                   = 0.09
+  recta 90° | · centro-der               = 0.14
+  recta 90° | · abajo-izq                = 0.09
+  recta 90° | · abajo-centro             = 0.09
+  recta 90° | · abajo-der                = 0.01
+  recta 90° | · cuenta                   = 3.00
+  recta 90° | · largo/32                 = 0.29
+  recta 135° \ · arriba-izq              = 0.02
+  recta 135° \ · arriba-centro           = 0.04
+  recta 135° \ · arriba-der              = 0.00
+  recta 135° \ · centro-izq              = 0.01
+  recta 135° \ · centro                  = 0.02
+  recta 135° \ · centro-der              = 0.00
+  recta 135° \ · abajo-izq               = 0.00
+  recta 135° \ · abajo-centro            = 0.00
+  recta 135° \ · abajo-der               = 0.00
+  recta 135° \ · cuenta                  = 1.00
+  recta 135° \ · largo/32                = 0.04
+  arco k→ · arriba-izq                   = 0.00
+  arco k→ · arriba-centro                = 0.00
+  arco k→ · arriba-der                   = 0.00
+  arco k→ · centro-izq                   = 0.14
+  arco k→ · centro                       = 0.10
+  arco k→ · centro-der                   = 0.00
+  arco k→ · abajo-izq                    = 0.02
+  arco k→ · abajo-centro                 = 0.01
+  arco k→ · abajo-der                    = 0.00
+  arco k→ · cuenta                       = 1.00
+  arco k→ · largo/32                     = 0.13
+  arco k← · arriba-izq                   = 0.00
+  arco k← · arriba-centro                = 0.32
+  arco k← · arriba-der                   = 0.24
+  arco k← · centro-izq                   = 0.00
+  arco k← · centro                       = 0.32
+  arco k← · centro-der                   = 0.24
+  arco k← · abajo-izq                    = 0.00
+  arco k← · abajo-centro                 = 0.00
+  arco k← · abajo-der                    = 0.00
+  arco k← · cuenta                       = 1.00
+  arco k← · largo/32                     = 0.28
+  arco k↑ · arriba-izq                   = 0.00
+  arco k↑ · arriba-centro                = 0.00
+  arco k↑ · arriba-der                   = 0.00
+  arco k↑ · centro-izq                   = 0.00
+  arco k↑ · centro                       = 0.00
+  arco k↑ · centro-der                   = 0.00
+  arco k↑ · abajo-izq                    = 0.07
+  arco k↑ · abajo-centro                 = 0.61
+  arco k↑ · abajo-der                    = 0.61
+  arco k↑ · cuenta                       = 2.00
+  arco k↑ · largo/32                     = 0.51
+  lazo · arriba-izq                      = 0.00
+  lazo · arriba-centro                   = 0.00
+  lazo · arriba-der                      = 0.00
+  lazo · centro-izq                      = 0.01
+  lazo · centro                          = 0.97
+  lazo · centro-der                      = 0.08
+  lazo · abajo-izq                       = 0.00
+  lazo · abajo-centro                    = 0.57
+  lazo · abajo-der                       = 0.05
+  lazo · cuenta                          = 1.00
+ATRIBUCIÓN a (logit 8 − logit 0) = +0.99; por bloque (+ empuja a 8, − empuja a 0):
+  rectas_todo  -0.72
+  arcos        +2.73
+  golpes       -0.25
+  lazos        -0.70
+  entrantes60  -0.04
+  las 10 entradas que más empujan a la clase predicha:
+    +1.57  lazo · abajo-centro                    (valor 0.57, media train 0.17)
+    +1.23  arco k← · arriba-centro                (valor 0.32, media train 0.08)
+    +1.06  arco k↑ · cuenta                       (valor 2.00, media train 0.33)
+    +0.94  arco k↑ · abajo-der                    (valor 0.61, media train 0.04)
+    +0.60  arco k↑ · largo/32                     (valor 0.51, media train 0.14)
+    +0.59  recta 90° | · cuenta                   (valor 3.00, media train 0.96)
+    +0.37  recta 0° — · cuenta                    (valor 0.00, media train 0.88)
+    +0.28  arco k← · centro                       (valor 0.32, media train 0.09)
+    +0.20  arco k↓ · cuenta                       (valor 0.00, media train 0.39)
+    +0.19  recta 90° | · abajo-izq                (valor 0.09, media train 0.01)
+  las 5 que más empujan a 0:
+    -1.35  lazo · centro                          (valor 0.97, media train 0.25)
+    -0.89  recta 90° | · centro-der               (valor 0.14, media train 0.06)
+    -0.52  arco k↑ · abajo-izq                    (valor 0.07, media train 0.02)
+    -0.48  recta 45° / · cuenta                   (valor 0.00, media train 0.26)
+    -0.44  arco k← · centro-der                   (valor 0.24, media train 0.06)
