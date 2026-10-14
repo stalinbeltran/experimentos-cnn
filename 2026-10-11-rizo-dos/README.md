@@ -1089,6 +1089,25 @@ pero aparecen 5→1 ×18 y 6→1 ×17 (con 3×3, 5 y 2). Figuras: `40-entrada-cr
 → Por el plan, lo siguiente es la **lista ordenada de objetos** (extremos, orientación, barrido, radio, área, abertura),
 que es un cambio de representación y no de parámetro: no se ha empezado.
 
+### 56–57 · Qué pasan las concavidades al compositor, y por qué el 5 NO tiene concavidad arriba (2026-10-15)
+
+`56-concavidades-al-compositor.png`: un 3 y un 5 de val con sus concavidades (polígono arco + cuerda, color = dirección
+de la abertura) y los 44 números que recibe el compositor (4 direcciones × 3×3 máx. de área/60 + cuenta + abertura/32).
+Las dos panzas del 3 (141° y 126°) entran como 0,23 y 0,36 en la columna central del bloque «←»; el barrido y la forma
+no viajan.
+
+`57-cinco-sin-concavidad-arriba.png`: el entrante bajo la barra del 5 (idx 5) no sale, por dos motivos que se suman:
+
+1. **Por definición no puede salir.** Una concavidad es la región que encierra un **arco** de ≥ 60°, y el entrante del
+   5 es una **esquina**: la barra y el palo se cortan en un nodo del grafo de la cresta (racimo 2), y los tramos se
+   trocean en los nodos. Dos rectas que se juntan a 90° nunca forman un arco, así que una esquina nunca es concavidad
+   —ni golpe, porque el golpe es un pico de |κ| *dentro* de un tramo y aquí el quiebro es un nodo—. Es el agujero que
+   el punto 3 del plan ya nombra (los sintéticos no tienen esquinas).
+2. **Y en este 5 la entrada la borra.** La barra mide 6–7 filas de alto y se funde con un palo de 6 px en un bloque de
+   16×7; `M` es una meseta (0,6–1,0 en 4 filas) y su esqueleto es una cruz de brazos de 6–7 px: la barra queda en dos
+   arcos de 2–3 px (20° y 29°) y una recta de 5,8 px a 61°. Es la misma clase de fallo que la doble cresta de los 1
+   gruesos (punto 2 del plan): `delg-cnn` no adelgaza un trazo de 6–7 px a una línea.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
