@@ -50,6 +50,8 @@ BARRIDO_MIN = 20.0
 CONC_MIN = 60.0      # 2026-10-14 (el dueño: «me gusta tu definición de concavidad»): una concavidad es la región que
                      # encierra un arco de ≥ 60° de barrido —el polígono arco + cuerda—, salvo que el arco forme parte
                      # de un lazo (entonces la abertura está cerrada por otro tramo: es un hueco, no una concavidad)
+BRAZO_ESQ = 10    # 2026-10-15 (el dueño: «una concavidad… ignorando si está rodeada por rectas o curvas»): en una ESQUINA, cada
+                  # brazo del polígono se toma hasta 10 px desde el nodo (y nunca más que el brazo corto): es la región del entrante
 L_RECTA = 5.0        # una recta más corta no es una recta: el 89 % de las falsas medían < 6 px (sobre 600 sintéticos, 2026-10-13)
 # BARRIDO_MIN (2026-10-13, mejora de rectas): un run curvo que barre < 20° no es un arco; se funde con las rectas vecinas
 SENTIDOS = ["k→", "k←", "k↓", "k↑"]; COLORES = ["#c2410c", "#2a78d6", "#1b7f3b", "#7c3aed"]; COLOR_LAZO = "#111111"; COLOR_RECTA = "#8a8a8a"
@@ -289,7 +291,8 @@ def objetos(M: np.ndarray) -> dict:
                 barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
                 arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
                               "fuerza": min(barrido / 180, 1.0), "pts": seg})
-    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": concavidades(arcos, lazos)}
+    conc = concavidades(arcos, lazos); esq = esquinas(tr, lazos)   # ⚠ sobre los tramos SIN empalmar: el empalmado pasa POR el nodo y la barra se queda sin pareja
+    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq)}
 
 
 def _dentro(p, poly):
@@ -325,6 +328,66 @@ def concavidades(arcos, lazos):
     return out
 
 
+def _entrante(poly, barrido, s, lazos):
+    """Objeto concavidad/esquina a partir de su polígono (abierto: el último lado, la cuerda, lo cierra np.roll)."""
+    x, y = poly[:, 0], poly[:, 1]
+    area = 0.5 * abs(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
+    if area < 2.0:
+        return None
+    cx, cy = poly.mean(0); medio = (poly[0] + poly[-1]) / 2; v = medio - np.array([cx, cy]); n = np.hypot(*v)
+    if n < 1e-6 or any(_dentro((cx, cy), z["pts"]) for z in lazos):
+        return None
+    v = v / n; o = (0 if v[0] > 0 else 1) if abs(v[0]) >= abs(v[1]) else (2 if v[1] > 0 else 3)
+    return {"cx": float(cx), "cy": float(cy), "area": float(area), "abertura": float(np.hypot(*(poly[-1] - poly[0]))), "dir": v, "o": o,
+            "barrido": float(barrido), "s": s, "fuerza": min(area / 60.0, 1.0), "pts": poly}
+
+
+def esquinas(tr: list[dict], lazos) -> list[dict]:
+    """Concavidades de ESQUINA (2026-10-15): en cada racimo, cada par de tramos (ya empalmados) que se juntan con un giro
+    de ≥ CONC_MIN° (ángulo interior ≤ 180 − CONC_MIN) encierra un entrante: polígono = brazo de uno (≤ BRAZO_ESQ px
+    desde el nodo, nunca más largo que el brazo corto) + brazo del otro + cuerda. Mismo objeto que `concavidades`,
+    con el giro como `barrido` y `s = -1` (no tiene sentido de curvatura). Recibe los tramos SIN empalmar (medido el
+    2026-10-15 con una T sintética: el tramo empalmado pasa por dentro del nodo y la barra se quedaba sin pareja → 0
+    esquinas); dos tramos colineales dan giro ≈ 0 y se descartan solos."""
+    extremos = {}
+    for i, t in enumerate(tr):
+        if t["a"] == t["b"] or len(t["pts"]) < 3:
+            continue
+        if t["a"] > 0:
+            extremos.setdefault(t["a"], []).append((i, True))
+        if t["b"] > 0:
+            extremos.setdefault(t["b"], []).append((i, False))
+    out = []
+    for rac, lista in extremos.items():
+        for x in range(len(lista)):
+            for y in range(x + 1, len(lista)):
+                (i, ii), (j, ji) = lista[x], lista[y]
+                if i == j:
+                    continue
+                di, dj = _direccion(tr[i]["pts"], ii), _direccion(tr[j]["pts"], ji)      # las dos SALEN del nodo
+                interior = np.degrees(np.arccos(np.clip(np.dot(di, dj), -1, 1))); giro = 180.0 - interior
+                if giro < CONC_MIN:
+                    continue
+                bi = tr[i]["pts"] if ii else tr[i]["pts"][::-1]; bj = tr[j]["pts"] if ji else tr[j]["pts"][::-1]   # empiezan en el nodo
+                L = min(BRAZO_ESQ, len(bi), len(bj))
+                poly = np.concatenate([bi[:L][::-1], bj[1:L]])
+                e = _entrante(poly, giro, -1, lazos)
+                if e is not None:
+                    out.append(e)
+    return out
+
+
+def entrantes(conc: list[dict], esq: list[dict]) -> list[dict]:
+    """Concavidades de arco ∪ esquinas, sin contar dos veces el mismo entrante: si el centro de uno cae dentro del
+    polígono del otro, se queda el de más área."""
+    todos = sorted(conc + esq, key=lambda e: -e["area"]); out = []
+    for e in todos:
+        if any(_dentro((e["cx"], e["cy"]), q["pts"]) or _dentro((q["cx"], q["cy"]), e["pts"]) for q in out):
+            continue
+        out.append(e)
+    return out
+
+
 def _mapa(objs, altura, sig=1.5):
     m = np.zeros((32, 32), np.float32)
     for o in objs:
@@ -333,15 +396,15 @@ def _mapa(objs, altura, sig=1.5):
 
 
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 152 (44·10·10·44·44); con 4×4, 250 (72·17·17·72·72)."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 196 (44·10·10·44·44·44); con 4×4, 322. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2))):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2))):
         out[g] = (n, n + k); n += k
     return out
 
 
 def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
-    """(n,32,32) → (n,152) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 (por dirección de la abertura).
+    """(n,32,32) → (n,196) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -356,6 +419,9 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
         for o in range(4):                                          # concavidades por dirección de la ABERTURA: 3×3 (fuerza = área/60) + cuenta + abertura/32
             cs = [c for c in ob["concavidades"] if c["o"] == o]
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
+        for o in range(4):                                          # entrantes (arco ∪ esquina), misma representación que las concavidades
+            cs = [c for c in ob["entrantes"] if c["o"] == o]
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
         out.append(f)
     return np.array(out, np.float32)

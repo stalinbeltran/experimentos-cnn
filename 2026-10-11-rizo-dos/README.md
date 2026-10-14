@@ -1108,6 +1108,37 @@ no viajan.
    arcos de 2–3 px (20° y 29°) y una recta de 5,8 px a 61°. Es la misma clase de fallo que la doble cresta de los 1
    gruesos (punto 2 del plan): `delg-cnn` no adelgaza un trazo de 6–7 px a una línea.
 
+### 58 · ENTRANTES: la concavidad sin importar si la cierran rectas o curvas (pedido por el dueño el 2026-10-15)
+
+«Otro feature que sea como una concavidad, pero ignorando si está rodeada por rectas o curvas.» Un **entrante** es la
+unión de las concavidades de arco (§ 53) y las **esquinas** (`cresta_curvas.esquinas`): en cada racimo del grafo de la
+cresta, cada par de tramos que se juntan con un giro de ≥ 60° (ángulo interior ≤ 120°) encierra una región: polígono =
+brazo de uno (≤ 10 px desde el nodo, nunca más que el brazo corto) + brazo del otro + cuerda. Mismo objeto que la
+concavidad (centro, área, abertura, dirección de la abertura; `barrido` = el giro, `s = -1`), misma representación para
+el compositor (4 direcciones × 3×3 máx. de área/60 + cuenta + abertura/32 = 44). `entrantes()` no cuenta dos veces: si el
+centro de uno cae dentro del polígono del otro, se queda el de más área. `caract` → 196 (los 152 primeros, idénticos a
+los de antes: comprobado sobre 20 dígitos). ⚠ Las esquinas se buscan sobre los tramos **sin empalmar**: el empalmado
+pasa por dentro del nodo y la barra se quedaba sin pareja (0 esquinas en una T sintética; test). Figura
+`58-entrantes.png`: el 5 (idx 5) gana su entrante bajo la barra (108°, 35 px², abre →), el 4 y el 7 sacan las esquinas
+de sus cruces, y el 1 grueso (idx 21) suelta 4 esquinas falsas por la doble cresta (punto 2 del plan).
+`nn/probar_entrantes.py` (5 tests: T → 2 esquinas y 0 arcos; L suelta → 1 arco y 0 esquinas; recta → nada; arco → 1 y
+no 2; 196 con los 152 primeros intactos). Lanzador `nn/correr-entrantes.sh` (unidad `rizo2-entrantes`, `Result=success`,
+`NRestarts=0`, 110 s por corrida).
+
+| corrida | grupos | n | val | a ciegas | fallos (3 sem.) | cuota rectas · curvas · golpes · lazos · conc · entr |
+|---|---|---|---|---|---|---|
+| cresta-cc-3x3 (§ 55) | rectas + arcos + golpes + lazos + concavidades | 152 | 0,8697 [0,867–0,872] | 0,8612 | 207 (198) | 0,30 · 0,36 · 0,03 · 0,15 · 0,17 · — |
+| cresta-entrantes | ídem, **entrantes en vez de concavidades** | 152 | **0,9140** [0,912–0,917] | **0,8993** | 135 (132) | 0,21 · 0,36 · 0,02 · 0,15 · — · 0,26 |
+| cresta-cc-entrantes | concavidades **y** entrantes | 196 | **0,9208** [0,920–0,922] | **0,9010** | 128 (120) | 0,20 · 0,29 · 0,02 · 0,15 · 0,14 · 0,20 |
+
+**Es el mayor salto de toda la línea sólo-cresta**: +4,4 puntos en val y +3,8 a ciegas con el **mismo** número de
+entradas (152), y 72 fallos menos. El 1→7 (×25, el primero en el § 54) **desaparece de las seis confusiones más
+frecuentes** (ahora 8→9 ×9 y 5→3 ×8), y la cuota de las rectas baja de 0,30 a 0,21: el compositor deja de leer el
+dígito por dónde hay rectas y lo lee por qué encierran. Con los dos bloques, +0,7 más en val y casi nada a ciegas
+(0,9010): la información de la concavidad de arco ya está casi entera dentro del entrante. Sigue a 6 puntos del mejor
+compositor (0,9804 / 0,9711, 118 números con rectas-objeto + gris + rayos), y los fallos que quedan son los de siempre
+(8→9, 5→3, 6→8) más las esquinas falsas de los trazos gruesos.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
@@ -1131,6 +1162,7 @@ que sueltan 10–20 objetos; la cresta suelta 2–5 y en 9 celdas un arco de 180
    `CELDAS` en `cresta_curvas.py` → parametrizar por argumento; ojo: `caract` da 152 con 3×3 y daría 4×(16+2)×3 + (16+1)×2 = 250 con 4×4).
    Comparar val / a ciegas / fallos y la cuota por grupo. Si 4×4 no mueve, la rejilla no es el cuello: probar la lista
    ordenada de objetos (extremos, orientación, barrido, radio, área, abertura).
+   ✅ 2026-10-15, § 58: el dueño pidió los ENTRANTES (concavidad ∪ esquina) y el sólo-cresta sube a 0,9140 / 0,8993 con los mismos 152.
 2. La doble cresta de los 1 gruesos en la ENTRADA (`delg-cnn`, pendiente 1): 25–29 de los fallos son 1→7.
 3. Golpes: medirlos contra la verdad como las otras cuatro (hay esquinas en los sintéticos: tipo «recta» con quiebro no; habría que añadirlas al generador).
 

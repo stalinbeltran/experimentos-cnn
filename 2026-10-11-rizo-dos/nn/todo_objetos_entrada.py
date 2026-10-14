@@ -118,6 +118,7 @@ def main() -> int:
     ap.add_argument("--cresta", default="", help="cresta_curvas: 'todo' = SÓLO objetos de la cresta (rectas + arcos + golpes + lazos, 108); 'solo' = curvas de la cresta en vez del gris (54); 'lazos' = curvas + lazos (64); 'mas-gris' = gris + curvas + lazos; 'lazos-solo' = gris + SÓLO los lazos de la cresta (10) en lugar de los huecos de rayos; 'lazos+conc' = idem + concavidades suaves (10)")
     ap.add_argument("--celdas", type=int, default=CC.CELDAS, help="lado de la rejilla de los objetos de la CRESTA (3 → 152 números con --conc-cresta; 4 → 250). 2026-10-15")
     ap.add_argument("--conc-cresta", action="store_true", help="añade las concavidades de la CRESTA (44: 4 direcciones de abertura × 3×3 + cuenta + abertura) a --cresta todo")
+    ap.add_argument("--entrantes", action="store_true", help="añade los ENTRANTES de la cresta (44: concavidades de arco ∪ esquinas, 2026-10-15) a --cresta todo")
     ap.add_argument("--conc-suaves", action="store_true", help="añade las concavidades de huecos_suaves (10) a cualquier modo --cresta")
     ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
@@ -142,6 +143,8 @@ def main() -> int:
                     g[nombre] = (n, n + B[k][1] - B[k][0]); n = g[nombre][1]
                 if a.conc_cresta:
                     partes.append(bl("concavidades")); g["cresta-concavidades"] = (n, n + B["concavidades"][1] - B["concavidades"][0]); n = g["cresta-concavidades"][1]
+                if a.entrantes:
+                    partes.append(bl("entrantes")); g["cresta-entrantes"] = (n, n + B["entrantes"][1] - B["entrantes"][0]); n = g["cresta-entrantes"][1]
                 if a.conc_suaves:
                     partes.append(HS.caract(im)[:, 10:20]); g["concavidades suaves"] = (n, n + 10); n += 10
                 feats.grupos = g
@@ -200,7 +203,7 @@ def main() -> int:
         nobj.update({"huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))})   # con suaves: suma de fuerzas
     if "cresta-lazos" in grupos:
         nobj["lazos por dígito"] = float(np.mean(Xva[:, grupos["cresta-lazos"][1] - 1]))
-    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "variante": a.variante, "cresta": a.cresta, "conc_cresta": a.conc_cresta, "celdas": a.celdas, "n": int(X.shape[1]),
+    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "variante": a.variante, "cresta": a.cresta, "conc_cresta": a.conc_cresta, "entrantes": a.entrantes, "celdas": a.celdas, "n": int(X.shape[1]),
            "grosor_medio_px": float(np.mean([2 * np.percentile(ndimage.distance_transform_edt(x)[x > 0], 75) for x in binario[va] if x.any()])),
            "val": round(float(np.mean(r["val"])), 4), "val_rango": [round(min(r["val"]), 4), round(max(r["val"]), 4)], "ciega": round(float(np.mean(r["ciega"])), 4),
            "cuota_peso": {g: round(float(np.mean([c[g] for c in r["cuota"]])), 3) for g in grupos}, "objetos_por_digito_val": nobj,
