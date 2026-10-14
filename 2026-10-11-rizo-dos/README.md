@@ -1313,6 +1313,45 @@ Lo que sale:
 4. **Asimetría**: mover a la izquierda cuesta más que a la derecha en los tres (0,879 contra 0,894 a ±4): a la
    derecha se recorta el 11,8 % de los dígitos (los más anchos, que son los difíciles) y salen de la media.
 
+### 69–70 · CRUCES: el detector, y el barrido de sus parámetros — NO aportan sobre el sólo-cresta (el dueño, 2026-10-15)
+
+**El detector** (`cresta_curvas.cruces`, figura `69-cruces.png`): dos rectas que se cortan por el INTERIOR = un nodo de la
+cresta (tramos sin empalmar) con dos pares de brazos casi colineales (≤ `ang_max`° de la colinealidad), o dos nodos de 3
+brazos unidos por un tramo ≤ `puente` px (así parte el esqueleto una X de trazo grueso); cada brazo ≥ `brazo_min` px, que
+es el «cerca de los extremos» del dueño. Sale con centro, ángulo entre las rectas y los cuatro largos. En sintéticos: X y
++ sí; T, L y recta no. En val (brazo 2, puente 3, 40°): 4 → 46/163, 7 → 42/161, 8 → 8/156, 1 → 1/164, 0/2/3/5/6/9 → 0.
+Lo que se le escapa: el 7 idx 7 (un brazo de 1,9 px), el 7 idx 44 (puente de 3,3 px), los 4 que son una T de verdad
+(correcto) y los 8 cuyos lazos se tocan en un punto sin brazos (no son dos rectas: sería otra feature).
+
+**El barrido** (`nn/cruces_barrido.py`, unidad `rizo2-cruces`, `Result=success`, `NRestarts=0`, 33 min): bloque de
+cruces = 3×3 de presencia + cuenta (10) sobre el sólo-cresta de 144 (§ 66); brazo {1,2,3,4,6} × puente {0,2,3,4,6} ×
+colinealidad {30,40,50}° = 75 combinaciones + la base, mismo protocolo (180 × 13, MLP 256, 3 semillas). **Criterio escrito
+antes**: gana el mejor val medio y se confirma a ciegas; si ninguna supera la base por más que el rango entre semillas
+(~0,002), las cruces no aportan. Figura `70-cruces-barrido.png`, datos `70-cruces-barrido.json`.
+
+| | n | val | a ciegas | % de val con cruz |
+|---|---:|---|---:|---:|
+| **base: sólo-cresta § 66, sin cruces** | 144 | **0,9227** [0,922–0,923] | 0,9001 | — |
+| parámetros de la figura 69 (brazo 2 · puente 3 · 40°) | 154 | 0,9208 [0,920–0,922] | 0,8993 | 6,1 |
+| toda la rejilla (75) | 154 | 0,9196 – 0,9221 (media 0,9207) | 0,8962 – 0,9056 (media 0,9000) | 0,1 – 8,1 |
+| «mejor» por val (brazo 6 · puente 6 · 30°) | 154 | 0,9221 | 0,9049 | **0,5** |
+
+**Veredicto, por el criterio: las cruces NO aportan.** Ninguna de las 75 combinaciones llega al val de la base; el
+«mejor» es el que casi no detecta nada (0,5 % de los dígitos: es la base con 10 columnas de ceros) y su +0,5 a ciegas
+está dentro del rango de la rejilla (0,896–0,906, que se mueve con 10 columnas casi vacías: es ruido del MLP). Las
+combinaciones que SÍ detectan (brazo 1–3, 4–8 % de los dígitos) quedan 0,2 puntos **por debajo** de la base en val y
+a ciegas. La marginal por parámetro es plana: brazo 0,9201–0,9217, puente 0,9205–0,9211, ángulo 0,9206–0,9208.
+
+**Por qué, medido**: la cruz ya está dentro de los entrantes. En los 99 dígitos de val con cruz hay **3,54 esquinas por
+dígito** contra 0,66 en los que no la tienen, y a < 3 px de cada cruz hay 1,06 esquinas de media (el resto las absorbe
+`entrantes()` por solapar con arcos). Un nodo donde se cruzan dos rectas produce cuatro giros de ~90°, o sea cuatro
+entrantes en cuatro conos distintos: el compositor ya lee «aquí se cruzan dos cosas» como «→ ← ↓ ↑ en la misma celda».
+Añadir el bloque de cruces es contar lo mismo dos veces con 10 columnas más, y con 180 dígitos eso resta.
+
+⚠ Lo que esto NO dice: que la cruz no sirva **como objeto** (para explicar un fallo, «sobró un cruce», como propone
+`trazos`), ni que no sirviera sobre otro compositor sin esquinas. Dice que sobre éste, con esta codificación, no suma.
+El bloque queda en `caract` (posiciones 276–285) por si se quiere probar otra codificación; `--cresta todo` no lo usa.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
