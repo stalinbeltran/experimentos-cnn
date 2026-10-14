@@ -46,7 +46,12 @@ UMBRAL = 0.4; SIGMA = 1.5; K_MIN = 0.07; K_GOLPE = 0.45; L_MIN = 4; CELDAS = 3
 ANG_EMPALME = 30.0   # 2026-10-14 (el dueño: «donde empieza un cruce termina una recta»): en un cruce, dos tramos que
                      # llegan colineales (≤ 30° entre sus direcciones) se EMPALMAN en uno antes de buscar rectas y arcos.
                      # Medido antes: el 82 % de las rectas detectadas acababan en un cruce (400 dígitos de val)
-BARRIDO_MIN = 20.0; L_RECTA = 5.0   # y una recta más corta que 6 px no es una recta: el 89 % de las falsas medían < 6 px (sobre 600 sintéticos)   # 2026-10-13 (mejora de rectas): un run curvo que barre < 20° no es un arco; se funde con las rectas vecinas
+BARRIDO_MIN = 20.0
+CONC_MIN = 60.0      # 2026-10-14 (el dueño: «me gusta tu definición de concavidad»): una concavidad es la región que
+                     # encierra un arco de ≥ 60° de barrido —el polígono arco + cuerda—, salvo que el arco forme parte
+                     # de un lazo (entonces la abertura está cerrada por otro tramo: es un hueco, no una concavidad)
+L_RECTA = 5.0        # una recta más corta no es una recta: el 89 % de las falsas medían < 6 px (sobre 600 sintéticos, 2026-10-13)
+# BARRIDO_MIN (2026-10-13, mejora de rectas): un run curvo que barre < 20° no es un arco; se funde con las rectas vecinas
 SENTIDOS = ["k→", "k←", "k↓", "k↑"]; COLORES = ["#c2410c", "#2a78d6", "#1b7f3b", "#7c3aed"]; COLOR_LAZO = "#111111"; COLOR_RECTA = "#8a8a8a"
 _YY, _XX = np.mgrid[0:32, 0:32] + 0.5
 VEC8 = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
@@ -284,7 +289,40 @@ def objetos(M: np.ndarray) -> dict:
                 barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
                 arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
                               "fuerza": min(barrido / 180, 1.0), "pts": seg})
-    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos}
+    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": concavidades(arcos, lazos)}
+
+
+def _dentro(p, poly):
+    """¿El punto p está dentro del polígono poly (n,2)? (regla par-impar)"""
+    x, y = p; dentro = False; n = len(poly)
+    for i in range(n):
+        x0, y0 = poly[i]; x1, y1 = poly[(i + 1) % n]
+        if (y0 > y) != (y1 > y) and x < x0 + (y - y0) * (x1 - x0) / (y1 - y0 + 1e-12):
+            dentro = not dentro
+    return dentro
+
+
+def concavidades(arcos, lazos):
+    """[{cx, cy, area, abertura, dir (vector unitario hacia la abertura), o (cuadrante de la abertura: → ← ↓ ↑),
+    barrido, s, pts (polígono)}] para los arcos de ≥ CONC_MIN° que no estén dentro de un lazo."""
+    out = []
+    for a in arcos:
+        if a["barrido"] < CONC_MIN:
+            continue
+        poly = a["pts"]; x, y = poly[:, 0], poly[:, 1]
+        area = 0.5 * abs(np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y))
+        if area < 2.0:
+            continue
+        cx, cy = poly.mean(0); medio = (poly[0] + poly[-1]) / 2; v = medio - np.array([cx, cy]); n = np.hypot(*v)
+        if n < 1e-6:
+            continue
+        v = v / n
+        if any(_dentro((cx, cy), z["pts"]) for z in lazos):
+            continue
+        o = (0 if v[0] > 0 else 1) if abs(v[0]) >= abs(v[1]) else (2 if v[1] > 0 else 3)
+        out.append({"cx": float(cx), "cy": float(cy), "area": float(area), "abertura": float(np.hypot(*(poly[-1] - poly[0]))), "dir": v, "o": o,
+                    "barrido": a["barrido"], "s": a["s"], "fuerza": min(area / 60.0, 1.0), "pts": poly})
+    return out
 
 
 def _mapa(objs, altura, sig=1.5):
@@ -295,7 +333,7 @@ def _mapa(objs, altura, sig=1.5):
 
 
 def caract(M: np.ndarray) -> np.ndarray:
-    """(n,32,32) → (n,108): arcos 44 · golpes 10 · lazos 10 · rectas 44."""
+    """(n,32,32) → (n,152): arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 (por dirección de la abertura)."""
     out = []
     for m in np.asarray(M, np.float32):
         ob = objetos(m); f = []
@@ -307,6 +345,9 @@ def caract(M: np.ndarray) -> np.ndarray:
         for o in range(4):
             rs = [r for r in ob["rectas"] if r["o"] == o]
             f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
+        for o in range(4):                                          # concavidades por dirección de la ABERTURA: 3×3 (fuerza = área/60) + cuenta + abertura/32
+            cs = [c for c in ob["concavidades"] if c["o"] == o]
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
         out.append(f)
     return np.array(out, np.float32)
 

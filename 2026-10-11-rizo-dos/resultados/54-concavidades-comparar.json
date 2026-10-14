@@ -1,0 +1,23 @@
+{
+ "trazos": 600,
+ "concavidades_reales": 281,
+ "tol_px": 3.0,
+ "cobertura_cresta_por_barrido": {
+  "120°": "88/95",
+  "180°": "29/45",
+  "240°": "7/10",
+  "60°": "105/131"
+ },
+ "cresta": {
+  "detecciones": 251,
+  "cobertura": 0.815,
+  "precision": 0.912,
+  "por_trazo": 0.42
+ },
+ "rayos v4": {
+  "detecciones": 290,
+  "cobertura": 0.491,
+  "precision": 0.476,
+  "por_trazo": 0.48
+ }
+}

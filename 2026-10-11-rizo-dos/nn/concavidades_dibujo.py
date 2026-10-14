@@ -53,19 +53,17 @@ def main() -> int:
         a0.set_xlim(-0.5, 31.5); a0.set_ylim(31.5, -0.5)
         a0.set_title(f"{y[i]} · idx {i} · rayos: {len(oc)} conc.", fontsize=7, pad=2)
         a1.imshow(np.where(m > 0.05, m, np.nan), cmap="Greys", vmin=0, vmax=2.4, interpolation="nearest", zorder=2)
-        ob = CC.objetos(m); n_arc = 0
-        for z in ob["arcos"]:
-            if z["barrido"] < ARCO_MIN:
-                continue
-            n_arc += 1; pts = z["pts"] - 0.5
-            a1.add_patch(Polygon(pts, closed=True, facecolor=CC.COLORES[z["s"]], edgecolor="none", alpha=0.35, zorder=1))
-            a1.plot(pts[:, 0], pts[:, 1], "-", color=CC.COLORES[z["s"]], lw=1.8, zorder=3)
-            a1.plot([pts[0, 0], pts[-1, 0]], [pts[0, 1], pts[-1, 1]], "--", color=CC.COLORES[z["s"]], lw=0.8, zorder=3)
+        ob = CC.objetos(m); COL_AB = ["#c2410c", "#2a78d6", "#1b7f3b", "#7c3aed"]    # color = dirección de la ABERTURA → ← ↓ ↑
+        for z in ob["concavidades"]:
+            pts = z["pts"] - 0.5
+            a1.add_patch(Polygon(pts, closed=True, facecolor=COL_AB[z["o"]], edgecolor="none", alpha=0.35, zorder=1))
+            a1.plot(pts[:, 0], pts[:, 1], "-", color=COL_AB[z["o"]], lw=1.6, zorder=3)
+            a1.arrow(z["cx"] - 0.5, z["cy"] - 0.5, 2.5 * z["dir"][0], 2.5 * z["dir"][1], color=COL_AB[z["o"]], head_width=1.0, lw=1.2, zorder=4)
         for z in ob["lazos"]:
             a1.plot(z["cx"] - 0.5, z["cy"] - 0.5, "+", color="#111", ms=8, mew=2, zorder=3)
-        a1.set_xlim(-0.5, 31.5); a1.set_ylim(31.5, -0.5); a1.set_title(f"cresta: {n_arc} arcos ≥ {ARCO_MIN:.0f}°", fontsize=7, pad=2)
+        a1.set_xlim(-0.5, 31.5); a1.set_ylim(31.5, -0.5); a1.set_title(f"cresta: {len(ob['concavidades'])} concavidades", fontsize=7, pad=2)
     fig.suptitle(f"rizo-2 · 53 · CONCAVIDADES en {a.n} dígitos de val (semilla {a.semilla}) · por pareja: rayos v4 (verde = mapa de concavidad; + verde objeto, + azul hueco cerrado) | "
-                 "cresta (arcos ≥ 60° con su región encerrada sombreada; color = centro de curvatura a la → naranja · ← azul · ↓ verde · ↑ morado; + negro = lazo)", fontsize=9)
+                 "cresta (concavidad = región encerrada por un arco ≥ 60° fuera de todo lazo; color = hacia dónde ABRE: → naranja · ← azul · ↓ verde · ↑ morado; flecha = abertura; + negro = lazo)", fontsize=9)
     fig.tight_layout(rect=(0, 0, 1, 0.95)); out = AQUI / "resultados" / "53-concavidades.png"; fig.savefig(out, dpi=100); print(f"→ {out.relative_to(AQUI)}")
     return 0
 
