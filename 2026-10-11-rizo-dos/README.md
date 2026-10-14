@@ -1235,6 +1235,54 @@ Lo que sale:
    (×10), que es de la entrada (el 1 grueso con doble cresta, punto 2 del plan), no de esta feature.
 4. **Lo que sigue sin verse** es la panza de un 3 plano (3→9 ×6) y el 8→9 (×7): un lazo que no cierra.
 
+### 67 · Dónde estamos (2026-10-15): el sólo-cresta por clase, contra el mejor compositor y contra las líneas previas
+
+Acierto por clase en val (semilla 0; n ≈ 160 por clase), de los `40-entrada-*.json`:
+
+| clase | mejor: rectas-obj + gris + rayos v4 (118) | sólo-cresta + conc. arco (§ 55, 152) | + entrantes 45° (§ 58, 152) | **+ conos 60° presencia (§ 66, 144)** |
+|---|---|---|---|---|
+| 0 | 1,000 (0) | 0,938 (10) | 0,931 (11) | 0,925 (12) |
+| 1 | 0,994 (1) | 0,805 (32) | 0,951 (8) | 0,909 (15) |
+| 2 | 0,981 (3) | 0,843 (25) | 0,925 (12) | **0,950** (8) |
+| 3 | 0,970 (5) | 0,885 (19) | 0,921 (13) | **0,939** (10) |
+| 4 | 0,969 (5) | 0,785 (35) | 0,890 (18) | 0,859 (23) |
+| 5 | 0,982 (3) | 0,805 (32) | 0,896 (17) | **0,933** (11) |
+| 6 | 0,988 (2) | 0,926 (12) | 0,939 (10) | 0,933 (11) |
+| 7 | 0,994 (1) | 0,932 (11) | 0,876 (20) | **0,950** (8) |
+| 8 | 0,955 (7) | 0,904 (15) | 0,917 (13) | 0,923 (12) |
+| 9 | 0,969 (5) | 0,901 (16) | 0,920 (13) | 0,914 (14) |
+| **val / ciega / fallos** | **0,9804 / 0,9711 / 32** | 0,8697 / 0,8612 / 207 | 0,9140 / 0,8993 / 135 | **0,9227 / 0,9001 / 124** |
+
+Lo que dice la tabla:
+1. **Lo que ganaron los entrantes son el 2, 3, 5 y 7**: entre +6 y +13 puntos por clase respecto del § 55, y en el
+   5 y el 7 el cono de 60° añade otros +4 y +7 sobre el § 58. Son las clases cuya forma es «qué encierra el trazo».
+2. **Lo que NO mejora es de la ENTRADA, no del compositor**: el **4** (0,859, 23 fallos, 4→1 ×10 y 4→5 ×4) y el
+   **1** (0,909; 1→7 ×6) son los dígitos gruesos con doble cresta o con el palo partido —punto 2 del plan—, y el
+   **0/6/8/9** (0,91–0,93, 8→9 ×7, 0→6 ×6, 6→8 ×6, 9→3 ×5) son lazos que la cresta no cierra o cierra de más. El
+   mejor compositor tampoco los resuelve del todo (8→9 ×7 es también su primera confusión).
+3. **La distancia al mejor compositor es de 5,8 puntos en val y 7,1 a ciegas, y está casi toda en 0/1/4/6/8/9.** En
+   2/3/5/7 ya está a 2–5 puntos. El mejor lleva 118 números de detectores de **borde** (Gabor, 15–18 objetos por
+   dígito) que ven lo que la cresta borra; el sólo-cresta lleva 144 de objetos nombrables (2–5 por dígito).
+
+Y contra las otras líneas del repo, con el mismo protocolo 180/1617 (val):
+
+| línea | entrada | compositor | val | a ciegas |
+|---|---|---|---|---|
+| píxeles crudos (`por-que-fallan`) | 32×32 tinta | lineal | 0,908 | — |
+| `feat-ind` fino + grueso (26 detectores CNN) | mapas 8×8 | lineal | 0,972 | — (0,990 con 900 de train) |
+| `rect-bor` Gabor fijos | mapas | lineal | 0,955 | — |
+| rizo-2 rectas-obj + gris + rayos v4 | 118 objetos/celdas | MLP 256 + aumento | **0,980** | **0,971** |
+| **rizo-2 sólo-cresta + conos 60°** | 144 objetos nombrables | MLP 256 + aumento | 0,923 | 0,900 |
+
+El sólo-cresta ya **supera a los píxeles crudos** (+1,5) con 144 números en vez de 1024, y queda 3–5 puntos por debajo
+de los bancos de detectores convolucionales. La diferencia de principio es la que fijó el dueño: aquí cada número es un
+objeto con nombre y posición (rectas, arcos, lazos, entrantes), y un fallo se puede atribuir a uno (§ 60–61).
+
+⚠ **Desplazamientos: NO medidos para este compositor.** El protocolo entrena con 13 copias movidas (±1–3 px), que en
+`resistencia.py` dio 0,94–0,96 a ±4 px para el compositor de 118; la curva del sólo-cresta no se ha corrido (regla del
+dueño del 2026-10-09: va antes de darlo por cerrado). Los objetos de la cresta se mueven con el dígito, pero la rejilla
+3×3 y el cono no: un entrante a 2 px de una raya cambia de celda.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
