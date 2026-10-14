@@ -1,0 +1,17 @@
+{
+ "trazos": 600,
+ "rectas_reales": 252,
+ "etiqueta": "empalme",
+ "rectas-objeto": {
+  "detecciones": 10712,
+  "cobertura": 0.964,
+  "precision": 0.026,
+  "por_trazo": 17.85
+ },
+ "cresta": {
+  "detecciones": 288,
+  "cobertura": 0.913,
+  "precision": 0.799,
+  "por_trazo": 0.48
+ }
+}

@@ -43,6 +43,9 @@ AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 
 UMBRAL = 0.4; SIGMA = 1.5; K_MIN = 0.07; K_GOLPE = 0.45; L_MIN = 4; CELDAS = 3
+ANG_EMPALME = 30.0   # 2026-10-14 (el dueño: «donde empieza un cruce termina una recta»): en un cruce, dos tramos que
+                     # llegan colineales (≤ 30° entre sus direcciones) se EMPALMAN en uno antes de buscar rectas y arcos.
+                     # Medido antes: el 82 % de las rectas detectadas acababan en un cruce (400 dígitos de val)
 BARRIDO_MIN = 20.0; L_RECTA = 5.0   # y una recta más corta que 6 px no es una recta: el 89 % de las falsas medían < 6 px (sobre 600 sintéticos)   # 2026-10-13 (mejora de rectas): un run curvo que barre < 20° no es un arco; se funde con las rectas vecinas
 SENTIDOS = ["k→", "k←", "k↓", "k↑"]; COLORES = ["#c2410c", "#2a78d6", "#1b7f3b", "#7c3aed"]; COLOR_LAZO = "#111111"; COLOR_RECTA = "#8a8a8a"
 _YY, _XX = np.mgrid[0:32, 0:32] + 0.5
@@ -107,6 +110,47 @@ def tramos(M: np.ndarray) -> tuple[list[dict], list[dict]]:
                 cam.append(cur)
             ciclos.append({"pts": np.array([pos[k] for k in cam])})
     return out, ciclos
+
+
+def _direccion(pts, en_inicio, n=4):
+    """Dirección unitaria del tramo en uno de sus extremos, SALIENDO del tramo (hacia fuera)."""
+    q = pts[:n] if en_inicio else pts[-n:][::-1]                     # q[0] es el extremo, q[-1] hacia dentro
+    v = q[0] - q[-1]; return v / (np.hypot(*v) + 1e-9)
+
+
+def empalmar(tr: list[dict]) -> list[dict]:
+    """Une, a través de cada racimo de cruce, los pares de tramos más colineales (ángulo entre la dirección con la que
+    uno LLEGA y la que el otro SALE ≤ ANG_EMPALME). Se repite hasta que no queda nada que unir, así una recta que
+    atraviesa dos cruces sale entera. Los tramos de un racimo a sí mismo (lazos) no se tocan."""
+    tr = [dict(t) for t in tr]
+    while True:
+        extremos = {}                                                 # racimo → [(índice de tramo, en_inicio)]
+        for i, t in enumerate(tr):
+            if t["a"] == t["b"]:
+                continue
+            if t["a"] > 0:
+                extremos.setdefault(t["a"], []).append((i, True))
+            if t["b"] > 0:
+                extremos.setdefault(t["b"], []).append((i, False))
+        mejor = None
+        for rac, lista in extremos.items():
+            for x in range(len(lista)):
+                for y in range(x + 1, len(lista)):
+                    (i, ii), (j, ji) = lista[x], lista[y]
+                    if i == j:
+                        continue
+                    # salir de i hacia el cruce y seguir por j: colineal ⇔ dir_salida(i) ≈ −dir_salida(j)
+                    ang = np.degrees(np.arccos(np.clip(-np.dot(_direccion(tr[i]["pts"], ii), _direccion(tr[j]["pts"], ji)), -1, 1)))
+                    if ang <= ANG_EMPALME and (mejor is None or ang < mejor[0]):
+                        mejor = (ang, rac, i, ii, j, ji)
+        if mejor is None:
+            return tr
+        _, rac, i, ii, j, ji = mejor
+        pi = tr[i]["pts"] if not ii else tr[i]["pts"][::-1]          # pi acaba en el cruce
+        pj = tr[j]["pts"] if ji else tr[j]["pts"][::-1]              # pj empieza en el cruce
+        a = tr[i]["b"] if not ii else tr[i]["a"]; a = tr[i]["a"] if not ii else tr[i]["b"]
+        nuevo = {"a": (tr[i]["a"] if not ii else tr[i]["b"]), "b": (tr[j]["b"] if ji else tr[j]["a"]), "pts": np.concatenate([pi, pj[1:]])}
+        tr = [t for k, t in enumerate(tr) if k not in (i, j)] + [nuevo]
 
 
 def ciclos_del_grafo(tr: list[dict]) -> list[np.ndarray]:
@@ -213,7 +257,7 @@ def objetos(M: np.ndarray) -> dict:
         if area < 2.0:
             continue
         cx, cy = ps.mean(0); lazos.append({"cx": float(cx), "cy": float(cy), "largo": len(ps), "area": float(area), "pts": ps})
-    for t in tr:
+    for t in empalmar(tr):
         p = t["pts"]
         if len(p) < 3:
             continue
