@@ -1283,6 +1283,36 @@ objeto con nombre y posición (rectas, arcos, lazos, entrantes), y un fallo se p
 dueño del 2026-10-09: va antes de darlo por cerrado). Los objetos de la cresta se mueven con el dígito, pero la rejilla
 3×3 y el cono no: un entrante a 2 px de una raya cambia de celda.
 
+### 68 · La CURVA de desplazamientos del sólo-cresta (regla del dueño del 2026-10-09; corrida el 2026-10-15)
+
+`nn/curva_entrantes.py` (unidad `rizo2-curva`, `Result=success`, `NRestarts=0`, 242 s): el mapa delgado `M` movido
+d = −4…+4 px con relleno de fondo (`EV.mover`, nunca `np.roll`), sólo los dígitos que no pierden tinta, acierto en val y
+% que cambia de lectura respecto de d = 0; tres compositores de la misma pasada de `caract`. Figura
+`68-curva-entrantes.png`, datos `68-curva-entrantes.json`.
+
+| compositor | d = 0 | x ±1 | x ±2 | x ±3 | x ±4 | cambian a x ±4 |
+|---|---:|---:|---:|---:|---:|---:|
+| conc. de arco 45° (§ 55, 152) | 0,8697 | 0,863 / 0,872 | 0,852 / 0,872 | 0,836 / 0,865 | 0,799 / 0,850 | 13,5 % / 12,3 % |
+| entrantes 45° (§ 58, 152) | 0,9140 | 0,911 / 0,912 | 0,906 / 0,910 | 0,893 / 0,900 | 0,867 / 0,887 | 11,3 % / 8,8 % |
+| **conos 60° presencia (§ 66, 144)** | **0,9227** | 0,922 / 0,924 | 0,914 / 0,920 | 0,902 / 0,910 | **0,879 / 0,894** | **9,8 % / 9,4 %** |
+| *(referencia, § resistencia: rectas + gris + rizo, 118, con aumento)* | *0,985* | *0,985 / 0,985* | *0,982 / 0,977* | *0,977 / 0,968* | *0,957 / 0,939* | *4 % / 6 %* |
+
+(primer número = d negativo, segundo = d positivo; «cambian» = % de dígitos cuya lectura difiere de la de d = 0)
+
+Lo que sale:
+1. **La curva es casi plana hasta ±2 px** (−0,9 puntos como mucho) y a ±4 px pierde **2,9–4,4 puntos** y cambia de
+   lectura el 9–10 %. El compositor de referencia de 118 números, con el mismo aumento, pierde 2,8–4,6 a ±4 px: la
+   resistencia **relativa** es la misma; lo que difiere es el nivel. Los objetos de la cresta se mueven con el dígito y
+   el aumento con 13 copias absorbe el salto de celda, como ya se había medido para el otro compositor.
+2. **Cada mejora de la representación mejoró también la resistencia**: a ±4 px el % que cambia baja de 13,5 (conc. de
+   arco) a 11,3 (entrantes 45°) a 9,8 (conos 60°). El cono ancho era, de hecho, una ganancia de estabilidad: un
+   entrante que oscila entre 40° y 50° al moverse ya no cambia de cajón.
+3. ⚠ **En vertical no se puede medir**: el 97–100 % de los dígitos de val pierde tinta con 1 px de desplazamiento
+   vertical (el dataset ocupa las 32 filas; en horizontal sólo el 0–12 %). A y ±1 quedan ~50 dígitos, y el conos 60°
+   **no cambia ninguna lectura** (0,0 %) en ellos; nada más se puede decir, y es la misma limitación de § resistencia.
+4. **Asimetría**: mover a la izquierda cuesta más que a la derecha en los tres (0,879 contra 0,894 a ±4): a la
+   derecha se recorta el 11,8 % de los dígitos (los más anchos, que son los difíciles) y salen de la media.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
