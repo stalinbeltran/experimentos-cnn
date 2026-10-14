@@ -1370,6 +1370,51 @@ se leen 7 o 8 — un 7 europeo también tiene esa cruz, y lo que distingue al 4 
 precisamente el tramo sin objeto. Los otros 17 no tienen cruz porque son T (la barra termina en el palo o en la diagonal)
 o lazos triangulares: correcto por definición. Confirma el § 70 por el otro lado: la cruz no es lo que le falta al 4.
 
+### 74 · TODO tramo produce objeto: los RESTOS — el mejor sólo-cresta hasta hoy (el dueño, 2026-10-15: «corrige para que funcione con todo tramo»)
+
+Dos puertas, las dos en `cresta_curvas.objetos`: (1) lo que `segmentar` descartaba —runs de < 4 puntos y rectas de < 5 px—
+pasa a ser un **resto** (centro, largo, orientación en 4 clases, `fuerza` = largo/32, como una recta); (2) **por
+construcción**, cualquier trozo de tramo que quede a > 1 px de todo objeto (medido: tramos de 5 px que no dejaban ni
+recta ni resto, idx 191/198/225) se convierte en resto. Las rectas y los arcos medidos contra la verdad **no cambian**.
+Cobertura de la cresta en val (300 dígitos): **82 % → 92 %**, peor cuarto 75 → 89 %; lo que queda fuera son **883 puntos
+sueltos, todos de 1 punto**, a 1,0–1,9 px de un objeto (el suavizado σ = 1,5 recorta las esquinas y los extremos):
+ningún tramo queda sin objeto. 1,5 restos por dígito, 2,5 px de media. Test en `probar_entrantes.py` (9).
+
+Dos formas de dárselo al compositor (`--restos fundido|aparte`; lanzador `nn/correr-restos.sh`, unidad `rizo2-restos`,
+`Result=success`, `NRestarts=0`):
+
+| corrida | restos | n | val | a ciegas | fallos (3 sem.) | cuota rectas · curvas · lazos · entrantes · restos |
+|---|---|---:|---|---:|---|---|
+| cresta-entrantes60-presencia (§ 66) | ninguno | 144 | 0,9227 [0,922–0,923] | 0,9001 | 124 (115) | 0,21 · 0,35 · 0,16 · 0,26 · — |
+| **cresta-restos-fundido** | **rectas ∪ restos**, mismos números | 144 | **0,9340** [0,933–0,934] | **0,9158** | **108** (95) | **0,33** · 0,29 · 0,14 · 0,23 · — |
+| cresta-restos-aparte | bloque propio de 44 | 188 | 0,9297 [0,927–0,932] | 0,9034 | 110 (105) | 0,20 · 0,26 · 0,13 · 0,20 · 0,18 |
+
+Por clase (val, semilla 0; fallos entre paréntesis):
+
+| clase | § 66 | **fundido** | aparte |
+|---|---|---|---|
+| 0 | 0.925 (12) | **0.963** (6) | 0.925 (12) |
+| 1 | 0.909 (15) | **0.927** (12) | 0.939 (10) |
+| 2 | 0.950 (8) | **0.956** (7) | 0.969 (5) |
+| 3 | 0.939 (10) | **0.945** (9) | 0.939 (10) |
+| 4 | 0.859 (23) | **0.871** (21) | 0.871 (21) |
+| 5 | 0.933 (11) | **0.921** (13) | 0.933 (11) |
+| 6 | 0.933 (11) | **0.939** (10) | 0.939 (10) |
+| 7 | 0.950 (8) | **0.950** (8) | 0.957 (7) |
+| 8 | 0.923 (12) | **0.929** (11) | 0.917 (13) |
+| 9 | 0.914 (14) | **0.932** (11) | 0.932 (11) |
+
+Lo que sale:
+1. **+1,1 en val y +1,6 a ciegas con los MISMOS 144 números**, y 16 fallos menos: es la mayor ganancia a ciegas de
+   toda la línea sólo-cresta, y la primera que no viene de una feature nueva sino de **no tirar lo que ya se veía**.
+   La cuota de las rectas sube de 0,21 a 0,33: el compositor ahora lee los trozos cortos como rectas de poca longitud.
+2. **Fundido > aparte**: 44 columnas nuevas con 180 dígitos cuestan más de lo que aportan (0,9297 / 0,9034); la misma
+   información dentro del bloque de rectas la aprovecha entera. Misma lección que las cruces (§ 70): con 180 ejemplos,
+   columnas nuevas restan; información nueva en columnas que ya existen, suma.
+3. **El 4 NO mejora** (23 → 21 fallos, 4→1 ×15): el brazo izquierdo del 4 ahora llega como resto (un trozo corto en la
+   celda izquierda-centro del bloque de rectas), pero el 1 con remate deja el mismo trozo en el mismo sitio. Lo que los
+   separa es que en el 4 ese trozo **se junta** con el palo en un nodo, y el bloque de rectas no sabe de nodos.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
