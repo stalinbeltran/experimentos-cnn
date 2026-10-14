@@ -1352,6 +1352,24 @@ Añadir el bloque de cruces es contar lo mismo dos veces con 10 columnas más, y
 `trazos`), ni que no sirviera sobre otro compositor sin esquinas. Dice que sobre éste, con esta codificación, no suma.
 El bloque queda en `caract` (posiciones 276–285) por si se quiere probar otra codificación; `--cresta todo` no lo usa.
 
+### 71–73 · Los fallos sobre el dígito DELGADO; los 23 del 4; y sólo las cruces (2026-10-15)
+
+`71-fallos-delgados.png` (4 fallos por clase del § 66), `72-fallos-4.png` (los 23 del 4: 4→1 ×10, 4→5 ×4, 4→8 ×3, 4→7 ×3)
+y `73-fallos-4-cruces.png` (los mismos 23 con SÓLO los tramos de la cresta y el detector de cruces).
+
+Lo que la 73 corrige de la lectura de la 72: en los 4→1 (idx 228, 580, 790, 966, 1043, 1244) **el brazo izquierdo SÍ está
+en la cresta** —se ve como tramo gris— pero **no sale como ningún objeto**: ni recta (≥ 5 px con |κ| < 0,07) ni arco
+(≥ 20°), porque es un tramo corto y ondulado. Un tramo que no produce objeto es invisible para el compositor, y el 4
+queda como «palo + entrante»: un 1. Medido sobre val, el % de puntos de la cresta a ≤ 1 px de algún objeto (recta, arco o
+lazo): **83 %** en general (el cuarto peor cubierto, < 77 %); en el 4, 78 % tanto en aciertos como en fallos; en el 2,
+86 % aciertan / 68 % fallan; en el 1, 77 / 70. O sea: **un quinto de la cresta no llega al compositor**, y no es
+específico de los fallos — es la holgura de las reglas de recta/arco, que se diseñaron contra la verdad sintética.
+
+Las cruces: **6 de los 23 fallos del 4 tienen cruz** (el palo atraviesa la barra: 74–90°, brazo mínimo 2–5 px) y aun así
+se leen 7 o 8 — un 7 europeo también tiene esa cruz, y lo que distingue al 4 es el brazo diagonal izquierdo, que es
+precisamente el tramo sin objeto. Los otros 17 no tienen cruz porque son T (la barra termina en el palo o en la diagonal)
+o lazos triangulares: correcto por definición. Confirma el § 70 por el otro lado: la cruz no es lo que le falta al 4.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
