@@ -304,6 +304,27 @@ def objetos(M: np.ndarray) -> dict:
                 barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
                 arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
                               "fuerza": min(barrido / 180, 1.0), "pts": seg})
+    # 2026-10-15, segunda puerta (medido: tramos de 5 px que no dejaban ni recta ni resto, idx 191/198/225 de val): lo que
+    # quede a > 1 px de TODO objeto se convierte en resto por construcción, trozo a trozo, así la cobertura no depende de
+    # qué regla lo descartó. Mínimo 2 puntos seguidos.
+    Q = [a["pts"] for a in arcos] + [z["pts"] for z in lazos] + [r["pts"] for r in restos]
+    Q += [np.linspace(r["pts"][0], r["pts"][1], int(np.hypot(*(r["pts"][1] - r["pts"][0]))) + 2) for r in rectas]
+    Q = np.concatenate(Q) if Q else np.zeros((0, 2), np.float32)
+    for t in tr:
+        p = np.asarray(t["pts"], np.float32)
+        if len(p) < 2:
+            continue
+        lejos = np.ones(len(p), bool) if len(Q) == 0 else np.sqrt(((p[:, None, :] - Q[None, :, :]) ** 2).sum(-1)).min(1) > 1.0
+        i = 0
+        while i < len(p):
+            if not lejos[i]:
+                i += 1; continue
+            j = i
+            while j < len(p) and lejos[j]:
+                j += 1
+            if j - i >= 2:
+                resto(p[i:j])
+            i = j
     conc = concavidades(arcos, lazos); esq = esquinas(tr, lazos); crz = cruces(tr)   # ⚠ sobre los tramos SIN empalmar: el empalmado pasa POR el nodo y la barra se queda sin pareja
     return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq), "cruces": crz, "restos": restos}
 
