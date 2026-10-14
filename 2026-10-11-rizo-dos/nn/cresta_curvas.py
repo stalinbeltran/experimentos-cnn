@@ -332,22 +332,31 @@ def _mapa(objs, altura, sig=1.5):
     return m
 
 
-def caract(M: np.ndarray) -> np.ndarray:
-    """(n,32,32) → (n,152): arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 (por dirección de la abertura)."""
+def bloques(celdas: int = CELDAS) -> dict:
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 152 (44·10·10·44·44); con 4×4, 250 (72·17·17·72·72)."""
+    c = celdas * celdas; n = 0; out = {}
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2))):
+        out[g] = (n, n + k); n += k
+    return out
+
+
+def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
+    """(n,32,32) → (n,152) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 (por dirección de la abertura).
+    `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
         ob = objetos(m); f = []
         for s in range(4):
             cs = [a for a in ob["arcos"] if a["s"] == s]
-            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda o: o["fuerza"]))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(a["largo"] for a in cs) / 32])
-        f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["golpes"], lambda o: 1.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.append(len(ob["golpes"]))
-        f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["lazos"], lambda o: 1.0, 2.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.append(len(ob["lazos"]))
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda o: o["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(a["largo"] for a in cs) / 32])
+        f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["golpes"], lambda o: 1.0))[None], celdas)[0].numpy().ravel().tolist()); f.append(len(ob["golpes"]))
+        f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(ob["lazos"], lambda o: 1.0, 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.append(len(ob["lazos"]))
         for o in range(4):
             rs = [r for r in ob["rectas"] if r["o"] == o]
-            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
         for o in range(4):                                          # concavidades por dirección de la ABERTURA: 3×3 (fuerza = área/60) + cuenta + abertura/32
             cs = [c for c in ob["concavidades"] if c["o"] == o]
-            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], CELDAS)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
+            f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, lambda q: q["fuerza"], 2.0))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(cs), sum(c["abertura"] for c in cs) / 32])
         out.append(f)
     return np.array(out, np.float32)
 
