@@ -1415,6 +1415,72 @@ Lo que sale:
    celda izquierda-centro del bloque de rectas), pero el 1 con remate deja el mismo trozo en el mismo sitio. Lo que los
    separa es que en el 4 ese trozo **se junta** con el palo en un nodo, y el bloque de rectas no sabe de nodos.
 
+## 📖 GLOSARIO (el dueño lo pide siempre; se actualiza con cada término nuevo, 2026-10-15)
+
+**La cadena, de la tinta al veredicto**
+- **tinta**: el dígito original de UCI, 32×32 binario, trazos de 3–6 px.
+- **dígito delgado / mapa M / `delgados-k3x3.npz`**: la tinta pasada por la red `delg-cnn` (sólo kernels 3×3): un mapa
+  continuo donde el trazo queda reducido a una línea media de ~1 px. Es la ENTRADA de todo lo de aquí (el preproceso
+  siempre se aplica).
+- **cresta**: el esqueleto de ese mapa (`M > 0,4`, `skeletonize`), afinado a sub-píxel. Sobre ella se buscan los objetos.
+- **tramo**: un trozo de cresta entre dos **nodos** (puntos donde se juntan ≥ 3 ramas, o extremos). El grafo de la
+  cresta = nodos + tramos.
+- **empalme**: en un nodo, dos tramos que llegan casi colineales (≤ 30°) se unen en uno antes de buscar rectas y arcos
+  («donde empieza un cruce termina una recta»).
+- **objeto**: lo que un detector emite con nombre y posición: recta, arco, golpe, lazo, concavidad, esquina, entrante,
+  cruz, resto. «Todo objetos» = la línea de trabajo donde el compositor sólo ve objetos nombrables.
+- **feature**: un grupo de números que resume un tipo de objeto para el compositor (p. ej. «rectas» = 44 números).
+- **bloque**: las columnas de `caract` que ocupa una feature (`cresta_curvas.bloques()` da los cortes).
+- **compositor**: el clasificador que recibe el vector de features y dice el dígito. Hoy: MLP de una capa oculta (256,
+  ReLU, dropout 0,3), entrenado con **180 dígitos de train × 13 copias movidas** (±1–3 px), 3 semillas.
+- **val / a ciegas**: val = 1617 dígitos con los que se compara y se eligen cosas; a ciegas = 3823 que nunca se miran
+  al decidir. Un resultado que sube en val y no a ciegas es ajuste a val.
+- **fallos (3 sem.)**: dígitos de val mal leídos por la semilla 0 (y entre paréntesis, los que fallan en las 3).
+- **cuota**: qué fracción del peso de la primera capa del MLP se lleva cada bloque: de qué se fía el compositor.
+- **confusiones** `a→b`: dígitos de clase a leídos como b.
+
+**Los objetos de la cresta** (`nn/cresta_curvas.py`)
+- **recta**: tramo (o run de tramo) con |κ| < 0,07 y ≥ 5 px; se representa por su ajuste (segmento, orientación en 4
+  clases: 0/45/90/135°). Contra la verdad sintética: cobertura 0,91 · precisión 0,80.
+- **arco / curva**: run de curvatura del mismo signo que barre ≥ 20°; sentido = hacia dónde está su centro. 0,80 / 0,83.
+- **golpe**: pico de |κ| ≥ 0,45 dentro de un tramo (un quiebro brusco). Sin medir contra la verdad.
+- **lazo**: ciclo del grafo de la cresta = un hueco cerrado (el 0, el 8, la cabeza del 9). 0,95 / 0,97.
+- **concavidad (de arco)**: región que encierra un arco de ≥ 60° + su cuerda, fuera de lazos; con centro, área,
+  abertura (la cuerda) y DIRECCIÓN de abertura (hacia dónde está abierta). 0,82 / 0,91.
+- **esquina**: lo mismo pero cerrado por dos tramos que se juntan en un nodo con un giro ≥ 60° (brazos ≤ 10 px).
+- **entrante**: concavidad de arco ∪ esquina, sin contar dos veces: «una concavidad, ignorando si la rodean rectas o
+  curvas» (el dueño). Es la feature que más subió el sólo-cresta (§ 58).
+- **cono (de 60°)**: cómo se clasifica la abertura de un entrante: derecha e izquierda si está a ±60° de la horizontal;
+  abajo y arriba el resto. Sustituye a los 4 cuadrantes de 45°, que partían la señal del 5 en dos cajones (§ 60–66).
+- **presencia**: codificar un objeto en la rejilla con altura 1 (está / no está) en vez de con su fuerza. Para los
+  entrantes, presencia > fuerza (§ 66).
+- **cruz**: dos rectas que se cortan por el interior: nodo con dos pares de brazos colineales (≤ 40°), brazos ≥ 2 px.
+  Medido: no aporta sobre este compositor porque ya está en los entrantes (§ 69–70).
+- **resto**: trozo de cresta que no llega a recta ni a arco (runs de < 4 puntos, rectas de < 5 px, y por construcción
+  todo lo que quede a > 1 px de cualquier objeto). Con centro, largo y orientación, como una recta (§ 74).
+
+**La representación (cómo un objeto se vuelve números)**
+- **rejilla 3×3**: el 32×32 partido en 9 celdas de ~10,7 px. Cada objeto se pinta como una gaussiana (σ 1,5 px; 2 px
+  en concavidades y entrantes) centrada en su centro, y la celda guarda el MÁXIMO. Es la única noción de posición que
+  recibe el compositor. 4×4 no mejora (§ 55).
+- **cuenta**: cuántos objetos de ese tipo hay en el dígito. **largo/32, abertura/32**: suma de largos o aberturas,
+  normalizada.
+- **4 direcciones × (3×3 + cuenta + largo)** = 44 números: la forma estándar de rectas, arcos, concavidades, entrantes.
+- **sin posición**: sólo cuenta o fuerza por dirección (4 números). Excepción de prueba, nunca la forma normal (regla
+  del dueño).
+- **fundido / aparte** (§ 74): dos formas de meter los restos. *Fundido*: los restos se suman a la lista de rectas antes
+  de calcular el bloque de rectas → el vector sigue teniendo 144 números. *Aparte*: los restos tienen su propio bloque de
+  44 → 188 números. Ganó fundido: con 180 dígitos de train, columnas nuevas cuestan más de lo que aportan.
+- **sólo-cresta**: el compositor que sólo recibe objetos de la cresta (hoy: rectas + arcos + golpes + lazos + entrantes
+  en conos 60° con presencia = 144). Se compara contra «el mejor compositor» (rectas-objeto + gris + rayos, 118
+  números de detectores de borde, 0,980 / 0,971), que no tiene objetos nombrables.
+
+**Las corridas** (`resultados/40-entrada-<nombre>.json`)
+- cada nombre es una combinación de bloques; `n` = cuántos números recibe el compositor. Las de hoy, en orden:
+  `cresta-cc-3x3` (§ 55, concavidades de arco) → `cresta-entrantes` (§ 58, entrantes a 45°) → `cresta-entrantes4-*`
+  (§ 59, sin posición) → `cresta-entrantes60-{presencia,fuerza}` (§ 66, conos) → `cresta-restos-{fundido,aparte}` (§ 74).
+- **desplazamientos**: la curva de acierto contra el dígito movido d px (regla del dueño); § 68.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`

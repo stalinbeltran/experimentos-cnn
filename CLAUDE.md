@@ -122,6 +122,15 @@ Medido en `rizo-2` (`nn/detectores.py`, `resultados/17-detectores.json`; 180 tra
   0,30–0,56): entrenar el MLP con 13 copias movidas ±1–3 px de cada dígito. Es la mejora más grande del experimento.
   ⚠ Medido sólo en val; a ciegas, pendiente.
 
+## ⚠ Regla del dueño (2026-10-15): todo README de experimento lleva un GLOSARIO, y cada término nuevo entra en él
+
+El dueño lo pide siempre y hasta hoy no estaba escrito en ningún sitio. Cada README de experimento tiene una sección
+`## 📖 GLOSARIO` con los términos del experimento en lenguaje llano: la cadena de datos (qué entra, qué sale), cada
+objeto/feature con su definición en una línea, cómo se codifica, y qué significa cada nombre de corrida. **Cuando se
+inventa un término nuevo** (entrante, cono, resto, fundido/aparte…), **se añade al glosario en el mismo commit** que lo
+usa. Al describir corridas al dueño, cada nombre de corrida se explica con lo que lleva, no se da por sabido. El primero
+está en `2026-10-11-rizo-dos/README.md`.
+
 ## ⚠ Regla del dueño (2026-10-15): TODO detector lleva POSICIÓN; si uno no la lleva, se le DICE
 
 > «Normalmente quiero posición en todos.» — el dueño, 2026-10-15
