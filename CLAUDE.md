@@ -122,6 +122,26 @@ Medido en `rizo-2` (`nn/detectores.py`, `resultados/17-detectores.json`; 180 tra
   0,30–0,56): entrenar el MLP con 13 copias movidas ±1–3 px de cada dígito. Es la mejora más grande del experimento.
   ⚠ Medido sólo en val; a ciegas, pendiente.
 
+## ⚠ Regla del dueño (2026-10-15): TODO detector lleva POSICIÓN; si uno no la lleva, se le DICE
+
+> «Normalmente quiero posición en todos.» — el dueño, 2026-10-15
+
+Un feature que entra al compositor **sin posición** (sólo presencia, cuenta o fuerza, como los «entrantes a 4
+direcciones» del § 59 de `rizo-2`) es una **excepción de prueba**, no la forma normal. Vale para medir cuánto aporta
+la posición (allí: 3 puntos, § 59 contra § 58), y nada más. Dos obligaciones:
+
+1. **Al proponer o correr un feature, se dice explícitamente si lleva posición y cuál** (hoy: rejilla 3×3 con el
+   máximo por celda, § 55 y § 63 de `rizo-2`). Si no la lleva, se avisa **en la misma frase** en que se presenta, y
+   se dice por qué (qué se está midiendo con ello).
+2. **La forma normal de cualquier detector nuevo es CON posición.** Lo medido en `feat-ind` manda: presencia sola
+   0,718, posicional 0,959 (+0,24). Reducir a «sin posición» es una decisión que se toma a propósito y se anota, no
+   un atajo.
+
+Lo que esto NO fija: **cómo** se codifica la posición. La rejilla 3×3 es lo que hay medido; sus límites están en
+`rizo-2` § 55 (4×4 no mejora), § 60–61 (empate diagonal de la dirección) y § 63 (una mancha cae en dos celdas; el
+60 % del bloque son ceros). Alternativas no probadas: centro en píxeles en una lista ordenada de objetos, reparto blando
+entre celdas o direcciones vecinas.
+
 ## ⏳ PENDIENTE (anotado el 2026-10-15, pedido por el dueño): AUTOMATIZAR LA BÚSQUEDA DE FEATURES — no empezado
 
 > «Partimos de que un píxel es un feature, y al poner un problema (por ej. la identificación de un dígito) obtenemos la
