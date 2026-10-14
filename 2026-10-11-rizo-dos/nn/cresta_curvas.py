@@ -291,8 +291,8 @@ def objetos(M: np.ndarray) -> dict:
                 barrido = float(np.degrees(np.sum(np.abs(k[i:j]) * np.hypot(*np.gradient(seg, axis=0).T)))); nm = nrm[i:j].mean(0)
                 arcos.append({"s": _sentido(nm[0], nm[1]), "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo, "barrido": barrido,
                               "fuerza": min(barrido / 180, 1.0), "pts": seg})
-    conc = concavidades(arcos, lazos); esq = esquinas(tr, lazos)   # ⚠ sobre los tramos SIN empalmar: el empalmado pasa POR el nodo y la barra se queda sin pareja
-    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq)}
+    conc = concavidades(arcos, lazos); esq = esquinas(tr, lazos); crz = cruces(tr)   # ⚠ sobre los tramos SIN empalmar: el empalmado pasa POR el nodo y la barra se queda sin pareja
+    return {"arcos": arcos, "rectas": rectas, "golpes": golpes, "lazos": lazos, "concavidades": conc, "esquinas": esq, "entrantes": entrantes(conc, esq), "cruces": crz}
 
 
 def _dentro(p, poly):
@@ -401,6 +401,84 @@ def cono(q) -> int:
         return 1
     return 2 if ang > 0 else 3
 
+
+
+ANG_CRUZ = 40.0    # 2026-10-15 (el dueño: «dónde se cruzan 2 rectas»): dos brazos opuestos son la MISMA recta si al salir del nodo
+                   # difieren de la colinealidad en ≤ 40°; una cruz son dos de esos pares en el mismo nodo
+BRAZO_CRUZ = 2     # brazo mínimo (px de cresta) para que el cruce no sea un extremo: parámetro a customizar (el dueño, 2026-10-15)
+PUENTE_CRUZ = 3    # dos nodos de 3 brazos unidos por un tramo ≤ 3 px son UNA cruz (así parte el esqueleto una X de trazo grueso)
+
+
+def cruces(tr: list[dict], brazo_min: int = BRAZO_CRUZ) -> list[dict]:
+    """[{cx, cy, ang (entre las dos rectas, 0–90°), brazos [4 largos en px], brazo_min, dirs [2 vectores unitarios de las rectas]}]
+    Un nodo del grafo (tramos SIN empalmar) con ≥ 4 brazos entre los que hay DOS pares casi colineales (≤ ANG_CRUZ° de la
+    colinealidad) es una cruz; también lo es un par de nodos de 3 brazos unidos por un tramo ≤ PUENTE_CRUZ px, cuyos 4
+    brazos externos formen esos dos pares. Cada brazo tiene que medir ≥ brazo_min px: si no, el cruce está en un extremo
+    y no cuenta (el parámetro que el dueño quiere customizar)."""
+    ext = {}
+    for i, t in enumerate(tr):
+        if t["a"] == t["b"] or len(t["pts"]) < 2:
+            continue
+        if t["a"] > 0:
+            ext.setdefault(t["a"], []).append((i, True))
+        if t["b"] > 0:
+            ext.setdefault(t["b"], []).append((i, False))
+
+    def brazo(i, ini):
+        p = tr[i]["pts"] if ini else tr[i]["pts"][::-1]              # empieza en el nodo
+        return p, float(np.sum(np.hypot(*np.diff(p, axis=0).T))), _direccion(tr[i]["pts"], ini)
+
+    def pares(brazos):
+        """brazos = [(pts, largo, dir)] → las dos parejas colineales, o None."""
+        n = len(brazos); cand = []
+        for x in range(n):
+            for y in range(x + 1, n):
+                ang = np.degrees(np.arccos(np.clip(-np.dot(brazos[x][2], brazos[y][2]), -1, 1)))
+                if ang <= ANG_CRUZ:
+                    cand.append((ang, x, y))
+        cand.sort()
+        for a1, x1, y1 in cand:
+            for a2, x2, y2 in cand:
+                if len({x1, y1, x2, y2}) == 4:
+                    return (x1, y1), (x2, y2)
+        return None
+
+    def armar(centro, brazos, par):
+        (x1, y1), (x2, y2) = par
+        if min(b[1] for b in brazos) < brazo_min:
+            return None
+        d1 = brazos[x1][2] - brazos[y1][2]; d1 /= np.hypot(*d1) + 1e-9
+        d2 = brazos[x2][2] - brazos[y2][2]; d2 /= np.hypot(*d2) + 1e-9
+        ang = float(np.degrees(np.arccos(np.clip(abs(np.dot(d1, d2)), -1, 1))))
+        return {"cx": float(centro[0]), "cy": float(centro[1]), "ang": ang, "brazos": [round(brazos[k][1], 1) for k in (x1, y1, x2, y2)],
+                "brazo_min": float(min(b[1] for b in brazos)), "dirs": [d1, d2], "pts": [brazos[k][0] for k in (x1, y1, x2, y2)]}
+
+    out, usados = [], set()
+    for rac, lista in ext.items():                                   # 1) nodos con ≥ 4 brazos
+        if len(lista) < 4:
+            continue
+        brazos = [brazo(i, ini) for i, ini in lista]; par = pares(brazos)
+        if par is None:
+            continue
+        centro = np.mean([b[0][0] for b in brazos], 0); c = armar(centro, brazos, par)
+        if c is not None:
+            out.append(c); usados.add(rac)
+    for i, t in enumerate(tr):                                       # 2) dos nodos de 3 brazos unidos por un puente corto
+        a, b = t["a"], t["b"]
+        if a <= 0 or b <= 0 or a == b or a in usados or b in usados or len(ext.get(a, [])) != 3 or len(ext.get(b, [])) != 3:
+            continue
+        if float(np.sum(np.hypot(*np.diff(t["pts"], axis=0).T))) > PUENTE_CRUZ:
+            continue
+        brazos = [brazo(j, ini) for rac in (a, b) for j, ini in ext[rac] if j != i]
+        if len(brazos) != 4:
+            continue
+        par = pares(brazos)
+        if par is None:
+            continue
+        centro = (t["pts"][0] + t["pts"][-1]) / 2; c = armar(centro, brazos, par)
+        if c is not None:
+            c["puente"] = True; out.append(c); usados.update((a, b))
+    return out
 
 
 def _mapa(objs, altura, sig=1.5):
