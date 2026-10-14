@@ -1067,3 +1067,32 @@ curvas 0,80/0,83 · lazos 0,95/0,97 · concavidades 0,82/0,91. `caract` → 152 
 | suave-k3x3-hs-v4 | 118 | 0.9804 | 0.9711 | 32 |
 | suave-cresta-todo-conc | 118 | 0.9188 | 0.9068 | 134 |
 | suave-cresta-todo-cc | 152 | 0.8697 | 0.8612 | 207 |
+
+## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
+
+**Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
+(`nn/cresta_curvas.py`) quedan como los detectores de la línea «todo objetos», medidos contra la verdad sintética
+(`48-curvas`, `50-rectas`, `46-lazos` [val, verdad = tinta], `54-concavidades`):
+
+| feature | qué es | cobertura | precisión | números hoy |
+|---|---|---|---|---|
+| rectas | tramo de la cresta con \|κ\| < 0,07 y ≥ 5 px, empalmado a través de los cruces; ajuste de línea con orientación | 0,91 | 0,80 | 4 orient. × (3×3 + cuenta + largo) = 44 |
+| curvas (arcos) | run de curvatura del mismo signo que barre ≥ 20°; sentido = hacia dónde está el centro | 0,80 | 0,83 | 4 sentidos × (3×3 + cuenta + largo) = 44 |
+| lazos | ciclo del grafo de racimos de la cresta (= hueco, sin rayos) | 0,95 | 0,97 | 3×3 + cuenta = 10 |
+| concavidades | región arco ≥ 60° + cuerda, fuera de lazos; centro, área, abertura y su dirección | 0,82 | 0,91 | 4 direcciones de abertura × (3×3 + cuenta + abertura) = 44 |
+| golpes | pico de \|κ\| ≥ 0,45 | — (sin medir) | — | 3×3 + cuenta = 10 |
+
+**Lo que está claro tras cuatro corridas (§ 44–54):** el compositor sólo-cresta da 0,87–0,92 contra 0,98 del viejo,
+y NO es por los detectores: es la REPRESENTACIÓN (rejilla 3×3 con el máximo por celda + cuenta, hecha para detectores
+que sueltan 10–20 objetos; la cresta suelta 2–5 y en 9 celdas un arco de 180° y uno de 60° son iguales).
+
+**Mañana (2026-10-15), en este orden:**
+1. **Rejilla 4×4 contra 3×3**, mismas features, mismo protocolo (`todo_objetos_entrada.py --cresta todo --conc-cresta`,
+   `CELDAS` en `cresta_curvas.py` → parametrizar por argumento; ojo: `caract` da 152 con 3×3 y daría 4×(16+2)×3 + (16+1)×2 = 250 con 4×4).
+   Comparar val / a ciegas / fallos y la cuota por grupo. Si 4×4 no mueve, la rejilla no es el cuello: probar la lista
+   ordenada de objetos (extremos, orientación, barrido, radio, área, abertura).
+2. La doble cresta de los 1 gruesos en la ENTRADA (`delg-cnn`, pendiente 1): 25–29 de los fallos son 1→7.
+3. Golpes: medirlos contra la verdad como las otras cuatro (hay esquinas en los sintéticos: tipo «recta» con quiebro no; habría que añadirlas al generador).
+
+Todo lo de hoy está en `main` (`f94c4fa` y anteriores); el `.npz` de entrada se regenera con
+`delg-cnn/nn/exportar_delgados.py` y el de verdad con `nn/exportar_sinteticos.py` (segundos).
