@@ -1068,6 +1068,27 @@ curvas 0,80/0,83 · lazos 0,95/0,97 · concavidades 0,82/0,91. `caract` → 152 
 | suave-cresta-todo-conc | 118 | 0.9188 | 0.9068 | 134 |
 | suave-cresta-todo-cc | 152 | 0.8697 | 0.8612 | 207 |
 
+### 55 · REJILLA 4×4 contra 3×3 con las cuatro features de la cresta (2026-10-15, punto 1 del plan del dueño)
+
+Mismas features, mismo protocolo (`todo_objetos_entrada.py --continuo --cresta todo --conc-cresta`), sólo cambia
+`--celdas` (`cresta_curvas.caract(M, celdas)`; los cortes los da `bloques(celdas)`). Lanzador `nn/correr-rejilla.sh`
+(unidad `rizo2-rejilla`, `Result=success`, `NRestarts=0`; 119 s + 115 s). El control 3×3 se volvió a correr sobre el
+`delgados-k3x3.npz` regenerado hoy y dio **exactamente** lo del § 54: mismo dato, mismo protocolo.
+
+| corrida | celdas | n | val | a ciegas | fallos (3 sem.) | cuota rectas · curvas · golpes · lazos · conc |
+|---|---|---|---|---|---|---|
+| cresta-cc-3x3 (= suave-cresta-todo-cc) | 3×3 | 152 | 0,8697 [0,867–0,872] | 0,8612 | 207 (198) | 0,31 · 0,36 · 0,03 · 0,15 · 0,17 |
+| cresta-cc-4x4 | 4×4 | 250 | 0,8631 [0,862–0,866] | 0,8545 | 217 (205) | 0,29 · 0,36 · 0,03 · 0,15 · 0,17 |
+
+**La rejilla NO es el cuello.** 4×4 pierde 0,7 puntos en val y en ciega (fuera del rango de las 3 semillas: 0,862–0,866
+contra 0,867–0,872), con 10 fallos más y la misma cuota por grupo. Más celdas = la misma información (un máximo por
+celda) repartida en más números y más sensible a 1–2 px de desplazamiento; no añade lo que falta, que es **qué** arco es
+(barrido, radio, extremos) y no **dónde** cae. Cambian las confusiones, no su cantidad: con 4×4 el 1→7 baja de 25 a 18
+pero aparecen 5→1 ×18 y 6→1 ×17 (con 3×3, 5 y 2). Figuras: `40-entrada-cresta-cc-4x4-muestra.png` y `-fallos.png`.
+
+→ Por el plan, lo siguiente es la **lista ordenada de objetos** (extremos, orientación, barrido, radio, área, abertura),
+que es un cambio de representación y no de parámetro: no se ha empezado.
+
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
 **Decisión del dueño:** «me gustan las features». Los cuatro detectores sobre la CRESTA del mapa suave de `delg-cnn`
@@ -1087,7 +1108,7 @@ y NO es por los detectores: es la REPRESENTACIÓN (rejilla 3×3 con el máximo p
 que sueltan 10–20 objetos; la cresta suelta 2–5 y en 9 celdas un arco de 180° y uno de 60° son iguales).
 
 **Mañana (2026-10-15), en este orden:**
-1. **Rejilla 4×4 contra 3×3**, mismas features, mismo protocolo (`todo_objetos_entrada.py --cresta todo --conc-cresta`,
+1. ✅ HECHO (§ 55: no mueve, 0,8631 contra 0,8697). **Rejilla 4×4 contra 3×3**, mismas features, mismo protocolo (`todo_objetos_entrada.py --cresta todo --conc-cresta`,
    `CELDAS` en `cresta_curvas.py` → parametrizar por argumento; ojo: `caract` da 152 con 3×3 y daría 4×(16+2)×3 + (16+1)×2 = 250 con 4×4).
    Comparar val / a ciegas / fallos y la cuota por grupo. Si 4×4 no mueve, la rejilla no es el cuello: probar la lista
    ordenada de objetos (extremos, orientación, barrido, radio, área, abertura).
