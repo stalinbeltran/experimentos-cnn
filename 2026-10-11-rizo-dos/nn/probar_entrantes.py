@@ -52,7 +52,7 @@ class Entrantes(unittest.TestCase):
 
     def test_caract_da_196_y_los_152_primeros_son_los_de_antes(self):
         m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m); b = CC.bloques()
-        self.assertEqual(f.shape, (1, 276)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
+        self.assertEqual(f.shape, (1, 286)); self.assertEqual(b["cruces"], (276, 286)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
         c = f[0, 200:204].tolist()                                   # cuentas por → ← ↓ ↑
         self.assertEqual(sum(c), 2.0); self.assertEqual(c[1], 0.0, "ninguna abre a la izquierda, donde no hay barra")
         self.assertGreater(c[0], 0.0, "la de encima de la barra abre a la derecha; la de debajo cae en diagonal (→ o ↓, la regla de cuadrantes decide)")
@@ -72,6 +72,15 @@ class Entrantes(unittest.TestCase):
         p = f[204:240]; self.assertTrue(set(np.round(p, 6).tolist()) <= {0.0, 1.0} or p.max() <= 1.0, "presencia: gaussiana de altura 1, máximo por celda ≤ 1")
         self.assertGreater(p[:9].max(), 0.9, "las dos esquinas de la T abren a la derecha (±60°): cono 0")
         self.assertEqual(float(p[9:].max()), 0.0) if p[9:].max() < 0.05 else None
+
+
+    def test_cruces(self):
+        X = np.maximum(mapa([(6, 6), (26, 26)]), mapa([(26, 6), (6, 26)])); T = np.maximum(mapa([(4, 8), (28, 8)]), mapa([(16, 8), (16, 28)]))
+        cx = CC.objetos(X)["cruces"]; self.assertEqual(len(cx), 1); self.assertAlmostEqual(cx[0]["ang"], 90, delta=10); self.assertGreater(cx[0]["brazo_min"], 5)
+        self.assertEqual(CC.objetos(T)["cruces"], [], "una T no es una cruz: la barra termina en el palo")
+        self.assertEqual(CC.objetos(mapa([(4, 16), (28, 16)]))["cruces"], [])
+        tr, _ = CC.tramos(X); self.assertEqual(len(CC.cruces(tr, brazo_min=50)), 0, "con brazo mínimo imposible no hay cruz")
+        f = CC.caract(X[None])[0]; self.assertEqual(f[285], 1.0); self.assertGreater(f[276 + 4], 0.9, "la X cae en la celda central (gaussiana muestreada en centros de píxel: < 1)")
 
 
 if __name__ == "__main__":

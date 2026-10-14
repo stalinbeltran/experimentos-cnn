@@ -409,12 +409,13 @@ BRAZO_CRUZ = 2     # brazo mínimo (px de cresta) para que el cruce no sea un ex
 PUENTE_CRUZ = 3    # dos nodos de 3 brazos unidos por un tramo ≤ 3 px son UNA cruz (así parte el esqueleto una X de trazo grueso)
 
 
-def cruces(tr: list[dict], brazo_min: int = BRAZO_CRUZ) -> list[dict]:
+def cruces(tr: list[dict], brazo_min: float = None, puente: float = None, ang_max: float = None) -> list[dict]:
     """[{cx, cy, ang (entre las dos rectas, 0–90°), brazos [4 largos en px], brazo_min, dirs [2 vectores unitarios de las rectas]}]
     Un nodo del grafo (tramos SIN empalmar) con ≥ 4 brazos entre los que hay DOS pares casi colineales (≤ ANG_CRUZ° de la
     colinealidad) es una cruz; también lo es un par de nodos de 3 brazos unidos por un tramo ≤ PUENTE_CRUZ px, cuyos 4
     brazos externos formen esos dos pares. Cada brazo tiene que medir ≥ brazo_min px: si no, el cruce está en un extremo
-    y no cuenta (el parámetro que el dueño quiere customizar)."""
+    y no cuenta (el parámetro que el dueño quiere customizar). Los tres parámetros se barren en nn/cruces_barrido.py."""
+    brazo_min = BRAZO_CRUZ if brazo_min is None else brazo_min; puente = PUENTE_CRUZ if puente is None else puente; ang_max = ANG_CRUZ if ang_max is None else ang_max
     ext = {}
     for i, t in enumerate(tr):
         if t["a"] == t["b"] or len(t["pts"]) < 2:
@@ -434,7 +435,7 @@ def cruces(tr: list[dict], brazo_min: int = BRAZO_CRUZ) -> list[dict]:
         for x in range(n):
             for y in range(x + 1, n):
                 ang = np.degrees(np.arccos(np.clip(-np.dot(brazos[x][2], brazos[y][2]), -1, 1)))
-                if ang <= ANG_CRUZ:
+                if ang <= ang_max:
                     cand.append((ang, x, y))
         cand.sort()
         for a1, x1, y1 in cand:
@@ -467,7 +468,7 @@ def cruces(tr: list[dict], brazo_min: int = BRAZO_CRUZ) -> list[dict]:
         a, b = t["a"], t["b"]
         if a <= 0 or b <= 0 or a == b or a in usados or b in usados or len(ext.get(a, [])) != 3 or len(ext.get(b, [])) != 3:
             continue
-        if float(np.sum(np.hypot(*np.diff(t["pts"], axis=0).T))) > PUENTE_CRUZ:
+        if float(np.sum(np.hypot(*np.diff(t["pts"], axis=0).T))) > puente:
             continue
         brazos = [brazo(j, ini) for rac in (a, b) for j, ini in ext[rac] if j != i]
         if len(brazos) != 4:
@@ -488,10 +489,15 @@ def _mapa(objs, altura, sig=1.5):
     return m
 
 
+def bloque_cruces(crz) -> list[float]:
+    """10 números: 3×3 de PRESENCIA (gaussiana de altura 1, σ = 2 px, máximo por celda) + cuenta."""
+    return F.adaptive_max_pool2d(torch.from_numpy(_mapa(crz, lambda q: 1.0, 2.0))[None], 3)[0].numpy().ravel().tolist() + [float(len(crz))]
+
+
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 276 (44·10·10·44·44·44·4·4·36·36); con 4×4, 402. Los 152 primeros son los de antes."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 286 (44·10·10·44·44·44·4·4·36·36·10); con 4×4, 412. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36)):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10)):
         out[g] = (n, n + k); n += k
     return out
 
@@ -500,7 +506,7 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
     """(n,32,32) → (n,204) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura)
     · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección)
     · entrantes60 36 (el dueño, 2026-10-15: CONOS de ±60° alrededor de la horizontal —derecha, izquierda— y el resto vertical —abajo, arriba—; 3×3 de PRESENCIA por cono, sin magnitud; siempre 3×3)
-    · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia).
+    · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia) · cruces 10 (3×3 de presencia + cuenta; el dueño, 2026-10-15).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -525,6 +531,7 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
             for o in range(4):
                 cs = [c for c in ob["entrantes"] if cono(c) == o]
                 f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, altura, 2.0))[None], 3)[0].numpy().ravel().tolist())
+        f.extend(bloque_cruces(ob["cruces"]))
         out.append(f)
     return np.array(out, np.float32)
 
