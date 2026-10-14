@@ -122,6 +122,50 @@ Medido en `rizo-2` (`nn/detectores.py`, `resultados/17-detectores.json`; 180 tra
   0,30–0,56): entrenar el MLP con 13 copias movidas ±1–3 px de cada dígito. Es la mejora más grande del experimento.
   ⚠ Medido sólo en val; a ciegas, pendiente.
 
+## ⏳ PENDIENTE (anotado el 2026-10-15, pedido por el dueño): AUTOMATIZAR LA BÚSQUEDA DE FEATURES — no empezado
+
+> «Partimos de que un píxel es un feature, y al poner un problema (por ej. la identificación de un dígito) obtenemos la
+> idoneidad de un píxel como feature, calculando qué tan bien sirve un píxel como feature. Notar que un píxel es siempre
+> la entrada básica disponible en visión artificial, pero eso no significa que sea el mejor feature. Una vez evaluada la
+> idoneidad del píxel, pasamos a proponer otros features (cualquiera), y también los evaluamos. Probablemente sirva
+> evaluar los features con pocas muestras para una rápida evaluación. Esto nos permitirá, con cada propuesta, contar con
+> un set de features calificado (o sea, cada uno tendrá una cierta calificación), donde los mejores son los más aptos para
+> identificar dígitos. Luego podemos proponer features compuestos creados de alguna forma a partir de features simples, y
+> también los evaluaremos. También proponemos features compuestos combinados con features simples, etc. Así continuamos
+> ampliando gradualmente la lista de features y obteniendo los mejores para un trabajo dado.» — el dueño, 2026-10-15
+
+**Qué es**: un ciclo que **califica** features para un trabajo dado y **crece** la lista a partir de las mejores, en vez
+de proponerlas una a una a mano como se ha hecho hasta hoy (rectas, arcos, lazos, concavidades, entrantes…). Cuatro
+piezas, en este orden:
+
+1. **La calificación de un feature.** Un número por feature, para un trabajo (hoy: identificar el dígito). Es la
+   decisión de diseño de la que depende todo lo demás, y hay que escribirla con su criterio **antes** de medir (R13).
+   Candidatas, ninguna elegida: información mutua con la clase · acierto de un clasificador de **un** feature ·
+   ganancia marginal al añadirlo al mejor conjunto actual (la única que castiga la redundancia: dos features iguales
+   valen como uno). ⚠ La tercera es la que corresponde a «los mejores para un trabajo», pero depende del conjunto y
+   cambia en cada vuelta.
+2. **El suelo: el píxel.** Los 1024 píxeles de 32×32 (o los 64 de 8×8) calificados uno a uno. Ya hay un número para
+   el conjunto entero —el compositor sobre píxeles crudos lee 0,890 en `feat-ind` y 0,908 en `por-que-fallan`—, pero
+   nunca se ha calificado **cada** píxel. Es la referencia contra la que cualquier feature propuesto tiene que ganar.
+3. **Evaluación rápida con pocas muestras.** Calificar con 36–180 dígitos, que es lo que ya hace el compositor, y
+   comprobar que el ranking con pocas muestras **predice** el ranking con muchas (es la condición para que el ciclo sea
+   barato; si no se cumple, se sabe antes de ampliar nada). La curva de `feat-ind` corrida 11 (36 → 1080 dígitos) es
+   el antecedente.
+4. **La composición.** Proponer features compuestos a partir de los mejores simples —y mezclas de compuestos con
+   simples— y volver a calificar. Cómo se componen es una decisión abierta: por operaciones fijas (máximo, producto,
+   diferencia, «A y B en celdas vecinas», como el combinante de la corrida 10), por posición relativa
+   (`posicion-relativa-features`), o aprendidas.
+
+**Qué hay ya que sirve de pieza**: todos los detectores de `rizo-2`, `feat-ind32` y `rect-bor` son features
+candidatos con su cuota de peso medida (`cuota_peso` en los `40-entrada-*.json` es una calificación *dentro de un
+conjunto*, no absoluta); el protocolo 180 train / 1617 val / 3823 a ciegas con 3 semillas; y la regla de los
+desplazamientos, que aquí sería una calificación más (qué tan estable es el feature al mover la entrada).
+
+**Qué NO está decidido, y hay que preguntar antes de empezar**: la calificación (punto 1), si «feature» es un número
+por dígito (como la cuenta de lazos) o un mapa (como un píxel o un detector convolucional, que son 1024 features o uno
+según cómo se mire), y cuánto cuesta una vuelta del ciclo (R-gasto: en CPU local es gratis mientras el feature sea
+barato; un feature aprendido ya no).
+
 ## ⏳⏳ PENDIENTE PARA EL 2026-10-12 (encargo del dueño del 11): BUSCAR ESTRATEGIAS PARA DETECTAR LAZOS Y CURVAS — empieza aquí
 
 > «Necesito que me ayudes observando los dígitos y aplicando distintas estrategias hasta hallar unas que nos permitan
