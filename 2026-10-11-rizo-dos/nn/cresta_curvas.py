@@ -70,7 +70,7 @@ def tramos(M: np.ndarray) -> tuple[list[dict], list[dict]]:
     vec = [[idx[(y + dy, x + dx)] for dy, dx in VEC8 if (y + dy, x + dx) in idx] for y, x in zip(yy, xx)]
     grado = np.array([len(v) for v in vec]); nodo = grado != 2
     # racimos: componentes 8-conexas de la máscara de nodos dilatada 1 px (sólo sobre la cresta)
-    mn = np.zeros((32, 32), bool); mn[yy[nodo], xx[nodo]] = True
+    mn = np.zeros(esq.shape, bool); mn[yy[nodo], xx[nodo]] = True
     lab, _ = ndimage.label(ndimage.binary_dilation(mn, np.ones((3, 3))) & esq, structure=np.ones((3, 3)))
     racimo = np.array([lab[y, x] for y, x in zip(yy, xx)])            # 0 = no es nodo ni está pegado a uno
     es_nodo = racimo > 0
