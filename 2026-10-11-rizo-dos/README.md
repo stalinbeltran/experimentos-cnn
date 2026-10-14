@@ -1052,3 +1052,18 @@ Los tres detectores de la cresta son los mejor definidos de los que hay (rectas 
 confusiones lo dicen: 1→7 ×29 (el 1 grueso sale con dos crestas paralelas → «dos rectas»), 5→4/5→3. Siguiente paso:
 representar cada objeto con lo que lo define (extremos, orientación, barrido, radio, longitud) en una rejilla más fina
 o como lista ordenada, y arreglar la doble cresta de los 1 en la entrada (`delg-cnn`).
+
+### 53–54 · CONCAVIDADES de la cresta (2026-10-14, «me gusta tu definición de concavidad»)
+
+Concavidad = la región que encierra un arco de la cresta de ≥ 60° (polígono arco + cuerda), fuera de todo lazo; objeto
+con centro, área, abertura y su dirección (`cresta_curvas.concavidades`). Contra la verdad sintética (281 reales):
+**cresta 0,815 / 0,912**; rayos v4 **0,491 / 0,476** (y en reales los rayos llenan el interior de los huecos cerrados
+de 0/6/8/9, `53-concavidades.png`). Las cuatro features de la cresta quedan así contra la verdad: rectas 0,91/0,80 ·
+curvas 0,80/0,83 · lazos 0,95/0,97 · concavidades 0,82/0,91. `caract` → 152 números. Compositor sólo-cresta con ellas
+(`--cresta todo --conc-cresta`), que ya no decide nada por la regla del dueño pero se anota:
+
+| corrida | n | val | a ciegas | fallos |
+|---|---|---|---|---|
+| suave-k3x3-hs-v4 | 118 | 0.9804 | 0.9711 | 32 |
+| suave-cresta-todo-conc | 118 | 0.9188 | 0.9068 | 134 |
+| suave-cresta-todo-cc | 152 | 0.8697 | 0.8612 | 207 |
