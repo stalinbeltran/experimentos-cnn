@@ -1580,3 +1580,37 @@ la lectura del 782 da los logits de la figura 82 (+4,3 / +4,0, lazo región +3,0
 área se lee 6 (fig. 83); un compositor nuevo de `golpes + lazos` entrena, aparece y se borra; un modo desconocido se niega.
 ⚠ Lo que no comprueba: la red de en medio (abrirla desde el móvil), y las figuras del README siguen siendo las de referencia:
 el revisor enseña lo mismo que `desglose.py`, no lo sustituye en el reporte.
+
+### 85 · El 4 en DOS subgrupos: «4c» = cruz + lazo cerrado, «4r» = el resto (el dueño, 2026-10-15; medido en el revisor)
+
+**Pedido:** *«clasificar los 4 en 2 subgrupos: los 4 que tienen una cruz y lazo cerrado son un grupo; los que quedan son el
+otro»*, y que se vea en la app. El subgrupo lo decide el **detector** sobre el dígito sin mover (`Datos.subgrupo4`: ≥ 1 cruz y
+≥ 1 lazo); el compositor «4 en dos» entrena con 11 salidas y su acierto se mide juntando 4c → 4, para que sea comparable.
+Figura `85-cuatros-lazo-cruz.png`: los 4 de val por grupo, con la cruz detectada en círculo rojo.
+
+| | train (18) | extra (387) | val (163) |
+|---|---:|---:|---:|
+| con lazo cerrado | 0 | 13 | 21 |
+| con cruz detectada | 4 | 23 | 46 |
+| **lazo Y cruz = 4c** | **0** | **2** | **13** |
+
+Con 180 de train no hay ningún 4c, así que la prueba se corrió con **180 + extra** (§ 819, ⚠ sin a ciegas), y con su control:
+
+| compositor (aprobada, 144) | train | val (3 sem.) | fallos s0 | 4→1 | cómo lee los 4c de val |
+|---|---:|---|---:|---:|---|
+| 4 en dos · +extra | 4003 (2 son 4c) | 0,9779 [0,9777–0,9784] | 36 | 2 | **0 de 13 como 4c**, 13 como 4r |
+| +extra (control, sin partir) | 4003 | 0,9779 [0,9765–0,9790] | 38 | 2 | — |
+
+Lo que sale:
+1. **El subgrupo no se aprende**: con 2 ejemplos de 4c en 4003, ninguna de las 13 de val se lee como 4c. Partir el 4 no cambia
+   nada (0,9779 contra 0,9779) porque en la práctica no hay segunda clase.
+2. **Los 4 cerrados son RAROS en UCI, y más en extra que en val** (3 % contra 13 %): son escritores distintos. Es un dato de la
+   base, no del detector.
+3. **El detector de cruces se pierde la mayoría de los cerrados** (val: 13 de 21 con lazo tienen cruz; extra: 2 de 13). En un 4
+   cerrado el palo cruza la barra, pero el empalme a ≤ 30° y los brazos ≥ 2 px no dejan dos pares colineales en ese nodo. Si el
+   subgrupo que se quiere es «4 cerrado», la señal fiable es el **lazo**, no la cruz.
+4. **Lo que sí sube es extra**: 36–38 fallos contra 105 con 180 de train (§ 79), el mismo efecto del § 819 sobre esta receta.
+
+En la app: Lista → clase 4 → chips «4c» / «4r»; cada 4 dice su subgrupo en Dígito; ⚙ tiene las casillas «el 4 en dos» y
+«entrenar con extra» (la primera vez calcula las features de extra, **415 s medidos**; cada compositor con extra tarda
+**13–20 min** con 3 semillas). Los dos compositores de esta tabla siguen entrenados en el revisor de este dev.
