@@ -1614,3 +1614,29 @@ Lo que sale:
 En la app: Lista → clase 4 → chips «4c» / «4r»; cada 4 dice su subgrupo en Dígito; ⚙ tiene las casillas «el 4 en dos» y
 «entrenar con extra» (la primera vez calcula las features de extra, **415 s medidos**; cada compositor con extra tarda
 **13–20 min** con 3 semillas). Los dos compositores de esta tabla siguen entrenados en el revisor de este dev.
+
+#### 85b · Segunda versión (el dueño, el mismo día): «en vez de tener 4 como clase, las clases 4 CON lazo y 4 SIN lazo»
+
+Sin exigir la cruz: **4l** = el detector ve ≥ 1 lazo en el dígito sin mover; **4a** = el resto. Hay 0 en train, 13 en extra y
+21 en val, así que de nuevo 180 + extra (⚠ sin a ciegas), 3 semillas, contra el mismo control. Se dan **dos aciertos**: con
+las dos clases separadas (el que pide la prueba) y juntándolas (comparable con todo lo anterior).
+
+| compositor (aprobada, 144, train 4003) | val, 4l y 4a SEPARADAS | fallos | val juntando 4l→4 | fallos | 4→1 |
+|---|---|---:|---|---:|---:|
+| **4 en dos (4l / 4a)** | **0,9734** [0,9728–0,9746] | 44 | **0,9788** [0,9777–0,9802] | 36 | 2 |
+| control (sin partir) | — | — | 0,9779 [0,9765–0,9790] | 38 | 2 |
+
+Cómo se leen los 4 de val (semilla 0): de los **21 con lazo, 11 se leen 4l, 8 se leen 4a y 2 otro dígito**; de los **142 sin
+lazo, 139 se leen 4a, 0 se leen 4l** y 3 otro dígito; ningún otro dígito se lee 4l.
+
+Lo que sale:
+1. **La clase «4 con lazo» SÍ se aprende, a medias: 11 de 21**, con sólo 13 ejemplos de train, y **sin falsos 4l** (ningún 4
+   abierto ni otro dígito cae en ella). Los 8 que van a 4a son el error de la clase nueva, no del 4: juntándolos, el 4 se lee
+   igual o mejor que en el control (36 fallos contra 38, dentro del rango de semillas).
+2. **Partir el 4 no le cuesta nada al resto**: 0,9788 contra 0,9779 juntando, mismo 4→1 (2). El coste está sólo en separar
+   4l de 4a (−0,54 puntos), que es la pregunta nueva.
+3. **El límite es la muestra**: 13 cuatros con lazo en 4003 dígitos. Lo que marcaría el techo es más 4l (otros escritores) o
+   aumento específico; con el bloque `lazos_region` dentro, la señal existe (el 4l tiene lazo y el 4a no).
+
+Los dos compositores siguen entrenados en el revisor de este dev: Lista → clase 4 → «4l» enseña los 21 con su lectura
+(`4l ✓`, `4l ✓ (lee 4a)`, `4l→9`…), y Compositor enseña los 11 logits con la clase «4l».
