@@ -1699,3 +1699,25 @@ extremo por encima del 40 % de la altura» (101: mete los de palo corto).
 `Datos.subgrupo4` = lazo en la cresta **o** `extremos_sobre_el_nudo ≤ 1` (margen 2 px). Recuento: **4l** = 0 / 25 / 27 en
 train / extra / val (eran 0 / 13 / 21 con «sólo lazo»); los seis nuevos de val son 110, 198, 225, 228, 239 y 250. Los siete
 compositores del revisor se reentrenan con esta etiqueta (los resultados, cuando terminen, en § 85g).
+
+#### 85g · Los siete compositores con «4l = cerrado por arriba» (§ 85f), en 11 clases (2026-10-15)
+
+Misma unidad, mismas recetas, etiqueta nueva: 27 4l en val (eran 21), 25 en extra (eran 13). 4l de val: leídos 4l / 4a / otro.
+
+| compositor | train | val (11 clases, 3 sem.) | fallos s0 | juntando (sec.) | 4l → 4l / 4a / otro | falsos 4l | 3 confusiones |
+|---|---:|---|---:|---|---|---:|---|
+| aprobada · 4 en dos · +extra | 4003 | **0,9742** [0,9716–0,9759] | 46 | 0,9790 | 13 / 8 / 6 | 0 | 4l→4a ×8, 9→3 ×5, 1→7 ×3 |
+| restos fundido, lazo presencia · 4 en dos · +extra | 4003 | 0,9724 [0,9716–0,9728] | 46 | 0,9759 | 16 / 6 / 5 | 0 | 4l→4a ×6, 9→3 ×6, 1→7 ×3 |
+| lazo área · 4 en dos · +extra | 4003 | 0,9732 [0,9716–0,9746] | 46 | 0,9784 | 12 / 9 / 6 | 0 | 4l→4a ×9, 9→3 ×5, 1→7 ×3 |
+| conos 60° sin restos · 4 en dos · +extra | 4003 | 0,9705 [0,9703–0,9709] | 48 | 0,9734 | **17** / 5 / 5 | 0 | 4l→4a ×5, 2→1 ×4, 9→3 ×4 |
+| Cruces 1 · 4 en dos · +extra | 4003 | 0,9619 [0,9604–0,9635] | 62 | 0,9643 | **18** / 3 / 6 | 1 | 2→1 ×7, 9→3 ×5, 6→8 ×3 |
+| lazos_region + entrantes60 · 4 en dos (del dueño) | 180 | 0,8893 [0,8850–0,8930] | 186 | 0,8973 | 0 / 15 / 12 | 0 | 5→4a ×15, 4l→4a ×15, 1→7 ×11 |
+| Cruces y aprobadas (del dueño) | 180 | 0,8893 [0,8874–0,8912] | 179 | 0,8980 | 0 / 15 / 12 | 0 | 5→4a ×17, 4l→4a ×15, 1→7 ×11 |
+
+Lo que sale: (1) con 25 ejemplos de 4l en train, se reconocen **de 12 a 18 de los 27** (antes, con 13 ejemplos, 10–15 de 21); los
+que más 4l reconocen son los que llevan cruces o entrantes sin restos, pero pierden en el resto de dígitos; (2) la aprobada sigue
+primera en val (0,9742 contra 0,9734 con la etiqueta anterior: los seis 4 rellenos ya no cuentan como fallo); (3) `4l→4a` sigue
+siendo la primera confusión de la aprobada (8): los 4l que fallan son los **rellenos** y los de triángulo pequeño, que al
+compositor le llegan sin lazo (el bloque `lazos_region` está a cero); (4) con 180 de train, 0 de 27. Para subir el 4l haría
+falta una feature que diga «cerrado por arriba» sin lazo —justo la señal del § 85f, los extremos sobre el nudo—, que hoy no
+entra en ningún bloque.
