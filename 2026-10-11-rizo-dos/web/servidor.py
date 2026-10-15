@@ -316,7 +316,7 @@ class Compositor:
         orden = np.argsort(-np.abs(atr))[:16]
         va_pos = int(np.flatnonzero(datos.va == i)[0]) if i in set(datos.va.tolist()) else None
         return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pf]), "p_real": float(p[real_f]),
-                "predicho_fino": pf, "real_fino": real_f, "clases": self.CLASES[:len(p)], "sub4": self.sub4,
+                "predicho_fino": pf, "real_fino": real_f, "clases": ([str(k) if k != 4 else "4a" for k in range(10)] + ["4l"]) if self.sub4 else self.CLASES[:10], "sub4": self.sub4,
                 "logits": [float(v) for v in lg.detach().numpy()], "semillas_que_fallan": int(self.veces[va_pos]) if va_pos is not None else None,
                 "semillas": len(self.semillas), "bloques": bloques, "pesan": [{"nombre": nombres[k], "valor": float(x[k]), "atr": float(atr[k])} for k in orden],
                 "suma_por_bloque": {b: float(atr[a:zz].sum()) for b, (a, zz) in self.cortes(datos).items()}}
