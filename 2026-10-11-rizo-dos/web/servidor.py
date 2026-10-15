@@ -385,6 +385,8 @@ class App:
                 c = self.cola.pop(0) if self.cola else None
             if c is None:
                 time.sleep(0.3); continue
+            if self.comps.get(c.nombre) is not c:                 # borrado mientras esperaba en la cola: no se entrena (13–20 min con extra)
+                continue
             c.entrenar(self.datos)
 
     def listo(self, nombre: str) -> Compositor:
