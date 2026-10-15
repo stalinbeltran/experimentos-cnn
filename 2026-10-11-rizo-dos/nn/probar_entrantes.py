@@ -52,7 +52,7 @@ class Entrantes(unittest.TestCase):
 
     def test_caract_da_196_y_los_152_primeros_son_los_de_antes(self):
         m = np.maximum(mapa([(10, 2), (10, 28)]), mapa([(10, 8), (26, 8)]))[None]; f = CC.caract(m); b = CC.bloques()
-        self.assertEqual(f.shape, (1, 374)); self.assertEqual(b["cruces"], (276, 286)); self.assertEqual(b["restos"], (286, 330)); self.assertEqual(b["rectas_todo"], (330, 374)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
+        self.assertEqual(f.shape, (1, 394)); self.assertEqual(b["lazos_region"], (374, 384)); self.assertEqual(b["lazos_area"], (384, 394)); self.assertEqual(b["cruces"], (276, 286)); self.assertEqual(b["restos"], (286, 330)); self.assertEqual(b["rectas_todo"], (330, 374)); self.assertEqual(b["entrantes60"], (204, 240)); self.assertEqual(b["entrantes60f"], (240, 276)); self.assertEqual(b["entrantes"], (152, 196)); self.assertEqual(b["entrantes4"], (196, 200)); self.assertEqual(b["entrantes4n"], (200, 204))
         c = f[0, 200:204].tolist()                                   # cuentas por → ← ↓ ↑
         self.assertEqual(sum(c), 2.0); self.assertEqual(c[1], 0.0, "ninguna abre a la izquierda, donde no hay barra")
         self.assertGreater(c[0], 0.0, "la de encima de la barra abre a la derecha; la de debajo cae en diagonal (→ o ↓, la regla de cuadrantes decide)")
@@ -93,6 +93,18 @@ class Entrantes(unittest.TestCase):
         dmin = np.sqrt(((P[:, None, :] - np.concatenate(Q)[None, :, :]) ** 2).sum(-1)).min(1)
         self.assertGreater(float((dmin <= 1.0).mean()), 0.9, "toda la cresta está a ≤ 1 px de algún objeto (sólo quedan fuera los 2 extremos: el ajuste de la recta los recorta ~1,5 px)")
         f = CC.caract(m[None])[0]; b = CC.bloques(); self.assertGreater(float(np.abs(f[b["restos"][0]:b["restos"][1]]).sum()), 0.0)
+
+
+    def test_lazo_grande_vale_mas_que_pequeno(self):
+        """Región y área: un círculo de radio 12 tiene que pesar más que uno de radio 5; la presencia de hoy, no."""
+        t = np.linspace(0, 2 * np.pi, 80)
+        G = mapa([(16 + 12 * np.cos(a), 16 + 12 * np.sin(a)) for a in t]); P = mapa([(16 + 5 * np.cos(a), 16 + 5 * np.sin(a)) for a in t])
+        fg, fp = CC.caract(G[None])[0], CC.caract(P[None])[0]; b = CC.bloques()
+        self.assertEqual(len(CC.objetos(G)["lazos"]), 1); self.assertEqual(len(CC.objetos(P)["lazos"]), 1)
+        hoy = lambda f: f[b["lazos"][0]:b["lazos"][0] + 9].sum(); reg = lambda f: f[b["lazos_region"][0]:b["lazos_region"][0] + 9].sum(); ar = lambda f: f[b["lazos_area"][0]:b["lazos_area"][0] + 9].max()
+        self.assertLess(abs(hoy(fg) - hoy(fp)), 0.6, "la presencia de hoy casi no distingue tamaño")
+        self.assertGreater(reg(fg), 3 * reg(fp), "la región del grande cubre muchas más celdas"); self.assertGreater(ar(fg), 3 * ar(fp), "la altura por área del grande es mucho mayor")
+        self.assertAlmostEqual(reg(fg), 9 * np.pi * 144 / 1024, delta=0.6, msg="la suma de fracciones ≈ área/celda")
 
 
 if __name__ == "__main__":

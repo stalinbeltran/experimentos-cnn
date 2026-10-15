@@ -122,6 +122,7 @@ def main() -> int:
     ap.add_argument("--entrantes4", default="", choices=["", "fuerza", "cuenta", "ambos"], help="los entrantes reducidos a 4 números, uno por dirección de abertura (→ ← ↓ ↑): fuerza máxima, cuenta, o los dos (8). El dueño, 2026-10-15")
     ap.add_argument("--entrantes60", default="", choices=["", "presencia", "fuerza"], help="entrantes en 4 CONOS (derecha/izquierda a ±60° de la horizontal, abajo/arriba el resto) × 3×3 = 36: presencia (sin magnitud, el dueño 2026-10-15) o fuerza máxima")
     ap.add_argument("--restos", default="", choices=["", "aparte", "fundido"], help="los RESTOS de la cresta (trozos que no son recta ni arco): 'aparte' = bloque propio de 44; 'fundido' = las rectas pasan a ser rectas ∪ restos (mismos números). 2026-10-15")
+    ap.add_argument("--lazos", default="", choices=["", "region", "area"], help="cómo entra el LAZO: 'region' = fracción de celda cubierta por su polígono; 'area' = gaussiana con altura área/300 (el dueño, 2026-10-15). Vacío = presencia de hoy")
     ap.add_argument("--conc-suaves", action="store_true", help="añade las concavidades de huecos_suaves (10) a cualquier modo --cresta")
     ap.add_argument("--huecos-suaves", action="store_true", help="el grupo de huecos lo da huecos_suaves.caract (20 números, sin binarizar), no rizo_huecos")
     ap.add_argument("--var", default=RH.VAR, help=f"variante de candidatos para los huecos: {list(DV.VARIANTES)}")
@@ -141,7 +142,8 @@ def main() -> int:
         def feats(im, C):
             cc = CC.caract(im, a.celdas); B = CC.bloques(a.celdas); bl = lambda k: cc[:, B[k][0]:B[k][1]]
             if a.cresta == "todo":                                  # SÓLO objetos de la cresta: rectas + arcos + golpes + lazos (+ concavidades); con 3×3: 44+44+10+10 (+44)
-                partes = [bl("rectas_todo" if a.restos == "fundido" else "rectas"), bl("arcos"), bl("golpes"), bl("lazos")]; g = {}; n = 0
+                kl = {"region": "lazos_region", "area": "lazos_area"}.get(a.lazos, "lazos")
+                partes = [bl("rectas_todo" if a.restos == "fundido" else "rectas"), bl("arcos"), bl("golpes"), bl(kl)]; g = {}; n = 0
                 for nombre, k in (("cresta-rectas", "rectas"), ("cresta-curvas", "arcos"), ("cresta-golpes", "golpes"), ("cresta-lazos", "lazos")):
                     g[nombre] = (n, n + B[k][1] - B[k][0]); n = g[nombre][1]
                 if a.conc_cresta:
@@ -215,7 +217,7 @@ def main() -> int:
         nobj.update({"huecos cerrados": float(np.mean(Xva[:, 98 + 9])), "concavidades": float(np.mean(Xva[:, 98 + 19]))})   # con suaves: suma de fuerzas
     if "cresta-lazos" in grupos:
         nobj["lazos por dígito"] = float(np.mean(Xva[:, grupos["cresta-lazos"][1] - 1]))
-    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "variante": a.variante, "cresta": a.cresta, "conc_cresta": a.conc_cresta, "entrantes": a.entrantes, "entrantes4": a.entrantes4, "entrantes60": a.entrantes60, "restos": a.restos, "celdas": a.celdas, "n": int(X.shape[1]),
+    out = {"nombre": a.nombre, "entrada": Path(a.entrada).name if a.entrada else None, "umbral": a.umbral, "engrosar": a.engrosar, "var": a.var, "continuo": a.continuo, "sin_huecos": a.sin_huecos, "huecos_suaves": a.huecos_suaves, "variante": a.variante, "cresta": a.cresta, "conc_cresta": a.conc_cresta, "entrantes": a.entrantes, "entrantes4": a.entrantes4, "entrantes60": a.entrantes60, "restos": a.restos, "lazos": a.lazos, "celdas": a.celdas, "n": int(X.shape[1]),
            "grosor_medio_px": float(np.mean([2 * np.percentile(ndimage.distance_transform_edt(x)[x > 0], 75) for x in binario[va] if x.any()])),
            "val": round(float(np.mean(r["val"])), 4), "val_rango": [round(min(r["val"]), 4), round(max(r["val"]), 4)], "ciega": round(float(np.mean(r["ciega"])), 4),
            "cuota_peso": {g: round(float(np.mean([c[g] for c in r["cuota"]])), 3) for g in grupos}, "objetos_por_digito_val": nobj,

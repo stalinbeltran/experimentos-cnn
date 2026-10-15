@@ -523,15 +523,40 @@ def _mapa(objs, altura, sig=1.5):
     return m
 
 
+AREA_LAZO = 300.0   # 2026-10-15: mediana del área del lazo de un 0 en val (296 px²; 6 → 113, 9 → 98, 8 → 87, 4 → 75)
+
+
+def _region_lazo(z) -> np.ndarray:
+    """Máscara 32×32 del interior del polígono del lazo (regla par-impar, centros de píxel)."""
+    poly = np.asarray(z["pts"], np.float32); n = len(poly); m = np.zeros((32, 32), bool)
+    x, y = _XX, _YY
+    for i in range(n):
+        x0, y0 = poly[i]; x1, y1 = poly[(i + 1) % n]
+        cruza = ((y0 > y) != (y1 > y)) & (x < x0 + (y - y0) * (x1 - x0) / (y1 - y0 + 1e-12))
+        m ^= cruza
+    return m.astype(np.float32)
+
+
+def bloque_lazos_region(lazos, celdas: int = CELDAS) -> list[float]:
+    m = np.zeros((32, 32), np.float32)
+    for z in lazos:
+        m = np.maximum(m, _region_lazo(z))
+    return F.adaptive_avg_pool2d(torch.from_numpy(m)[None], celdas)[0].numpy().ravel().tolist() + [float(len(lazos))]
+
+
+def bloque_lazos_area(lazos, celdas: int = CELDAS) -> list[float]:
+    return F.adaptive_max_pool2d(torch.from_numpy(_mapa(lazos, lambda z: z["area"] / AREA_LAZO, 2.0))[None], celdas)[0].numpy().ravel().tolist() + [float(len(lazos))]
+
+
 def bloque_cruces(crz) -> list[float]:
     """10 números: 3×3 de PRESENCIA (gaussiana de altura 1, σ = 2 px, máximo por celda) + cuenta."""
     return F.adaptive_max_pool2d(torch.from_numpy(_mapa(crz, lambda q: 1.0, 2.0))[None], 3)[0].numpy().ravel().tolist() + [float(len(crz))]
 
 
 def bloques(celdas: int = CELDAS) -> dict:
-    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 374 (44·10·10·44·44·44·4·4·36·36·10·44·44); con 4×4, 522. Los 152 primeros son los de antes."""
+    """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 394 (44·10·10·44·44·44·4·4·36·36·10·44·44·10·10); con 4×4, 556. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10), ("restos", 4 * (c + 2)), ("rectas_todo", 4 * (c + 2))):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10), ("restos", 4 * (c + 2)), ("rectas_todo", 4 * (c + 2)), ("lazos_region", c + 1), ("lazos_area", c + 1)):
         out[g] = (n, n + k); n += k
     return out
 
@@ -542,6 +567,8 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
     · entrantes60 36 (el dueño, 2026-10-15: CONOS de ±60° alrededor de la horizontal —derecha, izquierda— y el resto vertical —abajo, arriba—; 3×3 de PRESENCIA por cono, sin magnitud; siempre 3×3)
     · entrantes60f 36 (ídem con la fuerza máxima por celda en vez de presencia) · cruces 10 (3×3 de presencia + cuenta; el dueño, 2026-10-15)
     · restos 44 (los trozos de cresta que no son recta ni arco, como rectas: 4 orient. × (3×3 + cuenta + largo/32)) · rectas_todo 44 (rectas ∪ restos). 2026-10-15.
+    · lazos_region 10 (el dueño, 2026-10-15: la fracción de cada celda que cubre la REGIÓN del lazo + cuenta: tamaño y forma)
+    · lazos_area 10 (la gaussiana de siempre con altura = área/AREA_LAZO, sin tope: un lazo grande vale más + cuenta).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
     for m in np.asarray(M, np.float32):
@@ -567,10 +594,12 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
                 cs = [c for c in ob["entrantes"] if cono(c) == o]
                 f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(cs, altura, 2.0))[None], 3)[0].numpy().ravel().tolist())
         f.extend(bloque_cruces(ob["cruces"]))
+        # (restos y rectas_todo van después; lazos_region y lazos_area al final)
         for lista in (ob["restos"], ob["rectas"] + ob["restos"]):                                               # restos · rectas_todo
             for o in range(4):
                 rs = [r for r in lista if r["o"] == o]
                 f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
+        f.extend(bloque_lazos_region(ob["lazos"], celdas)); f.extend(bloque_lazos_area(ob["lazos"], celdas))
         out.append(f)
     return np.array(out, np.float32)
 
