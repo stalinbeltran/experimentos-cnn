@@ -183,11 +183,13 @@ class Datos:
         self._ob = {}; self._lock = threading.Lock(); self._finas = None
 
     def subgrupo4(self, i: int) -> bool:
-        """El 4 «con cruz y lazo cerrado» (el dueño, 2026-10-15): el detector ve ≥ 1 cruz Y ≥ 1 lazo en el dígito SIN mover."""
-        ob = self.objetos(i); return len(ob["cruces"]) > 0 and len(ob["lazos"]) > 0
+        """El 4 CON LAZO (el dueño, 2026-10-15, segunda versión: «las clases 4 con lazo y 4 sin lazo»): el detector ve ≥ 1 lazo en
+        el dígito SIN mover. La primera versión exigía además una cruz, y el detector de cruces se pierde la mayoría de los 4
+        cerrados (§ 85): quedaban 0 / 2 / 13 en train / extra / val."""
+        return len(self.objetos(i)["lazos"]) > 0
 
     def etiquetas_finas(self) -> np.ndarray:
-        """y con el 4 partido: 4 = el resto, 10 = «4c» (cruz + lazo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
+        """y con el 4 partido: 4 = «4a» (abierto, sin lazo), 10 = «4l» (con lazo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
         if self._finas is None:
             f = self.y.copy()
             for i in np.flatnonzero(self.y == 4):
@@ -232,7 +234,7 @@ class Datos:
 class Compositor:
     """Una receta (bloques + celdas + semillas) entrenada: redes, predicciones de val, fallos, confusiones y cuota."""
 
-    CLASES = [str(k) for k in range(10)] + ["4c"]              # la 11.ª sólo existe con sub4
+    CLASES = [str(k) for k in range(10)] + ["4l"]              # la 11.ª sólo existe con sub4; entonces la «4» es la 4a (abierta)
 
     def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False):
         self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
@@ -256,14 +258,16 @@ class Compositor:
             if self.extra:                                        # § 819: 180 + 3823 extra; ⚠ sin conjunto a ciegas
                 Xex, Yex = datos.features_extra(self.celdas); Xtr = np.concatenate([Xtr, self.corta(Xex, datos)]); Ytr = np.concatenate([Ytr, Yex])
                 idx_tr = np.concatenate([idx_tr, np.concatenate([datos.ex] * len(datos.aum))])
-            self.n = Xtr.shape[1]; self.redes = []; preds = []; finos = []; accs = []; cuotas = []
-            if self.sub4:                                         # el 4 partido en dos: 11 salidas; el acierto se mide con 4c → 4 (comparable)
+            self.n = Xtr.shape[1]; self.redes = []; preds = []; finos = []; accs = []; accs_finos = []; cuotas = []
+            if self.sub4:                                         # el 4 partido en dos: 11 salidas; el acierto se mide con 4l → 4 (comparable) y también con las dos separadas
                 yf = datos.etiquetas_finas(); Ytr = yf[idx_tr]; assert len(Ytr) == len(Xtr)
             for s in self.semillas:
                 red, mu, sd = entrenar(Xtr, Ytr, s, salidas=11 if self.sub4 else 10); self.redes.append((red, mu, sd))
                 with torch.no_grad():
                     lg = red(torch.from_numpy((Xva - mu) / sd).float()).numpy()
                 pf = lg.argmax(1); finos.append(pf); p = np.where(pf == 10, 4, pf); preds.append(p); accs.append(float((p == datos.y[datos.va]).mean()))
+                if self.sub4:
+                    accs_finos.append(float((pf == yf[datos.va]).mean()))   # con las dos clases del 4 SEPARADAS
                 W = red[0].weight.detach().numpy(); wt = (W ** 2).sum(); cuotas.append({b: float((W[:, a:z] ** 2).sum() / wt) for b, (a, z) in self.cortes(datos).items()})
                 if s == self.semillas[0]:
                     self.logits_va = lg
@@ -272,10 +276,10 @@ class Compositor:
             if self.sub4:                                         # cómo le va al 4 partido (semilla 0): cuántos hay y cómo se leen
                 yf = datos.etiquetas_finas(); yv, pf = yf[datos.va], finos[0]; es4 = datos.y[datos.va] == 4
                 cuenta = lambda real, lee: int(((yv == real) & (pf == lee)).sum())
-                sub = {"train_4c": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4r": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4c": int((yv == 10).sum()), "val_4r": int((yv == 4).sum()),
-                       "4c_leido_4c": cuenta(10, 10), "4c_leido_4r": cuenta(10, 4), "4c_leido_otro": int(((yv == 10) & (pf != 10) & (pf != 4)).sum()),
-                       "4r_leido_4r": cuenta(4, 4), "4r_leido_4c": cuenta(4, 10), "4r_leido_otro": int(((yv == 4) & (pf != 10) & (pf != 4)).sum()),
-                       "otros_leidos_4c": int((~es4 & (pf == 10)).sum()), "otros_leidos_4r": int((~es4 & (pf == 4)).sum())}
+                sub = {"val_fino": round(float(np.mean(accs_finos)), 4), "val_fino_rango": [round(min(accs_finos), 4), round(max(accs_finos), 4)], "fallos_finos_s0": int((finos[0] != yv).sum()), "train_4l": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4a": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4l": int((yv == 10).sum()), "val_4a": int((yv == 4).sum()),
+                       "4l_leido_4l": cuenta(10, 10), "4l_leido_4a": cuenta(10, 4), "4l_leido_otro": int(((yv == 10) & (pf != 10) & (pf != 4)).sum()),
+                       "4a_leido_4a": cuenta(4, 4), "4a_leido_4l": cuenta(4, 10), "4a_leido_otro": int(((yv == 4) & (pf != 10) & (pf != 4)).sum()),
+                       "otros_leidos_4l": int((~es4 & (pf == 10)).sum()), "otros_leidos_4a": int((~es4 & (pf == 4)).sum())}
             conf = {}
             for j in np.flatnonzero(p0 != y):
                 k = f"{y[j]}→{p0[j]}"; conf[k] = conf.get(k, 0) + 1
@@ -294,7 +298,7 @@ class Compositor:
         todos, _, _ = datos.features(self.celdas); x = self.corta(todos[i:i + 1], datos)[0]; red, mu, sd = self.redes[0]
         z = torch.from_numpy((x - mu) / sd).float()[None].requires_grad_(True); lg = red(z)[0]
         pf = int(lg.argmax()); pred = 4 if pf == 10 else pf; real = int(datos.y[i]); p = torch.softmax(lg, 0).detach().numpy()
-        real_f = int(datos.etiquetas_finas()[i]) if self.sub4 else real   # con sub4 la explicación va en el espacio FINO (4c ≠ 4r)
+        real_f = int(datos.etiquetas_finas()[i]) if self.sub4 else real   # con sub4 la explicación va en el espacio FINO (4l ≠ 4a)
         contra = real_f if real_f != pf else int(np.argsort(lg.detach().numpy())[-2])   # si acierta, se explica contra el segundo
         (lg[pf] - lg[contra]).backward(); atr = (z.grad[0] * z.detach()[0]).numpy()
         bloques = []
@@ -351,7 +355,7 @@ class App:
             except json.JSONDecodeError:
                 pass
         base = {k: {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS)} for k, v in RECETAS_BASE.items()}
-        base["aprobada · 4 en dos (cruz+lazo / resto)"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # la prueba del dueño (2026-10-15): sin extra, train tiene 0 cuatros cerrados
+        base["aprobada · 4 en dos (con lazo / sin lazo) · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # la prueba del dueño (2026-10-15): sin extra, train tiene 0 cuatros con lazo
         return base
 
     def guardar_recetas(self):
@@ -400,7 +404,7 @@ class App:
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
         c = self.listo(nombre); d = self.datos; y = d.y[d.va]; p0 = c.preds[0]
         yf = d.etiquetas_finas()[d.va]                            # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor
-        if sub in ("c", "r"):
+        if sub in ("l", "a"):
             clase = 4
         sel = np.ones(len(d.va), bool)
         if modo == "fallos":
@@ -411,17 +415,17 @@ class App:
             sel &= p0 == y
         if clase is not None:
             sel &= y == int(clase)
-        if sub == "c":
+        if sub == "l":
             sel &= yf == 10
-        elif sub == "r":
+        elif sub == "a":
             sel &= (y == 4) & (yf == 4)
         if conf:
             a, b = conf.replace("->", "→").split("→"); sel &= (y == int(a)) & (p0 == int(b))
         ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy(); pf = c.finos[0]
         filas = [{"idx": int(d.va[j]), "real": int(y[j]), "predicho": int(p0[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
-                  "sub": ("c" if yf[j] == 10 else "r") if y[j] == 4 else None, "predicho_fino": int(pf[j])} for k, j in enumerate(ids)]
+                  "sub": ("l" if yf[j] == 10 else "a") if y[j] == 4 else None, "predicho_fino": int(pf[j])} for k, j in enumerate(ids)]
         por_clase = {str(k): {"n": int((y == k).sum()), "fallos": int(((p0 != y) & (y == k)).sum())} for k in range(10)}
-        por_clase["4c"] = {"n": int((yf == 10).sum()), "fallos": int(((p0 != y) & (yf == 10)).sum())}; por_clase["4r"] = {"n": int(((y == 4) & (yf == 4)).sum()), "fallos": int(((p0 != y) & (y == 4) & (yf == 4)).sum())}
+        por_clase["4l"] = {"n": int((yf == 10).sum()), "fallos": int(((p0 != y) & (yf == 10)).sum())}; por_clase["4a"] = {"n": int(((y == 4) & (yf == 4)).sum()), "fallos": int(((p0 != y) & (y == 4) & (yf == 4)).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:
