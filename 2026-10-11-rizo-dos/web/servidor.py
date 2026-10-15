@@ -139,11 +139,11 @@ def mover(a, dx=0, dy=0):
     o[yd, xd] = a[ys, xs]; return o
 
 
-def entrenar(xtr, ytr, sem, oculta=256):
+def entrenar(xtr, ytr, sem, oculta=256, salidas=10):
     """= rastrear.entrenar, copiado para no arrastrar sus imports (matplotlib, los bocetos de Gabor…). `probar_revisor.py`
     comprueba que da los MISMOS logits que el original con la misma semilla."""
     torch.manual_seed(sem); mu, sd = xtr.mean(0), xtr.std(0) + 1e-6
-    red = torch.nn.Sequential(torch.nn.Linear(xtr.shape[1], oculta), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(oculta, 10))
+    red = torch.nn.Sequential(torch.nn.Linear(xtr.shape[1], oculta), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(oculta, salidas))
     opt = torch.optim.Adam(red.parameters(), lr=3e-3, weight_decay=1e-3)
     xt, yt = torch.from_numpy((xtr - mu) / sd).float(), torch.from_numpy(ytr).long()
     for _ in range(400):
@@ -176,11 +176,25 @@ class Datos:
             print(f"  no está {DELGADOS.name}: lo regenero con exportar_delgados.py (segundos)…", flush=True)
             subprocess.run([sys.executable, str(DELGADOS.parents[1] / "nn" / "exportar_delgados.py")], cwd=DELGADOS.parents[1], check=True)
         self.M = np.load(DELGADOS)["M"].astype(np.float32)
-        self.tr, self.va = np.flatnonzero(part == "train"), np.flatnonzero(part == "val")
+        self.tr, self.va, self.ex = np.flatnonzero(part == "train"), np.flatnonzero(part == "val"), np.flatnonzero(part == "extra")
         self.aum = [(0, 0)] + [(k, 0) for k in AUM] + [(0, k) for k in AUM]
         self.hash = hashlib.sha1((AQUI / "nn" / "cresta_curvas.py").read_bytes()).hexdigest()[:10]
         self.X = {}                                               # celdas → (X_todos (5620,394), X_tr_aum (180·13,394), Y_tr_aum)
-        self._ob = {}; self._lock = threading.Lock()
+        self._ob = {}; self._lock = threading.Lock(); self._finas = None
+
+    def subgrupo4(self, i: int) -> bool:
+        """El 4 «con cruz y lazo cerrado» (el dueño, 2026-10-15): el detector ve ≥ 1 cruz Y ≥ 1 lazo en el dígito SIN mover."""
+        ob = self.objetos(i); return len(ob["cruces"]) > 0 and len(ob["lazos"]) > 0
+
+    def etiquetas_finas(self) -> np.ndarray:
+        """y con el 4 partido: 4 = el resto, 10 = «4c» (cruz + lazo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
+        if self._finas is None:
+            f = self.y.copy()
+            for i in np.flatnonzero(self.y == 4):
+                if self.subgrupo4(i):
+                    f[i] = 10
+            self._finas = f
+        return self._finas
 
     def features(self, celdas: int):
         if celdas in self.X:
@@ -195,6 +209,19 @@ class Datos:
         np.savez_compressed(f, todos=todos, tr=tr, ytr=ytr); self.X[celdas] = (todos, tr, ytr)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return self.X[celdas]
 
+    def features_extra(self, celdas: int):
+        """Las 394 columnas de los 3823 «extra» × 13 desplazamientos, para entrenar con MÁS dígitos (§ 819: 180 + extra = 4003).
+        ⚠ Con extra en train no queda conjunto a ciegas: val es la única medida. Se calcula una vez (~7 min estimados: 50 k dígitos
+        a 8 ms) y se cachea como las demás."""
+        f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
+        if f.is_file():
+            z = np.load(f); return z["ex"], z["yex"]
+        t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
+        todos = self.features(celdas)[0]
+        ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas) for m in self.aum[1:]])
+        yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
+        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return ex, yex
+
     def objetos(self, i: int) -> dict:
         with self._lock:
             if i not in self._ob:
@@ -205,8 +232,10 @@ class Datos:
 class Compositor:
     """Una receta (bloques + celdas + semillas) entrenada: redes, predicciones de val, fallos, confusiones y cuota."""
 
-    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS):
-        self.nombre, self.bloques, self.celdas, self.semillas = nombre, list(bloques), int(celdas), tuple(semillas)
+    CLASES = [str(k) for k in range(10)] + ["4c"]              # la 11.ª sólo existe con sub4
+
+    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False):
+        self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
         self.estado = "pendiente"; self.error = ""; self.redes = []; self.segundos = 0.0; self.resumen = {}
 
     def cortes(self, datos: Datos) -> dict:
@@ -223,16 +252,30 @@ class Compositor:
         try:
             self.estado = "entrenando"; t = time.time()
             todos, Xtr, Ytr = datos.features(self.celdas); Xtr, Xva = self.corta(Xtr, datos), self.corta(todos[datos.va], datos)
-            self.n = Xtr.shape[1]; self.redes = []; preds = []; accs = []; cuotas = []
+            idx_tr = np.concatenate([datos.tr] * len(datos.aum))  # de qué dígito sale cada fila de train (para las etiquetas finas)
+            if self.extra:                                        # § 819: 180 + 3823 extra; ⚠ sin conjunto a ciegas
+                Xex, Yex = datos.features_extra(self.celdas); Xtr = np.concatenate([Xtr, self.corta(Xex, datos)]); Ytr = np.concatenate([Ytr, Yex])
+                idx_tr = np.concatenate([idx_tr, np.concatenate([datos.ex] * len(datos.aum))])
+            self.n = Xtr.shape[1]; self.redes = []; preds = []; finos = []; accs = []; cuotas = []
+            if self.sub4:                                         # el 4 partido en dos: 11 salidas; el acierto se mide con 4c → 4 (comparable)
+                yf = datos.etiquetas_finas(); Ytr = yf[idx_tr]; assert len(Ytr) == len(Xtr)
             for s in self.semillas:
-                red, mu, sd = entrenar(Xtr, Ytr, s); self.redes.append((red, mu, sd))
+                red, mu, sd = entrenar(Xtr, Ytr, s, salidas=11 if self.sub4 else 10); self.redes.append((red, mu, sd))
                 with torch.no_grad():
                     lg = red(torch.from_numpy((Xva - mu) / sd).float()).numpy()
-                p = lg.argmax(1); preds.append(p); accs.append(float((p == datos.y[datos.va]).mean()))
+                pf = lg.argmax(1); finos.append(pf); p = np.where(pf == 10, 4, pf); preds.append(p); accs.append(float((p == datos.y[datos.va]).mean()))
                 W = red[0].weight.detach().numpy(); wt = (W ** 2).sum(); cuotas.append({b: float((W[:, a:z] ** 2).sum() / wt) for b, (a, z) in self.cortes(datos).items()})
                 if s == self.semillas[0]:
                     self.logits_va = lg
-            y = datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]
+            y = datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]; self.finos = np.stack(finos)
+            sub = None
+            if self.sub4:                                         # cómo le va al 4 partido (semilla 0): cuántos hay y cómo se leen
+                yf = datos.etiquetas_finas(); yv, pf = yf[datos.va], finos[0]; es4 = datos.y[datos.va] == 4
+                cuenta = lambda real, lee: int(((yv == real) & (pf == lee)).sum())
+                sub = {"train_4c": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4r": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4c": int((yv == 10).sum()), "val_4r": int((yv == 4).sum()),
+                       "4c_leido_4c": cuenta(10, 10), "4c_leido_4r": cuenta(10, 4), "4c_leido_otro": int(((yv == 10) & (pf != 10) & (pf != 4)).sum()),
+                       "4r_leido_4r": cuenta(4, 4), "4r_leido_4c": cuenta(4, 10), "4r_leido_otro": int(((yv == 4) & (pf != 10) & (pf != 4)).sum()),
+                       "otros_leidos_4c": int((~es4 & (pf == 10)).sum()), "otros_leidos_4r": int((~es4 & (pf == 4)).sum())}
             conf = {}
             for j in np.flatnonzero(p0 != y):
                 k = f"{y[j]}→{p0[j]}"; conf[k] = conf.get(k, 0) + 1
@@ -241,7 +284,7 @@ class Compositor:
                             "val": round(float(np.mean(accs)), 4), "val_rango": [round(min(accs), 4), round(max(accs), 4)],
                             "fallos_s0": int((p0 != y).sum()), "fallan_en_todas": int((self.veces == len(self.semillas)).sum()),
                             "confusiones": dict(sorted(conf.items(), key=lambda z: -z[1])), "cuota": {b: round(float(np.mean([c[b] for c in cuotas])), 3) for b in self.bloques},
-                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if b in SIN_POSICION]}
+                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if b in SIN_POSICION], "sub4": self.sub4, "sub4_resumen": sub, "extra": self.extra, "n_train": int(len(idx_tr) // len(datos.aum))}
             self.estado = "listo"
         except Exception as e:                                    # noqa: BLE001
             self.estado = "error"; self.error = f"{type(e).__name__}: {e}"; traceback.print_exc()
@@ -250,9 +293,10 @@ class Compositor:
         """Lo que recibe y decide el compositor para el dígito i (semilla 0): entradas por bloque, logits, atribución."""
         todos, _, _ = datos.features(self.celdas); x = self.corta(todos[i:i + 1], datos)[0]; red, mu, sd = self.redes[0]
         z = torch.from_numpy((x - mu) / sd).float()[None].requires_grad_(True); lg = red(z)[0]
-        pred = int(lg.argmax()); real = int(datos.y[i]); p = torch.softmax(lg, 0).detach().numpy()
-        contra = real if real != pred else int(np.argsort(lg.detach().numpy())[-2])   # si acierta, se explica contra el segundo
-        (lg[pred] - lg[contra]).backward(); atr = (z.grad[0] * z.detach()[0]).numpy()
+        pf = int(lg.argmax()); pred = 4 if pf == 10 else pf; real = int(datos.y[i]); p = torch.softmax(lg, 0).detach().numpy()
+        real_f = int(datos.etiquetas_finas()[i]) if self.sub4 else real   # con sub4 la explicación va en el espacio FINO (4c ≠ 4r)
+        contra = real_f if real_f != pf else int(np.argsort(lg.detach().numpy())[-2])   # si acierta, se explica contra el segundo
+        (lg[pf] - lg[contra]).backward(); atr = (z.grad[0] * z.detach()[0]).numpy()
         bloques = []
         for b, (a, zz) in self.cortes(datos).items():
             cols = columnas(b, self.celdas); vals = x[a:zz]; at = atr[a:zz]
@@ -267,7 +311,8 @@ class Compositor:
         nombres = [f"{BLOQUES[b][0].split(' (')[0]} · {c['sub']} · {c['nombre']}".replace(" ·  ·", " ·") for b, (a, zz) in self.cortes(datos).items() for c in columnas(b, self.celdas)]
         orden = np.argsort(-np.abs(atr))[:16]
         va_pos = int(np.flatnonzero(datos.va == i)[0]) if i in set(datos.va.tolist()) else None
-        return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pred]), "p_real": float(p[real]),
+        return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pf]), "p_real": float(p[real_f]),
+                "predicho_fino": pf, "real_fino": real_f, "clases": self.CLASES[:len(p)], "sub4": self.sub4,
                 "logits": [float(v) for v in lg.detach().numpy()], "semillas_que_fallan": int(self.veces[va_pos]) if va_pos is not None else None,
                 "semillas": len(self.semillas), "bloques": bloques, "pesan": [{"nombre": nombres[k], "valor": float(x[k]), "atr": float(atr[k])} for k in orden],
                 "suma_por_bloque": {b: float(atr[a:zz].sum()) for b, (a, zz) in self.cortes(datos).items()}}
@@ -295,7 +340,7 @@ class App:
         self.datos = Datos(); self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
         self.hilo = threading.Thread(target=self._bucle, daemon=True); self.hilo.start()
         for nombre, bl in self.recetas_guardadas().items():
-            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS))
+            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
 
     # --- recetas: se guardan para sobrevivir al reinicio de la unidad (se reentrenan al arrancar, segundos)
     def recetas_guardadas(self) -> dict:
@@ -305,20 +350,22 @@ class App:
                 return json.loads(f.read_text())
             except json.JSONDecodeError:
                 pass
-        return {k: {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS)} for k, v in RECETAS_BASE.items()}
+        base = {k: {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS)} for k, v in RECETAS_BASE.items()}
+        base["aprobada · 4 en dos (cruz+lazo / resto)"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # la prueba del dueño (2026-10-15): sin extra, train tiene 0 cuatros cerrados
+        return base
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
-        (CACHE / "recetas.json").write_text(json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas)} for c in self.comps.values()}, ensure_ascii=False, indent=1))
+        (CACHE / "recetas.json").write_text(json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1))
 
-    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS) -> Compositor:
+    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False) -> Compositor:
         malos = [b for b in bloques if b not in BLOQUES]
         if malos or not bloques:
             raise ValueError(f"bloques desconocidos: {malos}" if malos else "sin bloques")
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
-        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "")
-        c = Compositor(nombre, bloques, celdas, semillas)
+        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · +extra" if extra else "")
+        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra)
         with self._lock:
             self.comps[nombre] = c; self.cola.append(c)
         self.guardar_recetas(); return c
@@ -346,12 +393,15 @@ class App:
 
     # --- lo que contesta
     def estado(self) -> dict:
-        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, **c.resumen} for c in self.comps.values()],
+        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
                 "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION} for k, v in BLOQUES.items()],
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
-    def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200) -> dict:
+    def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
         c = self.listo(nombre); d = self.datos; y = d.y[d.va]; p0 = c.preds[0]
+        yf = d.etiquetas_finas()[d.va]                            # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor
+        if sub in ("c", "r"):
+            clase = 4
         sel = np.ones(len(d.va), bool)
         if modo == "fallos":
             sel &= p0 != y
@@ -361,17 +411,23 @@ class App:
             sel &= p0 == y
         if clase is not None:
             sel &= y == int(clase)
+        if sub == "c":
+            sel &= yf == 10
+        elif sub == "r":
+            sel &= (y == 4) & (yf == 4)
         if conf:
             a, b = conf.replace("->", "→").split("→"); sel &= (y == int(a)) & (p0 == int(b))
-        ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy()
-        filas = [{"idx": int(d.va[j]), "real": int(y[j]), "predicho": int(p0[j]), "veces": int(c.veces[j]), "p": float(p[k, p0[j]])} for k, j in enumerate(ids)]
+        ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy(); pf = c.finos[0]
+        filas = [{"idx": int(d.va[j]), "real": int(y[j]), "predicho": int(p0[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
+                  "sub": ("c" if yf[j] == 10 else "r") if y[j] == 4 else None, "predicho_fino": int(pf[j])} for k, j in enumerate(ids)]
         por_clase = {str(k): {"n": int((y == k).sum()), "fallos": int(((p0 != y) & (y == k)).sum())} for k in range(10)}
+        por_clase["4c"] = {"n": int((yf == 10).sum()), "fallos": int(((p0 != y) & (yf == 10)).sum())}; por_clase["4r"] = {"n": int(((y == 4) & (yf == 4)).sum()), "fallos": int(((p0 != y) & (y == 4) & (yf == 4)).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:
         d = self.datos; ob = d.objetos(i)
         return {"idx": int(i), "real": int(d.y[i]), "tinta": d.tinta[i].ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(),
-                "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist()))}
+                "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist())), "sub4": (d.subgrupo4(i) if d.y[i] == 4 else None)}
 
     def miniaturas(self, ids: list[int]) -> list[dict]:
         d = self.datos; out = []
@@ -420,7 +476,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/estado":
                 return self._json(self.app.estado())
             if u.path == "/api/lista":
-                return self._json(self.app.lista(pide("c"), pide("modo", "fallos"), pide("clase"), pide("conf"), int(pide("hasta", 200))))
+                return self._json(self.app.lista(pide("c"), pide("modo", "fallos"), pide("clase"), pide("conf"), int(pide("hasta", 200)), pide("sub")))
             if u.path == "/api/digito":
                 return self._json(self.app.digito(int(pide("idx"))))
             if u.path == "/api/miniaturas":
@@ -430,7 +486,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/comparar":
                 return self._json(self.app.comparar(int(pide("idx")), [x for x in pide("cs", "").split("|") if x]))
             if u.path == "/api/nuevo":
-                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))))
+                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"))
                 return self._json({"ok": True, "nombre": c.nombre, "estado": c.estado})
             if u.path == "/api/borrar":
                 self.app.borrar(pide("nombre", "")); return self._json({"ok": True})
