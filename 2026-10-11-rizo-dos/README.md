@@ -1731,3 +1731,24 @@ guarda al instante en **`web/etiquetas-4.json`**, que va **en git** porque es un
 "4a": [...]}` manda sobre la regla en `Datos.etiquetas_finas`. La página exporta las decisiones como texto para pegarlas en el
 chat, y tiene un botón «reentrenar» que vuelve a poner en cola los compositores con el 4 en dos (no es automático: ≈15 min
 cada uno con extra). Test en `probar_revisor.py` (`test_etiquetar_a_mano`).
+
+#### 85i · Los siete compositores con las etiquetas A MANO del dueño (§ 85h; 2026-10-15, noche)
+
+13 correcciones (todas 4l→4a: el 110 de val y 12 de extra, figura 90): 4l = 0 / 13 / 26 en train / extra / val. Misma unidad,
+mismas recetas, en 11 clases. 4l de val (26): leídos 4l / 4a / otro.
+
+| compositor | train | val (11 clases, 3 sem.) | fallos s0 | juntando (sec.) | 4l → 4l / 4a / otro | falsos 4l | 3 confusiones |
+|---|---:|---|---:|---|---|---:|---|
+| aprobada · 4 en dos · +extra | 4003 | **0,9716** [0,9709–0,9728] | 47 | 0,9788 | 11 / 11 / 4 | 0 | 4l→4a ×11, 9→3 ×6, 1→7 ×3 |
+| restos fundido, lazo presencia · 4 en dos · +extra | 4003 | **0,9716** [0,9716–0,9716] | 46 | 0,9765 | **15** / 7 / 4 | 0 | 4l→4a ×7, 9→3 ×6, 1→7 ×3 |
+| lazo área · 4 en dos · +extra | 4003 | 0,9709 [0,9703–0,9716] | 47 | 0,9786 | 10 / 11 / 5 | 0 | 4l→4a ×11, 9→3 ×5, 1→7 ×3 |
+| conos 60° sin restos · 4 en dos · +extra | 4003 | 0,9680 [0,9672–0,9691] | 52 | 0,9732 | 12 / 8 / 6 | 1 | 4l→4a ×8, 2→1 ×4, 9→3 ×4 |
+| Cruces 1 · 4 en dos · +extra | 4003 | 0,9612 [0,9604–0,9623] | 63 | 0,9662 | 14 / 8 / 4 | 0 | 2→1 ×8, 4l→4a ×8, 9→3 ×5 |
+| lazos_region + entrantes60 · 4 en dos (del dueño) | 180 | 0,8899 [0,8856–0,8936] | 185 | 0,8973 | 0 / 14 / 12 | 0 | 5→4a ×15, 4l→4a ×14, 1→7 ×11 |
+| Cruces y aprobadas (del dueño) | 180 | 0,8899 [0,8881–0,8918] | 178 | 0,8980 | 0 / 14 / 12 | 0 | 5→4a ×17, 4l→4a ×14, 1→7 ×11 |
+
+Lo que sale: (1) con las etiquetas limpias **baja el val** (0,9742 → 0,9716 la aprobada) y **suben los `4l→4a`** (8 → 11): con la
+regla sucia el compositor «acertaba» 4l en abiertos que ahora son 4a, y los 13 ejemplos reales de 4l (12 menos que antes) no
+bastan para los 26 de val: la aprobada reconoce 11, el lazo por presencia 15; (2) sigue sin haber falsos 4l (un 4 abierto nunca
+se lee cerrado); (3) con 180 de train, 0 de 26. **La mitad de los 4l de val se leen como 4a**: es la feature que falta
+(«cerrado por arriba» sin lazo), no la etiqueta.
