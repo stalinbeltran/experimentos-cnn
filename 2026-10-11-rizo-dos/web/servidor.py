@@ -183,13 +183,31 @@ class Datos:
         self._ob = {}; self._lock = threading.Lock(); self._finas = None
 
     def subgrupo4(self, i: int) -> bool:
-        """El 4 CON LAZO (el dueño, 2026-10-15, segunda versión: «las clases 4 con lazo y 4 sin lazo»): el detector ve ≥ 1 lazo en
-        el dígito SIN mover. La primera versión exigía además una cruz, y el detector de cruces se pierde la mayoría de los 4
-        cerrados (§ 85): quedaban 0 / 2 / 13 en train / extra / val."""
-        return len(self.objetos(i)["lazos"]) > 0
+        """El 4 CERRADO por arriba = «4l» (el dueño, 2026-10-15, tercera versión: «198, 225, 239 y 250 son un 4l… el lazo no está
+        visible, pero debo separar bien las clases»). Dos señales, cualquiera vale: (a) la cresta tiene un LAZO; (b) el trazo
+        grueso rellena el triángulo y no deja lazo, pero sólo UN extremo libre de la cresta queda por encima del nudo más alto
+        (el vértice); un 4 abierto deja DOS (la punta izquierda y la del palo). Medido en val (fig. 87): 27 de 163 (21 con lazo +
+        6 rellenos); con la primera versión (cruz + lazo) eran 13 y con la segunda (sólo lazo) 21."""
+        ob = self.objetos(i)
+        if len(ob["lazos"]) > 0:
+            return True
+        return self.extremos_sobre_el_nudo(i) <= 1
+
+    def extremos_sobre_el_nudo(self, i: int, margen: float = 2.0) -> int:
+        """Cuántos extremos libres de la cresta (racimos con un solo tramo) quedan ≥ `margen` px por encima del nudo más alto
+        (racimo con ≥ 3 tramos). Sin ningún nudo, cuenta todos los extremos."""
+        tr, _ = CC.tramos(self.M[i]); cnt = {}; pos = {}
+        for t in tr:
+            p = np.asarray(t["pts"], float)
+            for k, q in ((t["a"], p[0]), (t["b"], p[-1])):
+                cnt[k] = cnt.get(k, 0) + 1; pos.setdefault(k, []).append(q)
+        ext = [np.mean(pos[k], 0) for k in cnt if cnt[k] == 1]; nud = [np.mean(pos[k], 0) for k in cnt if cnt[k] >= 3]
+        if not nud:
+            return len(ext)
+        yn = min(q[1] for q in nud); return int(sum(q[1] < yn - margen for q in ext))
 
     def etiquetas_finas(self) -> np.ndarray:
-        """y con el 4 partido: 4 = «4a» (abierto, sin lazo), 10 = «4l» (con lazo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
+        """y con el 4 partido: 4 = «4a» (abierto), 10 = «4l» (cerrado por arriba: lazo, o un solo extremo sobre el nudo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
         if self._finas is None:
             f = self.y.copy()
             for i in np.flatnonzero(self.y == 4):

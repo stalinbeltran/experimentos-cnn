@@ -1686,3 +1686,16 @@ Lo que sale, en 11 clases: (1) **`4l→4a` es la primera o segunda confusión** 
 nueva es de 4 a 8 fallos sobre 21; (2) la receta con **lazo por presencia** sigue siendo la que más 4l reconoce (15 de 21) y
 empata en val con la aprobada; (3) con **180 de train ningún 4l se reconoce** (0 de 21) y el compositor cae a 0,892: la clase
 existe y no tiene ejemplos; (4) ningún 4 abierto se lee 4l en ninguna receta.
+
+#### 85f · Tercera definición de «4l»: 4 CERRADO por arriba, con o sin lazo (el dueño: «198, 225, 239 y 250 son un 4l»)
+
+Esos cuatro no tienen agujero en ningún sitio —ni en la tinta ni en el delgado: el trazo grueso rellena el triángulo (medido,
+fig. 86)—, así que «4l» no es «tiene lazo» sino **«cerrado por arriba»**. La señal que lo separa está en el grafo de la cresta
+(fig. `87-cuatros-cerrados-extremos.png`): un 4 abierto deja **dos** extremos libres por encima del nudo más alto (la punta
+izquierda y la del palo); uno cerrado deja **uno** (el vértice) o ninguno (lazo). Dos reglas intermedias que NO sirven, medidas
+y descartadas el mismo día: «ningún extremo en el cuarto superior-izquierdo» (127 de 163 cerrados: mete los «ч») y «un solo
+extremo por encima del 40 % de la altura» (101: mete los de palo corto).
+
+`Datos.subgrupo4` = lazo en la cresta **o** `extremos_sobre_el_nudo ≤ 1` (margen 2 px). Recuento: **4l** = 0 / 25 / 27 en
+train / extra / val (eran 0 / 13 / 21 con «sólo lazo»); los seis nuevos de val son 110, 198, 225, 228, 239 y 250. Los siete
+compositores del revisor se reentrenan con esta etiqueta (los resultados, cuando terminen, en § 85g).
