@@ -1640,3 +1640,21 @@ Lo que sale:
 
 Los dos compositores siguen entrenados en el revisor de este dev: Lista → clase 4 → «4l» enseña los 21 con su lectura
 (`4l ✓`, `4l ✓ (lee 4a)`, `4l→9`…), y Compositor enseña los 11 logits con la clase «4l».
+
+#### 85c · TODAS las recetas con el 4 en dos clases (el dueño: «los compositores existentes… entrénalos»; 2026-10-15)
+
+Cada receta del revisor, entrenada con 4l / 4a como clases separadas y 180 + extra (3 semillas, val; ⚠ sin a ciegas). «Cruces 1»
+es una receta creada por el dueño desde la app (aprobada + bloque de cruces). De los 21 4l de val: leídos 4l / como 4a / otro.
+
+| receta · 4 en dos · +extra | val SEPARADAS | fallos | val juntando | fallos | 4l → 4l / 4a / otro | falsos 4l |
+|---|---|---:|---|---:|---|---:|
+| aprobada (lazo región) | 0,9734 [0,9728–0,9746] | 44 | **0,9788** | 36 | 11 / 8 / 2 | 0 |
+| restos fundido, lazo presencia | 0,9734 [0,9734–0,9734] | 43 | 0,9765 | 39 | **15** / 4 / 2 | 0 |
+| lazo área | 0,9728 [0,9722–0,9734] | 44 | 0,9786 | 36 | 10 / 8 / 3 | 0 |
+| conos 60° sin restos | 0,9699 [0,9691–0,9709] | 49 | 0,9732 | 44 | 12 / 5 / 4 | 1 |
+| Cruces 1 (aprobada + cruces) | 0,9635 [0,9623–0,9647] | 59 | 0,9662 | 55 | 14 / 4 / 3 | 0 |
+
+Lo que sale: (1) con las clases separadas las tres primeras **empatan** (0,9728–0,9734), y la que mejor reconoce el 4 con lazo es
+la del lazo por **presencia** (15 de 21): región y área, que codifican el tamaño del lazo, no ayudan a decir «hay lazo»; (2) ningún
+4 abierto se lee 4l en ninguna receta (1 falso 4l en conos 60°, de otro dígito); (3) el bloque de cruces **resta** también aquí
+(−1 punto), como en el § 70. Los cinco quedan entrenados en el revisor.
