@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>rizo-2 · revisor de dígitos</title>
+<style>
+  :root { --rec:#8a8a8a; --resto:#d6a21a; --lazo:#111; --rojo:#b22222; --verde:#1f8a4c; --gris:#777; --fondo:#f4f4f4; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, system-ui, Segoe UI, Roboto, sans-serif; font-size:14px; color:#222; background:#fff; padding-bottom:64px; }
+  header { background:#222; color:#fff; padding:10px 14px; font-weight:600; position:sticky; top:0; z-index:5; display:flex; justify-content:space-between; align-items:center; }
+  header small { font-weight:400; opacity:.8; }
+  nav { position:fixed; bottom:0; left:0; right:0; background:#eee; display:flex; border-top:1px solid #ccc; z-index:5; }
+  nav button { flex:1; border:0; background:none; padding:12px 0; font-size:13px; color:#333; }
+  nav button.on { font-weight:700; color:#000; border-top:3px solid #222; }
+  main { padding:10px 12px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  .chip { border:1px solid #222; border-radius:14px; padding:4px 10px; font-size:12px; background:#fff; }
+  .chip.on { background:#222; color:#fff; }
+  .chip.small { padding:3px 7px; font-size:11px; }
+  select, input[type=text] { font-size:13px; padding:6px; width:100%; border:1px solid #bbb; border-radius:6px; background:var(--fondo); }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .card { border:1px solid #ddd; border-radius:6px; padding:6px; background:#fff; }
+  .card .et { font-size:11px; margin-bottom:2px; }
+  .fallo { color:var(--rojo); } .acierto { color:var(--verde); }
+  canvas { display:block; max-width:100%; }
+  .obj { display:flex; gap:8px; padding:7px 6px; border-bottom:1px solid #eee; align-items:center; }
+  .obj.on { background:#fff5d6; }
+  .obj b { font-size:13px; } .obj small { color:#444; display:block; }
+  .sw { width:12px; height:12px; border-radius:2px; flex:none; }
+  .rej { display:inline-block; margin:4px 6px 8px 0; vertical-align:top; text-align:center; font-size:10px; }
+  .rej .t { margin-bottom:2px; max-width:112px; font-size:9px; line-height:1.15; }
+  .barra { display:flex; align-items:center; font-size:11px; margin:2px 0; }
+  .barra .n { width:54%; text-align:right; padding-right:4px; font-size:10px; line-height:1.1; }
+  .barra .b { height:12px; }
+  .nota { color:var(--gris); font-size:12px; margin:8px 0; }
+  .aviso { background:#fff3cd; border:1px solid #e0c060; padding:8px; border-radius:6px; margin:8px 0; font-size:12px; }
+  .err { background:#fde2e2; border:1px solid #d99; padding:8px; border-radius:6px; margin:8px 0; font-size:12px; }
+  .fila { display:flex; justify-content:space-between; align-items:center; gap:8px; margin:6px 0; }
+  h3 { margin:12px 0 6px; font-size:14px; }
+  .comp { border:1px solid #ddd; border-radius:6px; padding:8px; margin:6px 0; background:var(--fondo); }
+  .comp .nombre { font-weight:600; }
+  .logits { display:flex; align-items:flex-end; gap:3px; height:90px; margin:6px 0; }
+  .logits div { flex:1; text-align:center; font-size:10px; position:relative; }
+  .logits .b { width:100%; background:#aaa; margin:0 auto; }
+  button.act { font-size:12px; padding:6px 10px; border:1px solid #222; border-radius:6px; background:#fff; }
+  button.act.p { background:#222; color:#fff; }
+  .legend { font-size:11px; color:#444; margin:4px 0; line-height:1.6; }
+  .legend i { display:inline-block; width:10px; height:10px; margin-right:3px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<header><span id="titulo">rizo-2 · revisor</span><small id="sub"></small></header>
+<main id="main"></main>
+<nav>
+  <button data-t="lista">Lista</button><button data-t="digito">Dígito</button><button data-t="compositor">Compositor</button>
+  <button data-t="comparar">Comparar</button><button data-t="comps">⚙</button>
+</nav>
+<script>
+const T = new URLSearchParams(location.search).get('t') || '';
+const COL = { s:['#c2410c','#2a78d6','#1b7f3b','#7c3aed'], cono:['#c2410c','#2a78d6','#1b7f3b','#7c3aed'] };
+const S = { tab:'lista', comp:null, estado:null, idx:null, lista:null, filtros:{modo:'fallos', clase:null, conf:null}, mini:{}, dig:{}, ver:{tinta:false, delgado:true, objetos:true, cruces:false}, sel:null, cmp:[] };
+const $ = s => document.querySelector(s); const main = $('#main');
+async function api(p, q={}) {
+  const u = new URL(p, location.origin); u.searchParams.set('t', T); for (const [k,v] of Object.entries(q)) if (v!==null && v!==undefined) u.searchParams.set(k, v);
+  const r = await fetch(u); const j = await r.json(); if (j.error) throw new Error(j.error); return j;
+}
+const h = (s) => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const fallan = (f, n) => f.veces !== undefined ? `${f.veces}/${n}` : '';
+// ---------------------------------------------------------------- dibujo
+function dibujar(cv, M, ob, o={}) {
+  const n = o.px || 10, g = cv.getContext('2d'); cv.width = 32*n; cv.height = 32*n; g.clearRect(0,0,cv.width,cv.height);
+  if (o.tinta) { for (let i=0;i<1024;i++) if (o.tinta[i]) { g.fillStyle='#d8d8d8'; g.fillRect((i%32)*n, Math.floor(i/32)*n, n, n); } }
+  if (M && !o.sinM) for (let i=0;i<1024;i++) { const v=M[i]; if (v>0.05) { const k=Math.round(255-255*Math.min(v/2.4,1)); g.fillStyle=`rgb(${k},${k},${k})`; g.fillRect((i%32)*n, Math.floor(i/32)*n, n, n); } }
+  if (o.rejilla) { g.strokeStyle='#bbb'; g.setLineDash([3,3]); g.lineWidth=1; for (let k=1;k<o.rejilla;k++){ const q=32*n*k/o.rejilla; g.beginPath(); g.moveTo(q,0); g.lineTo(q,32*n); g.moveTo(0,q); g.lineTo(32*n,q); g.stroke(); } g.setLineDash([]); }
+  if (!ob || o.sinObjetos) return;
+  const sel = o.sel; const alpha = (k) => (sel && sel.k!==k) ? 0.25 : 1;
+  const poli = (pts, cerrar, color, w, k) => { if (!pts.length) return; g.globalAlpha=alpha(k); g.strokeStyle=color; g.lineWidth=w; g.lineCap='round'; g.beginPath(); pts.forEach((p,i)=> i?g.lineTo(p[0]*n,p[1]*n):g.moveTo(p[0]*n,p[1]*n)); if (cerrar) g.closePath(); g.stroke(); g.globalAlpha=1; };
+  (ob.entrantes||[]).forEach((e,i)=>{ const c = COL.cono[e.cono!==undefined?e.cono:e.o]; const k='entrantes'+i; g.globalAlpha = (sel && sel.k!==k) ? 0.12 : 0.32; g.fillStyle=c; g.beginPath(); e.pts.forEach((p,j)=> j?g.lineTo(p[0]*n,p[1]*n):g.moveTo(p[0]*n,p[1]*n)); g.closePath(); g.fill(); g.globalAlpha=alpha(k); g.strokeStyle=c; g.lineWidth=1; g.stroke(); cruz(e.cx*n,e.cy*n,c,5); g.globalAlpha=1; });
+  (ob.rectas||[]).forEach((r,i)=> poli(r.pts,false,'#8a8a8a',Math.max(1.4,n/6),'rectas'+i));
+  (ob.restos||[]).forEach((r,i)=> poli(r.pts,false,'#d6a21a',Math.max(1.4,n/6),'restos'+i));
+  (ob.arcos||[]).forEach((a,i)=> poli(a.pts,false,COL.s[a.s],Math.max(1.5,n/8)+n/3*(a.fuerza||0.3),'arcos'+i));
+  (ob.lazos||[]).forEach((z,i)=>{ poli(z.pts,true,'#111',Math.max(2,n/4),'lazos'+i); cruz(z.cx*n,z.cy*n,'#111',n*0.9); });
+  (ob.golpes||[]).forEach((q,i)=>{ g.strokeStyle='#000'; g.lineWidth=1.5; const x=q.cx*n,y=q.cy*n,d=n*0.4; g.beginPath(); g.moveTo(x-d,y-d); g.lineTo(x+d,y+d); g.moveTo(x+d,y-d); g.lineTo(x-d,y+d); g.stroke(); });
+  (ob.cruces||[]).forEach((q,i)=>{ if (!o.cruces) return; g.strokeStyle='#e11d48'; g.lineWidth=2; const x=q.cx*n,y=q.cy*n; g.beginPath(); g.arc(x,y,n*0.8,0,6.3); g.stroke(); });
+  function cruz(x,y,c,d){ g.strokeStyle=c; g.lineWidth=2; g.beginPath(); g.moveTo(x-d,y); g.lineTo(x+d,y); g.moveTo(x,y-d); g.lineTo(x,y+d); g.stroke(); }
+}
+function rejillaHTML(vals, lado, atr, titulo, color) {
+  const px = 24, w = lado*px; let cells='';
+  for (let i=0;i<lado*lado;i++){ const v=vals[i]; const k=Math.round(255-255*Math.min(Math.max(v,0),1)); const a = atr? atr[i]:0; const borde = Math.abs(a)>0.15 ? `box-shadow:inset 0 0 0 2px ${a>0?'#b22222':'#1f8a4c'};` : '';
+    cells += `<div style="width:${px}px;height:${px}px;background:rgb(${k},${k},${k});color:${v>0.55?'#fff':'#222'};font-size:8px;line-height:${px}px;${borde}" title="atr ${a.toFixed(2)}">${v.toFixed(2)}</div>`; }
+  return `<div class="rej"><div class="t" style="color:${color||'#222'}">${h(titulo)}</div><div style="display:grid;grid-template-columns:repeat(${lado},${px}px);border:1.5px solid ${color||'#222'};width:${w+3}px">${cells}</div></div>`;
+}
+// ---------------------------------------------------------------- pantallas
+async function cargarEstado() { S.estado = await api('/api/estado'); const listos = S.estado.compositores.filter(c=>c.estado==='listo'); if (!S.comp || !S.estado.compositores.find(c=>c.nombre===S.comp)) S.comp = listos[0] ? listos[0].nombre : null; }
+function compActual() { return S.estado.compositores.find(c=>c.nombre===S.comp); }
+function selectorComp() {
+  return `<select id="selc">${S.estado.compositores.map(c=>`<option value="${h(c.nombre)}" ${c.nombre===S.comp?'selected':''}>${h(c.nombre)} · ${c.estado==='listo'?`val ${c.val} · ${c.fallos_s0} fallos`:c.estado}</option>`).join('')}</select>`;
+}
+async function verLista() {
+  await cargarEstado(); const c = compActual();
+  let html = `<div>${selectorComp()}</div>`;
+  if (!c || c.estado!=='listo') { main.innerHTML = html + `<div class="aviso">${c?`«${h(c.nombre)}» está ${c.estado} ${c.error?h(c.error):''}. Reintenta en unos segundos.`:'No hay ningún compositor listo todavía.'}</div>`; return; }
+  const f = S.filtros;
+  html += `<div class="chips">${[['fallos','fallos'],['todas',`fallan ${c.semillas.length}/${c.semillas.length}`],['aciertos','aciertos'],['todos','todos']].map(([k,t])=>`<span class="chip ${f.modo===k?'on':''}" data-modo="${k}">${t}</span>`).join('')}</div>`;
+  html += `<div class="chips">clase: ${[0,1,2,3,4,5,6,7,8,9].map(k=>`<span class="chip small ${f.clase===k?'on':''}" data-clase="${k}">${k}</span>`).join('')}<span class="chip small ${f.clase===null?'on':''}" data-clase="">todas</span></div>`;
+  const confs = Object.entries(c.confusiones||{}).filter(([k])=>f.clase===null || k.startsWith(f.clase+'→')).slice(0,12);
+  html += `<div class="chips">${confs.map(([k,n])=>`<span class="chip small ${f.conf===k?'on':''}" data-conf="${k}">${k} ×${n}</span>`).join('')}${f.conf?`<span class="chip small" data-conf="">× quitar</span>`:''}</div>`;
+  main.innerHTML = html + `<div class="nota" id="resumen">cargando…</div><div class="grid2" id="cards"></div>`;
+  $('#selc').onchange = e => { S.comp = e.target.value; S.lista=null; verLista(); };
+  main.querySelectorAll('[data-modo]').forEach(el=> el.onclick=()=>{ f.modo=el.dataset.modo; verLista(); });
+  main.querySelectorAll('[data-clase]').forEach(el=> el.onclick=()=>{ f.clase = el.dataset.clase===''?null:+el.dataset.clase; f.conf=null; verLista(); });
+  main.querySelectorAll('[data-conf]').forEach(el=> el.onclick=()=>{ f.conf = el.dataset.conf||null; verLista(); });
+  const L = await api('/api/lista', {c:S.comp, modo:f.modo, clase:f.clase, conf:f.conf, hasta:120}); S.lista = L;
+  const pc = f.clase!==null ? L.por_clase[f.clase] : null;
+  $('#resumen').textContent = `${L.total} dígito(s)` + (L.total>120?' (se muestran 120)':'') + (pc?` · clase ${f.clase}: ${pc.fallos} fallos de ${pc.n}`:` · val ${c.val} · ${c.fallos_s0} fallos de ${S.estado.n_val}`);
+  const cards = $('#cards'); cards.innerHTML = L.filas.map(r=>`<div class="card" data-idx="${r.idx}"><div class="et ${r.real!==r.predicho?'fallo':'acierto'}">${r.real!==r.predicho?`${r.real}→${r.predicho}`:`${r.real} ✓`} · idx ${r.idx} · ${r.veces}/${c.semillas.length}${r.real===r.predicho?` · p ${r.p.toFixed(2)}`:''}</div><canvas id="m${r.idx}"></canvas></div>`).join('');
+  cards.querySelectorAll('.card').forEach(el=> el.onclick=()=>{ S.idx=+el.dataset.idx; S.sel=null; ir('digito'); });
+  const ids = L.filas.map(r=>r.idx).filter(i=>!S.mini[i]);
+  for (let k=0;k<ids.length;k+=30) { const lote = await api('/api/miniaturas',{ids:ids.slice(k,k+30).join(',')}); lote.forEach(m=> S.mini[m.idx]=m); pinta(); }
+  pinta();
+  function pinta(){ L.filas.forEach(r=>{ const m=S.mini[r.idx], cv=document.getElementById('m'+r.idx); if (m && cv && !cv.dataset.ok) { dibujar(cv, m.M, m.objetos, {px:5}); cv.dataset.ok=1; } }); }
+}
+async function cargarDigito(i) { if (!S.dig[i]) S.dig[i] = await api('/api/digito',{idx:i}); return S.dig[i]; }
+function navegacion() {
+  if (!S.lista) return '';
+  const ids = S.lista.filas.map(r=>r.idx), k = ids.indexOf(S.idx);
+  return `<div class="fila"><button class="act" id="prev" ${k<=0?'disabled':''}>◀ anterior</button><span class="nota">${k>=0?`${k+1} de ${ids.length}`:''}</span><button class="act" id="next" ${k<0||k>=ids.length-1?'disabled':''}>siguiente ▶</button></div>`;
+}
+function atarNav(fn) { const ids = S.lista? S.lista.filas.map(r=>r.idx):[]; const k=ids.indexOf(S.idx); const p=$('#prev'), n=$('#next'); if (p) p.onclick=()=>{S.idx=ids[k-1]; S.sel=null; fn();}; if (n) n.onclick=()=>{S.idx=ids[k+1]; S.sel=null; fn();}; }
+async function verDigito() {
+  if (S.idx===null) { main.innerHTML = '<div class="nota">Elige un dígito en la lista.</div>'; return; }
+  const d = await cargarDigito(S.idx); const ob = d.objetos; const v = S.ver;
+  const fallo = S.lista && S.lista.filas.find(r=>r.idx===S.idx);
+  let html = `<div class="fila"><b>idx ${d.idx} · es un ${d.real}${fallo?` · ${fallo.real!==fallo.predicho?`lo lee ${fallo.predicho}`:'acierta'} (${fallo.veces}/${compActual().semillas.length} semillas)`:''}</b></div>`;
+  html += `<div class="chips">${[['tinta','tinta'],['delgado','delgado'],['objetos','objetos'],['cruces','cruces']].map(([k,t])=>`<span class="chip ${v[k]?'on':''}" data-v="${k}">${t}</span>`).join('')}</div>`;
+  html += `<canvas id="big" style="border:1px solid #ddd;width:100%"></canvas><div class="legend"><i style="background:#8a8a8a"></i>recta <i style="background:#d6a21a"></i>resto <i style="background:#2a78d6"></i>arco (color = sentido) <i style="background:#111"></i>lazo · polígono = entrante (<span style="color:#c2410c">→</span> <span style="color:#2a78d6">←</span> <span style="color:#1b7f3b">↓</span> <span style="color:#7c3aed">↑</span>) · × golpe</div>`;
+  const filas = [];
+  const cn = (x,y)=>`(${x.toFixed(0)},${y.toFixed(0)})`;
+  ob.lazos.forEach((z,i)=> filas.push(['lazos'+i,'#111','lazo',`${z.area.toFixed(0)} px² · centro ${cn(z.cx,z.cy)} · ${z.largo} puntos`]));
+  ob.rectas.forEach((r,i)=> filas.push(['rectas'+i,'#8a8a8a',`recta ${['0° —','45° /','90° |','135° \\'][r.o]}`,`largo ${r.largo.toFixed(1)} px · ${r.ang.toFixed(0)}° · centro ${cn(r.cx,r.cy)} · fuerza ${r.fuerza.toFixed(2)}`]));
+  ob.arcos.forEach((a,i)=> filas.push(['arcos'+i,COL.s[a.s],`arco ${['k→','k←','k↓','k↑'][a.s]}`,`barre ${a.barrido.toFixed(0)}° · largo ${a.largo.toFixed(1)} px · centro ${cn(a.cx,a.cy)} · fuerza ${a.fuerza.toFixed(2)}`]));
+  ob.entrantes.forEach((e,i)=> filas.push(['entrantes'+i,COL.cono[e.cono],`entrante ${['→ der','← izq','↓ abajo','↑ arriba'][e.cono]} (cono 60°)${e.s===-1?' · esquina':' · de arco'}`,`área ${e.area.toFixed(0)} px² · abertura ${e.abertura.toFixed(1)} px · ${e.s===-1?'giro':'barre'} ${e.barrido.toFixed(0)}° · centro ${cn(e.cx,e.cy)} · a 45° sería ${['→','←','↓','↑'][e.o]}`]));
+  ob.restos.forEach((r,i)=> filas.push(['restos'+i,'#d6a21a',`resto ${['0° —','45° /','90° |','135° \\'][r.o]}`,`largo ${r.largo.toFixed(1)} px · centro ${cn(r.cx,r.cy)}`]));
+  ob.golpes.forEach((q,i)=> filas.push(['golpes'+i,'#000','golpe',`en ${cn(q.cx,q.cy)}`]));
+  ob.cruces.forEach((q,i)=> filas.push(['cruces'+i,'#e11d48','cruz (no entra en los compositores aprobados)',`en ${cn(q.cx,q.cy)}`]));
+  html += `<h3>objetos que ve el detector (${filas.length}) · toca uno para resaltarlo</h3>` + filas.map(([k,c,a,b])=>`<div class="obj ${S.sel&&S.sel.k===k?'on':''}" data-k="${k}"><div class="sw" style="background:${c}"></div><div><b>${h(a)}</b><small>${h(b)}</small></div></div>`).join('');
+  html += `<div class="nota">concavidades de arco: ${ob.concavidades.length} · esquinas: ${ob.esquinas.length} → entrantes sin repetir: ${ob.entrantes.length}</div>` + navegacion();
+  main.innerHTML = html;
+  const pinta = () => dibujar($('#big'), v.delgado?d.M:null, v.objetos?ob:null, {px:10, tinta:v.tinta?d.tinta:null, rejilla:3, sel:S.sel, cruces:v.cruces, sinM:!v.delgado});
+  pinta();
+  main.querySelectorAll('[data-v]').forEach(el=> el.onclick=()=>{ v[el.dataset.v]=!v[el.dataset.v]; verDigito(); });
+  main.querySelectorAll('.obj').forEach(el=> el.onclick=()=>{ S.sel = (S.sel&&S.sel.k===el.dataset.k)?null:{k:el.dataset.k}; verDigito(); });
+  atarNav(verDigito);
+}
+async function verCompositor() {
+  await cargarEstado(); const c = compActual();
+  if (S.idx===null) { main.innerHTML = `<div>${selectorComp()}</div><div class="nota">Elige un dígito en la lista.</div>`; $('#selc').onchange=e=>{S.comp=e.target.value; verCompositor();}; return; }
+  main.innerHTML = `<div>${selectorComp()}</div><div class="nota">leyendo idx ${S.idx}…</div>`; $('#selc').onchange=e=>{S.comp=e.target.value; S.lista=null; verCompositor();};
+  let L; try { L = await api('/api/leer',{c:S.comp, idx:S.idx}); } catch(e) { main.innerHTML += `<div class="err">${h(e.message)}</div>`; return; }
+  const d = await cargarDigito(S.idx);
+  const acierta = L.real===L.predicho; const vs = acierta ? `acierta (el rival es el ${L.contra})` : `lo lee ${L.predicho}`;
+  let html = `<div>${selectorComp()}</div><div class="fila"><b>idx ${L.idx} · es un ${L.real} · ${vs}</b><span class="nota">${L.semillas_que_fallan!==null?`${L.semillas_que_fallan}/${L.semillas} semillas fallan`:''}</span></div>`;
+  html += `<div style="display:flex;gap:10px;align-items:flex-start"><canvas id="mini" style="width:120px;flex:none;border:1px solid #ddd"></canvas><div style="flex:1"><div class="nota" style="margin:0">logits · <span style="color:var(--rojo)">rojo = ${L.predicho} (leído)</span> · <span style="color:var(--verde)">verde = ${acierta?L.contra+' (rival)':L.real+' (real)'}</span> · p ${L.p_pred.toFixed(2)}</div><div class="logits">${L.logits.map((v,k)=>{ const mx=Math.max(...L.logits.map(Math.abs)); const hh=Math.max(2,Math.abs(v)/mx*60); const col=k===L.predicho?'#b22222':k===(acierta?L.contra:L.real)?'#1f8a4c':'#bbb'; return `<div><div style="font-size:9px">${v.toFixed(1)}</div><div class="b" style="height:${hh}px;background:${col};opacity:${v<0?.35:1}"></div><div>${k}</div></div>`; }).join('')}</div></div></div>`;
+  html += `<h3>lo que recibe · ${c.n} entradas · ${c.celdas}×${c.celdas}</h3><div class="nota" style="margin-top:0">el borde rojo/verde de una celda marca que pesa (|atr| > 0,15); toca una para verla</div>`;
+  for (const b of L.bloques) {
+    const col = {rectas:'#555',rectas_todo:'#555',restos:'#d6a21a',arcos:'#2a78d6',golpes:'#000',lazos:'#111',lazos_region:'#111',lazos_area:'#111',concavidades:'#7c3aed',entrantes:'#7c3aed',entrantes60:'#7c3aed',entrantes60f:'#7c3aed',cruces:'#e11d48'}[b.bloque]||'#222';
+    html += `<div style="margin:8px 0 2px;font-weight:600;color:${col}">${h(b.etiqueta)} <span class="nota" style="display:inline">· suma atr ${b.atr_total>=0?'+':''}${b.atr_total.toFixed(2)}${b.sin_posicion?' · ⚠ SIN POSICIÓN':''}</span></div><div>`;
+    for (const s of b.subs) {
+      const cols = {'k→':'#c2410c','k←':'#2a78d6','k↓':'#1b7f3b','k↑':'#7c3aed','→ der':'#c2410c','← izq':'#2a78d6','↓ abajo':'#1b7f3b','↑ arriba':'#7c3aed','0° —':'#c2410c','45° /':'#2a78d6','90° |':'#1b7f3b','135° \\':'#7c3aed'}[s.sub]||col;
+      const otros = s.otros.map(o=>`${o.nombre} ${o.valor.toFixed(2)}`).join(' · ');
+      if (s.lado) html += rejillaHTML(s.rejilla, s.lado, s.rejilla_atr, `${s.sub||''}${otros?' · '+otros:''}`, cols);
+      else html += `<div class="rej"><div class="t" style="color:${cols}">${h(s.sub)}</div>${otros}</div>`;
+    }
+    html += `</div>`;
+  }
+  html += `<h3>qué pesa · <span style="color:var(--rojo)">rojo empuja al ${L.predicho}</span>, <span style="color:var(--verde)">verde al ${acierta?L.contra:L.real}</span></h3>`;
+  html += `<div class="nota" style="margin-top:0">por bloque: ${Object.entries(L.suma_por_bloque).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(1)}`).join(' · ')}</div>`;
+  const mx = Math.max(...L.pesan.map(p=>Math.abs(p.atr)));
+  html += L.pesan.map(p=>`<div class="barra"><div class="n">${h(p.nombre)} (=${p.valor.toFixed(2)})</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
+  html += navegacion(); main.innerHTML = html; $('#selc').onchange=e=>{S.comp=e.target.value; S.lista=null; verCompositor();};
+  dibujar($('#mini'), d.M, d.objetos, {px:4, rejilla:c.celdas}); atarNav(verCompositor);
+}
+async function verComparar() {
+  await cargarEstado(); const listos = S.estado.compositores.filter(c=>c.estado==='listo');
+  if (!S.cmp.length) S.cmp = listos.slice(0,3).map(c=>c.nombre);
+  let html = `<div class="chips">${listos.map(c=>`<span class="chip small ${S.cmp.includes(c.nombre)?'on':''}" data-c="${h(c.nombre)}">${h(c.nombre)}</span>`).join('')}</div>`;
+  if (S.idx===null) { main.innerHTML = html + '<div class="nota">Elige un dígito en la lista.</div>'; atar(); return; }
+  main.innerHTML = html + `<div class="nota">comparando idx ${S.idx}…</div>`; atar();
+  let R; try { R = await api('/api/comparar',{idx:S.idx, cs:S.cmp.join('|')}); } catch(e) { main.innerHTML += `<div class="err">${h(e.message)}</div>`; atar(); return; }
+  const d = await cargarDigito(S.idx);
+  html += `<div class="fila"><b>idx ${R.idx} · es un ${R.real}</b><span class="nota">bloques que difieren: ${R.bloques_que_difieren.join(', ')||'ninguno'}; el resto son idénticos</span></div>`;
+  for (const [n, L] of Object.entries(R.lecturas)) {
+    const ok = L.real===L.predicho;
+    html += `<div class="comp"><div class="fila"><span class="nombre">${h(n)}</span><b class="${ok?'acierto':'fallo'}">${ok?`${L.real} ✓`:`${L.predicho} ✗`}</b></div><div class="nota" style="margin:2px 0">logit ${L.predicho}: ${L.logits[L.predicho].toFixed(1)} · logit ${L.real}: ${L.logits[L.real].toFixed(1)} · p ${L.p_pred.toFixed(2)} · ${L.semillas_que_fallan!==null?`${L.semillas_que_fallan}/${L.semillas} semillas fallan`:''}</div><div>`;
+    for (const b of L.bloques) if (R.bloques_que_difieren.includes(b.bloque)) for (const s of b.subs) if (s.lado) html += rejillaHTML(s.rejilla, s.lado, s.rejilla_atr, `${b.etiqueta.split(' (')[0]} ${s.sub} · atr ${b.atr_total>=0?'+':''}${b.atr_total.toFixed(1)}`, '#222');
+    html += `</div><div class="nota" style="margin:4px 0 0">por bloque: ${Object.entries(L.suma_por_bloque).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(1)}`).join(' · ')}</div></div>`;
+  }
+  html += navegacion(); main.innerHTML = html; atar(); atarNav(verComparar);
+  function atar(){ main.querySelectorAll('[data-c]').forEach(el=> el.onclick=()=>{ const n=el.dataset.c; S.cmp = S.cmp.includes(n)? S.cmp.filter(x=>x!==n) : [...S.cmp, n]; verComparar(); }); }
+}
+async function verComps() {
+  await cargarEstado(); const E = S.estado;
+  let html = `<h3 style="margin-top:0">compositores entrenados (${E.compositores.length})${E.pendientes?` · ${E.pendientes} en cola`:''}</h3>`;
+  html += E.compositores.map(c=>`<div class="comp"><div class="fila"><span class="nombre">${h(c.nombre)}</span><span>${c.estado==='listo'?`<b>val ${c.val}</b> [${c.val_rango.join('–')}] · ${c.fallos_s0} fallos (${c.fallan_en_todas} en todas)`:`<i>${c.estado}</i> ${h(c.error||'')}`}</span></div><div class="nota" style="margin:2px 0">${c.bloques.join(' + ')} · ${c.celdas}×${c.celdas} · ${c.semillas?c.semillas.length:3} semillas${c.n?` · ${c.n} números`:''}${c.sin_posicion&&c.sin_posicion.length?` · ⚠ sin posición: ${c.sin_posicion.join(', ')}`:''}</div>${c.cuota?`<div class="nota" style="margin:2px 0">cuota: ${Object.entries(c.cuota).map(([k,v])=>`${k} ${(v*100).toFixed(0)} %`).join(' · ')}${c.segundos?` · ${c.segundos} s`:''}</div>`:''}<div class="fila"><button class="act" data-usar="${h(c.nombre)}">usar en la lista</button><button class="act" data-borrar="${h(c.nombre)}">borrar</button></div></div>`).join('');
+  html += `<h3>entrenar otro (segundos; 3 semillas)</h3><div class="nota" style="margin-top:0">marca los bloques; ⚠ los marcados «sin posición» sólo para probar (regla: cada feature con su posición)</div>`;
+  html += E.bloques.map(b=>`<label style="display:block;padding:5px 0;border-bottom:1px solid #eee;font-size:12px"><input type="checkbox" data-b="${b.clave}" ${['rectas_todo','arcos','golpes','lazos_region','entrantes60'].includes(b.clave)?'checked':''}> <b>${h(b.etiqueta)}</b>${b.sin_posicion?' <span class="fallo">⚠ sin posición</span>':''}<br><span class="nota" style="margin:0">${h(b.forma)}</span></label>`).join('');
+  html += `<div class="fila" style="margin-top:8px"><label>rejilla <select id="celdas" style="width:auto"><option value="3">3×3</option><option value="4">4×4</option></select></label><label>semillas <select id="sem" style="width:auto"><option>1</option><option selected>3</option><option>5</option></select></label></div>`;
+  html += `<input type="text" id="nombre" placeholder="nombre (vacío: los bloques)"><div class="fila" style="margin-top:8px"><button class="act p" id="crear">entrenar</button><span class="nota" id="msg"></span></div>`;
+  html += `<div class="nota">caract de cresta_curvas.py ${E.hash_cresta} · ${E.n_val} dígitos de val · lo entrenado se queda en memoria y las recetas en web/cache/recetas.json (se reentrenan al reiniciar)</div>`;
+  main.innerHTML = html;
+  main.querySelectorAll('[data-usar]').forEach(el=> el.onclick=()=>{ S.comp=el.dataset.usar; S.lista=null; ir('lista'); });
+  main.querySelectorAll('[data-borrar]').forEach(el=> el.onclick=async()=>{ if (confirm(`¿borrar «${el.dataset.borrar}»?`)) { await api('/api/borrar',{nombre:el.dataset.borrar}); verComps(); } });
+  $('#crear').onclick = async () => { const bl=[...main.querySelectorAll('[data-b]:checked')].map(e=>e.dataset.b); if (!bl.length) { $('#msg').textContent='marca algún bloque'; return; }
+    try { const r = await api('/api/nuevo',{nombre:$('#nombre').value, bloques:bl.join(','), celdas:$('#celdas').value, semillas:$('#sem').value}); $('#msg').textContent=`«${r.nombre}» en cola`; setTimeout(verComps, 1500); } catch(e) { $('#msg').textContent=e.message; } };
+  if (E.compositores.some(c=>c.estado!=='listo' && c.estado!=='error')) setTimeout(()=>{ if (S.tab==='comps') verComps(); }, 4000);
+}
+// ---------------------------------------------------------------- navegación
+const PANTALLAS = { lista:verLista, digito:verDigito, compositor:verCompositor, comparar:verComparar, comps:verComps };
+async function ir(t) { S.tab=t; document.querySelectorAll('nav button').forEach(b=> b.classList.toggle('on', b.dataset.t===t)); $('#sub').textContent = S.comp ? S.comp.slice(0,28) : ''; try { await PANTALLAS[t](); } catch(e) { main.innerHTML = `<div class="err">${h(e.message)}</div>`; } window.scrollTo(0,0); }
+document.querySelectorAll('nav button').forEach(b=> b.onclick=()=>ir(b.dataset.t));
+const Q = new URLSearchParams(location.search); if (Q.get('idx')) S.idx = +Q.get('idx'); if (Q.get('c')) S.comp = Q.get('c');   // ?idx=782&c=…#compositor abre directo (y sirve para las capturas)
+if (!T) main.innerHTML = '<div class="err">Falta el token en la URL (?t=…). Pídela por Telegram: /use revisor → url</div>'; else ir(PANTALLAS[location.hash.slice(1)] ? location.hash.slice(1) : 'lista');
+</script>
+</body>
+</html>

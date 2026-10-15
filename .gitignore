@@ -18,3 +18,6 @@ __pycache__/
 
 # cachés de candidatos de rizo-2 (se regeneran, ~35 min cada uno)
 *-candidatos*.pkl
+
+# estado del revisor de rizo-2 (caché de features y recetas entrenadas; se regenera)
+2026-10-11-rizo-dos/web/cache/

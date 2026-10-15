@@ -1,0 +1,18 @@
+{
+  "name": "revisor",
+  "descripcion": "La app movil para REVISAR DIGITOS de rizo-2 (el dueño, 2026-10-15): los fallos de cada compositor, los objetos que ve el detector sobre el digito delgado, las rejillas y la atribucion del compositor, y el mismo digito en varios compositores. Calcula en vivo en el dev y mantiene varios compositores entrenados (segundos cada uno). `url` da la direccion ya comprobada contra el socket y ufw; `instalar` la repone entera en un dev recien hecho. No gasta nada.",
+  "ejemplos": [
+    "url",
+    "estado",
+    "instalar",
+    "cerrar"
+  ],
+  "command": "./.venv/bin/python -c \"import sys,runpy;from expcnn import por_id;p=por_id('rizo-2').carpeta/'web'/'servidor.py';sys.argv=[str(p)]+sys.argv[1:];runpy.run_path(str(p),run_name='__main__')\" {{input}}",
+  "encargados": [
+    "echo"
+  ],
+  "requiere": [
+    "python3"
+  ],
+  "timeoutMs": 300000
+}

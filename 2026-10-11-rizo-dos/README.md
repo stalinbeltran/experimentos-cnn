@@ -1537,3 +1537,46 @@ que sueltan 10–20 objetos; la cresta suelta 2–5 y en 9 celdas un arco de 180
 
 Todo lo de hoy está en `main` (`f94c4fa` y anteriores); el `.npz` de entrada se regenera con
 `delg-cnn/nn/exportar_delgados.py` y el de verdad con `nn/exportar_sinteticos.py` (segundos).
+
+## 📱 84 · El REVISOR: app web móvil que calcula en vivo (el dueño, 2026-10-15: «revisar varios dígitos»)
+
+**Pedido:** *«un app web mobile que me permita revisar los dígitos (los fallos, con más frecuencia), las respuestas de los
+detectores y los valores asignados por el compositor; que corra en el dev y se calcule según lo pido; mantén varios
+compositores entrenados»*. Está en `web/` (`servidor.py` + `index.html`, stdlib, sin framework) y se pide por Telegram:
+
+```
+tú → /use revisor
+tú → url
+bot ← rizo2-revisor · puerto 8050
+      unidad rizo2-revisor: active · Result=success · NRestarts=0
+      socket LISTEN 0.0.0.0:8050 · cortafuegos abierto para el 8050 · token sí · salud {"ok": true, "compositores": 4}
+      ok  http://<ip-del-dev>:8050/?t=<token>
+```
+
+(Sesión real del 2026-10-15 por `test-executor.mjs`; el token y la IP cambian con cada dev: `url` los da comprobados.)
+
+**Cómo funciona.** Al arrancar carga el dataset y el delgado, calcula **una vez** las 394 columnas de `caract` para todos los
+dígitos y el train aumentado (×13) —**8 ms por dígito, 66 s en total, medido ese día**— y las cachea en `web/cache/` (fuera de
+git, con el hash de `cresta_curvas.py`: si cambia el detector, se recalcula). Desde ahí un **compositor es una receta**
+(qué bloques, rejilla 3×3 o 4×4, semillas) y se entrena en **~30 s con 3 semillas** (medido). Las cuatro recetas de 144 del
+README nacen entrenadas; las que crees desde la pantalla ⚙ se guardan en `web/cache/recetas.json` y se reentrenan al
+reiniciar la unidad. ⚠ Nada sobrevive a rehacer el dev: `/use revisor` → `instalar` lo repone (unidad + ufw + token).
+
+**Las cuatro pantallas**, y de qué figura sale cada una:
+- **Lista** (fig. 75): fallos / fallan en las 3 / aciertos / todos, por clase y por confusión `a→b`, con el dígito delgado y sus
+  objetos en miniatura; la etiqueta es `6→0 · idx 782 · 3/3`.
+- **Dígito** (fig. 75, 77): tinta, delgado y objetos (recta, resto, arco por sentido, lazo, entrante por cono, golpe, cruz) con la
+  rejilla 3×3 de fondo; debajo, cada objeto con sus números (área, largo, abertura, giro…) y se toca para resaltarlo.
+- **Compositor** (fig. 82–83): los logits de las 10 clases, **todas** las rejillas que recibe con el valor de cada celda (borde
+  rojo/verde si pesa), y las 16 entradas que más empujan hacia lo leído (rojo) o lo real (verde), con la suma por bloque. Si
+  acierta, se explica contra el **segundo** logit.
+- **Comparar** (fig. 80–81): el mismo dígito leído por los compositores que marques; sólo se despliegan los bloques que difieren.
+- **⚙**: los compositores entrenados (val, rango, fallos, cuota) y el formulario para entrenar otro marcando bloques. Los
+  bloques **sin posición** se marcan ⚠ (regla del dueño).
+
+**Verificado ese día** (`web/probar_revisor.py`, 11 pruebas contra un servidor de verdad): sin token da 403; **las cuatro
+recetas reproducen exactamente el val y los fallos de sus JSON** (0,9365 / 105 · 0,9340 / 108 · 0,9338 / 111 · 0,9227 / 124);
+la lectura del 782 da los logits de la figura 82 (+4,3 / +4,0, lazo región +3,0, «lazos REGIÓN · centro» la que más pesa) y con
+área se lee 6 (fig. 83); un compositor nuevo de `golpes + lazos` entrena, aparece y se borra; un modo desconocido se niega.
+⚠ Lo que no comprueba: la red de en medio (abrirla desde el móvil), y las figuras del README siguen siendo las de referencia:
+el revisor enseña lo mismo que `desglose.py`, no lo sustituye en el reporte.
