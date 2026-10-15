@@ -359,9 +359,10 @@ class App:
                 return json.loads(f.read_text())
             except json.JSONDecodeError:
                 pass
-        base = {k: {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS)} for k, v in RECETAS_BASE.items()}
-        base["aprobada · 4 en dos (con lazo / sin lazo) · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # la prueba del dueño (2026-10-15): sin extra, train tiene 0 cuatros con lazo
-        return base
+        # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
+        # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
+        # features de extra (~7 min) y cada una tarda ~15 min.
+        return {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
