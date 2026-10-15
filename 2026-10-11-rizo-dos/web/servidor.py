@@ -235,6 +235,7 @@ class Compositor:
     """Una receta (bloques + celdas + semillas) entrenada: redes, predicciones de val, fallos, confusiones y cuota."""
 
     CLASES = [str(k) for k in range(10)] + ["4l"]              # la 11.ª sólo existe con sub4; entonces la «4» es la 4a (abierta)
+    CLASES_FINAS = [str(k) if k != 4 else "4a" for k in range(10)] + ["4l"]
 
     def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False):
         self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
@@ -265,24 +266,28 @@ class Compositor:
                 red, mu, sd = entrenar(Xtr, Ytr, s, salidas=11 if self.sub4 else 10); self.redes.append((red, mu, sd))
                 with torch.no_grad():
                     lg = red(torch.from_numpy((Xva - mu) / sd).float()).numpy()
-                pf = lg.argmax(1); finos.append(pf); p = np.where(pf == 10, 4, pf); preds.append(p); accs.append(float((p == datos.y[datos.va]).mean()))
+                pf = lg.argmax(1); finos.append(pf); pj = np.where(pf == 10, 4, pf)
+                # ⚠ Con el 4 en dos, la clase «4» NO EXISTE (el dueño, 2026-10-15): se evalúa en las 11 clases, y un 4l leído 4a es
+                # un fallo. «Juntando» queda sólo como dato secundario (val_juntando) para comparar con las recetas sin partir.
+                p = pf if self.sub4 else pj; preds.append(p); accs.append(float((p == (yf[datos.va] if self.sub4 else datos.y[datos.va])).mean()))
                 if self.sub4:
-                    accs_finos.append(float((pf == yf[datos.va]).mean()))   # con las dos clases del 4 SEPARADAS
+                    accs_finos.append(float((pj == datos.y[datos.va]).mean()))   # = val_juntando
                 W = red[0].weight.detach().numpy(); wt = (W ** 2).sum(); cuotas.append({b: float((W[:, a:z] ** 2).sum() / wt) for b, (a, z) in self.cortes(datos).items()})
                 if s == self.semillas[0]:
                     self.logits_va = lg
-            y = datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]; self.finos = np.stack(finos)
+            y = datos.etiquetas_finas()[datos.va] if self.sub4 else datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]; self.finos = np.stack(finos)
+            et = lambda k: self.CLASES_FINAS[k] if self.sub4 else str(k)
             sub = None
             if self.sub4:                                         # cómo le va al 4 partido (semilla 0): cuántos hay y cómo se leen
                 yf = datos.etiquetas_finas(); yv, pf = yf[datos.va], finos[0]; es4 = datos.y[datos.va] == 4
                 cuenta = lambda real, lee: int(((yv == real) & (pf == lee)).sum())
-                sub = {"val_fino": round(float(np.mean(accs_finos)), 4), "val_fino_rango": [round(min(accs_finos), 4), round(max(accs_finos), 4)], "fallos_finos_s0": int((finos[0] != yv).sum()), "train_4l": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4a": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4l": int((yv == 10).sum()), "val_4a": int((yv == 4).sum()),
+                sub = {"val_juntando": round(float(np.mean(accs_finos)), 4), "val_juntando_rango": [round(min(accs_finos), 4), round(max(accs_finos), 4)], "fallos_juntando_s0": int((np.where(finos[0] == 10, 4, finos[0]) != datos.y[datos.va]).sum()), "train_4l": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4a": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4l": int((yv == 10).sum()), "val_4a": int((yv == 4).sum()),
                        "4l_leido_4l": cuenta(10, 10), "4l_leido_4a": cuenta(10, 4), "4l_leido_otro": int(((yv == 10) & (pf != 10) & (pf != 4)).sum()),
                        "4a_leido_4a": cuenta(4, 4), "4a_leido_4l": cuenta(4, 10), "4a_leido_otro": int(((yv == 4) & (pf != 10) & (pf != 4)).sum()),
                        "otros_leidos_4l": int((~es4 & (pf == 10)).sum()), "otros_leidos_4a": int((~es4 & (pf == 4)).sum())}
             conf = {}
             for j in np.flatnonzero(p0 != y):
-                k = f"{y[j]}→{p0[j]}"; conf[k] = conf.get(k, 0) + 1
+                k = f"{et(y[j])}→{et(p0[j])}"; conf[k] = conf.get(k, 0) + 1
             self.segundos = time.time() - t
             self.resumen = {"nombre": self.nombre, "bloques": self.bloques, "celdas": self.celdas, "semillas": list(self.semillas), "n": int(self.n),
                             "val": round(float(np.mean(accs)), 4), "val_rango": [round(min(accs), 4), round(max(accs), 4)],
@@ -316,7 +321,7 @@ class Compositor:
         orden = np.argsort(-np.abs(atr))[:16]
         va_pos = int(np.flatnonzero(datos.va == i)[0]) if i in set(datos.va.tolist()) else None
         return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pf]), "p_real": float(p[real_f]),
-                "predicho_fino": pf, "real_fino": real_f, "clases": ([str(k) if k != 4 else "4a" for k in range(10)] + ["4l"]) if self.sub4 else self.CLASES[:10], "sub4": self.sub4,
+                "predicho_fino": pf, "real_fino": real_f, "clases": self.CLASES_FINAS if self.sub4 else self.CLASES[:10], "sub4": self.sub4, "acierta": (pf == real_f) if self.sub4 else (pred == real),
                 "logits": [float(v) for v in lg.detach().numpy()], "semillas_que_fallan": int(self.veces[va_pos]) if va_pos is not None else None,
                 "semillas": len(self.semillas), "bloques": bloques, "pesan": [{"nombre": nombres[k], "valor": float(x[k]), "atr": float(atr[k])} for k in orden],
                 "suma_por_bloque": {b: float(atr[a:zz].sum()) for b, (a, zz) in self.cortes(datos).items()}}
@@ -404,8 +409,9 @@ class App:
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
-        c = self.listo(nombre); d = self.datos; y = d.y[d.va]; p0 = c.preds[0]
-        yf = d.etiquetas_finas()[d.va]                            # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor
+        c = self.listo(nombre); d = self.datos; yf = d.etiquetas_finas()[d.va]; y = yf if c.sub4 else d.y[d.va]; p0 = c.preds[0]
+        # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor; con sub4, y y p0 están en las 11 clases
+        fino = lambda e: 10 if e == "4l" else 4 if e == "4a" else int(e)
         if sub in ("l", "a"):
             clase = 4
         sel = np.ones(len(d.va), bool)
@@ -416,18 +422,19 @@ class App:
         elif modo == "aciertos":
             sel &= p0 == y
         if clase is not None:
-            sel &= y == int(clase)
+            sel &= (d.y[d.va] == int(clase)) if not c.sub4 or int(clase) != 4 else ((y == 4) | (y == 10))
         if sub == "l":
             sel &= yf == 10
         elif sub == "a":
             sel &= (y == 4) & (yf == 4)
         if conf:
-            a, b = conf.replace("->", "→").split("→"); sel &= (y == int(a)) & (p0 == int(b))
+            a, b = conf.replace("->", "→").split("→"); sel &= (y == fino(a)) & (p0 == fino(b))
         ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy(); pf = c.finos[0]
-        filas = [{"idx": int(d.va[j]), "real": int(y[j]), "predicho": int(p0[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
+        filas = [{"idx": int(d.va[j]), "real": int(d.y[d.va][j]), "predicho": int(np.where(p0[j] == 10, 4, p0[j])), "fallo": bool(p0[j] != y[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
                   "sub": ("l" if yf[j] == 10 else "a") if y[j] == 4 else None, "predicho_fino": int(pf[j])} for k, j in enumerate(ids)]
-        por_clase = {str(k): {"n": int((y == k).sum()), "fallos": int(((p0 != y) & (y == k)).sum())} for k in range(10)}
-        por_clase["4l"] = {"n": int((yf == 10).sum()), "fallos": int(((p0 != y) & (yf == 10)).sum())}; por_clase["4a"] = {"n": int(((y == 4) & (yf == 4)).sum()), "fallos": int(((p0 != y) & (y == 4) & (yf == 4)).sum())}
+        yc = d.y[d.va]; mal = p0 != y
+        por_clase = {str(k): {"n": int((yc == k).sum()), "fallos": int((mal & (yc == k)).sum())} for k in range(10)}
+        por_clase["4l"] = {"n": int((yf == 10).sum()), "fallos": int((mal & (yf == 10)).sum())}; por_clase["4a"] = {"n": int(((yc == 4) & (yf == 4)).sum()), "fallos": int((mal & (yc == 4) & (yf == 4)).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:

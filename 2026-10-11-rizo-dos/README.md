@@ -1658,3 +1658,11 @@ Lo que sale: (1) con las clases separadas las tres primeras **empatan** (0,9728�
 la del lazo por **presencia** (15 de 21): región y área, que codifican el tamaño del lazo, no ayudan a decir «hay lazo»; (2) ningún
 4 abierto se lee 4l en ninguna receta (1 falso 4l en conos 60°, de otro dígito); (3) el bloque de cruces **resta** también aquí
 (−1 punto), como en el § 70. Los cinco quedan entrenados en el revisor.
+
+#### 85d · ⚠ Con el 4 en dos, la clase «4» NO EXISTE (el dueño, 2026-10-15: «sé que es raro, pero necesito evaluarlo así»)
+
+Desde este commit, un compositor «4 en dos» se evalúa **sólo en las 11 clases**: `val`, fallos, confusiones y la Lista del revisor
+cuentan un 4l leído 4a como **fallo** (`4l→4a`), y «juntando 4l+4a» queda como dato secundario en ⚙. Las tablas del § 85b–c
+están en la convención anterior (val juntando como principal); su columna «val SEPARADAS» es la que ahora se llama `val`.
+Medido con 180 de train y 1 semilla (sin 4l que aprender): val 0,9252, 121 fallos, `4l→4a` ×14 — es decir, sin extra, partir el 4
+cuesta 1,1 puntos enteros porque la clase 4l no se puede aprender.
