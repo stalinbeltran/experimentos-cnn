@@ -1666,3 +1666,23 @@ cuentan un 4l leído 4a como **fallo** (`4l→4a`), y «juntando 4l+4a» queda c
 están en la convención anterior (val juntando como principal); su columna «val SEPARADAS» es la que ahora se llama `val`.
 Medido con 180 de train y 1 semilla (sin 4l que aprender): val 0,9252, 121 fallos, `4l→4a` ×14 — es decir, sin extra, partir el 4
 cuesta 1,1 puntos enteros porque la clase 4l no se puede aprender.
+
+#### 85e · La tabla del § 85c REHECHA en 11 clases (la clase 4 no existe; 2026-10-15, tras el reinicio con la regla del § 85d)
+
+Mismos compositores, misma unidad; ahora `val` y los fallos cuentan `4l→4a` como fallo. Los dos últimos los creó el dueño desde
+la app con 180 de train (sin 4l que aprender). 4l de val (21): leídos 4l / 4a / otro.
+
+| compositor | train | val (11 clases, 3 sem.) | fallos s0 | juntando (secundario) | 4l → 4l / 4a / otro | falsos 4l | 3 confusiones |
+|---|---:|---|---:|---|---|---:|---|
+| aprobada · 4 en dos · +extra | 4003 | **0,9734** [0,9728–0,9746] | 44 | 0,9788 | 11 / 8 / 2 | 0 | 4l→4a ×8, 9→3 ×6, 1→7 ×3 |
+| restos fundido, lazo presencia · 4 en dos · +extra | 4003 | **0,9734** [0,9734–0,9734] | 43 | 0,9765 | **15** / 4 / 2 | 0 | 9→3 ×6, 4l→4a ×4, 1→7 ×3 |
+| lazo área · 4 en dos · +extra | 4003 | 0,9728 [0,9722–0,9734] | 44 | 0,9786 | 10 / 8 / 3 | 0 | 4l→4a ×8, 9→3 ×5, 1→7 ×3 |
+| conos 60° sin restos · 4 en dos · +extra | 4003 | 0,9699 [0,9691–0,9709] | 49 | 0,9732 | 12 / 5 / 4 | 1 | 4l→4a ×5, 2→1 ×4, 9→3 ×4 |
+| Cruces 1 · 4 en dos · +extra | 4003 | 0,9635 [0,9623–0,9647] | 59 | 0,9662 | 14 / 4 / 3 | 0 | 2→1 ×8, 9→3 ×5, 4l→4a ×4 |
+| lazos_region + entrantes60 · 4 en dos (del dueño) | 180 | 0,8924 [0,8881–0,8961] | 181 | 0,8973 | 0 / 10 / 11 | 0 | 5→4a ×15, 1→7 ×11, 4l→4a ×10 |
+| Cruces y aprobadas (del dueño) | 180 | 0,8922 [0,8905–0,8936] | 174 | 0,8980 | 0 / 10 / 11 | 0 | 5→4a ×17, 1→7 ×11, 4l→4a ×10 |
+
+Lo que sale, en 11 clases: (1) **`4l→4a` es la primera o segunda confusión** de todas las recetas con extra: el coste de la clase
+nueva es de 4 a 8 fallos sobre 21; (2) la receta con **lazo por presencia** sigue siendo la que más 4l reconoce (15 de 21) y
+empata en val con la aprobada; (3) con **180 de train ningún 4l se reconoce** (0 de 21) y el compositor cae a 0,892: la clase
+existe y no tiene ejemplos; (4) ningún 4 abierto se lee 4l en ninguna receta.
