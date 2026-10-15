@@ -1460,6 +1460,7 @@ Lo que sale:
   todo lo que quede a > 1 px de cualquier objeto). Con centro, largo y orientación, como una recta (§ 74).
 
 **La representación (cómo un objeto se vuelve números)**
+- **región (del lazo)**: en vez de una gaussiana en el centro, la fracción de cada celda que cubre el polígono del lazo: tamaño y forma en los mismos 9 números (§ 79, adoptada).
 - **rejilla 3×3**: el 32×32 partido en 9 celdas de ~10,7 px. Cada objeto se pinta como una gaussiana (σ 1,5 px; 2 px
   en concavidades y entrantes) centrada en su centro, y la celda guarda el MÁXIMO. Es la única noción de posición que
   recibe el compositor. 4×4 no mejora (§ 55).
@@ -1480,6 +1481,32 @@ Lo que sale:
   `cresta-cc-3x3` (§ 55, concavidades de arco) → `cresta-entrantes` (§ 58, entrantes a 45°) → `cresta-entrantes4-*`
   (§ 59, sin posición) → `cresta-entrantes60-{presencia,fuerza}` (§ 66, conos) → `cresta-restos-{fundido,aparte}` (§ 74).
 - **desplazamientos**: la curva de acierto contra el dígito movido d px (regla del dueño); § 68.
+
+### 78–79 · El LAZO con tamaño: región y área (el dueño, 2026-10-15)
+
+`78-lazo-tamano.png`: el área del lazo separa el 0 del resto (mediana 296 px² contra 113 el 6, 98 el 9, 87 el 8, 75 el 4,
+cuartiles sin solape) y la rejilla de hoy —gaussiana de altura 1 en el centro— la tira: un lazo de 312 px² y uno de 55
+dejan la misma marca. Dos codificaciones nuevas del bloque de lazos (10 números, igual que hoy; `--lazos region|area`;
+`bloque_lazos_region` y `bloque_lazos_area`; test con dos círculos de radio 12 y 5): **región** = fracción de cada celda
+cubierta por el polígono del lazo; **área** = la gaussiana con altura área/300. Lanzador `nn/correr-lazos.sh` (unidad
+`rizo2-lazos`, `Result=success`, `NRestarts=0`). Figura `79-lazo-tamano-resultado.png`.
+
+| lazo como | n | val | a ciegas | fallos (3 sem.) | 0 | 8 | 9 |
+|---|---:|---|---:|---|---|---|---|
+| presencia (hoy, § 74) | 144 | 0,9340 [0,933–0,934] | 0,9158 | 108 (95) | 6 | 11 | 11 |
+| **región** | 144 | **0,9365** [0,935–0,939] | **0,9161** | **105** (92) | 6 | 13 | 9 |
+| área | 144 | 0,9338 [0,931–0,936] | 0,9129 | 111 (97) | 5 | 16 | 9 |
+
+Lo que sale:
+1. **Región gana por poco**: +0,25 en val (el rango de sus 3 semillas queda entero por encima del de la base) y +0,03 a
+   ciegas, 3 fallos menos. Es una mejora real pero pequeña: la forma del lazo sí se lee, el tamaño no decide tanto.
+2. **Área no ayuda** (−0,3 a ciegas, 8→9 sube de 11 a 16): escalar la altura por el área hace que un 8 con un lazo grande y
+   otro pequeño se parezca a un 9, y el compositor pierde más de lo que gana.
+3. **El 0 no se mueve** (6 → 6 → 5): sus fallos son los ceros **abiertos** en el mapa delgado (§ 76: sin lazo), y a un
+   lazo que no existe no se le puede dar tamaño. El tamaño sólo ayudaría al 0 con lazo, que ya acierta.
+
+Se adopta **región** como forma del bloque de lazos (misma cuenta de números). Receta aprobada desde aquí: rectas∪restos
++ arcos + golpes + lazos-región + entrantes conos 60° presencia = 144.
 
 ## ⏳ PARA SEGUIR (el dueño, 2026-10-14): las cuatro features de la cresta SE QUEDAN; mañana, rejilla 4×4 contra 3×3
 
