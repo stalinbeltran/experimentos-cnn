@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>rizo-2 · etiquetar los 4</title>
+<style>
+ body{margin:0;font-family:-apple-system,system-ui,sans-serif;font-size:13px;color:#222}
+ header{background:#222;color:#fff;padding:10px 12px;font-weight:600;position:sticky;top:0;z-index:5}
+ main{padding:8px}
+ .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+ .chip{border:1px solid #222;border-radius:14px;padding:4px 10px;font-size:12px;background:#fff}
+ .chip.on{background:#222;color:#fff}
+ .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+ .c{border:3px solid #bbb;border-radius:6px;padding:3px;text-align:center;font-size:11px;background:#fff}
+ .c.l{border-color:#1f8a4c} .c.a{border-color:#bbb} .c.m{box-shadow:0 0 0 2px #d6a21a inset}
+ .c canvas{width:100%;display:block}
+ .nota{color:#666;font-size:12px;margin:6px 0}
+ textarea{width:100%;height:120px;font-size:11px}
+ button.act{font-size:12px;padding:6px 10px;border:1px solid #222;border-radius:6px;background:#fff}
+</style></head>
+<body><header>rizo-2 · etiquetar los 4: toca para cambiar 4l ⇄ 4a</header><main id="m">cargando…</main>
+<script>
+const T=new URLSearchParams(location.search).get('t')||''; const main=document.getElementById('m');
+async function api(p,q={}){const u=new URL(p,location.origin);u.searchParams.set('t',T);for(const[k,v]of Object.entries(q))u.searchParams.set(k,v);const j=await (await fetch(u)).json();if(j.error)throw new Error(j.error);return j;}
+const S={datos:null,parte:'todas',ver:'todos'};
+const clase=c=>c.manual||c.regla;
+function pinta(cv,M){const n=4,g=cv.getContext('2d');cv.width=cv.height=32*n;for(let i=0;i<1024;i++){const v=M[i];if(v>0.05){const k=Math.round(255-255*Math.min(v/2.4,1));g.fillStyle=`rgb(${k},${k},${k})`;g.fillRect((i%32)*n,Math.floor(i/32)*n,n,n);}}}
+function render(){
+ const D=S.datos; const todos=D.cuatros; const sel=todos.filter(c=>(S.parte==='todas'||c.parte===S.parte)&&(S.ver==='todos'||(S.ver==='4l'&&clase(c)==='4l')||(S.ver==='4a'&&clase(c)==='4a')||(S.ver==='manual'&&c.manual)||(S.ver==='relleno'&&clase(c)==='4l'&&!c.lazo)));
+ const n4l=todos.filter(c=>clase(c)==='4l').length, nman=todos.filter(c=>c.manual).length;
+ let h=`<div class="chips">${['todas','train','extra','val'].map(p=>`<span class="chip ${S.parte===p?'on':''}" data-p="${p}">${p}</span>`).join('')}</div>`;
+ h+=`<div class="chips">${[['todos','todos'],['4l','4l'],['relleno','4l sin lazo (los dudosos)'],['4a','4a'],['manual','corregidos a mano']].map(([k,t])=>`<span class="chip ${S.ver===k?'on':''}" data-v="${k}">${t}</span>`).join('')}</div>`;
+ h+=`<div class="nota">${sel.length} de ${todos.length} cuatros · 4l: ${n4l} · corregidos a mano: ${nman} · <b>verde = 4l (cerrado)</b>, gris = 4a (abierto), borde ocre = decidido a mano. Un toque cambia la clase y se guarda al instante en web/etiquetas-4.json.</div>`;
+ h+=`<div class="grid">${sel.map(c=>`<div class="c ${clase(c)==='4l'?'l':'a'} ${c.manual?'m':''}" data-i="${c.idx}"><canvas id="c${c.idx}"></canvas>${c.idx} · ${c.parte}<br><b>${clase(c)}</b>${c.manual?' (mano)':' (regla)'}${c.lazo?' · lazo':''}</div>`).join('')}</div>`;
+ h+=`<h3>exportar</h3><div class="nota">las decisiones a mano, para pegarlas en el chat si hace falta:</div><textarea id="exp" readonly></textarea>`;
+ h+=`<div class="chips" style="margin-top:10px"><button class="act" id="re">reentrenar los compositores con las etiquetas de ahora (≈15 min cada uno con extra)</button><span class="nota" id="msg"></span></div>`;
+ main.innerHTML=h; sel.forEach(c=>pinta(document.getElementById('c'+c.idx),D.M[c.idx]));
+ main.querySelectorAll('[data-p]').forEach(e=>e.onclick=()=>{S.parte=e.dataset.p;render();});
+ main.querySelectorAll('[data-v]').forEach(e=>e.onclick=()=>{S.ver=e.dataset.v;render();});
+ main.querySelectorAll('.c').forEach(e=>e.onclick=async()=>{const i=+e.dataset.i;const c=todos.find(x=>x.idx===i);const nueva=clase(c)==='4l'?'4a':'4l';const r=await api('/api/marcar',{idx:i,clase:nueva===c.regla?'auto':nueva});c.manual=nueva===c.regla?null:nueva;render();window.scrollTo(0,e.offsetTop-80);});
+ const man=todos.filter(c=>c.manual); document.getElementById('exp').value=`etiquetas-4 (${new Date().toISOString().slice(0,16)}Z)\n4l: ${man.filter(c=>c.manual==='4l').map(c=>c.idx).join(', ')||'—'}\n4a: ${man.filter(c=>c.manual==='4a').map(c=>c.idx).join(', ')||'—'}`;
+ document.getElementById('re').onclick=async()=>{const r=await api('/api/reentrenar');document.getElementById('msg').textContent=`${r.en_cola} compositor(es) en cola; míralos en ⚙ del revisor`;};
+}
+(async()=>{try{S.datos=await api('/api/cuatros');render();}catch(e){main.innerHTML='<div class="nota">'+e.message+'</div>';}})();
+</script></body></html>

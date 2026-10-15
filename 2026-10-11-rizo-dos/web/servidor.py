@@ -213,8 +213,43 @@ class Datos:
             for i in np.flatnonzero(self.y == 4):
                 if self.subgrupo4(i):
                     f[i] = 10
+            # ⚠ Las correcciones A MANO del dueño mandan sobre la regla (2026-10-15: «son varios, prefiero marcarlos a mano»).
+            # Viven en web/etiquetas-4.json, EN GIT (no en la caché): son un dato que no se re-deriva (R9).
+            for i, cl in self.manuales().items():
+                if self.y[i] == 4:
+                    f[i] = 10 if cl == "4l" else 4
             self._finas = f
         return self._finas
+
+    def manuales(self) -> dict:
+        """{idx: '4l'|'4a'} decididos a mano. Fichero: {"4l": [idx…], "4a": [idx…], "quien": …, "cuando": …}."""
+        f = AQUI / "web" / "etiquetas-4.json"
+        if not f.is_file():
+            return {}
+        try:
+            j = json.loads(f.read_text()); return {**{int(i): "4l" for i in j.get("4l", [])}, **{int(i): "4a" for i in j.get("4a", [])}}
+        except (json.JSONDecodeError, ValueError):
+            return {}
+
+    def marcar(self, i: int, clase: str):
+        """Guarda una decisión a mano ('4l', '4a' o 'auto' = quitarla) y olvida las etiquetas calculadas (NO reentrena nada)."""
+        if self.y[i] != 4:
+            raise ValueError(f"idx {i} no es un 4")
+        f = AQUI / "web" / "etiquetas-4.json"; m = self.manuales(); m.pop(i, None)
+        if clase in ("4l", "4a"):
+            m[i] = clase
+        elif clase != "auto":
+            raise ValueError("clase: 4l · 4a · auto")
+        f.write_text(json.dumps({"4l": sorted(k for k, v in m.items() if v == "4l"), "4a": sorted(k for k, v in m.items() if v == "4a"),
+                                 "quien": "el dueño, desde /etiquetar", "cuando": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
+                                 "regla_base": "Datos.subgrupo4 (§ 85f): lazo, o un solo extremo libre sobre el nudo"}, indent=1) + "\n")
+        self._finas = None
+
+    def cuatros(self) -> list[dict]:
+        """Todos los 4 del dataset con su parte, la clase por la REGLA y la decisión a mano si la hay."""
+        m = self.manuales(); parte = {int(i): "train" for i in self.tr}; parte.update({int(i): "val" for i in self.va}); parte.update({int(i): "extra" for i in self.ex})
+        return [{"idx": int(i), "parte": parte.get(int(i), "?"), "regla": "4l" if self.subgrupo4(int(i)) else "4a", "manual": m.get(int(i)), "lazo": len(self.objetos(int(i))["lazos"]) > 0}
+                for i in np.flatnonzero(self.y == 4)]
 
     def features(self, celdas: int):
         if celdas in self.X:
@@ -503,6 +538,18 @@ class Handler(BaseHTTPRequestHandler):
         if not secrets.compare_digest(str(pide("t", "")), self.token):
             return self._json({"error": "falta el token. Pídelo con `web/servidor.py url`"}, 403)
         try:
+            if u.path == "/etiquetar":
+                return self._envia(200, "text/html; charset=utf-8", (AQUI / "web" / "etiquetar.html").read_bytes())
+            if u.path == "/api/cuatros":
+                return self._json({"cuatros": self.app.datos.cuatros(), "M": {int(i): np.round(self.app.datos.M[i], 2).ravel().tolist() for i in np.flatnonzero(self.app.datos.y == 4)}})
+            if u.path == "/api/marcar":
+                self.app.datos.marcar(int(pide("idx")), pide("clase", "auto")); return self._json({"ok": True, "manuales": self.app.datos.manuales()})
+            if u.path == "/api/reentrenar":                        # tras corregir etiquetas: vuelve a la cola todo compositor con el 4 en dos (~15 min cada uno con extra)
+                n = 0
+                for c in list(self.app.comps.values()):
+                    if c.sub4:
+                        c.estado = "pendiente"; self.app.cola.append(c); n += 1
+                return self._json({"ok": True, "en_cola": n})
             if u.path == "/":
                 return self._envia(200, "text/html; charset=utf-8", (AQUI / "web" / "index.html").read_bytes())
             if u.path == "/api/estado":
@@ -666,7 +713,7 @@ def main() -> int:
             print(f"✗ no hay token: la app no se ha levantado nunca en esta máquina.\n  → `web/servidor.py instalar`  o  sudo systemctl start {UNIDAD}"); return 1
         if estado(a.puerto) != 0:
             return 1
-        print(f"http://{_ip()}:{a.puerto}/?t={t}"); return 0
+        print(f"http://{_ip()}:{a.puerto}/?t={t}"); print(f"etiquetar los 4: http://{_ip()}:{a.puerto}/etiquetar?t={t}"); return 0
     if modo not in ("", "servir"):                                # se NIEGA, no adivina
         print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · (nada: levantarla)\n"); return 2
     return servir(a.puerto, a.host)

@@ -131,6 +131,23 @@ class ConDato(unittest.TestCase):
         self.assertEqual(R["lecturas"]["lazo área (§ 79)"]["predicho"], 6)             # README § 83: con área se lee bien
         m = self.api("/api/miniaturas", ids="782,101"); self.assertEqual([x["idx"] for x in m], [782, 101])
 
+    def test_etiquetar_a_mano(self):
+        """/etiquetar: marcar un 4 a mano manda sobre la regla, se guarda en web/etiquetas-4.json y 'auto' lo quita."""
+        f = AQUI / "web" / "etiquetas-4.json"; antes = f.read_text() if f.is_file() else None
+        try:
+            c = {x["idx"]: x for x in self.api("/api/cuatros")["cuatros"]}; self.assertEqual(len(c), 568); self.assertIsNone(c[110]["manual"])
+            r = self.api("/api/marcar", idx=110, clase="4a"); self.assertEqual(r["manuales"], {"110": "4a"})
+            self.assertEqual(json.loads(f.read_text())["4a"], [110])
+            self.assertEqual({x["idx"]: x for x in self.api("/api/cuatros")["cuatros"]}[110]["manual"], "4a")
+            with self.assertRaises(urllib.error.HTTPError):
+                self.api("/api/marcar", idx=782, clase="4l")                 # el 782 es un 6
+            self.api("/api/marcar", idx=110, clase="auto"); self.assertEqual(json.loads(f.read_text())["4a"], [])
+        finally:
+            if antes is None:
+                f.unlink(missing_ok=True)
+            else:
+                f.write_text(antes)
+
     def test_nuevo_compositor_y_borrar(self):
         r = self.api("/api/nuevo", nombre="prueba-golpes", bloques="golpes,lazos", semillas=1)
         self.assertEqual(r["nombre"], "prueba-golpes")

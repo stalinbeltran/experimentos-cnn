@@ -1721,3 +1721,13 @@ siendo la primera confusión de la aprobada (8): los 4l que fallan son los **rel
 compositor le llegan sin lazo (el bloque `lazos_region` está a cero); (4) con 180 de train, 0 de 27. Para subir el 4l haría
 falta una feature que diga «cerrado por arriba» sin lazo —justo la señal del § 85f, los extremos sobre el nudo—, que hoy no
 entra en ningún bloque.
+
+#### 85h · Etiquetar los 4 A MANO: `/etiquetar` (el dueño, 2026-10-15: «son varios, prefiero marcarlos a mano»)
+
+Las reglas automáticas se quedaron sin señal para los «ч» de palo corto (§ 85f–g, figuras 88–89), así que la etiqueta la decide
+el dueño. `web/etiquetar.html` (misma unidad, `/etiquetar?t=…`; `url` la imprime) enseña los **568 cuatros** del dataset en
+delgado, marcados por la regla (verde = 4l), con filtros por parte y «4l sin lazo (los dudosos)»; un toque cambia la clase y se
+guarda al instante en **`web/etiquetas-4.json`**, que va **en git** porque es un dato que no se re-deriva (R9): `{"4l": [...],
+"4a": [...]}` manda sobre la regla en `Datos.etiquetas_finas`. La página exporta las decisiones como texto para pegarlas en el
+chat, y tiene un botón «reentrenar» que vuelve a poner en cola los compositores con el 4 en dos (no es automático: ≈15 min
+cada uno con extra). Test en `probar_revisor.py` (`test_etiquetar_a_mano`).
