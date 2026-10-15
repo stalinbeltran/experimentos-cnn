@@ -446,9 +446,9 @@ class App:
                 time.sleep(0.3); continue
             if self.comps.get(c.nombre) is not c:                 # borrado mientras esperaba en la cola: no se entrena (13–20 min con extra)
                 continue
-            if c.estado == "listo":                               # ya entrenado desde que se encoló (p. ej. «reentrenar» pulsado dos veces): no se repite
+            if c.estado == "listo" and not getattr(c, "reentrenar", False):   # ya entrenado desde que se encoló («reentrenar» dos veces): no se repite
                 continue
-            c.entrenar(self.datos)
+            c.reentrenar = False; c.entrenar(self.datos)
 
     def listo(self, nombre: str) -> Compositor:
         c = self.comps.get(nombre)
@@ -550,7 +550,10 @@ class Handler(BaseHTTPRequestHandler):
                 n = 0
                 for c in list(self.app.comps.values()):
                     if c.sub4 and c not in self.app.cola:          # el que ya espera no se duplica; el que está entrenando se vuelve a encolar (sus etiquetas son las viejas)
-                        c.estado = "pendiente" if c.estado != "entrenando" else c.estado; self.app.cola.append(c); n += 1
+                        c.reentrenar = True                        # y se marca: aunque termine «listo» antes de que le toque, se repite con las etiquetas nuevas
+                        if c.estado != "entrenando":
+                            c.estado = "pendiente"
+                        self.app.cola.append(c); n += 1
                 return self._json({"ok": True, "en_cola": n})
             if u.path == "/":
                 return self._envia(200, "text/html; charset=utf-8", (AQUI / "web" / "index.html").read_bytes())
