@@ -1752,3 +1752,37 @@ regla sucia el compositor «acertaba» 4l en abiertos que ahora son 4a, y los 13
 bastan para los 26 de val: la aprobada reconoce 11, el lazo por presencia 15; (2) sigue sin haber falsos 4l (un 4 abierto nunca
 se lee cerrado); (3) con 180 de train, 0 de 26. **La mitad de los 4l de val se leen como 4a**: es la feature que falta
 («cerrado por arriba» sin lazo), no la etiqueta.
+
+### 95 · El VÉRTICE del 4 por los bordes de la tinta: detector y compositor (el dueño, 2026-10-16)
+
+**De dónde viene.** El dueño descartó un detector entrenado sobre la tinta («no usa la misma entrada, y tiene 32 píxeles») y
+pidió mirar **el ángulo de la punta superior, sólo por los bordes, sin la raya inferior y sin el relleno**; luego precisó: «el
+ángulo no importa, sólo vemos si está; por supuesto debe ser menor de 90°», y siempre con posición. Figura 94 (medido en val
+con las etiquetas a mano): el **ángulo como número NO separa** (mediana 38° en 4l, 34° en 4a, histogramas superpuestos);
+los **dos bordes por separado SÍ**: en un triángulo el izquierdo baja hacia la izquierda y el derecho vertical o hacia la
+derecha; en un «ч» los dos bajan paralelos hacia la izquierda (son el mismo trazo).
+
+**Detector** (`cresta_curvas.vertices(tinta)`): en las 10 filas bajo la cima, el componente que toca la cima tiene **una sola
+mancha por fila** (una segunda mancha —el palo del 4 abierto, el lazo— lo anula), borde izquierdo con pendiente < −0,2 px/fila,
+borde derecho > −0,1, apertura entre 0° y 90°. Sale como objeto con posición; **bloque `vertice`** = 3×3 de presencia + cuenta
+(10 números). `caract(M, celdas, tinta)` recibe ahora la tinta; sin ella el bloque va a cero. Test con los sintéticos de
+`triangulo_sinteticos.py` (`probar_entrantes.Vertice`: triángulos sí, «ч» y hueco no).
+
+Dónde dispara en val: **4l 16 de 26, 4a 0 de 137**; fuera del 4, en el **1** con bandera (76 de 164: también es un vértice,
+arriba y centrado) y en 7 ceros, 7 doses, 9 seises, 2 cincos, 1 ocho, 2 nueves. La condición decisiva fue «una sola mancha en
+TODA la banda»: cortando la banda al aparecer la segunda daba 13 falsos en 4a y disparaba en la mitad de 0, 2 y 7.
+
+**En el compositor** (4 en dos, extra, 11 clases, etiquetas a mano; 3 semillas):
+
+| compositor | n | val | fallos s0 | 4l → 4l / 4a / otro | cuota vértice |
+|---|---:|---|---:|---|---:|
+| aprobada | 144 | 0,9716 [0,9709–0,9728] | 47 | 11 / 11 / 4 | — |
+| **aprobada + vértice** | 154 | **0,9728** [0,9716–0,9740] | **42** | 11 / 10 / 5 | 2 % |
+| lazo presencia | 144 | 0,9716 [0,9716–0,9716] | 46 | 15 / 7 / 4 | — |
+| **lazo presencia + vértice** | 154 | **0,9730** [0,9722–0,9740] | 44 | 14 / 7 / 5 | 2 % |
+
+Lo que sale: (1) el vértice **sube el val** en las dos recetas (+0,12 y +0,14, los rangos de semillas casi no se tocan) y quita
+5 y 2 fallos; (2) pero **no mueve los 4l reconocidos** (11 → 11, 15 → 14): la ganancia está repartida (`4l→4a` baja de 11 a 10 y
+mejoran otros dígitos), no en la clase nueva. Con 2 % de cuota el compositor lo usa poco: 16 presencias en 26 4l contra 76 en
+los 1 lo hacen más «señal de 1 con bandera» que «señal de 4 cerrado» para una red de 180 + extra; (3) sigue sin falsos 4l.
+Los dos compositores quedan en el revisor.
