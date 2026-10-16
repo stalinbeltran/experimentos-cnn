@@ -1796,8 +1796,18 @@ los 4l reconocidos** (11 de 26) con un 2 % de cuota. Dos pistas sin probar: darl
 para ver si el vértice disparó y el compositor lo ignoró, o no disparó. Para reponer el revisor en el dev nuevo:
 
 ```bash
-cd ~/src && git clone https://github.com/stalinbeltran/experimentos-cnn && cd experimentos-cnn
-python3 -m venv .venv && .venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch && .venv/bin/pip install numpy scipy scikit-image pillow matplotlib -e .
-(cd 2026-10-15-delgado-cnn && ../.venv/bin/python nn/exportar_delgados.py)      # el .npz del delgado, segundos
-.venv/bin/python 2026-10-11-rizo-dos/web/servidor.py instalar                   # unidad + ufw; luego /use revisor → url
+sh ~/src/experimentos-cnn/2026-10-11-rizo-dos/web/reponer.sh    # venv (torch CPU) + delgado + unidad + ufw; luego /use revisor → url
 ```
+
+✅ **Desde la tarde del 2026-10-16 eso lo hace solo el `post` de `types/dev.json` del lanzador** (el dueño: «prepara todo
+para que no tengamos que esperar para usarlo»), después de `almacen conectar`. Y lo que hay que esperar ya no es el
+entrenamiento: **los pesos de cada compositor, las recetas y la caché de features viven en el almacén**
+(`foveal-vision-data/experimentos-cnn-resultados/rizo-2/revisor/`, con `cache/` para los `.npz`) y la app los restaura al
+arrancar si la huella coincide. Medido ese día en el dev, borrando `web/cache` y corriendo `reponer.sh`: **5 compositores
+«listo» en 0 s**, `pendientes 0`, y `features(3)` en 0,2 s traída del almacén en vez de los 62 s de calcularla.
+
+⚠ **Los 5 `.pt` que hay en el almacén ese día son EMULADOS** (`web/emular.py`: redes sin entrenar, `val` ≈ 0,08, campo
+`emulado` en el resumen y un ⚠ por compositor en el log al restaurar). Son la **prueba de restauración** que pidió el dueño
+antes de destruir el dev; **no sirven para revisar**. Se sustituyen por los de verdad con `/api/reentrenar` desde la app (o
+borrando el `.pt` y reiniciando la unidad): misma receta = mismo fichero, se pisa. La caché de **extra** (~8 min) no está
+emulada: se calcula y se guarda en el almacén la primera vez que un compositor con extra entrene de verdad.

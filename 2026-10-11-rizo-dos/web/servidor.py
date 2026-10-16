@@ -40,6 +40,7 @@ import hashlib
 import json
 import os
 import secrets
+import shutil
 import socket
 import subprocess
 import sys
@@ -80,6 +81,58 @@ def almacen_revisor() -> Path | None:
     `experimentos-cnn-resultados/**/*.pt`."""
     d = ruta_datos()
     return (d / "experimentos-cnn-resultados" / "rizo-2" / "revisor") if d else None
+
+
+def cache_del_almacen(f: Path) -> Path | None:
+    """La copia en el almacén de un fichero de la caché de features (`web/cache/*.npz`), o None sin repo de datos.
+    Pedido por el dueño el 2026-10-16 («todo lo que se deba guardar debe guardarse en el volumen»): las features de extra tardan
+    ~8 min (471 s medidos el 2026-10-16) y las de base ~30 s, y sin esto un dev nuevo las recalculaba aunque los pesos ya
+    estuvieran. Viven en `revisor/cache/`, con el hash de cresta_curvas.py en el nombre, así que una versión nueva del detector
+    no puede leer la caché de la vieja."""
+    alm = almacen_revisor()
+    return (alm / "cache" / f.name) if alm else None
+
+
+def traer_cache(f: Path) -> bool:
+    """Si `f` no está en local pero sí en el almacén, se copia (True). Nunca lanza: una copia rota se recalcula como siempre."""
+    if f.is_file():
+        return True
+    a = cache_del_almacen(f)
+    if a is None or not a.is_file():
+        return False
+    try:
+        f.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(a, f); return True
+    except OSError as e:
+        print(f"  ⚠ no pude traer {a.name} del almacén: {e}", flush=True); return False
+
+
+def guardar_cache(f: Path, que: str):
+    """Copia `f` al almacén y lo empuja. Nunca lanza (el aviso es una comodidad; lo local sigue sirviendo)."""
+    a = cache_del_almacen(f)
+    if a is None:
+        print("  ⚠ sin repo de datos: la caché NO sobrevive a rehacer el dev", flush=True); return
+    try:
+        a.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(f, a); empujar_almacen(f"rizo-2 revisor: caché {que} ({f.name}, {f.stat().st_size // 1024} KB)")
+    except OSError as e:
+        print(f"  ⚠ no pude guardar {f.name} en el almacén: {e}", flush=True)
+
+
+def empujar_almacen(mensaje: str):
+    """`git add` de la carpeta del revisor en el repo de datos, commit si hay algo y push. Nunca lanza: si el push falla (mini
+    apagado) queda commiteado y lo reintenta el siguiente. Lo usan los pesos, las recetas y la caché."""
+    alm = almacen_revisor()
+    if alm is None:
+        return
+    try:
+        repo = alm.parents[2]; rel = alm.relative_to(repo)
+        g = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True, timeout=120)
+        g("add", "--", str(rel))
+        if g("diff", "--cached", "--quiet", "--", str(rel)).returncode != 0:
+            g("commit", "-q", "-m", mensaje)
+        r = g("push", "-q")
+        print(f"  almacén ← {rel}" + ("" if r.returncode == 0 else f"  ⚠ push falló (queda commiteado): {(r.stderr or r.stdout).strip()[-200:]}"), flush=True)
+    except Exception as e:                                        # noqa: BLE001
+        print(f"  ⚠ no pude empujar al almacén: {type(e).__name__}: {e}", flush=True)
 
 # Cómo se llama cada bloque de `caract` para una persona, y cómo se nombran sus columnas (bloque · orientación/cono · celda).
 ORI = ["0° —", "45° /", "90° |", "135° \\"]; SENT = ["k→", "k←", "k↓", "k↑"]; DIR4 = ["→ der", "← izq", "↓ abajo", "↑ arriba"]
@@ -275,27 +328,27 @@ class Datos:
         if celdas in self.X:
             return self.X[celdas]
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
-        if f.is_file():
+        if traer_cache(f):                                        # local, o la copia del almacén (del dev anterior)
             z = np.load(f); self.X[celdas] = (z["todos"], z["tr"], z["ytr"]); return self.X[celdas]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de {len(self.M)} + {len(self.tr) * 12} dígitos…", flush=True)
         todos = CC.caract(self.M, celdas, self.tinta)                     # la tinta va con el delgado: el bloque «vertice» la necesita (2026-10-16)
         tr = np.concatenate([todos[self.tr]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.tr]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.tr]])) for m in self.aum[1:]])
         ytr = np.concatenate([self.y[self.tr]] * len(self.aum))
         np.savez_compressed(f, todos=todos, tr=tr, ytr=ytr); self.X[celdas] = (todos, tr, ytr)
-        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return self.X[celdas]
+        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features {celdas}×{celdas}"); return self.X[celdas]
 
     def features_extra(self, celdas: int):
         """Las 394 columnas de los 3823 «extra» × 13 desplazamientos, para entrenar con MÁS dígitos (§ 819: 180 + extra = 4003).
         ⚠ Con extra en train no queda conjunto a ciegas: val es la única medida. Se calcula una vez (~7 min estimados: 50 k dígitos
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
-        if f.is_file():
+        if traer_cache(f):
             z = np.load(f); return z["ex"], z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self.features(celdas)[0]
         ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
-        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return ex, yex
+        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}"); return ex, yex
 
     def objetos(self, i: int) -> dict:
         with self._lock:
@@ -411,6 +464,8 @@ class Compositor:
             red.load_state_dict(sd_red); red.eval(); self.redes.append((red, mu, sd))
         self.preds, self.veces, self.finos, self.logits_va = z["preds"], z["veces"], z["finos"], z["logits_va"]
         self.segundos = float(z["segundos"]); self.resumen = {**z["resumen"], "restaurado": z.get("guardado", "?")}; self.estado = "listo"
+        if self.resumen.get("emulado"):                           # web/emular.py: redes SIN entrenar para probar la restauración
+            print(f"  ⚠ «{self.nombre}»: pesos EMULADOS ({self.resumen['emulado']}); no sirven para revisar. Para tener los de verdad: /api/reentrenar", flush=True)
         return True
 
     def leer(self, datos: Datos, i: int) -> dict:
@@ -500,13 +555,7 @@ class App:
             print("  ⚠ sin repo de datos: los pesos NO sobreviven a rehacer el dev", flush=True); return
         try:
             f = c.guardar(alm, c.huella(self.datos)); self.guardar_recetas()
-            repo = alm.parents[2]; rel = alm.relative_to(repo)
-            g = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True, timeout=120)
-            g("add", "--", str(rel))
-            if g("diff", "--cached", "--quiet", "--", str(rel)).returncode != 0:
-                g("commit", "-q", "-m", f"rizo-2 revisor: pesos de «{c.nombre}» (val {c.resumen.get('val')})")
-            r = g("push", "-q")
-            print(f"  pesos → {f.relative_to(repo)}" + ("" if r.returncode == 0 else f"  ⚠ push falló (queda commiteado): {(r.stderr or r.stdout).strip()[-200:]}"), flush=True)
+            print(f"  pesos → {f.name}", flush=True); empujar_almacen(f"rizo-2 revisor: pesos de «{c.nombre}» (val {c.resumen.get('val')})")
         except Exception as e:                                    # noqa: BLE001
             print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
@@ -783,7 +832,8 @@ def instalar(puerto: int) -> int:
 def servir(puerto: int, host: str = "0.0.0.0") -> int:
     torch.set_num_threads(2); t = time.time(); print("rizo2-revisor · cargando dataset y delgado…", flush=True)
     Handler.app = App(); Handler.token = _token_de_disco(crear=True)
-    print(f"  {len(Handler.app.datos.va)} dígitos de val · {len(Handler.app.comps)} compositor(es) en cola ({time.time() - t:.0f} s)", flush=True)
+    rest = sum(c.estado == "listo" for c in Handler.app.comps.values())
+    print(f"  {len(Handler.app.datos.va)} dígitos de val · {len(Handler.app.comps)} compositor(es): {rest} restaurado(s) del almacén, {len(Handler.app.comps) - rest} en cola ({time.time() - t:.0f} s)", flush=True)
     print(f"\n  http://{_ip()}:{puerto}/?t={Handler.token}\n", flush=True)
     srv = ThreadingHTTPServer((host, puerto), Handler)
     try:

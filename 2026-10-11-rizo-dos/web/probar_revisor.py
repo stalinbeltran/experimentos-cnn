@@ -206,6 +206,26 @@ class Pesos(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             c.fichero(Path(d)).write_bytes(b"basura"); self.assertFalse(c.restaurar(Path(d), {}))
 
+    def test_la_cache_de_features_viene_del_almacen_si_falta_en_local(self):
+        """Las features (web/cache/*.npz) también sobreviven al dev (el dueño, 2026-10-16): si no están en local se traen del
+        almacén; si tampoco están allí, se calculan; y nunca se pisa lo local."""
+        with tempfile.TemporaryDirectory() as d:
+            alm = Path(d) / "alm"; (alm / "cache").mkdir(parents=True); loc = Path(d) / "local" / "caract-x-3x3.npz"
+            real = S.almacen_revisor; S.almacen_revisor = lambda: alm
+            try:
+                self.assertFalse(S.traer_cache(loc)); self.assertFalse(loc.exists())           # en ningún lado: se calcula
+                (alm / "cache" / loc.name).write_bytes(b"del almacen")
+                self.assertTrue(S.traer_cache(loc)); self.assertEqual(loc.read_bytes(), b"del almacen")
+                loc.write_bytes(b"local"); self.assertTrue(S.traer_cache(loc)); self.assertEqual(loc.read_bytes(), b"local")
+                self.assertEqual(S.cache_del_almacen(loc), alm / "cache" / loc.name)
+            finally:
+                S.almacen_revisor = real
+        S_real = S.almacen_revisor; S.almacen_revisor = lambda: None
+        try:
+            self.assertIsNone(S.cache_del_almacen(Path("/x/caract.npz"))); self.assertFalse(S.traer_cache(Path("/x/no-existe.npz")))
+        finally:
+            S.almacen_revisor = S_real
+
     def test_no_se_guarda_lo_que_no_esta_listo(self):
         c = S.Compositor("x", ["rectas"])
         with tempfile.TemporaryDirectory() as d:
