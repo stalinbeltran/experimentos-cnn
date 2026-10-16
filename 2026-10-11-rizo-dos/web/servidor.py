@@ -57,7 +57,7 @@ import torch.nn.functional as F
 AQUI = Path(__file__).resolve().parents[1]                        # 2026-10-11-rizo-dos
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 import cresta_curvas as CC                                        # noqa: E402
-from expcnn import exigir_dataset                                 # noqa: E402
+from expcnn import exigir_dataset, ruta_datos                     # noqa: E402
 
 PUERTO = 8050
 UNIDAD = "rizo2-revisor"
@@ -66,6 +66,20 @@ DELGADOS = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-k3x
 CACHE = AQUI / "web" / "cache"
 AUM = (-3, -2, -1, 1, 2, 3)                                       # resistencia.AUM: 13 copias por dígito de train
 SEMILLAS = (0, 1, 2)
+OCULTA, PASOS = 256, 400                                          # el MLP de `entrenar`; van en la huella de los pesos guardados
+
+
+def almacen_revisor() -> Path | None:
+    """Dónde SOBREVIVEN a rehacer el dev los PESOS de cada compositor y las recetas: el repo de DATOS (el almacén), o None si
+    no está clonado. Pedido por el dueño el 2026-10-16 («guarda los pesos de los compositores, para que la próxima vez entre en
+    operación inmediatamente»): hasta entonces un dev nuevo reentrenaba las 5 recetas con extra (~1,5 h) antes de servir.
+    Un `.pt` por compositor (~1,3 MB: 3 redes de 104 k parámetros) con su HUELLA (dataset, hash de cresta_curvas.py, hash de
+    las etiquetas a mano, receta, MLP): si al arrancar la huella coincide, se restaura sin entrenar; si no, se reentrena y se
+    vuelve a guardar. Se commitea y empuja SÓLO esa carpeta tras cada entrenamiento; si el push falla (mini apagado) queda
+    commiteado y se reintenta en el siguiente. El `.gitignore` del repo de datos ya deja entrar
+    `experimentos-cnn-resultados/**/*.pt`."""
+    d = ruta_datos()
+    return (d / "experimentos-cnn-resultados" / "rizo-2" / "revisor") if d else None
 
 # Cómo se llama cada bloque de `caract` para una persona, y cómo se nombran sus columnas (bloque · orientación/cono · celda).
 ORI = ["0° —", "45° /", "90° |", "135° \\"]; SENT = ["k→", "k←", "k↓", "k↑"]; DIR4 = ["→ der", "← izq", "↓ abajo", "↑ arriba"]
@@ -222,6 +236,11 @@ class Datos:
             self._finas = f
         return self._finas
 
+    def hash_manuales(self) -> str:
+        """Huella de las etiquetas a mano: cambiarlas cambia las clases finas, así que unos pesos guardados con otras no valen."""
+        f = AQUI / "web" / "etiquetas-4.json"
+        return hashlib.sha1(f.read_bytes()).hexdigest()[:10] if f.is_file() else "sin"
+
     def manuales(self) -> dict:
         """{idx: '4l'|'4a'} decididos a mano. Fichero: {"4l": [idx…], "4a": [idx…], "quien": …, "cuando": …}."""
         f = AQUI / "web" / "etiquetas-4.json"
@@ -352,6 +371,48 @@ class Compositor:
         except Exception as e:                                    # noqa: BLE001
             self.estado = "error"; self.error = f"{type(e).__name__}: {e}"; traceback.print_exc()
 
+    # --- pesos que sobreviven al dev (el dueño, 2026-10-16). `huella` dice CON QUÉ se entrenaron; guardar/restaurar no tocan Datos
+    def huella(self, datos: Datos) -> dict:
+        return {"dataset": DATASET, "cresta": datos.hash, "etiquetas4": datos.hash_manuales(), "bloques": list(self.bloques), "celdas": self.celdas,
+                "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
+
+    def fichero(self, carpeta: Path) -> Path:
+        limpio = "".join(ch if ch.isalnum() else "-" for ch in self.nombre.lower()).strip("-")[:40]
+        return carpeta / f"{limpio}-{hashlib.sha1(self.nombre.encode()).hexdigest()[:8]}.pt"
+
+    def guardar(self, carpeta: Path, huella: dict) -> Path:
+        """Todo lo que `leer`/`lista` necesitan de un compositor LISTO: las 3 redes (state_dict + mu + sd), las predicciones de
+        val, los logits de la semilla 0 y el resumen. Un `.pt` por compositor; se pisa (misma receta = mismo fichero)."""
+        if self.estado != "listo":
+            raise RuntimeError(f"«{self.nombre}» está {self.estado}: no hay nada que guardar")
+        carpeta.mkdir(parents=True, exist_ok=True); f = self.fichero(carpeta)
+        torch.save({"huella": huella, "nombre": self.nombre, "n": int(self.n), "segundos": self.segundos, "resumen": self.resumen,
+                    "redes": [(red.state_dict(), np.asarray(mu), np.asarray(sd)) for red, mu, sd in self.redes],
+                    "preds": self.preds, "veces": self.veces, "finos": self.finos, "logits_va": self.logits_va,
+                    "guardado": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime())}, f)
+        return f
+
+    def restaurar(self, carpeta: Path, huella: dict) -> bool:
+        """True si había pesos con EXACTAMENTE esta huella y quedan cargados (estado «listo», sin entrenar). Cualquier otra
+        cosa —no hay fichero, huella distinta, fichero roto— es False y se entrena como siempre: nunca se sirve con pesos de
+        otra receta, otro `cresta_curvas.py` u otras etiquetas."""
+        f = self.fichero(carpeta)
+        if not f.is_file():
+            return False
+        try:
+            z = torch.load(f, weights_only=False, map_location="cpu")
+        except Exception as e:                                    # noqa: BLE001
+            print(f"  ⚠ {f.name} no se puede leer ({type(e).__name__}: {e}): se reentrena", flush=True); return False
+        if z.get("huella") != huella:
+            return False
+        self.n = int(z["n"]); self.redes = []
+        for sd_red, mu, sd in z["redes"]:
+            red = torch.nn.Sequential(torch.nn.Linear(self.n, OCULTA), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(OCULTA, 11 if self.sub4 else 10))
+            red.load_state_dict(sd_red); red.eval(); self.redes.append((red, mu, sd))
+        self.preds, self.veces, self.finos, self.logits_va = z["preds"], z["veces"], z["finos"], z["logits_va"]
+        self.segundos = float(z["segundos"]); self.resumen = {**z["resumen"], "restaurado": z.get("guardado", "?")}; self.estado = "listo"
+        return True
+
     def leer(self, datos: Datos, i: int) -> dict:
         """Lo que recibe y decide el compositor para el dígito i (semilla 0): entradas por bloque, logits, atribución."""
         todos, _, _ = datos.features(self.celdas); x = self.corta(todos[i:i + 1], datos)[0]; red, mu, sd = self.redes[0]
@@ -407,12 +468,15 @@ class App:
 
     # --- recetas: se guardan para sobrevivir al reinicio de la unidad (se reentrenan al arrancar, segundos)
     def recetas_guardadas(self) -> dict:
-        f = CACHE / "recetas.json"
-        if f.is_file():
-            try:
-                return json.loads(f.read_text())
-            except json.JSONDecodeError:
-                pass
+        # local (esta unidad) > almacén (el dev anterior) > las de partida. Así un dev nuevo arranca con las recetas que el dueño
+        # dejó en el anterior, y con sus pesos si la huella coincide (2026-10-16).
+        alm = almacen_revisor()
+        for f in [CACHE / "recetas.json"] + ([alm / "recetas.json"] if alm else []):
+            if f.is_file():
+                try:
+                    return json.loads(f.read_text())
+                except json.JSONDecodeError:
+                    pass
         # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
         # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
         # features de extra (~7 min) y cada una tarda ~15 min.
@@ -422,7 +486,29 @@ class App:
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
-        (CACHE / "recetas.json").write_text(json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1))
+        texto = json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1)
+        (CACHE / "recetas.json").write_text(texto)
+        alm = almacen_revisor()
+        if alm:                                                   # la copia que sobrevive al dev; se empuja con los pesos
+            alm.mkdir(parents=True, exist_ok=True); (alm / "recetas.json").write_text(texto)
+
+    def _persistir(self, c: Compositor):
+        """Guarda los pesos de un compositor recién entrenado en el almacén y los empuja. NUNCA lanza: el aviso es una
+        comodidad y la red sigue en memoria; lo que falle se dice en el log y se reintenta en el siguiente entrenamiento."""
+        alm = almacen_revisor()
+        if alm is None:
+            print("  ⚠ sin repo de datos: los pesos NO sobreviven a rehacer el dev", flush=True); return
+        try:
+            f = c.guardar(alm, c.huella(self.datos)); self.guardar_recetas()
+            repo = alm.parents[2]; rel = alm.relative_to(repo)
+            g = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True, text=True, timeout=120)
+            g("add", "--", str(rel))
+            if g("diff", "--cached", "--quiet", "--", str(rel)).returncode != 0:
+                g("commit", "-q", "-m", f"rizo-2 revisor: pesos de «{c.nombre}» (val {c.resumen.get('val')})")
+            r = g("push", "-q")
+            print(f"  pesos → {f.relative_to(repo)}" + ("" if r.returncode == 0 else f"  ⚠ push falló (queda commiteado): {(r.stderr or r.stdout).strip()[-200:]}"), flush=True)
+        except Exception as e:                                    # noqa: BLE001
+            print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
     def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False) -> Compositor:
         malos = [b for b in bloques if b not in BLOQUES]
@@ -431,9 +517,12 @@ class App:
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
         nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · +extra" if extra else "")
-        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra)
+        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra); alm = almacen_revisor()
+        restaurado = bool(alm) and c.restaurar(alm, c.huella(self.datos))   # del dev anterior, si la huella coincide: ni cola ni espera
         with self._lock:
-            self.comps[nombre] = c; self.cola.append(c)
+            self.comps[nombre] = c
+            if not restaurado:
+                self.cola.append(c)
         self.guardar_recetas(); return c
 
     def borrar(self, nombre: str):
@@ -452,6 +541,8 @@ class App:
             if c.estado == "listo" and not getattr(c, "reentrenar", False):   # ya entrenado desde que se encoló («reentrenar» dos veces): no se repite
                 continue
             c.reentrenar = False; c.entrenar(self.datos)
+            if c.estado == "listo":
+                self._persistir(c)
 
     def listo(self, nombre: str) -> Compositor:
         c = self.comps.get(nombre)

@@ -165,3 +165,49 @@ class ConDato(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Pesos(unittest.TestCase):
+    """Los pesos de un compositor sobreviven al dev (el dueño, 2026-10-16). Sin dato: redes entrenadas sobre números al azar."""
+
+    def _listo(self, nombre="receta · prueba", semillas=(0, 1)):
+        rng = np.random.default_rng(0); X = rng.normal(size=(60, 12)).astype(np.float32); y = rng.integers(0, 10, 60)
+        c = S.Compositor(nombre, ["rectas"], 3, semillas); c.n = 12; c.redes = []
+        for s in semillas:
+            red, mu, sd = S.entrenar(X, y, s); c.redes.append((red, mu, sd))
+        c.preds = np.zeros((len(semillas), 5), int); c.veces = np.zeros(5, int); c.finos = c.preds.copy(); c.logits_va = np.zeros((5, 10))
+        c.segundos = 1.0; c.resumen = {"nombre": nombre, "val": 0.5}; c.estado = "listo"
+        return c, X
+
+    def test_guardar_y_restaurar_da_los_mismos_logits(self):
+        c, X = self._listo(); huella = {"cresta": "abc", "etiquetas4": "sin", "bloques": ["rectas"]}
+        with tempfile.TemporaryDirectory() as d:
+            f = c.guardar(Path(d), huella); self.assertTrue(f.is_file())
+            c2 = S.Compositor(c.nombre, ["rectas"], 3, (0, 1))
+            self.assertTrue(c2.restaurar(Path(d), huella)); self.assertEqual(c2.estado, "listo"); self.assertIn("restaurado", c2.resumen)
+            for (r1, mu, sd), (r2, mu2, sd2) in zip(c.redes, c2.redes):
+                import torch
+                z = torch.from_numpy((X - mu) / sd).float()
+                with torch.no_grad():
+                    np.testing.assert_allclose(r1(z).numpy(), r2(z).numpy(), atol=1e-6)
+
+    def test_huella_distinta_no_restaura(self):
+        """Otra versión de cresta_curvas.py, otras etiquetas a mano u otra receta: se reentrena, nunca se sirve con pesos ajenos."""
+        c, _ = self._listo(); huella = {"cresta": "abc", "etiquetas4": "sin"}
+        with tempfile.TemporaryDirectory() as d:
+            c.guardar(Path(d), huella)
+            for otra in ({"cresta": "zzz", "etiquetas4": "sin"}, {"cresta": "abc", "etiquetas4": "1234"}, {}):
+                c2 = S.Compositor(c.nombre, ["rectas"], 3, (0, 1))
+                self.assertFalse(c2.restaurar(Path(d), otra)); self.assertEqual(c2.estado, "pendiente"); self.assertEqual(c2.redes, [])
+            self.assertFalse(S.Compositor("otra receta", ["rectas"], 3).restaurar(Path(d), huella))
+
+    def test_un_fichero_roto_se_reentrena_en_vez_de_caer(self):
+        c, _ = self._listo()
+        with tempfile.TemporaryDirectory() as d:
+            c.fichero(Path(d)).write_bytes(b"basura"); self.assertFalse(c.restaurar(Path(d), {}))
+
+    def test_no_se_guarda_lo_que_no_esta_listo(self):
+        c = S.Compositor("x", ["rectas"])
+        with tempfile.TemporaryDirectory() as d:
+            with self.assertRaises(RuntimeError):
+                c.guardar(Path(d), {})
