@@ -1,0 +1,20 @@
+{
+  "name": "rizo2-paralelo",
+  "descripcion": "Entrena los compositores del REVISOR de rizo-2 EN PARALELO: un droplet de DO (tipo dev, sin servicios) por receta, cada uno entrena la suya, empuja su .pt al almacen y se destruye solo. Pedido por el dueño el 2026-10-16. `seco` dice que lanzaria sin lanzar; `lanzar` arma la unidad `rizo2-entrenar-paralelo` (sobrevive al turno) y avisa al terminar; `estado` dice unidad, droplets vivos y que .pt hay ya; `off` para y destruye los droplets rizo2-*. ⚠ GASTA: ~0,0357 $/h por maquina, ~25 min cada una.",
+  "ejemplos": [
+    "seco",
+    "seco emulados",
+    "lanzar",
+    "lanzar 1c384b8b",
+    "estado",
+    "off"
+  ],
+  "command": "sh 2026-10-11-rizo-dos/web/entrenar_paralelo.sh {{input}}",
+  "encargados": [
+    "echo"
+  ],
+  "requiere": [
+    "python3"
+  ],
+  "timeoutMs": 600000
+}

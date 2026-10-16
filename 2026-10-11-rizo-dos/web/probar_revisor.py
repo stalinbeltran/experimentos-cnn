@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -56,6 +57,30 @@ class Columnas(unittest.TestCase):
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 2); self.assertIn("no sé qué es", r.stdout)
+
+    def test_entrenar_seco_lista_y_se_niega(self):
+        """`entrenar … --seco` dice qué entrenaría (ID · nombre) sin entrenar, y ante una receta desconocida SE NIEGA (rc 2)."""
+        srv = str(AQUI / "web" / "servidor.py")
+        r = subprocess.run([sys.executable, srv, "entrenar", "todas", "--seco"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("SECO", r.stdout)
+        ids = re.findall(r"^  ([0-9a-f]{8}) · ", r.stdout, re.M); self.assertGreaterEqual(len(ids), 5)
+        r2 = subprocess.run([sys.executable, srv, "entrenar", ids[0], "--seco"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(r2.returncode, 0); self.assertEqual(len(re.findall(r"^  [0-9a-f]{8} · ", r2.stdout, re.M)), 1)
+        r3 = subprocess.run([sys.executable, srv, "entrenar", "no-existe", "--seco"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(r3.returncode, 2); self.assertIn("no conozco", r3.stdout)
+
+    def test_lanzador_paralelo_seco_y_se_niega(self):
+        """`entrenar_paralelo.sh seco` imprime recetas, máquinas y la ORDEN sin lanzar; un modo desconocido y una receta
+        desconocida se niegan (2026-09-08: el último caso del despacho nunca es una acción por defecto)."""
+        sh = str(AQUI / "web" / "entrenar_paralelo.sh")
+        r = subprocess.run(["sh", sh, "seco", "todas"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("SECO", r.stdout); self.assertIn("Orden: ", r.stdout)
+        self.assertIn("desacoplar-persistente.sh rizo2-entrenar-paralelo", r.stdout); self.assertIn("--dentro", r.stdout)
+        self.assertRegex(r.stdout, r"rizo2-[0-9a-f]{8}")
+        r2 = subprocess.run(["sh", sh, "seco", "no-existe"], capture_output=True, text=True, timeout=120)
+        self.assertEqual(r2.returncode, 2); self.assertIn("desconocida", r2.stdout)
+        r3 = subprocess.run(["sh", sh, "lo-que-sea"], capture_output=True, text=True, timeout=60)
+        self.assertEqual(r3.returncode, 2); self.assertIn("no sé qué es", r3.stdout)
 
     def test_url_sin_token_dice_que_no_ha_arrancado(self):
         env = {**os.environ, "REVISOR_TOKEN_FILE": str(Path(tempfile.mkdtemp()) / "no-existe.token")}

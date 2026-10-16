@@ -137,6 +137,10 @@ def empujar_almacen(mensaje: str):
         if g("diff", "--cached", "--quiet", "--", str(rel)).returncode != 0:
             g("commit", "-q", "-m", mensaje)
         r = g("push", "-q")
+        for intento in range(3):                                  # 2026-10-16: con el entrenamiento en PARALELO (un server por
+            if r.returncode == 0:                                 # receta) varios empujan a la vez y el segundo es non-fast-forward.
+                break                                             # Cada uno toca su propio .pt, así que el rebase es limpio; si no
+            g("pull", "-q", "--rebase"); time.sleep(2 + 3 * intento); r = g("push", "-q")   # lo es, queda commiteado como antes
         print(f"  almacén ← {rel}" + ("" if r.returncode == 0 else f"  ⚠ push falló (queda commiteado): {(r.stderr or r.stdout).strip()[-200:]}"), flush=True)
     except Exception as e:                                        # noqa: BLE001
         print(f"  ⚠ no pude empujar al almacén: {type(e).__name__}: {e}", flush=True)
@@ -521,6 +525,26 @@ def serializar_objetos(ob: dict) -> dict:
     return out
 
 
+def recetas_guardadas() -> dict:
+    """Las recetas con las que arranca la app Y las que entrena la consola (`entrenar`): local (esta unidad) > almacén (el dev
+    anterior) > las de partida."""
+    # local (esta unidad) > almacén (el dev anterior) > las de partida. Así un dev nuevo arranca con las recetas que el dueño
+    # dejó en el anterior, y con sus pesos si la huella coincide (2026-10-16).
+    alm = almacen_revisor()
+    for f in [CACHE / "recetas.json"] + ([alm / "recetas.json"] if alm else []):
+        if f.is_file():
+            try:
+                return json.loads(f.read_text())
+            except json.JSONDecodeError:
+                pass
+    # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
+    # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
+    # features de extra (~7 min) y cada una tarda ~15 min.
+    base = {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
+    base["aprobada + vértice · 4 en dos · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"] + ["vertice"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # § 95, pendiente de revisar (2026-10-16)
+    return base
+
+
 class App:
     def __init__(self):
         self.datos = Datos(); self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
@@ -528,23 +552,8 @@ class App:
         for nombre, bl in self.recetas_guardadas().items():
             self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
 
-    # --- recetas: se guardan para sobrevivir al reinicio de la unidad (se reentrenan al arrancar, segundos)
     def recetas_guardadas(self) -> dict:
-        # local (esta unidad) > almacén (el dev anterior) > las de partida. Así un dev nuevo arranca con las recetas que el dueño
-        # dejó en el anterior, y con sus pesos si la huella coincide (2026-10-16).
-        alm = almacen_revisor()
-        for f in [CACHE / "recetas.json"] + ([alm / "recetas.json"] if alm else []):
-            if f.is_file():
-                try:
-                    return json.loads(f.read_text())
-                except json.JSONDecodeError:
-                    pass
-        # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
-        # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
-        # features de extra (~7 min) y cada una tarda ~15 min.
-        base = {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
-        base["aprobada + vértice · 4 en dos · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"] + ["vertice"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # § 95, pendiente de revisar (2026-10-16)
-        return base
+        return recetas_guardadas()
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
@@ -859,10 +868,62 @@ def servir(puerto: int, host: str = "0.0.0.0") -> int:
     return 0
 
 
+def entrenar_consola(que: list[str], seco: bool) -> int:
+    """`servidor.py entrenar <qué…> [--seco]`: entrena UNA o varias recetas por consola —sin unidad ni puerto— y deja cada `.pt`
+    en el almacén, commiteado y empujado, igual que la app. Es lo que corre cada server del entrenamiento EN PARALELO
+    (web/entrenar_paralelo.sh, el dueño, 2026-10-16: un server por receta en vez de ~15 min cada una en serie en el dev).
+    `que` es una lista de: `emulados` (las que tienen pesos de web/emular.py), `todas`, el ID de 8 hex del nombre del `.pt`,
+    o el nombre exacto. Se NIEGA ante un nombre que no conozca (no adivina). `--seco`: dice qué entrenaría y sale."""
+    rec = recetas_guardadas(); alm = almacen_revisor()
+    ids = {hashlib.sha1(n.encode()).hexdigest()[:8]: n for n in rec}
+    elegidas = []
+    for q in que:
+        if q == "todas":
+            elegidas += list(rec)
+        elif q == "emulados":
+            if alm is None:
+                print("✗ `emulados` necesita el repo de datos (almacén), y no está clonado"); return 2
+            for n, bl in rec.items():
+                c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
+                f = c.fichero(alm)
+                try:
+                    z = torch.load(f, weights_only=False, map_location="cpu") if f.is_file() else None
+                except Exception:                                 # noqa: BLE001
+                    z = None
+                if z is None or z.get("resumen", {}).get("emulado"):   # sin pesos, rotos o emulados: hay que entrenarla
+                    elegidas.append(n)
+        elif q in ids:
+            elegidas.append(ids[q])
+        elif q in rec:
+            elegidas.append(q)
+        else:
+            print(f"\n✗ no conozco la receta «{q}». Las que hay (ID · nombre):"); [print(f"  {i} · {n}") for i, n in ids.items()]; return 2
+    elegidas = list(dict.fromkeys(elegidas))
+    if not elegidas:
+        print("nada que entrenar (ninguna receta elegida)"); return 0
+    print(("🧪 SECO — no entreno nada. " if seco else "") + f"{len(elegidas)} receta(s)" + ("" if alm else " ⚠ SIN almacén: los pesos no sobrevivirán"))
+    for n in elegidas:
+        print(f"  {hashlib.sha1(n.encode()).hexdigest()[:8]} · {n}")
+    if seco:
+        return 0
+    datos = Datos(); mal = 0
+    for n in elegidas:
+        bl = rec[n]; c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
+        print(f"\n==== {time.strftime('%H:%M:%S', time.gmtime())} UTC · entrenando «{n}»", flush=True); c.entrenar(datos)
+        if c.estado != "listo":
+            print(f"  ✗ «{n}»: {c.error}", flush=True); mal += 1; continue
+        print(f"  val {c.resumen['val']} · {c.resumen['segundos']} s", flush=True)
+        if alm is not None:
+            f = c.guardar(alm, c.huella(datos)); (alm / "recetas.json").write_text(json.dumps(rec, ensure_ascii=False, indent=1))
+            print(f"  pesos → {f.name}", flush=True); empujar_almacen(f"rizo-2 revisor: pesos de «{n}» (val {c.resumen.get('val')})")
+    return 1 if mal else 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--puerto", type=int, default=int(os.environ.get("REVISOR_PUERTO", PUERTO))); ap.add_argument("--host", default="0.0.0.0")
-    ap.add_argument("modo", nargs="*", default=[], help="url · estado · instalar · abrir · cerrar · (vacío: servir)")
+    ap.add_argument("--seco", action="store_true", help="con `entrenar`: dice qué entrenaría y sale")
+    ap.add_argument("modo", nargs="*", default=[], help="url · estado · instalar · abrir · cerrar · entrenar <emulados|todas|id|nombre…> [--seco] · (vacío: servir)")
     a = ap.parse_args()
     modo = " ".join(a.modo).strip().lower()                       # se fija AQUÍ y no se relee (2026-09-08)
     print(f"rizo2-revisor: modo `{modo or 'servir'}`", file=sys.stderr)
@@ -872,6 +933,8 @@ def main() -> int:
         return instalar(a.puerto)
     if modo in ("abrir", "cerrar"):
         return cortafuegos(a.puerto, modo == "abrir")
+    if a.modo and a.modo[0].lower() == "entrenar":
+        return entrenar_consola(a.modo[1:], a.seco)
     if modo == "url":
         t = _token_de_disco(crear=False)
         if not t:
@@ -880,7 +943,7 @@ def main() -> int:
             return 1
         print(f"http://{_ip()}:{a.puerto}/?t={t}"); print(f"etiquetar los 4: http://{_ip()}:{a.puerto}/etiquetar?t={t}"); return 0
     if modo not in ("", "servir"):                                # se NIEGA, no adivina
-        print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · (nada: levantarla)\n"); return 2
+        print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · entrenar … · (nada: levantarla)\n"); return 2
     return servir(a.puerto, a.host)
 
 
