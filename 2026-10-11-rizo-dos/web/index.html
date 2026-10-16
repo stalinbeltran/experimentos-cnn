@@ -93,7 +93,7 @@ function rejillaHTML(vals, lado, atr, titulo, color) {
   return `<div class="rej"><div class="t" style="color:${color||'#222'}">${h(titulo)}</div><div style="display:grid;grid-template-columns:repeat(${lado},${px}px);border:1.5px solid ${color||'#222'};width:${w+3}px">${cells}</div></div>`;
 }
 // ---------------------------------------------------------------- pantallas
-async function cargarEstado() { S.estado = await api('/api/estado'); const listos = S.estado.compositores.filter(c=>c.estado==='listo'); if (!S.comp || !S.estado.compositores.find(c=>c.nombre===S.comp)) S.comp = listos[0] ? listos[0].nombre : null; }
+async function cargarEstado() { S.estado = await api('/api/estado'); const listos = S.estado.compositores.filter(c=>c.estado==='listo'); if (!S.comp || !S.estado.compositores.find(c=>c.nombre===S.comp)) S.comp = listos.length ? listos[listos.length-1].nombre : null; }   // el MÁS RECIENTE (el dueño, 2026-10-16): la lista viene en orden de creación
 function compActual() { return S.estado.compositores.find(c=>c.nombre===S.comp); }
 function selectorComp() {
   return `<select id="selc">${S.estado.compositores.map(c=>`<option value="${h(c.nombre)}" ${c.nombre===S.comp?'selected':''}>${h(c.nombre)} · ${c.estado==='listo'?`val ${c.val} · ${c.fallos_s0} fallos`:c.estado}</option>`).join('')}</select>`;
