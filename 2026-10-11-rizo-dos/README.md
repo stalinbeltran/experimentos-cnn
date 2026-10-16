@@ -1789,6 +1789,16 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 97 · Fuera los golpes: UNA receta, «aprobadas + vértice, sin golpes» (el dueño, 2026-10-16: «elimina todas las que tienen golpes»)
+
+Las cinco recetas del revisor llevaban el bloque `golpes` (pico de |κ| ≥ 0,45), heredado de las corridas de 144 del § 40. El
+dueño fijó la regla (CLAUDE.md del repo: los golpes NO van por defecto) y ordenó quitar todas las que lo llevan y entrenar una
+sola: **rectas ∪ restos, arcos, lazo región, conos 60° y vértice** (144 columnas, 4 en dos, extra, 3 semillas). Los cinco `.pt`
+salieron del almacén en `fe4247c3` (siguen en su historia); `recetas.json` queda con la nueva, y `recetas_guardadas()` la trae
+por defecto en un dev nuevo. Entrenada en un droplet con `entrenar_paralelo.sh lanzar` (unidad `rizo2-entrenar-paralelo`).
+Resultado: ⏳ **por medir** (se rellena cuando llegue el `.pt`; comparar con 0,9728 de «aprobada + vértice» con golpes, § 95).
+
+
 ### ✅ 96 · Los 5 compositores entrenados EN PARALELO, un droplet por receta (el dueño, 2026-10-16: «inicia el entrenamiento en paralelo»)
 
 `web/entrenar_paralelo.sh lanzar emulados` (desde Telegram, `/use rizo2-paralelo`): un droplet `dev` sin servicios por receta,
