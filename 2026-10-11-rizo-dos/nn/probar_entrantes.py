@@ -107,5 +107,23 @@ class Entrantes(unittest.TestCase):
         self.assertAlmostEqual(reg(fg), 9 * np.pi * 144 / 1024, delta=0.6, msg="la suma de fracciones ≈ área/celda")
 
 
+class Vertice(unittest.TestCase):
+    """El vértice del triángulo del 4 (2026-10-16), sobre sintéticos de triangulo_sinteticos.py: un triángulo (con hueco o macizo) da
+    un vértice en la cima; un «ч» y un 4 con hueco arriba no dan ninguno; una tinta vacía tampoco."""
+
+    def test_triangulo_si_ch_no(self):
+        import triangulo_sinteticos as TS
+        rng = np.random.default_rng(1); hits = {"triangulo": 0, "ch": 0, "hueco": 0}; n = 40
+        for _ in range(n):
+            t = TS.cuatro(rng, True)["tinta"]; v = CC.vertices(t); hits["triangulo"] += len(v) > 0
+            if v:
+                self.assertLess(v[0]["cy"], 8); self.assertLess(v[0]["ang"], 90)
+            hits["ch"] += len(CC.vertices(TS.cuatro(rng, False, "ch")["tinta"])) > 0
+            hits["hueco"] += len(CC.vertices(TS.cuatro(rng, False, "hueco")["tinta"])) > 0
+        self.assertGreaterEqual(hits["triangulo"], 0.6 * n, hits); self.assertLessEqual(hits["ch"], 0.1 * n, hits); self.assertLessEqual(hits["hueco"], 0.1 * n, hits)
+        self.assertEqual(CC.vertices(np.zeros((32, 32), bool)), []); self.assertEqual(len(CC.bloque_vertice(None)), 10)
+        self.assertEqual(CC.bloques()["vertice"][1] - CC.bloques()["vertice"][0], 10)
+
+
 if __name__ == "__main__":
     unittest.main()

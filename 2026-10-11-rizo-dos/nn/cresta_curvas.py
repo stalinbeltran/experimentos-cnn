@@ -516,6 +516,45 @@ def cruces(tr: list[dict], brazo_min: float = None, puente: float = None, ang_ma
     return out
 
 
+VERT_PROF = 10        # filas bajo la cima que se miran
+VERT_IZQ = -0.2       # el borde izquierdo baja hacia la IZQUIERDA al menos así (px por fila)
+VERT_DER = -0.1       # y el derecho NO: vertical o hacia la derecha (medido el 2026-10-16 en val: 16 de 26 4l, 0 de 137 4a; fuera del 4
+                      # sólo dispara en el 1 con bandera —76 de 164— y en 7 ceros, 7 doses y 9 seises; la posición en la rejilla los separa)
+
+
+def vertices(tinta: np.ndarray) -> list[dict]:
+    """El VÉRTICE del triángulo del 4, sólo por los BORDES de la tinta y sin mirar la barra ni el relleno (el dueño, 2026-10-16:
+    «el ángulo no importa, sólo vemos si está; por supuesto debe ser menor de 90°»). En las VERT_PROF filas bajo la cima del
+    dígito, el componente que toca la cima tiene UNA mancha por fila, su borde izquierdo baja hacia la izquierda (pendiente
+    < VERT_IZQ) y el derecho vertical o hacia la derecha (> VERT_DER): dos bordes que divergen desde un punto = vértice. En un
+    «ч» los dos bordes bajan paralelos hacia la izquierda (mismo trazo) y no hay vértice. [{cx, cy, ang, pi, pd}] (0 ó 1)."""
+    t = np.asarray(tinta).astype(bool)
+    if not t.any():
+        return []
+    ys = np.flatnonzero(t.any(1)); y0 = int(ys.min()); lab, n = ndimage.label(t); comp = np.bincount(lab[y0][t[y0]]).argmax()
+    izq, der, filas = [], [], []
+    for y in range(y0, min(t.shape[0], y0 + VERT_PROF)):
+        f = lab[y] == comp
+        if not f.any():
+            break
+        if ndimage.label(t[y])[1] >= 2:                                    # una segunda mancha en la banda (el palo del 4 abierto, el lazo): NO hay vértice
+            return []                                                      # medido 2026-10-16 en val: con esto 16 de 26 4l y 0 de 137 4a; cortando la banda, 13 falsos
+        xs = np.flatnonzero(f); izq.append(xs.min()); der.append(xs.max()); filas.append(y - y0)
+    if len(filas) < 4:
+        return []
+    filas = np.asarray(filas, float); pi = float(np.polyfit(filas, np.asarray(izq, float), 1)[0]); pd = float(np.polyfit(filas, np.asarray(der, float), 1)[0])
+    ang = float(np.degrees(np.arctan(pd) - np.arctan(pi)))
+    if pi < VERT_IZQ and pd > VERT_DER and 0 < ang < 90:
+        return [{"cx": float((izq[0] + der[0]) / 2 + 0.5), "cy": float(y0 + 0.5), "ang": ang, "pi": pi, "pd": pd}]
+    return []
+
+
+def bloque_vertice(tinta, celdas: int = CELDAS) -> list[float]:
+    """10 números con 3×3: rejilla de PRESENCIA del vértice (gaussiana σ 2 px, máximo por celda) + cuenta. Siempre con posición."""
+    v = vertices(tinta) if tinta is not None else []
+    return F.adaptive_max_pool2d(torch.from_numpy(_mapa(v, lambda q: 1.0, 2.0))[None], celdas)[0].numpy().ravel().tolist() + [float(len(v))]
+
+
 def _mapa(objs, altura, sig=1.5):
     m = np.zeros((32, 32), np.float32)
     for o in objs:
@@ -556,12 +595,12 @@ def bloque_cruces(crz) -> list[float]:
 def bloques(celdas: int = CELDAS) -> dict:
     """Dónde empieza y acaba cada grupo en caract(·, celdas): con 3×3 son 394 (44·10·10·44·44·44·4·4·36·36·10·44·44·10·10); con 4×4, 556. Los 152 primeros son los de antes."""
     c = celdas * celdas; n = 0; out = {}
-    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10), ("restos", 4 * (c + 2)), ("rectas_todo", 4 * (c + 2)), ("lazos_region", c + 1), ("lazos_area", c + 1)):
+    for g, k in (("arcos", 4 * (c + 2)), ("golpes", c + 1), ("lazos", c + 1), ("rectas", 4 * (c + 2)), ("concavidades", 4 * (c + 2)), ("entrantes", 4 * (c + 2)), ("entrantes4", 4), ("entrantes4n", 4), ("entrantes60", 36), ("entrantes60f", 36), ("cruces", 10), ("restos", 4 * (c + 2)), ("rectas_todo", 4 * (c + 2)), ("lazos_region", c + 1), ("lazos_area", c + 1), ("vertice", c + 1)):
         out[g] = (n, n + k); n += k
     return out
 
 
-def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
+def caract(M: np.ndarray, celdas: int = CELDAS, tinta: np.ndarray | None = None) -> np.ndarray:
     """(n,32,32) → (n,204) con 3×3: arcos 44 · golpes 10 · lazos 10 · rectas 44 · concavidades 44 · entrantes 44 (concavidades de arco ∪ esquinas, 2026-10-15; por dirección de la abertura)
     · entrantes4 4 (el dueño, 2026-10-15: «reduce los entrantes a 4 posibilidades: arriba, abajo, derecha e izq.»: la fuerza máxima, área/60, por dirección → ← ↓ ↑) · entrantes4n 4 (la cuenta por dirección)
     · entrantes60 36 (el dueño, 2026-10-15: CONOS de ±60° alrededor de la horizontal —derecha, izquierda— y el resto vertical —abajo, arriba—; 3×3 de PRESENCIA por cono, sin magnitud; siempre 3×3)
@@ -569,9 +608,10 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
     · restos 44 (los trozos de cresta que no son recta ni arco, como rectas: 4 orient. × (3×3 + cuenta + largo/32)) · rectas_todo 44 (rectas ∪ restos). 2026-10-15.
     · lazos_region 10 (el dueño, 2026-10-15: la fracción de cada celda que cubre la REGIÓN del lazo + cuenta: tamaño y forma)
     · lazos_area 10 (la gaussiana de siempre con altura = área/AREA_LAZO, sin tope: un lazo grande vale más + cuenta).
+    · vertice 10 (el dueño, 2026-10-16: el vértice del triángulo del 4 por los BORDES de la tinta; necesita `tinta`, si no va a cero).
     `celdas` es el lado de la rejilla (2026-10-15: 4×4 contra 3×3); los cortes los da bloques(celdas)."""
     out = []
-    for m in np.asarray(M, np.float32):
+    for k, m in enumerate(np.asarray(M, np.float32)):
         ob = objetos(m); f = []
         for s in range(4):
             cs = [a for a in ob["arcos"] if a["s"] == s]
@@ -600,6 +640,7 @@ def caract(M: np.ndarray, celdas: int = CELDAS) -> np.ndarray:
                 rs = [r for r in lista if r["o"] == o]
                 f.extend(F.adaptive_max_pool2d(torch.from_numpy(_mapa(rs, lambda q: q["fuerza"]))[None], celdas)[0].numpy().ravel().tolist()); f.extend([len(rs), sum(r["largo"] for r in rs) / 32])
         f.extend(bloque_lazos_region(ob["lazos"], celdas)); f.extend(bloque_lazos_area(ob["lazos"], celdas))
+        f.extend(bloque_vertice(None if tinta is None else tinta[k], celdas))
         out.append(f)
     return np.array(out, np.float32)
 

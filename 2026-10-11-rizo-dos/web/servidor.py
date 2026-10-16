@@ -85,6 +85,7 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     "entrantes60": ("entrantes conos 60°, presencia (§ 66, aprobada)", "4 conos × rejilla 3×3", "entrantes"),
     "entrantes60f": ("entrantes conos 60°, fuerza (§ 66)", "4 conos × rejilla 3×3", "entrantes"),
     "cruces": ("cruces (§ 69)", "rejilla 3×3 + cuenta", "cruces"),
+    "vertice": ("vértice del 4 (bordes de la tinta, § 95)", "rejilla + cuenta", "vertice"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 
@@ -117,7 +118,7 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
         for o in range(4):
             out += [{"sub": et[o], "celda": k, "tipo": "rejilla", "nombre": f"{cn[k]}"} for k in range(c)]
             out += [{"sub": et[o], "celda": None, "tipo": "cuenta", "nombre": "cuenta"}, {"sub": et[o], "celda": None, "tipo": "largo", "nombre": extra}]
-    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area"):
+    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area", "vertice"):
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": cn[k]} for k in range(c)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     elif bloque in ("entrantes4", "entrantes4n"):
         out += [{"sub": DIR4[o], "celda": None, "tipo": "fuerza" if bloque == "entrantes4" else "cuenta", "nombre": "fuerza" if bloque == "entrantes4" else "cuenta"} for o in range(4)]
@@ -258,8 +259,8 @@ class Datos:
         if f.is_file():
             z = np.load(f); self.X[celdas] = (z["todos"], z["tr"], z["ytr"]); return self.X[celdas]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de {len(self.M)} + {len(self.tr) * 12} dígitos…", flush=True)
-        todos = CC.caract(self.M, celdas)
-        tr = np.concatenate([todos[self.tr]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.tr]]), celdas) for m in self.aum[1:]])
+        todos = CC.caract(self.M, celdas, self.tinta)                     # la tinta va con el delgado: el bloque «vertice» la necesita (2026-10-16)
+        tr = np.concatenate([todos[self.tr]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.tr]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.tr]])) for m in self.aum[1:]])
         ytr = np.concatenate([self.y[self.tr]] * len(self.aum))
         np.savez_compressed(f, todos=todos, tr=tr, ytr=ytr); self.X[celdas] = (todos, tr, ytr)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return self.X[celdas]
@@ -273,7 +274,7 @@ class Datos:
             z = np.load(f); return z["ex"], z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self.features(celdas)[0]
-        ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas) for m in self.aum[1:]])
+        ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); return ex, yex
 
