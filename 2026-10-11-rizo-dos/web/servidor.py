@@ -175,6 +175,8 @@ RECETAS_BASE = {   # las corridas de 144 del README, por nombre: lo que un compo
     "lazo área (§ 79)": ["rectas_todo", "arcos", "golpes", "lazos_area", "entrantes60"],
     "conos 60° sin restos (§ 66)": ["rectas", "arcos", "golpes", "lazos", "entrantes60"],
 }
+BLOQUES_DEFECTO = ["rectas_todo", "arcos", "lazos_region", "entrantes60", "vertice"]   # aprobadas + vértice, SIN golpes (el dueño, 2026-10-16)
+RECETA_DEFECTO = "aprobadas + vértice, sin golpes · 4 en dos · +extra"
 CORRIDA_DE = {   # receta → JSON de su corrida, para que el test compruebe que esto reproduce los números del README
     "aprobada: lazo región (§ 79)": "40-entrada-cresta-lazos-region.json",
     "restos fundido, lazo presencia (§ 74)": "40-entrada-cresta-restos-fundido.json",
@@ -542,9 +544,9 @@ def recetas_guardadas() -> dict:
     # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
     # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
     # features de extra (~7 min) y cada una tarda ~15 min.
-    base = {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
-    base["aprobada + vértice · 4 en dos · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"] + ["vertice"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # § 95, pendiente de revisar (2026-10-16)
-    return base
+    # Y desde el 2026-10-16 (tarde) el dueño quitó TODAS las que llevan `golpes` («no queremos usar golpes por default») y dejó
+    # UNA: las aprobadas (rectas ∪ restos, arcos, lazo región, conos 60°) + el vértice (§ 95). Sin golpes.
+    return {RECETA_DEFECTO: {"bloques": BLOQUES_DEFECTO, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}}
 
 
 class App:
