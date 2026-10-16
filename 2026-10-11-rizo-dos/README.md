@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 99 · ¿A qué se parece cada dígito BIEN reconocido? (el dueño, 2026-10-16: «me dará una idea de qué tan desviado está el reconocimiento»)
+
+![parecidos](resultados/99-parecidos.png)
+
+`nn/parecidos.py` (datos en `resultados/99-parecidos.json`). Compositor «aprobadas + vértice en UNA celda, sin golpes»
+(§ 98, val 0,9769). Para cada clase real de val, **sólo con los dígitos que acierta**, la probabilidad media (softmax, media de
+las 3 semillas) que da a cada una de las otras clases.
+
+Lo que sale:
+1. **Casi todos los dígitos están muy seguros**: se quedan entre el 95 % y el 99 % en su propia clase, y ningún «parecido» pasa
+   del 1,5 %. Los más dudosos son el **1** (95 %: se parece al 2, al 8 y al 6) y el **2** (96 %: al 1 y al 7).
+2. Los parecidos van **en pareja**: 1↔2 (1,2 % y 1,5 %), 3↔5 (1,3 % y 0,2 %), 6↔8 (1,1 % y 0,3 %), 9↔4l (0,6 %).
+3. **El 4l es la excepción**: aun acertado, sólo se queda con el **65 %**, y le da **25 % al 4a**, 3,7 % al 1 y 3 % al 9. Es la
+   clase que el compositor no tiene clara (15 de 26 aciertos, media de 3 semillas).
+
+**Glosario.** *Probabilidad media*: la salida softmax del compositor para esa clase, promediada sobre los dígitos de la fila y
+sobre las 3 semillas. *Bien reconocido*: la clase con más probabilidad media de las 3 semillas es la real. *Diagonal*: el
+acierto; no se pinta, su valor va en la etiqueta de la fila. *Escala logarítmica*: cada tono más oscuro es ~10× más; hace
+visibles los parecidos de 0,01 % a 1 %, que en escala lineal saldrían todos en blanco.
+
+
 ### 98 · El vértice en UNA celda: `vertice_1` (el dueño, 2026-10-16: «lo posicionamos en 2 celdas; ¿puede estar sólo en una?»)
 
 El bloque `vertice` pinta el vértice como mancha gaussiana (σ 2 px) y la rejilla 3×3 sale de `adaptive_max_pool2d`, cuyas
