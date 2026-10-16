@@ -214,6 +214,44 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
     return out
 
 
+def partes(bloque: str) -> list[str]:
+    """Las PIEZAS de un bloque, en su orden de columnas: «rejilla», «cuenta», «largo», «abertura», «fuerza» (las que tenga)."""
+    return list(dict.fromkeys("largo" if c["tipo"] == "largo" and c["nombre"] == "largo/32" else
+                              "abertura" if c["tipo"] == "largo" else c["tipo"] for c in columnas(bloque, 3)))
+
+
+def pieza(entrada: str) -> tuple[str, list[str] | None]:
+    """«vertice» → ("vertice", None) = el bloque entero; «vertice:rejilla+cuenta» → ("vertice", ["rejilla", "cuenta"]).
+    El dueño (2026-10-16): «separa las rejillas 3×3 de todo lo demás; quiero entrenar sin la cuenta y no se puede»."""
+    base, sep, resto = entrada.partition(":")
+    return base, ([q for q in resto.split("+") if q] if sep else None)   # «vertice:» = ninguna pieza, no «todas»
+
+
+def normalizar(entrada: str) -> str:
+    """Una entrada con TODAS las piezas se guarda como el bloque a secas: así una receta vieja conserva su nombre, su huella
+    y sus pesos del almacén. Se niega ante un bloque o una pieza desconocidos."""
+    base, ps = pieza(entrada)
+    if base not in BLOQUES:
+        raise ValueError(f"bloque desconocido: {base}")
+    if ps is None:
+        return base
+    todas = partes(base); malas = [q for q in ps if q not in todas]
+    if malas or not ps:
+        raise ValueError(f"«{base}» no tiene la pieza {malas or '(ninguna)'}; tiene {todas}")
+    ps = [q for q in todas if q in ps]                             # el orden de las columnas, no el del clic
+    return base if ps == todas else f"{base}:{'+'.join(ps)}"
+
+
+def columnas_de(entrada: str, celdas: int) -> tuple[str, list[int], list[dict]]:
+    """(bloque, índices DENTRO del bloque, columnas) de una entrada: todas, o sólo las de sus piezas."""
+    base, ps = pieza(entrada); cols = columnas(base, celdas)
+    if ps is None:
+        return base, list(range(len(cols))), cols
+    tipo = lambda c: "abertura" if c["tipo"] == "largo" and c["nombre"] != "largo/32" else c["tipo"]
+    idx = [k for k, c in enumerate(cols) if tipo(c) in ps]
+    return base, idx, [cols[k] for k in idx]
+
+
 def mover(a, dx=0, dy=0):
     """= evaluar.mover (relleno de fondo, nunca np.roll)."""
     o = np.zeros_like(a); H, W = a.shape
@@ -382,15 +420,19 @@ class Compositor:
         self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
         self.estado = "pendiente"; self.error = ""; self.redes = []; self.segundos = 0.0; self.resumen = {}
 
-    def cortes(self, datos: Datos) -> dict:
-        B = CC.bloques(self.celdas); n = 0; out = {}
+    def cortes(self, datos: Datos | None = None) -> dict:
+        n = 0; out = {}
         for b in self.bloques:
-            k = B[b][1] - B[b][0]; out[b] = (n, n + k); n += k
+            k = len(columnas_de(b, self.celdas)[1]); out[b] = (n, n + k); n += k
         return out
 
-    def corta(self, X, datos):
-        B = CC.bloques(self.celdas)
-        return np.concatenate([X[:, B[b][0]:B[b][1]] for b in self.bloques], 1)
+    def corta(self, X, datos=None):
+        """Las columnas de la receta: cada entrada es un bloque entero o sólo algunas de sus piezas (2026-10-16)."""
+        B = CC.bloques(self.celdas); partes_x = []
+        for b in self.bloques:
+            base, idx, _ = columnas_de(b, self.celdas); a = B[base][0]
+            partes_x.append(X[:, [a + k for k in idx]])
+        return np.concatenate(partes_x, 1)
 
     def entrenar(self, datos: Datos):
         try:
@@ -434,7 +476,7 @@ class Compositor:
                             "val": round(float(np.mean(accs)), 4), "val_rango": [round(min(accs), 4), round(max(accs), 4)],
                             "fallos_s0": int((p0 != y).sum()), "fallan_en_todas": int((self.veces == len(self.semillas)).sum()),
                             "confusiones": dict(sorted(conf.items(), key=lambda z: -z[1])), "cuota": {b: round(float(np.mean([c[b] for c in cuotas])), 3) for b in self.bloques},
-                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if b in SIN_POSICION], "sub4": self.sub4, "sub4_resumen": sub, "extra": self.extra, "n_train": int(len(idx_tr) // len(datos.aum))}
+                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if pieza(b)[0] in SIN_POSICION], "sub4": self.sub4, "sub4_resumen": sub, "extra": self.extra, "n_train": int(len(idx_tr) // len(datos.aum))}
             self.estado = "listo"
         except Exception as e:                                    # noqa: BLE001
             self.estado = "error"; self.error = f"{type(e).__name__}: {e}"; traceback.print_exc()
@@ -493,7 +535,7 @@ class Compositor:
         (lg[pf] - lg[contra]).backward(); atr = (z.grad[0] * z.detach()[0]).numpy()
         bloques = []
         for b, (a, zz) in self.cortes(datos).items():
-            cols = columnas(b, self.celdas); vals = x[a:zz]; at = atr[a:zz]
+            base, _, cols = columnas_de(b, self.celdas); vals = x[a:zz]; at = atr[a:zz]
             subs = []
             for sub in dict.fromkeys(c["sub"] for c in cols):
                 idx = [k for k, c in enumerate(cols) if c["sub"] == sub]
@@ -501,8 +543,9 @@ class Compositor:
                 lado = int(round(len(rej) ** 0.5)) if rej else 0
                 subs.append({"sub": sub, "lado": lado, "rejilla": [float(vals[k]) for k in rej], "rejilla_atr": [float(at[k]) for k in rej],
                              "otros": [{"nombre": cols[k]["nombre"], "valor": float(vals[k]), "atr": float(at[k])} for k in otros]})
-            bloques.append({"bloque": b, "etiqueta": BLOQUES[b][0], "sin_posicion": b in SIN_POSICION, "subs": subs, "atr_total": float(at.sum())})
-        nombres = [f"{BLOQUES[b][0].split(' (')[0]} · {c['sub']} · {c['nombre']}".replace(" ·  ·", " ·") for b, (a, zz) in self.cortes(datos).items() for c in columnas(b, self.celdas)]
+            et = BLOQUES[base][0] + ("" if pieza(b)[1] is None else f" — sólo {' + '.join(pieza(b)[1])}")
+            bloques.append({"bloque": b, "etiqueta": et, "sin_posicion": base in SIN_POSICION, "subs": subs, "atr_total": float(at.sum())})
+        nombres = [f"{BLOQUES[pieza(b)[0]][0].split(' (')[0]} · {c['sub']} · {c['nombre']}".replace(" ·  ·", " ·") for b, (a, zz) in self.cortes(datos).items() for c in columnas_de(b, self.celdas)[2]]
         orden = np.argsort(-np.abs(atr))[:16]
         va_pos = int(np.flatnonzero(datos.va == i)[0]) if i in set(datos.va.tolist()) else None
         return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pf]), "p_real": float(p[real_f]),
@@ -580,9 +623,9 @@ class App:
             print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
     def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False) -> Compositor:
-        malos = [b for b in bloques if b not in BLOQUES]
-        if malos or not bloques:
-            raise ValueError(f"bloques desconocidos: {malos}" if malos else "sin bloques")
+        if not bloques:
+            raise ValueError("sin bloques")
+        bloques = [normalizar(b) for b in bloques]                 # se niega ante un bloque o pieza desconocidos
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
         nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · +extra" if extra else "")
@@ -640,7 +683,7 @@ class App:
     # --- lo que contesta
     def estado(self) -> dict:
         return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
-                "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION} for k, v in BLOQUES.items()],
+                "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k, v in BLOQUES.items()],
                 "bloques_defecto": BLOQUES_DEFECTO,                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 

@@ -54,6 +54,28 @@ class Columnas(unittest.TestCase):
         for linea in ("torch.manual_seed(sem); mu, sd = xtr.mean(0), xtr.std(0) + 1e-6", "lr=3e-3, weight_decay=1e-3", "for _ in range(400):", "torch.nn.Dropout(0.3)"):
             self.assertIn(linea, cuerpo); self.assertIn(linea, mio)
 
+    def test_piezas_de_un_bloque(self):
+        """2026-10-16, el dueño: la rejilla se elige aparte de la cuenta. Todas las piezas = el bloque a secas (misma huella que
+        las recetas viejas); una pieza desconocida se NIEGA; y `corta` saca exactamente esas columnas, en su orden."""
+        self.assertEqual(S.partes("vertice"), ["rejilla", "cuenta"])
+        self.assertEqual(S.partes("rectas_todo"), ["rejilla", "cuenta", "largo"])
+        self.assertEqual(S.partes("entrantes"), ["rejilla", "cuenta", "abertura"])
+        self.assertEqual(S.partes("entrantes60"), ["rejilla"])
+        self.assertEqual(S.normalizar("vertice:cuenta+rejilla"), "vertice")
+        self.assertEqual(S.normalizar("vertice:rejilla"), "vertice:rejilla")
+        self.assertEqual(S.normalizar("rectas_todo:largo+rejilla"), "rectas_todo:rejilla+largo")
+        for malo in ("vertice:largo", "nada:rejilla", "vertice:"):
+            with self.assertRaises(ValueError, msg=malo):
+                S.normalizar(malo)
+        B = CC.bloques(3); W = max(z for _, z in B.values()); X = np.arange(2 * W, dtype=float).reshape(2, W)
+        c = S.Compositor("p", ["vertice:rejilla", "rectas_todo:cuenta"], 3)
+        a, z = B["vertice"]; r = B["rectas_todo"][0]
+        esperado = list(range(a, a + 9)) + [r + 9, r + 20, r + 31, r + 42]
+        self.assertEqual(c.corta(X)[0].tolist(), esperado)
+        self.assertEqual(c.cortes(), {"vertice:rejilla": (0, 9), "rectas_todo:cuenta": (9, 13)})
+        entero = S.Compositor("e", ["vertice"], 3)
+        self.assertEqual(entero.corta(X)[0].tolist(), list(range(a, z)))   # el bloque entero no cambia
+
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 2); self.assertIn("no sé qué es", r.stdout)
