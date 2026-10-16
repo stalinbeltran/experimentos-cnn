@@ -641,6 +641,7 @@ class App:
     def estado(self) -> dict:
         return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
                 "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION} for k, v in BLOQUES.items()],
+                "bloques_defecto": BLOQUES_DEFECTO,                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
