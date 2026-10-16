@@ -168,6 +168,8 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 
 RECETAS_BASE = {   # las corridas de 144 del README, por nombre: lo que un compositor «es» son sus bloques
+    # ⚠ Regla del dueño (2026-10-16): los GOLPES NO van por defecto en un compositor NUEVO (CLAUDE.md del repo). Estas
+    # recetas los llevan porque ya están entrenadas y medidas (§ 85i, § 95, § 96); no se tocan sin que él lo ordene.
     "aprobada: lazo región (§ 79)": ["rectas_todo", "arcos", "golpes", "lazos_region", "entrantes60"],
     "restos fundido, lazo presencia (§ 74)": ["rectas_todo", "arcos", "golpes", "lazos", "entrantes60"],
     "lazo área (§ 79)": ["rectas_todo", "arcos", "golpes", "lazos_area", "entrantes60"],

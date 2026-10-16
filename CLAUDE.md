@@ -151,6 +151,23 @@ Lo que esto NO fija: **cómo** se codifica la posición. La rejilla 3×3 es lo q
 60 % del bloque son ceros). Alternativas no probadas: centro en píxeles en una lista ordenada de objetos, reparto blando
 entre celdas o direcciones vecinas.
 
+## ⚠ Regla del dueño (2026-10-16): los GOLPES NO van por defecto en un compositor
+
+> «No queremos usar golpes por default.» — el dueño, 2026-10-16, al ver que «aprobada + vértice» los lleva
+
+Un **golpe** es el pico de curvatura |κ| ≥ 0,45 de la cresta (`rizo-2` README, tabla de bloques; bloque `golpes` =
+rejilla 3×3 + cuenta, 10 números). **Hoy las CINCO recetas del revisor de `rizo-2` lo llevan** —las cuatro base
+(`RECETAS_BASE` en `web/servidor.py`) y «aprobada + vértice»—, heredado de las corridas de 144 del § 40 sin que nadie
+lo decidiera aparte. A partir de ahora:
+
+1. **Un compositor nuevo se propone SIN `golpes`.** Meterlo es una decisión que se toma a propósito y se escribe con su
+   motivo (qué se está midiendo con él), igual que la excepción de «sin posición» de la regla anterior.
+2. **Las recetas ya entrenadas NO se tocan por esto**: sus pesos están en el almacén y sus números en el README (§ 85i,
+   § 95, § 96). Cambiarlas es otro entrenamiento y otra tabla, y lo ordena el dueño.
+3. ⚠ Lo que NO está medido: cuánto aporta `golpes` por sí solo en las recetas con el 4 en dos. La cuota del bloque la
+   enseña el revisor (pantalla del compositor); medir la receta «aprobada + vértice − golpes» es el experimento que
+   diría si el defecto nuevo cuesta algo.
+
 ## ⏳ PENDIENTE (anotado el 2026-10-15, pedido por el dueño): AUTOMATIZAR LA BÚSQUEDA DE FEATURES — no empezado
 
 > «Partimos de que un píxel es un feature, y al poner un problema (por ej. la identificación de un dígito) obtenemos la
