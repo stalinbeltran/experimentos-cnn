@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 98 · El vértice en UNA celda: `vertice_1` (el dueño, 2026-10-16: «lo posicionamos en 2 celdas; ¿puede estar sólo en una?»)
+
+El bloque `vertice` pinta el vértice como mancha gaussiana (σ 2 px) y la rejilla 3×3 sale de `adaptive_max_pool2d`, cuyas
+celdas se solapan un píxel ([0,11) [10,22) [21,32)). **Medido: 159 de 475 vértices encendían DOS celdas** (el 77, con su
+centro en x = 21, encendía arriba-centro y arriba-derecha a 0,969). `vertice_1` pone un 1 en la única celda que contiene el
+centro, sin mancha ni solape: **475 de 475 en una celda**, misma cuenta. Se calcula en `web/servidor.py` (no en
+`cresta_curvas.py`, para no cambiar su hash ni la huella de los compositores guardados); ~30 s todo, caché `vert1-…`.
+
+Mismas piezas que § 97, cambiando sólo el vértice (entrenado en el dev; 4 en dos, extra, 3 semillas):
+
+| compositor | val | fallos s0 | 4l → 4l / 4a / otro | cuota vértice |
+|---|---|---:|---|---:|
+| aprobadas + vértice, sin golpes (§ 97) | 0,9759 [0,9746–0,9777] | 36 | 17 / 4 / 5 | 2,0 % |
+| **aprobadas + vértice en UNA celda, sin golpes** | **0,9769** [0,9753–0,9784] | **35** | 16 / 5 / 5 | 1,6 % |
+
+Lo que sale: (1) **+0,10 de val y un fallo menos, pero los rangos de semillas se solapan**: es empate técnico, no una mejora
+declarada; (2) los 4l casi no se mueven (17 → 16); (3) el 77 **sigue leyéndose 1** en las 3 semillas (p 0,79), y el vértice
+sigue empujando hacia el 1 (+2,03 contra +2,44): **el problema del 77 no era la celda duplicada sino que el detector ve un
+vértice en la cabeza maciza de un 2**. Eso se arregla en el detector (exigir una punta estrecha), no en la rejilla.
+
+
 ### 97 · Fuera los golpes: UNA receta, «aprobadas + vértice, sin golpes» (el dueño, 2026-10-16: «elimina todas las que tienen golpes»)
 
 Las cinco recetas del revisor llevaban el bloque `golpes` (pico de |κ| ≥ 0,45), heredado de las corridas de 144 del § 40. El
