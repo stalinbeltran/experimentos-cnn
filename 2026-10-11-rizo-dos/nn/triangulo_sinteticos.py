@@ -52,12 +52,18 @@ def _dentro(poly):
     return m
 
 
+P_MACIZO = 0.35     # el dueño (2026-10-16): «algunos triángulos van a estar cerrados, cero huecos»: esta fracción de positivos lleva el
+                    # interior RELLENO de tinta a propósito (los 198/225/239/250 de val), además de los que quedan macizos por grosor
+P_PEQUENO = 0.25    # y otra fracción son triángulos pequeños (ancho 4–7 px), que con grosor 3–6 quedan macizos o casi
+
+
 def cuatro(rng, cerrado: bool = True, tipo_abierto: str = "hueco") -> dict:
     """Un 4 sintético. cerrado=True → triángulo (positivo). cerrado=False → 'hueco' (la raya no llega al vértice) o 'ch' (se junta
     a la altura de la barra). Devuelve tinta, verdad y parámetros."""
     xa = rng.uniform(13, 21); ya = rng.uniform(1.5, 6)                   # vértice
     yb = rng.uniform(13, 21)                                             # altura de la barra
-    ancho = rng.uniform(6, 13); xl = max(1.5, xa - ancho)                # pie izquierdo del triángulo
+    pequeno = rng.uniform() < P_PEQUENO
+    ancho = rng.uniform(4, 7) if pequeno else rng.uniform(6, 13); xl = max(1.5, xa - ancho)   # pie izquierdo del triángulo
     xr = min(30.5, xa + rng.uniform(3, 9))                               # fin de la barra a la derecha
     yfin = rng.uniform(26, 30.5)                                         # fin del palo
     incl = rng.uniform(-2.5, 2.5)                                        # el palo se inclina un poco
@@ -68,7 +74,7 @@ def cuatro(rng, cerrado: bool = True, tipo_abierto: str = "hueco") -> dict:
         tramos.append(_tramo(rng, A, (xa + incl, yfin)))                 # palo entero
         tramos.append(_tramo(rng, A, L))                                 # raya izquierda hasta el pie
         tramos.append(_tramo(rng, (xl - rng.uniform(0, 2), L[1]), (xr, yb + rng.uniform(-0.8, 0.8))))   # barra
-        verdad = {"vertice": A, "pie": L, "cruce": C, "centro": tuple(np.mean([A, L, C], 0)), "mascara": _dentro([A, L, C])}
+        verdad = {"vertice": A, "pie": L, "cruce": C, "centro": tuple(np.mean([A, L, C], 0)), "mascara": _dentro([A, L, C]), "macizo": rng.uniform() < P_MACIZO, "pequeno": pequeno}
     elif tipo_abierto == "hueco":                                        # la raya izquierda empieza más abajo y a la izquierda: no toca el palo
         # ⚠ el hueco se mide DESCONTANDO el grosor: con 3–7 px de separación y 6 px de tinta, la tinta tapaba el hueco y el
         # «abierto» salía cerrado (visto en la primera figura). Separación libre entre tintas ≥ 1,5 px.
@@ -88,6 +94,8 @@ def cuatro(rng, cerrado: bool = True, tipo_abierto: str = "hueco") -> dict:
     tinta = np.zeros((N, N), bool)
     for p in tramos:
         tinta |= SN.engrosar(p, _grosor(rng, len(p), g0))
+    if cerrado and verdad["macizo"]:
+        tinta |= verdad["mascara"]                                       # el triángulo entero de tinta: cero huecos
     return {"tinta": tinta, "cerrado": cerrado, "tipo": "triangulo" if cerrado else tipo_abierto, "verdad": verdad}
 
 
@@ -133,6 +141,18 @@ def main() -> int:
     fig.suptitle("rizo-2 · 92 · sintéticos del TRIÁNGULO del 4 (fila impar: tinta con la verdad —naranja = interior del triángulo, ▲ vértice, ◀ pie, × cruce, + centro—; fila par: su delgado)\n"
                  "grosor 3–6 px con ondulación; negativos: 4 abierto con hueco arriba, «ч» que se junta a la altura de la barra, y trazos sueltos", fontsize=9)
     fig.tight_layout(); out = AQUI / "resultados" / "92-triangulo-sinteticos.png"; fig.savefig(out, dpi=110); print(f"→ {out.relative_to(AQUI)}")
+    # 93: sólo positivos, 48, con el tamaño del HUECO que queda en la tinta (0 = macizo)
+    from scipy import ndimage
+    ms = [cuatro(rng, True) for _ in range(48)]; huecos = []
+    for m in ms:
+        t = m["tinta"]; h = ndimage.binary_fill_holes(t) & ~t; lab, n = ndimage.label(h); huecos.append(max([int((lab == k).sum()) for k in range(1, n + 1)], default=0))
+    fig, axs = plt.subplots(4, 12, figsize=(12 * 1.35, 4 * 1.5))
+    for k, (m, hu) in enumerate(zip(ms, huecos)):
+        ax = axs.ravel()[k]; ax.imshow(m["tinta"], cmap="Greys", vmin=0, vmax=1); ax.axis("off")
+        ax.set_title(("MACIZO" if hu == 0 else f"hueco {hu} px²") + (" · relleno" if m["verdad"]["macizo"] else "") + (" · peq." if m["verdad"]["pequeno"] else ""), fontsize=6.5, color="#b22222" if hu == 0 else "#222")
+    nz = sum(1 for h in huecos if h == 0)
+    fig.suptitle(f"rizo-2 · 93 · 48 positivos del triángulo: {nz} MACIZOS (cero huecos) y {48 - nz} con hueco; «relleno» = interior pintado a propósito (P = {P_MACIZO}), «peq.» = triángulo de 4–7 px (P = {P_PEQUENO})", fontsize=9)
+    fig.tight_layout(); out = AQUI / "resultados" / "93-triangulo-macizos.png"; fig.savefig(out, dpi=110); print(f"→ {out.relative_to(AQUI)} · macizos {nz}/48")
     return 0
 
 
