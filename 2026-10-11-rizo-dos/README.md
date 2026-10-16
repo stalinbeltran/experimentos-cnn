@@ -1811,3 +1811,17 @@ arrancar si la huella coincide. Medido ese día en el dev, borrando `web/cache` 
 antes de destruir el dev; **no sirven para revisar**. Se sustituyen por los de verdad con `/api/reentrenar` desde la app (o
 borrando el `.pt` y reiniciando la unidad): misma receta = mismo fichero, se pisa. La caché de **extra** (~8 min) no está
 emulada: se calcula y se guarda en el almacén la primera vez que un compositor con extra entrene de verdad.
+`/api/reentrenar?nombre=<receta>` reentrena **uno solo** (desde el 2026-10-16), para sustituir un emulado sin pagar los demás.
+
+✅ **Medido el 2026-10-16, 15:08 → 15:21 UTC, en el dev: un entrenamiento REAL pisa al emulado en el almacén.** Se reentrenó
+«aprobada + vértice» con `/api/reentrenar?nombre=…`; salió `val` **0,9728** (el mismo número del § 95), y el almacén recibió el
+commit `rizo-2 revisor: pesos de «aprobada + vértice · 4 en dos · +extra» (val 0.9728)` sobre el **mismo fichero**
+(718.655 → 722.559 bytes), sin campo `emulado`. Los otros cuatro siguen emulados a propósito. ⚠ Lo que destapó: la caché de
+extra (17,5 MB) la había calculado la suite de tests con el almacén apagado, y el entrenamiento la encontró en local y **no la
+subió**; ahora `traer_cache` sube lo que está en local y falta en el almacén (test), y la extra ya está allí.
+
+⏳ **PENDIENTE, sólo cuando el dueño lo ordene (2026-10-16): entrenar los compositores en SERVERS EN PARALELO**, una
+receta por máquina, en vez de en serie dentro del dev. Va **después** de comprobar que la restauración funciona tras
+destruir el dev. No está diseñado: alquila máquinas, así que irá por `desacoplar-persistente.sh` del coordinador, con el
+freno `cerrable`, y cada `.pt` se empuja al almacén al terminar con la misma huella que aquí (si no, el revisor no lo
+restaura y lo reentrena).

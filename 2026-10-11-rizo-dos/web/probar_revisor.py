@@ -217,6 +217,8 @@ class Pesos(unittest.TestCase):
                 (alm / "cache" / loc.name).write_bytes(b"del almacen")
                 self.assertTrue(S.traer_cache(loc)); self.assertEqual(loc.read_bytes(), b"del almacen")
                 loc.write_bytes(b"local"); self.assertTrue(S.traer_cache(loc)); self.assertEqual(loc.read_bytes(), b"local")
+                (alm / "cache" / loc.name).unlink(); S.empujar_almacen = lambda m: None     # en local y no en el almacén: se sube (sin git aquí)
+                self.assertTrue(S.traer_cache(loc)); self.assertEqual((alm / "cache" / loc.name).read_bytes(), b"local")
                 self.assertEqual(S.cache_del_almacen(loc), alm / "cache" / loc.name)
             finally:
                 S.almacen_revisor = real

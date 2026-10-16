@@ -95,9 +95,14 @@ def cache_del_almacen(f: Path) -> Path | None:
     return (alm / "cache" / f.name) if alm else None
 
 
-def traer_cache(f: Path) -> bool:
-    """Si `f` no está en local pero sí en el almacén, se copia (True). Nunca lanza: una copia rota se recalcula como siempre."""
+def traer_cache(f: Path, que: str = "") -> bool:
+    """Si `f` no está en local pero sí en el almacén, se copia (True). Y si está en local y FALTA en el almacén, se sube:
+    medido el 2026-10-16, la caché de extra la calculó la suite de tests (almacén apagado) y el entrenamiento real la encontró
+    en local y nunca la subió. Nunca lanza: una copia rota se recalcula como siempre."""
     if f.is_file():
+        a = cache_del_almacen(f)
+        if a is not None and not a.is_file():
+            guardar_cache(f, que or "de features (ya estaba en local)")
         return True
     a = cache_del_almacen(f)
     if a is None or not a.is_file():
@@ -330,7 +335,7 @@ class Datos:
         if celdas in self.X:
             return self.X[celdas]
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
-        if traer_cache(f):                                        # local, o la copia del almacén (del dev anterior)
+        if traer_cache(f, f"de features {celdas}×{celdas}"):      # local, o la copia del almacén (del dev anterior)
             z = np.load(f); self.X[celdas] = (z["todos"], z["tr"], z["ytr"]); return self.X[celdas]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de {len(self.M)} + {len(self.tr) * 12} dígitos…", flush=True)
         todos = CC.caract(self.M, celdas, self.tinta)                     # la tinta va con el delgado: el bloque «vertice» la necesita (2026-10-16)
@@ -344,7 +349,7 @@ class Datos:
         ⚠ Con extra en train no queda conjunto a ciegas: val es la única medida. Se calcula una vez (~7 min estimados: 50 k dígitos
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
-        if traer_cache(f):
+        if traer_cache(f, f"de features extra {celdas}×{celdas}"):
             z = np.load(f); return z["ex"], z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self.features(celdas)[0]
