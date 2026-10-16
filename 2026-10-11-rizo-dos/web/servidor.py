@@ -595,6 +595,22 @@ class App:
             if c.estado == "listo":
                 self._persistir(c)
 
+    def reentrenar(self, nombre: str | None = None) -> int:
+        """Vuelve a la cola los compositores con el 4 en dos (todos), o SÓLO `nombre` (sea sub4 o no; 2026-10-16: para sustituir
+        unos pesos emulados sin pagar los demás). Devuelve cuántos encoló. El que ya espera no se duplica; el que está entrenando
+        se vuelve a encolar (sus etiquetas son las viejas) y se marca: aunque termine «listo» antes de que le toque, se repite."""
+        if nombre is not None and nombre not in self.comps:
+            raise KeyError(f"no hay compositor «{nombre}»")
+        n = 0
+        with self._lock:
+            for c in list(self.comps.values()):
+                if (c.nombre == nombre if nombre is not None else c.sub4) and c not in self.cola:
+                    c.reentrenar = True
+                    if c.estado != "entrenando":
+                        c.estado = "pendiente"
+                    self.cola.append(c); n += 1
+        return n
+
     def listo(self, nombre: str) -> Compositor:
         c = self.comps.get(nombre)
         if c is None:
@@ -692,14 +708,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/marcar":
                 self.app.datos.marcar(int(pide("idx")), pide("clase", "auto")); return self._json({"ok": True, "manuales": self.app.datos.manuales()})
             if u.path == "/api/reentrenar":                        # tras corregir etiquetas: vuelve a la cola todo compositor con el 4 en dos (~15 min cada uno con extra)
-                n = 0
-                for c in list(self.app.comps.values()):
-                    if c.sub4 and c not in self.app.cola:          # el que ya espera no se duplica; el que está entrenando se vuelve a encolar (sus etiquetas son las viejas)
-                        c.reentrenar = True                        # y se marca: aunque termine «listo» antes de que le toque, se repite con las etiquetas nuevas
-                        if c.estado != "entrenando":
-                            c.estado = "pendiente"
-                        self.app.cola.append(c); n += 1
-                return self._json({"ok": True, "en_cola": n})
+                return self._json({"ok": True, "en_cola": self.app.reentrenar(pide("nombre", "") or None)})   # `nombre`: uno solo (p. ej. para sustituir pesos emulados)
             if u.path == "/":
                 return self._envia(200, "text/html; charset=utf-8", (AQUI / "web" / "index.html").read_bytes())
             if u.path == "/api/estado":

@@ -226,6 +226,19 @@ class Pesos(unittest.TestCase):
         finally:
             S.almacen_revisor = S_real
 
+    def test_reentrenar_uno_solo_o_todos_los_sub4(self):
+        """`reentrenar(nombre)` encola SÓLO ése (para pisar unos pesos emulados sin pagar los demás); sin nombre, todos los sub4."""
+        import threading
+        app = S.App.__new__(S.App); app.comps = {}; app.cola = []; app._lock = threading.Lock()
+        a = S.Compositor("a", ["rectas"], sub4=True); b = S.Compositor("b", ["rectas"], sub4=True); c = S.Compositor("c", ["rectas"])
+        for x in (a, b, c):
+            x.estado = "listo"; app.comps[x.nombre] = x
+        self.assertEqual(app.reentrenar("c"), 1); self.assertEqual(app.cola, [c]); self.assertEqual(c.estado, "pendiente"); self.assertTrue(c.reentrenar)
+        self.assertEqual(app.reentrenar("c"), 0)                                  # ya espera: no se duplica
+        self.assertEqual(app.reentrenar(), 2); self.assertEqual(app.cola, [c, a, b])   # sin nombre: los sub4 (c no es sub4 y ya estaba)
+        with self.assertRaises(KeyError):
+            app.reentrenar("no existe")
+
     def test_no_se_guarda_lo_que_no_esta_listo(self):
         c = S.Compositor("x", ["rectas"])
         with tempfile.TemporaryDirectory() as d:
