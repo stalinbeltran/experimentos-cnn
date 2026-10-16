@@ -1796,7 +1796,18 @@ dueño fijó la regla (CLAUDE.md del repo: los golpes NO van por defecto) y orde
 sola: **rectas ∪ restos, arcos, lazo región, conos 60° y vértice** (144 columnas, 4 en dos, extra, 3 semillas). Los cinco `.pt`
 salieron del almacén en `fe4247c3` (siguen en su historia); `recetas.json` queda con la nueva, y `recetas_guardadas()` la trae
 por defecto en un dev nuevo. Entrenada en un droplet con `entrenar_paralelo.sh lanzar` (unidad `rizo2-entrenar-paralelo`).
-Resultado: ⏳ **por medir** (se rellena cuando llegue el `.pt`; comparar con 0,9728 de «aprobada + vértice» con golpes, § 95).
+**Medido** (droplet `rizo2-a6be48ff`, 16:28 → 16:48 UTC, 914 s de entrenamiento, `Result=success`, `NRestarts=0`; ≈0,01 $):
+
+| compositor | n | val (11 clases, 3 sem.) | fallos s0 | 4l → 4l / 4a / otro | falsos 4l | 3 confusiones | cuota |
+|---|---:|---|---:|---|---:|---|---|
+| aprobada + vértice (con golpes, § 95) | 154 | 0,9728 [0,9716–0,9740] | 42 | 11 / 10 / 5 | 0 | — | vértice 2 % |
+| **aprobadas + vértice, sin golpes** | 144 | **0,9759** [0,9746–0,9777] | **36** | **17** / 4 / 5 | 0 | 9→3 ×5, 4l→4a ×4, 4l→1 ×4 | rectas 34 %, arcos 26 %, conos 25 %, lazo 13 %, vértice 2 % |
+
+Lo que sale: (1) **sin golpes es mejor**: +0,31 de val, 6 fallos menos, y el rango de semillas no se solapa con el de con golpes;
+(2) **los 4l suben de 11 a 17 de 26**, y `4l→4a` baja de 10 a 4 —lo que el vértice no conseguía con golpes delante—; aparece
+`4l→1` ×4, coherente con que el vértice dispara en el 1 con bandera (§ 95); (3) la cuota del vértice sigue en 2 %; (4) sin falsos
+4l. ⚠ Un solo punto: no dice si lo que molestaba eran los golpes o sólo sus 10 columnas de ruido. El revisor arrancó con este
+compositor restaurado del almacén, sin cola.
 
 
 ### ✅ 96 · Los 5 compositores entrenados EN PARALELO, un droplet por receta (el dueño, 2026-10-16: «inicia el entrenamiento en paralelo»)
