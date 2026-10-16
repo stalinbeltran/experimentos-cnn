@@ -416,7 +416,9 @@ class App:
         # Desde el 2026-10-15 (el dueño: «elimina los compositores previos al 4a y 4l») el arranque de un dev nuevo trae SÓLO
         # recetas con el 4 en dos clases, con extra (sin extra, train tiene 0 cuatros con lazo). ⚠ La primera vez calcula las
         # features de extra (~7 min) y cada una tarda ~15 min.
-        return {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
+        base = {f"{k} · 4 en dos · +extra": {"bloques": v, "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True} for k, v in RECETAS_BASE.items()}
+        base["aprobada + vértice · 4 en dos · +extra"] = {"bloques": RECETAS_BASE["aprobada: lazo región (§ 79)"] + ["vertice"], "celdas": 3, "semillas": list(SEMILLAS), "sub4": True, "extra": True}   # § 95, pendiente de revisar (2026-10-16)
+        return base
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
@@ -495,15 +497,15 @@ class App:
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:
-        d = self.datos; ob = d.objetos(i)
+        d = self.datos; ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i])   # el vértice sale de la TINTA (§ 95)
         return {"idx": int(i), "real": int(d.y[i]), "tinta": d.tinta[i].ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(),
                 "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist())), "sub4": (d.subgrupo4(i) if d.y[i] == 4 else None)}
 
     def miniaturas(self, ids: list[int]) -> list[dict]:
         d = self.datos; out = []
         for i in ids[:60]:
-            ob = d.objetos(i); s = serializar_objetos(ob)
-            out.append({"idx": int(i), "M": np.round(d.M[i], 2).ravel().tolist(), "objetos": {k: [{kk: v for kk, v in o.items() if kk in ("pts", "s", "o", "cx", "cy", "cono", "fuerza")} for o in s[k]] for k in ("rectas", "restos", "arcos", "lazos", "entrantes", "golpes")}})
+            ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i]); s = serializar_objetos(ob)
+            out.append({"idx": int(i), "M": np.round(d.M[i], 2).ravel().tolist(), "objetos": {k: [{kk: v for kk, v in o.items() if kk in ("pts", "s", "o", "cx", "cy", "cono", "fuerza")} for o in s[k]] for k in ("rectas", "restos", "arcos", "lazos", "entrantes", "golpes", "vertices")}})
         return out
 
     def comparar(self, i: int, nombres: list[str]) -> dict:

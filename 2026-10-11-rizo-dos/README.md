@@ -1786,3 +1786,18 @@ Lo que sale: (1) el vértice **sube el val** en las dos recetas (+0,12 y +0,14, 
 mejoran otros dígitos), no en la clase nueva. Con 2 % de cuota el compositor lo usa poco: 16 presencias en 26 4l contra 76 en
 los 1 lo hacen más «señal de 1 con bandera» que «señal de 4 cerrado» para una red de 180 + extra; (3) sigue sin falsos 4l.
 Los dos compositores quedan en el revisor.
+
+## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
+
+Está construido, medido y en el revisor (`aprobada + vértice` y `lazo presencia + vértice`, las dos con el 4 en dos y extra), y
+un dev nuevo arranca con `aprobada + vértice` entre sus recetas. Lo que queda por revisar: sube el val (+0,12) pero **no mueve
+los 4l reconocidos** (11 de 26) con un 2 % de cuota. Dos pistas sin probar: darle más señal (altura relativa del vértice, o
+«el palo sigue por debajo», que el 1 con bandera no tiene), y mirar en el revisor los 10 `4l→4a` de «aprobada + vértice»
+para ver si el vértice disparó y el compositor lo ignoró, o no disparó. Para reponer el revisor en el dev nuevo:
+
+```bash
+cd ~/src && git clone https://github.com/stalinbeltran/experimentos-cnn && cd experimentos-cnn
+python3 -m venv .venv && .venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch && .venv/bin/pip install numpy scipy scikit-image pillow matplotlib -e .
+(cd 2026-10-15-delgado-cnn && ../.venv/bin/python nn/exportar_delgados.py)      # el .npz del delgado, segundos
+.venv/bin/python 2026-10-11-rizo-dos/web/servidor.py instalar                   # unidad + ufw; luego /use revisor → url
+```
