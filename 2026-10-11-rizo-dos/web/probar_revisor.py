@@ -70,7 +70,7 @@ class ConDato(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tmp = tempfile.mkdtemp(); cls.puerto = 8900 + os.getpid() % 100
-        env = {**os.environ, "REVISOR_TOKEN_FILE": f"{cls.tmp}/t.token"}
+        env = {**os.environ, "REVISOR_TOKEN_FILE": f"{cls.tmp}/t.token", "REVISOR_SIN_ALMACEN": "1"}   # nunca al almacén de verdad
         cls.p = subprocess.Popen([sys.executable, str(AQUI / "web" / "servidor.py"), "--puerto", str(cls.puerto), "--host", "127.0.0.1"], env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
         for _ in range(600):                                     # caract la primera vez tarda ~1 min; la caché, segundos
             try:

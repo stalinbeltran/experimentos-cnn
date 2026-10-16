@@ -79,6 +79,8 @@ def almacen_revisor() -> Path | None:
     vuelve a guardar. Se commitea y empuja SÓLO esa carpeta tras cada entrenamiento; si el push falla (mini apagado) queda
     commiteado y se reintenta en el siguiente. El `.gitignore` del repo de datos ya deja entrar
     `experimentos-cnn-resultados/**/*.pt`."""
+    if os.environ.get("REVISOR_SIN_ALMACEN"):                     # las PRUEBAS: un test que entrena no puede empujar al almacén
+        return None                                               # (pasó el 2026-10-16: «prueba-golpes» acabó commiteado allí)
     d = ruta_datos()
     return (d / "experimentos-cnn-resultados" / "rizo-2" / "revisor") if d else None
 
