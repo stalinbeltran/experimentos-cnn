@@ -164,6 +164,7 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     "entrantes60f": ("entrantes conos 60°, fuerza (§ 66)", "4 conos × rejilla 3×3", "entrantes"),
     "cruces": ("cruces (§ 69)", "rejilla 3×3 + cuenta", "cruces"),
     "vertice": ("vértice del 4 (bordes de la tinta, § 95)", "rejilla + cuenta", "vertice"),
+    "vertice_1": ("vértice del 4 en UNA celda (prueba, 2026-10-16)", "rejilla one-hot: la celda que contiene el centro, sin mancha ni solape + cuenta", "vertice"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 
@@ -200,7 +201,7 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
         for o in range(4):
             out += [{"sub": et[o], "celda": k, "tipo": "rejilla", "nombre": f"{cn[k]}"} for k in range(c)]
             out += [{"sub": et[o], "celda": None, "tipo": "cuenta", "nombre": "cuenta"}, {"sub": et[o], "celda": None, "tipo": "largo", "nombre": extra}]
-    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area", "vertice"):
+    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area", "vertice", "vertice_1"):
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": cn[k]} for k in range(c)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     elif bloque in ("entrantes4", "entrantes4n"):
         out += [{"sub": DIR4[o], "celda": None, "tipo": "fuerza" if bloque == "entrantes4" else "cuenta", "nombre": "fuerza" if bloque == "entrantes4" else "cuenta"} for o in range(4)]
@@ -212,6 +213,25 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
         c3 = celdas_nombres(3)
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": c3[k]} for k in range(9)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     return out
+
+
+def bloque_vertice_1(tinta, celdas: int = 3) -> list[float]:
+    """El vértice puesto en UNA sola celda: la que contiene su centro, partiendo los 32 px en `celdas` tramos SIN solape
+    (int(cx·celdas/32)). El dueño, 2026-10-16: «al detectar el vértice lo posicionamos en 2 celdas; ¿puede estar sólo en
+    una?». En el bloque `vertice` la mancha gaussiana (σ 2 px) y las celdas solapadas de adaptive_max_pool ([0,11) [10,22)
+    [21,32)) encendían DOS celdas en 159 de 475 vértices (medido ese día). Se calcula aquí y no en cresta_curvas.py a
+    propósito: tocar ese fichero cambia su hash, y con él la huella de todo compositor guardado y las cachés de features."""
+    v = CC.vertices(tinta); g = [0.0] * (celdas * celdas)
+    for o in v:
+        c = min(celdas - 1, int(o["cx"] * celdas / 32)); r = min(celdas - 1, int(o["cy"] * celdas / 32)); g[r * celdas + c] = 1.0
+    return g + [float(len(v))]
+
+
+def rangos(celdas: int) -> dict:
+    """Dónde está cada bloque en la matriz que usa la app: los de caract (CC.bloques) y, al final, los que se calculan aquí."""
+    B = dict(CC.bloques(celdas)); n = max(z for _, z in B.values())
+    B["vertice_1"] = (n, n + celdas * celdas + 1)
+    return B
 
 
 def partes(bloque: str) -> list[str]:
@@ -377,18 +397,38 @@ class Datos:
         return [{"idx": int(i), "parte": parte.get(int(i), "?"), "regla": "4l" if self.subgrupo4(int(i)) else "4a", "manual": m.get(int(i)), "lazo": len(self.objetos(int(i))["lazos"]) > 0}
                 for i in np.flatnonzero(self.y == 4)]
 
+    def _v1(self, tintas, celdas):
+        return np.asarray([bloque_vertice_1(t, celdas) for t in tintas], np.float32)
+
+    def vert1(self, celdas: int, extra: bool = False):
+        """Las columnas de `vertice_1` para (todos, train aumentado) o para los extra aumentados, en el MISMO orden que caract.
+        ~30 s todo (0,6 ms por dígito, medido 2026-10-16); caché propia `vert1-…`, también en el almacén."""
+        f = CACHE / f"vert1-{self.hash}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        if traer_cache(f, f"vertice_1 {celdas}×{celdas}"):
+            z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
+        idx = self.ex if extra else self.tr
+        aum = np.concatenate([self._v1(np.stack([mover(x, *m) for x in self.tinta[idx]]), celdas) for m in self.aum])   # aum[0] = sin mover
+        if extra:
+            np.savez_compressed(f, ex=aum); guardar_cache(f, f"vertice_1 {celdas}×{celdas} extra"); return (aum,)
+        todos = self._v1(self.tinta, celdas); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"vertice_1 {celdas}×{celdas}")
+        return todos, aum
+
     def features(self, celdas: int):
         if celdas in self.X:
             return self.X[celdas]
+        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas)
+        self.X[celdas] = (np.concatenate([todos, vt], 1), np.concatenate([tr, vtr], 1), ytr); return self.X[celdas]
+
+    def _features_caract(self, celdas: int):
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
         if traer_cache(f, f"de features {celdas}×{celdas}"):      # local, o la copia del almacén (del dev anterior)
-            z = np.load(f); self.X[celdas] = (z["todos"], z["tr"], z["ytr"]); return self.X[celdas]
+            z = np.load(f); return z["todos"], z["tr"], z["ytr"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de {len(self.M)} + {len(self.tr) * 12} dígitos…", flush=True)
         todos = CC.caract(self.M, celdas, self.tinta)                     # la tinta va con el delgado: el bloque «vertice» la necesita (2026-10-16)
         tr = np.concatenate([todos[self.tr]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.tr]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.tr]])) for m in self.aum[1:]])
         ytr = np.concatenate([self.y[self.tr]] * len(self.aum))
-        np.savez_compressed(f, todos=todos, tr=tr, ytr=ytr); self.X[celdas] = (todos, tr, ytr)
-        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features {celdas}×{celdas}"); return self.X[celdas]
+        np.savez_compressed(f, todos=todos, tr=tr, ytr=ytr)
+        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features {celdas}×{celdas}"); return todos, tr, ytr
 
     def features_extra(self, celdas: int):
         """Las 394 columnas de los 3823 «extra» × 13 desplazamientos, para entrenar con MÁS dígitos (§ 819: 180 + extra = 4003).
@@ -396,12 +436,13 @@ class Datos:
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
         if traer_cache(f, f"de features extra {celdas}×{celdas}"):
-            z = np.load(f); return z["ex"], z["yex"]
+            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0]], 1), z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
-        todos = self.features(celdas)[0]
+        todos = self._features_caract(celdas)[0]
         ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
-        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}"); return ex, yex
+        print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}")
+        return np.concatenate([ex, self.vert1(celdas, extra=True)[0]], 1), yex
 
     def objetos(self, i: int) -> dict:
         with self._lock:
@@ -428,7 +469,7 @@ class Compositor:
 
     def corta(self, X, datos=None):
         """Las columnas de la receta: cada entrada es un bloque entero o sólo algunas de sus piezas (2026-10-16)."""
-        B = CC.bloques(self.celdas); partes_x = []
+        B = rangos(self.celdas); partes_x = []
         for b in self.bloques:
             base, idx, _ = columnas_de(b, self.celdas); a = B[base][0]
             partes_x.append(X[:, [a + k for k in idx]])

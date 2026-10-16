@@ -36,7 +36,7 @@ class Columnas(unittest.TestCase):
     def test_cada_bloque_nombra_exactamente_sus_columnas(self):
         """Los nombres de las columnas (lo que la app enseña) tienen que casar con el ancho real del bloque en caract."""
         for celdas in (3, 4):
-            B = CC.bloques(celdas)
+            B = S.rangos(celdas)   # los de caract y los que calcula la app (vertice_1)
             for b in S.BLOQUES:
                 self.assertEqual(len(S.columnas(b, celdas)), B[b][1] - B[b][0], f"{b} con {celdas}×{celdas}")
 
@@ -75,6 +75,19 @@ class Columnas(unittest.TestCase):
         self.assertEqual(c.cortes(), {"vertice:rejilla": (0, 9), "rectas_todo:cuenta": (9, 13)})
         entero = S.Compositor("e", ["vertice"], 3)
         self.assertEqual(entero.corta(X)[0].tolist(), list(range(a, z)))   # el bloque entero no cambia
+
+    def test_vertice_en_una_celda(self):
+        """2026-10-16, el dueño: el vértice en UNA celda. Un centro justo en la frontera (x = 21, la del dígito 77) cae en la
+        celda que lo contiene, sin repartirse; la cuenta es la de siempre; y va al final de la matriz, sin mover los demás."""
+        import unittest.mock as um
+        with um.patch.object(S.CC, "vertices", return_value=[{"cx": 21.0, "cy": 0.5}]):
+            g = S.bloque_vertice_1(np.zeros((32, 32)), 3)
+        self.assertEqual(g, [0, 1, 0, 0, 0, 0, 0, 0, 0, 1.0])
+        with um.patch.object(S.CC, "vertices", return_value=[]):
+            self.assertEqual(S.bloque_vertice_1(np.zeros((32, 32)), 3), [0.0] * 10)
+        B = S.rangos(3); fin = max(z for k, (_, z) in B.items() if k != "vertice_1")
+        self.assertEqual(B["vertice_1"], (fin, fin + 10))
+        self.assertEqual(S.partes("vertice_1"), ["rejilla", "cuenta"])
 
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
