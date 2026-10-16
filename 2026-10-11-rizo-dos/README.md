@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### ✅ 96 · Los 5 compositores entrenados EN PARALELO, un droplet por receta (el dueño, 2026-10-16: «inicia el entrenamiento en paralelo»)
+
+`web/entrenar_paralelo.sh lanzar emulados` (desde Telegram, `/use rizo2-paralelo`): un droplet `dev` sin servicios por receta,
+cada uno corre `servidor.py entrenar <id>`, empuja su `.pt` al almacén y se destruye. **Medido** (unidad `rizo2-entrenar-paralelo`,
+`Result=success`, `NRestarts=0`; logs en el almacén, `temporal/dev/2026-10-16/rizo2-*.log`):
+
+| receta | val | entrenar (s) | máquina viva |
+|---|---:|---:|---|
+| aprobada: lazo región (§ 79) | 0,9716 | 732 | 15:52 → 16:10 UTC |
+| restos fundido, lazo presencia (§ 74) | 0,9716 | 780 | ≈ igual |
+| lazo área (§ 79) | 0,9709 | 699 | ≈ igual |
+| conos 60° sin restos (§ 66) | 0,968 | 777 | ≈ igual |
+
+4 máquinas `s-2vcpu-4gb` (0,0357 $/h) unos 18 min cada una ⇒ **≈0,04 $** (estimado del tiempo; DO factura por hora empezada,
+así que el real puede ser 4 × 0,0357 = 0,14 $). Reloj total **~20 min** contra ~1 h en serie en el dev. Nacer una máquina
+(launch + `post` con venv y delgado): 5 min 23 s; la caché de features de extra vino del almacén (sin ella, +8 min).
+Los 4 pushes concurrentes entraron sin pisarse (`empujar_almacen` hace `pull --rebase` y reintenta). ⚠ La app NO recarga sola:
+`sudo systemctl restart rizo2-revisor` (o `/use revisor` → `instalar`) y arrancó con «5 restaurado(s) del almacén, 0 en cola»,
+ninguno emulado. El de `aprobada + vértice` (0,9728) ya era real, del dev, y no se repitió.
+
+
 Está construido, medido y en el revisor (`aprobada + vértice` y `lazo presencia + vértice`, las dos con el 4 en dos y extra), y
 un dev nuevo arranca con `aprobada + vértice` entre sus recetas. Lo que queda por revisar: sube el val (+0,12) pero **no mueve
 los 4l reconocidos** (11 de 26) con un 2 % de cuota. Dos pistas sin probar: darle más señal (altura relativa del vértice, o
