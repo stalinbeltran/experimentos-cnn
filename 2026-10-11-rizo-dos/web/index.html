@@ -184,7 +184,7 @@ async function verCompositor() {
   html += `<h3>qué pesa · <span style="color:var(--rojo)">rojo empuja al ${K[L.predicho_fino]}</span>, <span style="color:var(--verde)">verde al ${K[acierta?L.contra:L.real_fino]}</span></h3>`;
   html += `<div class="nota" style="margin-top:0">por bloque: ${Object.entries(L.suma_por_bloque).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(1)}`).join(' · ')}</div>`;
   const mx = Math.max(...L.pesan.map(p=>Math.abs(p.atr)));
-  html += L.pesan.map((p,k)=>`<div class="barra" data-pesa="${k}" style="cursor:pointer"><div class="n">${h(p.nombre)} (=${p.valor.toFixed(2)})</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
+  html += L.pesan.map((p,k)=>`<div class="barra" data-pesa="${k}" style="cursor:pointer"><div class="n" title="${h(p.nombre)} (=${p.valor.toFixed(2)})">${h(p.nombre.split(' · ')[0])}</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
   html += navegacion(); main.innerHTML = html; $('#selc').onchange=e=>{S.comp=e.target.value; S.lista=null; verCompositor();};
   dibujar($('#mini'), d.M, d.objetos, {px:4, rejilla:c.celdas}); atarNav(verCompositor);
   main.querySelectorAll('[data-pesa]').forEach(el=> el.onclick=()=> popupPesa(L, L.pesan[+el.dataset.pesa], d, K, mx));
