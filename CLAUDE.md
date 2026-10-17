@@ -168,6 +168,26 @@ lo decidiera aparte. A partir de ahora:
    enseña el revisor (pantalla del compositor); medir la receta «aprobada + vértice − golpes» es el experimento que
    diría si el defecto nuevo cuesta algo.
 
+## ⚠ Regla del dueño (2026-10-17): la entrada por DEFECTO es el DELGADO, no la tinta
+
+> «La entrada default no es la tinta sino delgada (le aplicamos una transformación).» — el dueño, 2026-10-17, al ver una
+> figura con la tinta de fondo
+
+El **delgado** es la salida de `delg-cnn` (`2026-10-15-delgado-cnn`): una CNN entrenada con trazos sintéticos que convierte
+el dígito en un **mapa continuo** 32×32 de por dónde pasa el bolígrafo (abre los lazos macizos, deja los cruces como dos
+líneas). Fichero: `2026-10-15-delgado-cnn/resultados/delgados-k3x3.npz`, clave `M` (float, 5620 dígitos, mismo orden que el
+dataset); lo regenera `nn/exportar_delgados.py` en segundos. La **cresta** (`rizo-2/nn/cresta_curvas.tramos`) es el
+esqueleto de `M > 0,4`.
+
+1. **Toda feature, detector o figura nueva se calcula sobre el delgado.** La tinta (`imagenes > 0` del dataset) sólo entra
+   si se decide a propósito, y entonces se **dice** en el código, en la figura y en el README («ENTRADA: la tinta, porque…»).
+2. **Las figuras enseñan el delgado de fondo**, no la tinta: si el fondo es tinta, el dueño lee (con razón) que el cálculo
+   también lo fue. Pasó con `rizo-2` § 102: la detección iba sobre el delgado y el dibujo, sobre la tinta.
+3. ⚠ **Lo que hoy NO cumple la regla, y está en uso**: el bloque `vertice` del revisor (`cresta_curvas.vertices`, § 95) mira
+   los bordes de la **tinta**. Cambiarlo cambia la huella de los compositores guardados; es decisión del dueño. Medido el
+   2026-10-17 (`rizo-2` § 101): ese mismo detector sobre el delgado (`M > 0,4`) dispara N en 10 cuatros de val, contra 16
+   de 26 cuatros cerrados sobre la tinta; el vértice sobre la cresta (§ 102) da 23 de 26.
+
 ## ⏳ PENDIENTE (anotado el 2026-10-15, pedido por el dueño): AUTOMATIZAR LA BÚSQUEDA DE FEATURES — no empezado
 
 > «Partimos de que un píxel es un feature, y al poner un problema (por ej. la identificación de un dígito) obtenemos la

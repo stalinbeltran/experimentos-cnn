@@ -1798,7 +1798,9 @@ desde la cima del dígito y por construcción sólo ve la punta del extremo (§ 
 < 90° medidos a 6 px (y < 120° a 3 px, para no confundir una curva cerrada con una esquina), a mitad de un tramo o en un nudo, sin
 contar los **cruces** (los dos brazos siguen de largo por trazos distintos: la X del 8 daba 168 N y 152 S sin esa regla). Por
 dirección: rejilla 3×3 de **presencia en una sola celda** + rejilla 3×3 de **amplitud** (ángulo/180) + cuenta = 4 × 19 = **76
-números**. Parámetros **sin calibrar**. Figura `resultados/102-vertice-libre.png`, números en `.json`.
+números**. Parámetros **sin calibrar**. Figura `resultados/102-vertice-libre.png`, números en `.json`. **Entrada: el DELGADO**
+(`delgados-k3x3.npz`): la detección ya lo era desde la primera versión; el fondo de la figura era la tinta y se corrigió el
+2026-10-17 (mismos números).
 
 Medido en val (1617 dígitos, 7 ms por dígito):
 - **el 4 cerrado (4l) tiene vértice N en 23 de 26** (el de hoy: 16 de 26); el 4 abierto (4a), 7 de 137, **ninguno en la fila de
@@ -1819,7 +1821,9 @@ y devuelve la posición al dígito; la rejilla es la del bloque `vertice` (σ 2 
 `resultados/101-vertice-4-direcciones.png`. Convención propuesta: el vértice se nombra por hacia dónde **apunta**; un entrante
 por hacia dónde **abre** (conos 60°: der→E, izq→O, abajo→S, arriba→N); las celdas, NO N NE / O C E / SO S SE.
 
-Medido en val (1617 dígitos): **N 121** (1: 76, 4: 16) · **S 84** (4: 48, 7: 14, 1: 12) · **E 28** (1: 20, 5: 4) · **O 4**.
+⚠ **Recalculado el 2026-10-17 sobre el DELGADO** (regla del dueño de ese día: la entrada por defecto no es la tinta): el detector
+de § 95 pasa sobre `M > 0,4`. Medido en val (1617 dígitos): **N 60** (1: 47, 4: 10) · **S 62** (4: 39, 1: 12, 7: 9) · **E 28**
+(1: 20) · **O 10** (1: 9). La primera versión de esta figura (`9b25416`) iba sobre la tinta: N 121 (1: 76, 4: 16) · S 84 · E 28 · O 4.
 ⚠ **Cada dirección cae sólo en su borde de la rejilla** (N siempre en la fila de arriba, S en la de abajo, E en la columna
 derecha, O en la izquierda): el detector busca la punta desde el **extremo** del dígito (su «cima»), así que de las 9 celdas
 cada dirección usa 3. ⚠ La regla de bordes del N es **asimétrica** a propósito (el palo del 4 vertical a la derecha, § 95), y al

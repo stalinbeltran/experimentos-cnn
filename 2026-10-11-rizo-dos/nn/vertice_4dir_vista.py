@@ -31,6 +31,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt                                           # noqa: E402
 
 DATASET = "uci-optdigits-orig-32px-r20261005"                            # el de rizo-2 (web/servidor.py)
+DELGADOS = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-k3x3.npz"
 N = 32
 # dirección → (giros CCW de np.rot90 que llevan esa punta ARRIBA, cómo vuelve (cx, cy) del giro al dígito original)
 DIRS = {
@@ -57,7 +58,11 @@ def rejilla(vs) -> np.ndarray:
 
 def main() -> int:
     d = dict(np.load(exigir_dataset(DATASET) / "datos.npz"))
-    tinta = (d["imagenes"] > 0).astype(np.uint8); y = d["etiquetas"].astype(int); va = np.flatnonzero(d["particion"] == "val")
+    y = d["etiquetas"].astype(int); va = np.flatnonzero(d["particion"] == "val")
+    # ⚠ la entrada por defecto es el DELGADO de delg-cnn, no la tinta (el dueño, 2026-10-17). El detector de § 95 pide una
+    # máscara: el delgado binarizado con el MISMO umbral que la cresta (cresta_curvas.UMBRAL). La 1.ª versión de esta figura
+    # (commit 9b25416) usaba la tinta.
+    M = np.load(DELGADOS)["M"].astype(np.float32); tinta = (M > CC.UMBRAL).astype(np.uint8)
     # dónde dispara cada dirección en val, por clase, y en qué celda cae
     cuenta = {k: [0] * 10 for k in DIRS}; celda = {k: np.zeros(9, int) for k in DIRS}; ejemplos = {k: [] for k in DIRS}
     for i in va:
@@ -106,7 +111,7 @@ def main() -> int:
         for rr in range(3):
             filas.append("  " + "  ".join(f"{CELDAS[rr * 3 + cc]:>2} {celda[k][rr * 3 + cc]:>4}" for cc in range(3)))
         a.text(0, 0.95, "\n".join(filas), va="top", family="monospace", fontsize=10)
-    fig.suptitle("rizo-2 · 101 · VISTA PREVIA: el vértice en 4 direcciones (detector de hoy, GIRADO)\n"
+    fig.suptitle("rizo-2 · 101 · VISTA PREVIA: el vértice en 4 direcciones (detector de hoy, GIRADO) · ENTRADA: el DELGADO (> 0,4)\n"
                  "nombre = hacia dónde APUNTA la punta · celdas de la rejilla: NO N NE / O C E / SO S SE · "
                  "entrantes (conos 60°): der→E, izq→O, abajo→S, arriba→N", fontsize=10.5)
     fig.tight_layout(rect=(0, 0, 1, 0.955), h_pad=3.0)

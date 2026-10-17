@@ -2,7 +2,8 @@
 """rizo-2 — VISTA PREVIA del vértice LIBRE: en cualquier sitio, en 4 direcciones, en UNA celda, y con su AMPLITUD (el dueño,
 2026-10-17: «debe detectarlos donde estén… en posición única (si caen en medio de 2 celdas), pues nos sirve por si se ven varios
 vértices. También otro vértice con la misma posición única que refleje el ángulo: 0 = 0°, 1 = 180°. Revisa si tiene sentido y
-si es factible. Muéstrame cómo quedarían»). PROTOTIPO: no toca `cresta_curvas.vertices` ni nada que use el revisor.
+si es factible. Muéstrame cómo quedarían»). PROTOTIPO: no toca `cresta_curvas.vertices` ni nada que use el revisor. ENTRADA: el DELGADO de delg-cnn
+(`delgados-k3x3.npz`), que es la entrada por defecto; la tinta no se usa ni para dibujar (el dueño, 2026-10-17).
 
 Por qué en la CRESTA y no en la tinta: el detector de hoy (§ 95) mira los BORDES de la tinta desde la cima del dígito, y por
 construcción sólo ve la punta del extremo (§ 101: N siempre en la fila de arriba). Para encontrar un vértice «donde esté» hay que
@@ -161,8 +162,8 @@ def mover(m, dx, dy):
 
 def main() -> int:
     d = dict(np.load(exigir_dataset(DATASET) / "datos.npz"))
-    tinta = (d["imagenes"] > 0).astype(np.uint8); y = d["etiquetas"].astype(int); va = np.flatnonzero(d["particion"] == "val")
-    M = np.load(DELGADOS)["M"].astype(np.float32)
+    y = d["etiquetas"].astype(int); va = np.flatnonzero(d["particion"] == "val")
+    M = np.load(DELGADOS)["M"].astype(np.float32)   # ⚠ la entrada por defecto es el DELGADO (delg-cnn), NUNCA la tinta (el dueño, 2026-10-17)
     t0 = time.time(); V = {int(i): vertices_libres(M[i]) for i in va}; ms = (time.time() - t0) / len(va) * 1000
     por_clase = {k: [0] * 10 for k in DIRS}; por_celda = {k: [0] * 9 for k in DIRS}; angs = {k: [] for k in DIRS}
     n_vert = np.array([len(V[i]) for i in va]); borde = 0; choques = 0; total = 0
@@ -198,7 +199,7 @@ def main() -> int:
     gs = fig.add_gridspec(len(idx) + 1, 9, width_ratios=[1.5] + [1] * 8, height_ratios=[1] * len(idx) + [1.05], hspace=0.55, wspace=0.25)
     for r, i in enumerate(idx):
         vs = V[i]; R = rejillas(vs)
-        a = fig.add_subplot(gs[r, 0]); a.imshow(tinta[i], cmap="Greys", alpha=0.35, extent=(0, N, N, 0))
+        a = fig.add_subplot(gs[r, 0]); a.imshow(M[i], cmap="Greys", vmin=0, vmax=1, alpha=0.45, extent=(0, N, N, 0))   # el DELGADO: la entrada por defecto
         for t in CC.tramos(M[i])[0] + CC.tramos(M[i])[1]:
             a.plot(t["pts"][:, 0], t["pts"][:, 1], "-", color="#333", lw=1.2)
         for b in (32 / 3, 64 / 3):
@@ -237,7 +238,7 @@ def main() -> int:
     a.text(0, 1, "\n".join(filas), va="top", family="monospace", fontsize=9.5)
     fig.suptitle("rizo-2 · 102 · VISTA PREVIA: el vértice LIBRE (en cualquier sitio de la cresta) · 4 direcciones · UNA celda · amplitud = ángulo/180\n"
                  f"vértice = 2 brazos de cresta ≥ {BRAZO_MIN:.0f} px con < {A_MAX:.0f}° a {BRAZO:.0f} px (y < {A_MAX_CORTO:.0f}° a {BRAZO_CORTO:.0f} px: esquina, no curva), sin contar cruces · "
-                 "dirección = hacia dónde APUNTA · celdas NO N NE / O C E / SO S SE · parámetros SIN calibrar", fontsize=10.5, y=0.995)
+                 "dirección = hacia dónde APUNTA · celdas NO N NE / O C E / SO S SE · ENTRADA: el DELGADO (delg-cnn) · parámetros SIN calibrar", fontsize=10.5, y=0.995)
     out = AQUI / "resultados" / "102-vertice-libre"
     fig.savefig(out.with_suffix(".png"), dpi=100, bbox_inches="tight")
     resumen = {"val": int(len(va)), "ms_por_digito": round(ms, 2), "vertices": total, "por_clase": por_clase,
