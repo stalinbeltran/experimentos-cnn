@@ -1789,6 +1789,17 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 108 · El centro de un 3 (val #409) NO es vértice: 144°, contra el límite de < 90° (el dueño, 2026-10-17)
+
+«Un detector de vértices no encuentra el vértice en el centro de un 3, id 409… muéstrame el ángulo hallado, en una imagen.»
+`nn/vertice_409_vista.py` → `resultados/108-vertice-centro-3-409.png`, con el MISMO `vertice_libre` del revisor (nada cambiado).
+La cresta del delgado es UN tramo sin nudos; en la cintura apenas hay lengüeta, y el punto más cerrado que apunta al O en la fila
+del medio, (19,5; 13,5), da **144° a 6 px y 138° a 3 px**: le faltan 54° para el límite. Sólo halla el vértice de arriba (N, 86°).
+
+No es el 409 sólo (medido ese día sobre los 165 tres de val, vértice O más agudo en la fila del medio, límites relajados): **< 90° en
+17**, < 120° en 107, < 150° en 153, mediana 112°. Subir el límite a 120° también enciende el 4 (114 de 163), el 5 (74) y el 9 (53).
+⏳ **Propuesto al dueño, sin aplicar**: subir el límite, una pieza «codo» (90–150°) aparte, o dejar el centro del 3 a los entrantes.
+
 ### 107 · El 1l, CLASE del entrenamiento: «el 1 en dos», igual que el 4 (el dueño, 2026-10-17)
 
 «Revisa si mis cambios se guardaron. Checa que ésta sea la nueva clase en el app y por supuesto para el entrenamiento.» Sus marcas:
