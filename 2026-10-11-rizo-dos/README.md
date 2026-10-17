@@ -1789,6 +1789,22 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 104 · La REDONDEZ del vértice: tres definiciones para elegir (el dueño, 2026-10-17: «muéstrame las imágenes… vamos a definirlas ahora»)
+
+`nn/redondez_vista.py` → `resultados/104-redondez.{png,json}`. Sobre los 1416 vértices libres de val (§ 102–103, cresta del
+DELGADO), cada uno con sus dos brazos de cresta (`vertice_libre_vista._camino`, hasta 9 px). Nada entrenado ni en el revisor.
+
+| definición | qué mide | escala propuesta | cuantiles 10–50–90 % en val |
+|---|---|---|---|
+| **(a) despegue** | distancia de la punta al cruce de las rectas de los dos brazos (ajustadas de 2 a 6 px) | 0 = 0 px · 1 = ≥ 4 px | 1,4 · 2,8 · 7,0 px |
+| **(b) se abre de cerca** | ángulo con cuerdas de 2 px − ángulo con cuerdas de 6 px (recortado a ≥ 0) | 0 = 0° · 1 = ≥ 90° | 0 · 22 · 47° |
+| **(c) radio** | radio del círculo ajustado (mínimos cuadrados) a la cresta a ≤ 3 px de la punta | 0 = 0 px · 1 = ≥ 6 px | 2,1 · 2,9 · 4,1 px |
+
+¿Miden lo mismo? Correlación de rangos en val: a–c **0,52**, a–b 0,27, b–c −0,07: (a) y (c) van juntas; (b) mide otra cosa.
+Correcciones de la primera pasada, que la figura enseñaba: (c) era 1/curvatura de la cresta SUAVIZADA y el suavizado movía la
+punta (círculos que no la tocaban, casi todos 2–4 px); (a) ajustaba las rectas de 3 a 9 px y en brazos curvos se cruzaban a
+112 px. ⏳ **Pendiente: que el dueño elija** (o combine) a la vista de la figura.
+
 ### 103 · Las REJILLAS del vértice: UNA por dirección, 4 direcciones, celdas sin letras (el dueño, 2026-10-17)
 
 El dueño leyó en la figura 101 las letras de las CELDAS (NO, N, NE…, que eran su posición) como si hubiera direcciones

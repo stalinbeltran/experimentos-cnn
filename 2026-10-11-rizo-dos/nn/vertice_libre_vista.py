@@ -72,6 +72,25 @@ def _brazo(p, i, paso, L, cerrado):
     return p[j] - p[i], acc
 
 
+def _camino(p, i, paso, L, cerrado) -> np.ndarray:
+    """Los puntos de la cresta desde p[i] (incluido) hasta L px de recorrido en el sentido `paso`: el BRAZO entero, no sólo su
+    cuerda. Lo usan las medidas de REDONDEZ (`redondez_vista.py`, 2026-10-17); no interviene en la detección."""
+    n = len(p); acc, j = 0.0, i; out = [p[i]]
+    while acc < L:
+        k = j + paso
+        if cerrado:
+            k %= n
+        elif k < 0 or k >= n:
+            break
+        acc += float(np.hypot(*(p[k] - p[j]))); j = k; out.append(p[j])
+        if cerrado and j == i:
+            break
+    return np.asarray(out)
+
+
+ALCANCE = 9.0        # px de brazo que se guardan con cada vértice (para medir su redondez)
+
+
 def _angulo(u, v):
     return float(np.degrees(np.arccos(np.clip(np.dot(u, v) / (np.hypot(*u) * np.hypot(*v) + 1e-9), -1, 1))))
 
@@ -109,6 +128,8 @@ def vertices_libres(M) -> list[dict]:
                 continue
             uc, _ = _brazo(p, i, -1, BRAZO_CORTO, cerrado); vc, _ = _brazo(p, i, +1, BRAZO_CORTO, cerrado)
             angs[i] = _angulo(u, v); res[i] = _candidato(*p[i], u, v, uc, vc)
+            if res[i] is not None:
+                res[i]["brazos"] = (_camino(p, i, -1, ALCANCE, cerrado), _camino(p, i, +1, ALCANCE, cerrado))
         for i in range(n):
             vec = [angs[(i - 1) % n], angs[(i + 1) % n]] if cerrado else [angs[i - 1] if i > 0 else 180, angs[i + 1] if i < n - 1 else 180]
             if res[i] is not None and angs[i] <= min(vec):
@@ -139,7 +160,7 @@ def vertices_libres(M) -> list[dict]:
                 uc, _ = _brazo(p, 0, +1, BRAZO_CORTO, False); vc, _ = _brazo(q, 0, +1, BRAZO_CORTO, False)
                 c = _candidato(*((p[0] + q[0]) / 2), u, v, uc, vc)
                 if c is not None:
-                    cand.append(c)
+                    c["brazos"] = (_camino(p, 0, +1, ALCANCE, False), _camino(q, 0, +1, ALCANCE, False)); cand.append(c)
     out = []
     for c in sorted(cand, key=lambda c: c["ang"]):                       # supresión: el más agudo de cada sitio
         if all(np.hypot(c["cx"] - o["cx"], c["cy"] - o["cy"]) >= SUPR for o in out):
