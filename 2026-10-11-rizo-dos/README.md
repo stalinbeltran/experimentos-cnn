@@ -1789,6 +1789,22 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 103 · Las REJILLAS del vértice: UNA por dirección, 4 direcciones, celdas sin letras (el dueño, 2026-10-17)
+
+El dueño leyó en la figura 101 las letras de las CELDAS (NO, N, NE…, que eran su posición) como si hubiera direcciones
+diagonales. Regla nueva (en el `CLAUDE.md` del repo): **una rejilla 3×3 por dirección**, sólo **N, E, S, O**, cada una un sector
+de 90° del rumbo de la punta (N [315°, 45°), E [45°, 135°), S [135°, 225°), O [225°, 315°)): no hay NE, un vértice a 30° es N
+y uno a 60° es E. Las celdas son sólo sitios del dígito y **no llevan letras**. `nn/vertice_rejillas_vista.py` →
+`resultados/103-vertice-rejillas.png`: el vértice libre de § 102 (sobre la cresta del DELGADO), ahora con el **rumbo** de cada
+punta escrito (`vertice_libre_vista._rumbo`). Ejemplos de frontera en la figura: el #740 (un 7) tiene dos puntas a 39° y 43° y
+caen las dos sólo en N; el #8 (un 8), una a 311° que cae sólo en O. Nada entrenado (el dueño: «no entrenes ningún compositor
+por ahora»).
+
+⏳ **Pendientes que dejó el dueño ese día** (detalle en el `CLAUDE.md` del repo): (1) **todo por defecto sobre el delgado**: el
+vértice de § 95/§ 98 y el que dibuja el revisor van sobre la tinta y hay que pasarlos — **no recalculado**; (2) la **curvatura**
+del vértice (afilado o redondeado), un dato más con la misma posición única, a probar más adelante — **no implementada**;
+(3) ningún compositor se entrena por ahora.
+
 ### 102 · VISTA PREVIA: el vértice LIBRE — donde esté, 4 direcciones, UNA celda y su AMPLITUD (el dueño, 2026-10-17)
 
 Pedido: «debe detectarlos donde estén… en posición única (si caen en medio de 2 celdas), pues nos sirve por si se ven varios

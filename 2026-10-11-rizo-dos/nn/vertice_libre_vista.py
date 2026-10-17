@@ -77,15 +77,23 @@ def _angulo(u, v):
 
 
 def _direccion(u, v) -> str:
-    b = -(u / (np.hypot(*u) + 1e-9) + v / (np.hypot(*v) + 1e-9))       # la punta apunta CONTRA los brazos
-    a = np.degrees(np.arctan2(b[1], b[0]))                               # y crece hacia abajo
-    return "E" if abs(a) <= 45 else "O" if abs(a) >= 135 else ("S" if a > 0 else "N")
+    """El sector de 90° del rumbo (ver `_rumbo`): N [315°, 45°), E [45°, 135°), S [135°, 225°), O [225°, 315°). Sale del MISMO
+    rumbo para que las fronteras sean exactamente las escritas (2026-10-17: la versión anterior empataba distinto en 135° y 315°;
+    en val no pasaba nunca, 0 de 1416)."""
+    return "NESO"[int(((_rumbo(u, v) + 45) % 360) // 90)]
+
+
+def _rumbo(u, v) -> float:
+    """Hacia dónde apunta la punta, como una brújula: 0° = N, 90° = E, 180° = S, 270° = O. `_direccion` lo parte en 4
+    sectores de 90° (±45° alrededor de cada uno): no hay NE; un vértice a 30° es N y uno a 60° es E (el dueño, 2026-10-17)."""
+    b = -(u / (np.hypot(*u) + 1e-9) + v / (np.hypot(*v) + 1e-9))
+    return float((np.degrees(np.arctan2(b[1], b[0])) + 90) % 360)
 
 
 def _candidato(x, y, u, v, uc, vc):
     a, ac = _angulo(u, v), _angulo(uc, vc)
     if a < A_MAX and ac < A_MAX_CORTO:
-        return {"cx": float(x), "cy": float(y), "ang": a, "dir": _direccion(u, v)}
+        return {"cx": float(x), "cy": float(y), "ang": a, "dir": _direccion(u, v), "rumbo": _rumbo(u, v)}
     return None
 
 

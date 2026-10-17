@@ -168,7 +168,46 @@ lo decidiera aparte. A partir de ahora:
    enseña el revisor (pantalla del compositor); medir la receta «aprobada + vértice − golpes» es el experimento que
    diría si el defecto nuevo cuesta algo.
 
-## ⚠ Regla del dueño (2026-10-17): la entrada por DEFECTO es el DELGADO, no la tinta
+## ⚠ Regla del dueño (2026-10-17): POR DEFECTO, TODO se calcula sobre el DELGADO, no sobre la tinta
+
+> «No sabía que el vértice se calculaba sobre la tinta. Anota que por default todo se calcula sobre el delgado. Debemos
+> modificar todos los features, pues hay un divorcio entre lo que yo esperaba y lo que el sistema hace.» — el dueño, 2026-10-17
+
+### ⏳ PENDIENTE (el dueño, 2026-10-17): pasar al delgado lo que hoy va sobre la tinta — NO recalculado todavía
+
+Inventario hecho ese día leyendo el código, y revisado por el agente `verificador`. **En lo que usa el revisor** (`caract` de
+`rizo-2/nn/cresta_curvas.py` y `rizo-2/web/servidor.py`) el divorcio es **sólo del vértice**; el resto ya sale del delgado
+(`caract(M, …)` sólo pasa la tinta al bloque del vértice):
+
+| qué | dónde | entrada hoy |
+|---|---|---|
+| bloque `vertice` (§ 95) | `cresta_curvas.vertices` / `bloque_vertice`, llamado desde `caract` | ❌ **tinta** |
+| bloque `vertice_1` (§ 98) | `web/servidor.py: bloque_vertice_1` → `CC.vertices` | ❌ **tinta** |
+| el vértice que dibuja el revisor en la ficha del dígito | `web/servidor.py` (líneas de `ob["vertices"] = CC.vertices(d.tinta[i])`) | ❌ **tinta** |
+| rectas, arcos, lazos (y región/área), entrantes, golpes, restos, cruces | `cresta_curvas.objetos(M)` | ✅ delgado |
+| el 4 partido en 4l/4a (`subgrupo4`) | `web/servidor.py` | ✅ delgado |
+
+⚠ **Fuera del revisor la tinta sigue en muchos sitios, y eso NO está auditado**: 33 scripts antiguos de `rizo-2/nn/` leen
+`imagenes` del dataset y calculan sobre la tinta (p. ej. `todo_objetos.features` = rectas + gris + huecos, `detectores.py`,
+`menos_rectas.py`, `resistencia.py`, `compuesto*.py`, `evaluar.py`), y otros 28 experimentos del repo también la leen. Son
+anteriores al delgado y no alimentan el revisor; si se van a reutilizar, primero se pasan al delgado. Lista sacada con `grep`,
+no leída fichero a fichero.
+
+El sustituto natural es el **vértice libre** sobre la cresta del delgado (`rizo-2` § 102–103), pero **cambiarlo cambia la
+huella de los compositores guardados** y el dueño ordenó el 2026-10-17 **no entrenar ningún compositor por ahora**. Cuando
+se haga: la tabla de arriba es la lista; quitar `tinta` de `caract` y del revisor; y medir la curva de desplazamientos.
+
+### ⏳ PENDIENTE (el dueño, 2026-10-17): la CURVATURA del vértice — afilado o redondeado
+
+> «El delgado nos permite apreciar si el vértice es afilado o redondeado, y ese dato puede ser útil (lo vamos a probar más
+> adelante).»
+
+Un dato más por vértice, con la misma posición única que su presencia y su amplitud. **No implementado ni definido por el
+dueño**; dos propuestas para elegir: (a) la distancia entre el punto de la cresta y el cruce de las dos rectas de los brazos
+(≈ 0 px en una V, varios px en una U), escalada a 0–1; (b) cuánto se abre el ángulo al mirarlo de cerca (a 3 px) contra de
+lejos (a 6 px), que el prototipo ya calcula para descartar curvas.
+
+### La regla
 
 > «La entrada default no es la tinta sino delgada (le aplicamos una transformación).» — el dueño, 2026-10-17, al ver una
 > figura con la tinta de fondo
@@ -184,9 +223,23 @@ esqueleto de `M > 0,4`.
 2. **Las figuras enseñan el delgado de fondo**, no la tinta: si el fondo es tinta, el dueño lee (con razón) que el cálculo
    también lo fue. Pasó con `rizo-2` § 102: la detección iba sobre el delgado y el dibujo, sobre la tinta.
 3. ⚠ **Lo que hoy NO cumple la regla, y está en uso**: el bloque `vertice` del revisor (`cresta_curvas.vertices`, § 95) mira
-   los bordes de la **tinta**. Cambiarlo cambia la huella de los compositores guardados; es decisión del dueño. Medido el
+   los bordes de la **tinta**. El dueño ordenó el 2026-10-17 pasarlo al delgado (pendiente de arriba, sin recalcular aún). Medido el
    2026-10-17 (`rizo-2` § 101): ese mismo detector sobre el delgado (`M > 0,4`) dispara N en 10 cuatros de val, contra 16
    de 26 cuatros cerrados sobre la tinta; el vértice sobre la cresta (§ 102) da 23 de 26.
+
+## ⚠ Regla del dueño (2026-10-17): UNA rejilla por DIRECCIÓN, y sólo hay 4 — N, E, S, O
+
+> «Cada rejilla debe corresponder a solo una dirección de las 4. No hay ninguna dirección NE, sino que hasta cierto rango
+> (ej. hasta 45 grados) un vértice NE será considerado N o E, pues no quiero meter tanto detalle.»
+
+1. Un feature con dirección lleva **una rejilla 3×3 por dirección**, y las direcciones son **4**: N, E, S, O (antes
+   arriba/derecha/abajo/izquierda). Cada una es un **sector de 90°** del rumbo: N [315°, 45°), E [45°, 135°), S [135°, 225°),
+   O [225°, 315°). **No hay diagonales**: un vértice que apunta a 30° es N y uno a 60° es E.
+2. **Las celdas de una rejilla NO se rotulan con letras de brújula.** Una celda es un SITIO del dígito (tercio de arriba/medio/
+   abajo × izquierda/centro/derecha); rotularla «NE» se lee como una dirección diagonal. Pasó en `rizo-2` § 101. Si hay que
+   nombrarlas, por fila y columna («arriba-der»), nunca con N/S/E/O.
+3. Se aplica de aquí en adelante a todo feature con dirección (vértices, entrantes…); renombrar en el código los ya existentes
+   (los conos de entrantes usan `→ der`, `← izq`, …) va con el pendiente del delgado: es tocar la huella de lo guardado.
 
 ## ⏳ PENDIENTE (anotado el 2026-10-15, pedido por el dueño): AUTOMATIZAR LA BÚSQUEDA DE FEATURES — no empezado
 
