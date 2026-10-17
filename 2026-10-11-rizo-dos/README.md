@@ -1789,6 +1789,23 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 106 · Pantalla SEPARADORA del 1: 1l (sólo la recta vertical) y 1a (los demás) (el dueño, 2026-10-17)
+
+«Separemos los 1 en 2 grupos: los que son sólo una vertical única y los otros… 1l es sólo la recta vertical (también parece una
+l minúscula). Para los 4 creamos una pantalla separadora donde yo las reviso. Crea una para el 1.» **`/separar?d=1`** (la URL la
+da `web/servidor.py url`). Toque = cambia 1l ⇄ 1a; borde ocre = decidido a mano; filtros por parte y por clase.
+
+Diseño (agente arquitecto, opción C): los grupos son DATO en **`web/grupos.py`** (`GRUPOS`), las decisiones van a
+**`web/etiquetas-1.json`** (en git, R9, y copia al almacén en cada toque) y la página es **`web/separar.html`**, la del 4 sin botón de
+reentrenar. **El 4 no se toca** (`/etiquetar`, `etiquetas-4.json`): su fichero entra en la huella de los compositores y el del 1 NO
+(test). Estas etiquetas **todavía no alimentan ningún compositor**: «1l como clase» es otro paso, y obliga a reentrenar.
+
+Regla de partida, escrita antes de mirar (sobre la cresta del DELGADO): 1l si, sin espolones (< 4 px), la cresta es UN trazo, sin
+lazos, que se aparta ≤ 2 px de su recta y está a ≤ 25° de la vertical. **76 de los 571 unos** (18 train · 164 val · 389 extra) salen 1l.
+⚠ Lo que la regla falla y corrige la mano: el 1 grueso con doble cresta (sale 1a) y la **bandera corta** (< ~9 px: el esqueleto se
+come la esquina y queda como espolón, sale 1l; medido con sintéticos). ⚠ «Vertical» admite hasta 25°: si un palo recto inclinado no
+es 1l, se baja `INCL_MAX`. 9 pruebas en `web/probar_grupos.py`.
+
 ### 105 · El VÉRTICE LIBRE en el revisor: un bloque con 6 piezas para elegir (el dueño, 2026-10-17: «métELOS en el app»)
 
 «Me gustan todas estas definiciones de redondez… al entrenar compositores yo debo poder elegir cuál entreno.» El bloque

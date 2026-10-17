@@ -59,6 +59,7 @@ AQUI = Path(__file__).resolve().parents[1]                        # 2026-10-11-r
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 import cresta_curvas as CC                                        # noqa: E402
 import vertice_libre as VLB                                       # noqa: E402  (el vértice LIBRE, sobre el delgado: § 105)
+sys.path.insert(0, str(AQUI / "web")); import grupos as GR        # noqa: E402,E702  (separar el 1 en 1l/1a: § 106)
 from expcnn import exigir_dataset, ruta_datos                     # noqa: E402
 
 PUERTO = 8050
@@ -934,6 +935,18 @@ class Handler(BaseHTTPRequestHandler):
         u = urlparse(self.path); q = parse_qs(u.query); pide = lambda k, d=None: q.get(k, [d])[0]
         return u, pide
 
+    def _separar(self, ruta, pide):
+        """/separar (la página), /api/grupo (los dígitos con regla y decisión a mano) y /api/grupo/marcar. Toda la lógica, en grupos.py."""
+        if ruta == "/separar":
+            return self._envia(200, "text/html; charset=utf-8", (AQUI / "web" / "separar.html").read_bytes())
+        d = str(pide("d", "1")); g = GR.grupo(d); D = self.app.datos; alm = almacen_revisor()
+        if ruta == "/api/grupo/marcar":
+            GR.respaldar(GR.marcar(D, d, int(pide("idx")), pide("clase", "auto"), alm), alm, empujar_almacen)
+            return self._json({"ok": True})
+        els = GR.elementos(D, d, alm)
+        return self._json({"digito": g["digito"], "clases": g["clases"], "texto": g["texto"], "fichero": g["fichero"], "elementos": els,
+                           "M": {e["idx"]: np.round(D.M[e["idx"]], 2).ravel().tolist() for e in els}})
+
     def do_GET(self):                                             # noqa: N802
         u, pide = self._ruta()
         if u.path == "/salud":                                    # sin token, a propósito
@@ -947,6 +960,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"cuatros": self.app.datos.cuatros(), "M": {int(i): np.round(self.app.datos.M[i], 2).ravel().tolist() for i in np.flatnonzero(self.app.datos.y == 4)}})
             if u.path == "/api/marcar":
                 self.app.datos.marcar(int(pide("idx")), pide("clase", "auto")); return self._json({"ok": True, "manuales": self.app.datos.manuales()})
+            if u.path in ("/separar", "/api/grupo", "/api/grupo/marcar"):   # § 106: separar un dígito en dos grupos (web/grupos.py)
+                return self._separar(u.path, pide)
             if u.path == "/api/reentrenar":                        # tras corregir etiquetas: vuelve a la cola todo compositor con el 4 en dos (~15 min cada uno con extra)
                 return self._json({"ok": True, "en_cola": self.app.reentrenar(pide("nombre", "") or None)})   # `nombre`: uno solo (p. ej. para sustituir pesos emulados)
             if u.path == "/":
@@ -1171,7 +1186,7 @@ def main() -> int:
             print(f"✗ no hay token: la app no se ha levantado nunca en esta máquina.\n  → `web/servidor.py instalar`  o  sudo systemctl start {UNIDAD}"); return 1
         if estado(a.puerto) != 0:
             return 1
-        print(f"http://{_ip()}:{a.puerto}/?t={t}"); print(f"etiquetar los 4: http://{_ip()}:{a.puerto}/etiquetar?t={t}"); return 0
+        print(f"http://{_ip()}:{a.puerto}/?t={t}"); print(f"etiquetar los 4: http://{_ip()}:{a.puerto}/etiquetar?t={t}"); print(f"separar los 1: http://{_ip()}:{a.puerto}/separar?d=1&t={t}"); return 0
     if modo not in ("", "servir"):                                # se NIEGA, no adivina
         print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · entrenar … · limpiar-pesos · (nada: levantarla)\n"); return 2
     return servir(a.puerto, a.host)
