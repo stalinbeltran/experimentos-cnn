@@ -240,7 +240,12 @@ async function verComps() {
   // Cada bloque se elige por PIEZAS: la rejilla por un lado y la cuenta / largo / abertura / fuerza por otro (el dueño,
   // 2026-10-16: «separa las rejillas 3×3 de todo lo demás; quiero entrenar sin la cuenta y no se puede»). Todas marcadas
   // = el bloque entero (mismo nombre y misma huella que antes); algunas = «bloque:rejilla+cuenta».
-  html += E.bloques.map(b=>`<div style="padding:5px 0;border-bottom:1px solid #eee;font-size:12px"><b>${h(b.etiqueta)}</b>${b.sin_posicion?' <span class="fallo">⚠ sin posición</span>':''}<br><span class="nota" style="margin:0">${h(b.forma)}</span><br>${b.partes.map(p=>`<label style="display:inline-block;margin-right:14px;padding:3px 0"><input type="checkbox" data-b="${b.clave}" data-p="${p}"> ${p}</label>`).join('')}</div>`).join('');
+  // Cada feature tiene «archivar»: pasa a un contenedor plegado, abajo, con «desarchivar» (el dueño, 2026-10-17). Sólo cambia
+  // dónde se enseña; la lista se guarda en el servidor y en el almacén. Archivar desmarca sus piezas.
+  const filaB = (b, arch) => `<div class="fb" data-fb="${b.clave}" style="padding:5px 0;border-bottom:1px solid #eee;font-size:12px"><div class="fila" style="margin:0"><b>${h(b.etiqueta)}</b><button class="act" data-arch="${b.clave}" style="padding:2px 8px;font-size:11px">${arch?'desarchivar':'archivar'}</button></div>${b.sin_posicion?'<span class="fallo">⚠ sin posición</span> ':''}<span class="nota" style="margin:0">${h(b.forma)}</span><br>${b.partes.map(p=>`<label style="display:inline-block;margin-right:14px;padding:3px 0"><input type="checkbox" data-b="${b.clave}" data-p="${p}"> ${p}</label>`).join('')}</div>`;
+  const ARCH = new Set(E.archivados||[]);
+  html += `<div id="activos">${E.bloques.filter(b=>!ARCH.has(b.clave)).map(b=>filaB(b,false)).join('')}</div>`;
+  html += `<details id="archiv" style="margin:8px 0;border:1px solid #ddd;border-radius:6px;padding:4px 8px"><summary style="cursor:pointer;font-size:13px;padding:4px 0">features archivados (<span id="narch">${ARCH.size}</span>)</summary><div id="archivados">${E.bloques.filter(b=>ARCH.has(b.clave)).map(b=>filaB(b,true)).join('')}</div><div class="nota" id="notarch"></div></details>`;
   html += `<div class="fila" style="margin-top:8px"><label>rejilla <select id="celdas" style="width:auto"><option value="3">3×3</option><option value="4">4×4</option></select></label><label>semillas <select id="sem" style="width:auto"><option>1</option><option selected>3</option><option>5</option></select></label></div>`;
   html += `<label style="display:block;padding:6px 0"><input type="checkbox" id="sub4" checked> <b>el 4 en dos clases</b>: 4l = cerrado por arriba (lazo, o un solo extremo sobre el nudo), 4a = abierto; la clase 4 deja de existir: val y fallos van en las 11 clases (juntando se da aparte)</label>`;
   html += `<label style="display:block;padding:6px 0"><input type="checkbox" id="extra"> <b>entrenar con 180 + 3823 extra</b> (§ 819; ⚠ sin conjunto a ciegas; la primera vez calcula ~7 min)</label>`;
@@ -252,7 +257,17 @@ async function verComps() {
     main.querySelectorAll('[data-b]').forEach(e=> e.checked = (e.dataset.b in sel) && (sel[e.dataset.b]===null || sel[e.dataset.b].includes(e.dataset.p)));
     $('#celdas').value = c ? String(c.celdas) : '3'; $('#sub4').checked = c ? !!c.sub4 : true; $('#extra').checked = c ? !!c.extra : true; };
   aplicarBase(base);
-  $('#base').onchange = e => aplicarBase(E.compositores.find(c=>c.nombre===e.target.value) || null);
+  const avisaArch = () => { const usados = [...main.querySelectorAll('#archivados [data-b]:checked')].map(e=>e.dataset.b);
+    $('#notarch').textContent = usados.length ? `⚠ el compositor de partida usa archivados: ${[...new Set(usados)].join(', ')}` : '';
+    if (usados.length) $('#archiv').open = true; };
+  avisaArch();
+  main.querySelectorAll('[data-arch]').forEach(bt=> bt.onclick = async (ev) => { ev.preventDefault();
+    const k = bt.dataset.arch, fila = main.querySelector(`[data-fb="${k}"]`), si = bt.textContent==='archivar';
+    (si ? $('#archivados') : $('#activos')).appendChild(fila); bt.textContent = si ? 'desarchivar' : 'archivar';
+    if (si) fila.querySelectorAll('[data-b]').forEach(e=> e.checked=false);
+    $('#narch').textContent = $('#archivados').children.length; avisaArch();
+    try { await api('/api/archivar', {bloque:k, si: si?1:0}); } catch(e) { $('#notarch').textContent = '⚠ no se guardó: ' + e.message; } });
+  $('#base').onchange = e => { aplicarBase(E.compositores.find(c=>c.nombre===e.target.value) || null); avisaArch(); };
   main.querySelectorAll('[data-usar]').forEach(el=> el.onclick=()=>{ S.comp=el.dataset.usar; S.lista=null; ir('lista'); });
   main.querySelectorAll('[data-borrar]').forEach(el=> el.onclick=async()=>{ if (confirm(`¿borrar «${el.dataset.borrar}»?`)) { await api('/api/borrar',{nombre:el.dataset.borrar}); verComps(); } });
   $('#crear').onclick = async () => { const bl = E.bloques.map(b=>{ const ps=[...main.querySelectorAll(`[data-b="${b.clave}"]:checked`)].map(e=>e.dataset.p);

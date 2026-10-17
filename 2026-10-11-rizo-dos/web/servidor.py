@@ -616,6 +616,32 @@ def serializar_objetos(ob: dict) -> dict:
     return out
 
 
+def archivados() -> list[str]:
+    """Los features ARCHIVADOS en «entrenar otro» (el dueño, 2026-10-17): van a un contenedor plegado. Es sólo cómo se
+    enseñan: no cambian ninguna receta. Local (esta unidad) > almacén (el dev anterior) > ninguno."""
+    alm = almacen_revisor()
+    for f in [CACHE / "archivados.json"] + ([alm / "archivados.json"] if alm else []):
+        if f.is_file():
+            try:
+                return [b for b in json.loads(f.read_text()) if b in BLOQUES]
+            except (json.JSONDecodeError, TypeError):
+                pass
+    return []
+
+
+def archivar(bloque: str, si: bool) -> list[str]:
+    """Archiva o desarchiva un feature; guarda la lista en local y en el almacén y la empuja. Se niega ante uno desconocido."""
+    if bloque not in BLOQUES:
+        raise ValueError(f"bloque desconocido: {bloque}")
+    lst = [b for b in archivados() if b != bloque] + ([bloque] if si else [])
+    texto = json.dumps(lst, ensure_ascii=False, indent=1); CACHE.mkdir(parents=True, exist_ok=True); (CACHE / "archivados.json").write_text(texto)
+    alm = almacen_revisor()
+    if alm:
+        alm.mkdir(parents=True, exist_ok=True); (alm / "archivados.json").write_text(texto)
+        empujar_almacen(f"rizo-2 revisor: {'archivado' if si else 'desarchivado'} el feature «{bloque}»")
+    return lst
+
+
 def recetas_guardadas() -> dict:
     """Las recetas con las que arranca la app Y las que entrena la consola (`entrenar`): local (esta unidad) > almacén (el dev
     anterior) > las de partida."""
@@ -731,7 +757,7 @@ class App:
     def estado(self) -> dict:
         return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
                 "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k, v in BLOQUES.items()],
-                "bloques_defecto": BLOQUES_DEFECTO,                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
+                "bloques_defecto": BLOQUES_DEFECTO, "archivados": archivados(),                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
@@ -835,6 +861,8 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/nuevo":
                 c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"))
                 return self._json({"ok": True, "nombre": c.nombre, "estado": c.estado})
+            if u.path == "/api/archivar":                          # ?bloque=…&si=1|0 (2026-10-17)
+                return self._json({"ok": True, "archivados": archivar(pide("bloque", ""), pide("si", "1") in ("1", "true"))})
             if u.path == "/api/borrar":
                 self.app.borrar(pide("nombre", "")); return self._json({"ok": True})
         except (KeyError, ValueError, RuntimeError) as e:
