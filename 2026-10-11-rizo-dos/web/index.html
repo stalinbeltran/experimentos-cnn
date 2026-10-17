@@ -167,7 +167,8 @@ async function verCompositor() {
   const K = L.clases; const acierta = L.acierta; const finoMal = false; const vs = !acierta ? `lo lee ${K[L.predicho_fino]}` : `acierta (el rival es el ${K[L.contra]})`;
   let html = `<div>${selectorComp()}</div><div class="fila"><b>idx ${L.idx} · es un ${K[L.real_fino]} · ${vs}</b><span class="nota">${L.semillas_que_fallan!==null?`${L.semillas_que_fallan}/${L.semillas} semillas fallan`:''}</span></div>`;
   html += `<div style="display:flex;gap:10px;align-items:flex-start"><canvas id="mini" style="width:120px;flex:none;border:1px solid #ddd"></canvas><div style="flex:1"><div class="nota" style="margin:0">logits · <span style="color:var(--rojo)">rojo = ${K[L.predicho_fino]} (leído)</span> · <span style="color:var(--verde)">verde = ${acierta&&!finoMal?K[L.contra]+' (rival)':K[L.real_fino]+' (real)'}</span> · p ${L.p_pred.toFixed(2)}${L.sub4?' · 4 en dos (4l = cerrado por arriba, 4a = abierto)':''}</div><div class="logits">${L.logits.map((v,k)=>{ const mx=Math.max(...L.logits.map(Math.abs)); const hh=Math.max(2,Math.abs(v)/mx*60); const col=k===L.predicho_fino?'#b22222':k===(acierta?L.contra:L.real_fino)?'#1f8a4c':'#bbb'; return `<div><div style="font-size:9px">${v.toFixed(1)}</div><div class="b" style="height:${hh}px;background:${col};opacity:${v<0?.35:1}"></div><div>${K[k]}</div></div>`; }).join('')}</div></div></div>`;
-  html += `<h3>lo que recibe · ${c.n} entradas · ${c.celdas}×${c.celdas}</h3><div class="nota" style="margin-top:0">el borde rojo/verde de una celda marca que pesa (|atr| > 0,15); toca una para verla</div>`;
+  // Colapsada por defecto (el dueño, 2026-10-17): son decenas de rejillas y empujan «qué pesa» fuera de la pantalla.
+  html += `<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;font-size:15px;padding:6px 0">lo que recibe · ${c.n} entradas · ${c.celdas}×${c.celdas} <span class="nota" style="display:inline">(toca para abrir)</span></summary><div class="nota" style="margin-top:0">el borde rojo/verde de una celda marca que pesa (|atr| > 0,15); toca una para verla</div>`;
   for (const b of L.bloques) {
     const col = {vertice:'#0a7c8c',rectas:'#555',rectas_todo:'#555',restos:'#d6a21a',arcos:'#2a78d6',golpes:'#000',lazos:'#111',lazos_region:'#111',lazos_area:'#111',concavidades:'#7c3aed',entrantes:'#7c3aed',entrantes60:'#7c3aed',entrantes60f:'#7c3aed',cruces:'#e11d48'}[b.bloque]||'#222';
     html += `<div style="margin:8px 0 2px;font-weight:600;color:${col}">${h(b.etiqueta)} <span class="nota" style="display:inline">· suma atr ${b.atr_total>=0?'+':''}${b.atr_total.toFixed(2)}${b.sin_posicion?' · ⚠ SIN POSICIÓN':''}</span></div><div>`;
@@ -179,6 +180,7 @@ async function verCompositor() {
     }
     html += `</div>`;
   }
+  html += `</details>`;
   html += `<h3>qué pesa · <span style="color:var(--rojo)">rojo empuja al ${K[L.predicho_fino]}</span>, <span style="color:var(--verde)">verde al ${K[acierta?L.contra:L.real_fino]}</span></h3>`;
   html += `<div class="nota" style="margin-top:0">por bloque: ${Object.entries(L.suma_por_bloque).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(1)}`).join(' · ')}</div>`;
   const mx = Math.max(...L.pesan.map(p=>Math.abs(p.atr)));
