@@ -1789,6 +1789,34 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 100 · El 973 (un 5 leído como 3): qué concavidades ve y cuánto aporta cada feature al 5 y al 3 POR SEPARADO (el dueño, 2026-10-17)
+
+![objetos](resultados/100-973-objetos.png)
+![pesos LazosConcavidades](resultados/100-973-pesos-lazosconcavidades.png)
+![pesos 14 basico](resultados/100-973-pesos-14-basico.png)
+
+`nn/analizar_digito.py 973 5 3 "LazosConcavidades" "14 basico"` (datos en `resultados/100-973.json`). Sirve para cualquier
+dígito y par de clases.
+
+Lo que sale:
+1. **Las concavidades de arco sólo ven UNA cosa en este 5**: un trozo pequeño de la panza (8 px², abajo a la derecha, abre
+   ← a −156°). Entra como **0,13** porque el valor es área/60. La entrada de arriba, bajo la barra, **es una esquina** y por
+   definición no es concavidad (§ 57): las concavidades no la ven.
+2. **Los entrantes sí la ven** (cono →, 23 px²) y además ponen la panza como **presencia 0,96–0,97**, no 0,13.
+3. **«LazosConcavidades» lo lee 3 con p 0,51 contra 0,32**: los aportes al 5 y al 3 suman casi lo mismo (+1,5 y +1,5). Lo que
+   inclina al 3 es la **ausencia** de una concavidad → arriba a la izquierda (−1,4 en 5 − 3): un 5 «suele» tenerla cuando su
+   esquina sale redondeada, y aquí no.
+4. **«14 basico» lo lee 5 con p 1,00**: el cono 60° → arriba a la izquierda aporta **+4,5 al 5 y −0,8 al 3** (+5,3 en 5 − 3).
+   Es justo la esquina que las concavidades no pueden ver.
+
+**Glosario.** *Aporte*: gradiente × entrada del logit de ESA clase, respecto de la entrada normalizada, media de 3 semillas;
+rojo sube el logit, azul lo baja. *Aporte de una celda vacía*: lo que su ausencia empuja frente a un dígito medio (la entrada
+normalizada de un 0 no es 0). ⚠ No es una descomposición exacta: la ReLU hace que la suma de aportes sólo aproxime el logit.
+*Sector*: la clase de abertura en que cae una concavidad; cuadrante de 90° en `concavidades`, cono ±60° horizontal / 60°
+vertical en `entrantes60`. *Esquina*: dos tramos que se juntan en un nodo con giro ≥ 60° (§ 58); entra en entrantes, no en
+concavidades.
+
+
 ### 99 · ¿A qué se parece cada dígito BIEN reconocido? (el dueño, 2026-10-16: «me dará una idea de qué tan desviado está el reconocimiento»)
 
 ![parecidos](resultados/99-parecidos.png)
