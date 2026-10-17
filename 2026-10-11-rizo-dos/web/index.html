@@ -83,6 +83,11 @@ function dibujar(cv, M, ob, o={}) {
   (ob.lazos||[]).forEach((z,i)=>{ poli(z.pts,true,'#111',Math.max(2,n/4),'lazos'+i); cruz(z.cx*n,z.cy*n,'#111',n*0.9); });
   (ob.golpes||[]).forEach((q,i)=>{ g.strokeStyle='#000'; g.lineWidth=1.5; const x=q.cx*n,y=q.cy*n,d=n*0.4; g.beginPath(); g.moveTo(x-d,y-d); g.lineTo(x+d,y+d); g.moveTo(x+d,y-d); g.lineTo(x-d,y+d); g.stroke(); });
   (ob.vertices||[]).forEach((q,i)=>{ const x=q.cx*n,y=q.cy*n,d=n*0.9; g.globalAlpha=alpha('vertices'+i); g.strokeStyle='#0a7c8c'; g.lineWidth=2.2; g.beginPath(); g.moveTo(x-d,y+d*1.6); g.lineTo(x,y); g.lineTo(x+d,y+d*1.6); g.stroke(); g.globalAlpha=1; });
+  // la CÚSPIDE (§ 111): un anillo en la punta y una flecha hacia donde apunta (rumbo de brújula: 0 N, 90 E)
+  (ob.cuspides||[]).forEach((q,i)=>{ const x=q.cx*n,y=q.cy*n,r=q.rumbo*Math.PI/180,L=n*2.2,ex=x+L*Math.sin(r),ey=y-L*Math.cos(r),a=0.5;
+    g.globalAlpha=alpha('cuspides'+i); g.strokeStyle='#9333ea'; g.fillStyle='#9333ea'; g.lineWidth=2.4; g.beginPath(); g.arc(x,y,n*0.55,0,6.3); g.stroke();
+    g.beginPath(); g.moveTo(x,y); g.lineTo(ex,ey); g.stroke(); g.beginPath(); g.moveTo(ex,ey);
+    g.lineTo(ex-n*0.8*Math.sin(r-a),ey+n*0.8*Math.cos(r-a)); g.lineTo(ex-n*0.8*Math.sin(r+a),ey+n*0.8*Math.cos(r+a)); g.closePath(); g.fill(); g.globalAlpha=1; });
   (ob.cruces||[]).forEach((q,i)=>{ if (!o.cruces) return; g.strokeStyle='#e11d48'; g.lineWidth=2; const x=q.cx*n,y=q.cy*n; g.beginPath(); g.arc(x,y,n*0.8,0,6.3); g.stroke(); });
   function cruz(x,y,c,d){ g.strokeStyle=c; g.lineWidth=2; g.beginPath(); g.moveTo(x-d,y); g.lineTo(x+d,y); g.moveTo(x,y-d); g.lineTo(x,y+d); g.stroke(); }
 }
@@ -142,7 +147,7 @@ async function verDigito() {
   const fallo = S.lista && S.lista.filas.find(r=>r.idx===S.idx);
   let html = `<div class="fila"><b>idx ${d.idx} · es un ${d.real}${d.sub4!==null&&d.sub4!==undefined?(d.sub4?' (4l: cerrado por arriba)':' (4a: abierto)'):''}${fallo?` · ${fallo.real!==fallo.predicho?`lo lee ${fallo.predicho}`:'acierta'} (${fallo.veces}/${compActual().semillas.length} semillas)`:''}</b></div>`;
   html += `<div class="chips">${[['tinta','tinta'],['delgado','delgado'],['objetos','objetos'],['cruces','cruces']].map(([k,t])=>`<span class="chip ${v[k]?'on':''}" data-v="${k}">${t}</span>`).join('')}</div>`;
-  html += `<canvas id="big" style="border:1px solid #ddd;width:100%"></canvas><div class="legend"><i style="background:#8a8a8a"></i>recta <i style="background:#d6a21a"></i>resto <i style="background:#2a78d6"></i>arco (color = sentido) <i style="background:#111"></i>lazo <i style="background:#0a7c8c"></i>∧ vértice · polígono = entrante (<span style="color:#c2410c">→</span> <span style="color:#2a78d6">←</span> <span style="color:#1b7f3b">↓</span> <span style="color:#7c3aed">↑</span>) · × golpe</div>`;
+  html += `<canvas id="big" style="border:1px solid #ddd;width:100%"></canvas><div class="legend"><i style="background:#8a8a8a"></i>recta <i style="background:#d6a21a"></i>resto <i style="background:#2a78d6"></i>arco (color = sentido) <i style="background:#111"></i>lazo <i style="background:#0a7c8c"></i>∧ vértice <i style="background:#9333ea"></i>◯→ cúspide · polígono = entrante (<span style="color:#c2410c">→</span> <span style="color:#2a78d6">←</span> <span style="color:#1b7f3b">↓</span> <span style="color:#7c3aed">↑</span>) · × golpe</div>`;
   const filas = [];
   const cn = (x,y)=>`(${x.toFixed(0)},${y.toFixed(0)})`;
   ob.lazos.forEach((z,i)=> filas.push(['lazos'+i,'#111','lazo',`${z.area.toFixed(0)} px² · centro ${cn(z.cx,z.cy)} · ${z.largo} puntos`]));
@@ -152,6 +157,7 @@ async function verDigito() {
   ob.restos.forEach((r,i)=> filas.push(['restos'+i,'#d6a21a',`resto ${['0° —','45° /','90° |','135° \\'][r.o]}`,`largo ${r.largo.toFixed(1)} px · centro ${cn(r.cx,r.cy)}`]));
   ob.golpes.forEach((q,i)=> filas.push(['golpes'+i,'#000','golpe',`en ${cn(q.cx,q.cy)}`]));
   (ob.vertices||[]).forEach((q,i)=> filas.push(['vertices'+i,'#0a7c8c','vértice del 4 (bordes de la tinta, § 95)',`en ${cn(q.cx,q.cy)} · apertura ${q.ang.toFixed(0)}° · bordes ${q.pi.toFixed(2)} / ${q.pd.toFixed(2)} px por fila`]));
+  (ob.cuspides||[]).forEach((q,i)=> filas.push(['cuspides'+i,'#9333ea',`cúspide ${q.punta} (§ 111: dos curvas y una punta)`,`en ${cn(q.cx,q.cy)} · punta ${q.giro.toFixed(0)}° al revés · curvas ${q.curvas[0].toFixed(0)}° y ${q.curvas[1].toFixed(0)}° · apunta a ${q.rumbo.toFixed(0)}°`]));
   ob.cruces.forEach((q,i)=> filas.push(['cruces'+i,'#e11d48','cruz (no entra en los compositores aprobados)',`en ${cn(q.cx,q.cy)}`]));
   html += `<h3>objetos que ve el detector (${filas.length}) · toca uno para resaltarlo</h3>` + filas.map(([k,c,a,b])=>`<div class="obj ${S.sel&&S.sel.k===k?'on':''}" data-k="${k}"><div class="sw" style="background:${c}"></div><div><b>${h(a)}</b><small>${h(b)}</small></div></div>`).join('');
   html += `<div class="nota">concavidades de arco: ${ob.concavidades.length} · esquinas: ${ob.esquinas.length} → entrantes sin repetir: ${ob.entrantes.length}</div>` + navegacion();

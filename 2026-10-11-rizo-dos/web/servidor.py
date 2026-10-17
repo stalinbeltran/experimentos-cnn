@@ -59,6 +59,7 @@ AQUI = Path(__file__).resolve().parents[1]                        # 2026-10-11-r
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 import cresta_curvas as CC                                        # noqa: E402
 import vertice_libre as VLB                                       # noqa: E402  (el vértice LIBRE, sobre el delgado: § 105)
+import cuspide as CUS                                             # noqa: E402  (la CÚSPIDE, sobre el delgado: § 111)
 sys.path.insert(0, str(AQUI / "web")); import grupos as GR        # noqa: E402,E702  (separar el 1 en 1l/1a: § 106)
 from expcnn import exigir_dataset, ruta_datos                     # noqa: E402
 
@@ -171,6 +172,10 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     # la cresta del DELGADO, 4 direcciones N E S O, UNA celda, y por celda presencia + amplitud + las tres redondeces de § 104.
     # Cada una es una PIEZA: se elige al entrenar. Calculado en nn/vertice_libre.py, fuera de cresta_curvas.py (su hash es aparte).
     "vertice_libre": ("vértice LIBRE en el delgado (§ 105)", "N E S O × (rejilla + amplitud + despegue + cerca + radio + cuenta)", "vertices_libres"),
+    # La CÚSPIDE (§ 110–111, el dueño, 2026-10-17: «2 curvas abiertas en la misma dirección que se encuentran en una punta… procede»):
+    # la firma + − + de la curvatura de la cresta del DELGADO. N E S O = hacia dónde apunta la punta; UNA celda; cada medida, una
+    # pieza. Calculado en nn/cuspide.py, fuera de cresta_curvas.py (su hash es aparte).
+    "cuspide": ("CÚSPIDE: dos curvas y una punta (§ 111)", "N E S O × (rejilla + giro + curvas + cuenta)", "cuspides"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 # RETIRADOS (el dueño, 2026-10-17: «elimina los features de tinta… aunque por el compositor existente deban seguir existiendo en
@@ -238,6 +243,12 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
             for q in VLB.PIEZAS[1:-1]:                                # cada medida, su propia rejilla («N · radio»…)
                 out += [{"sub": f"{d} · {q}", "celda": k, "tipo": q, "nombre": cn[k]} for k in range(c)]
             out += [{"sub": d, "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
+    elif bloque == "cuspide":                                     # mismo orden que CUS.bloque: por dirección, sus piezas
+        for d in CUS.ORDEN:
+            out += [{"sub": d, "celda": k, "tipo": "rejilla", "nombre": cn[k]} for k in range(c)]
+            for q in CUS.PIEZAS[1:-1]:                                # «N · giro», «N · curvas»
+                out += [{"sub": f"{d} · {q}", "celda": k, "tipo": q, "nombre": cn[k]} for k in range(c)]
+            out += [{"sub": d, "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     elif bloque == "cruces":
         c3 = celdas_nombres(3)
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": c3[k]} for k in range(9)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
@@ -260,7 +271,8 @@ def rangos(celdas: int) -> dict:
     """Dónde está cada bloque en la matriz que usa la app: los de caract (CC.bloques) y, al final, los que se calculan aquí."""
     B = dict(CC.bloques(celdas)); n = max(z for _, z in B.values())
     B["vertice_1"] = (n, n + celdas * celdas + 1); n = B["vertice_1"][1]
-    B["vertice_libre"] = (n, n + len(columnas("vertice_libre", celdas)))
+    B["vertice_libre"] = (n, n + len(columnas("vertice_libre", celdas))); n = B["vertice_libre"][1]
+    B["cuspide"] = (n, n + len(columnas("cuspide", celdas)))     # el ÚLTIMO: los bloques de antes no se mueven (sus pesos valen)
     return B
 
 
@@ -478,11 +490,26 @@ class Datos:
         todos = uno(self.M); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"vértice libre {celdas}×{celdas}")
         print(f"  listo en {time.time() - t:.0f} s", flush=True); return todos, aum
 
+    def cusp(self, celdas: int, extra: bool = False):
+        """Las columnas de `cuspide` (sobre el DELGADO), igual que `vlibre`: (todos, train aumentado) o los extra aumentados.
+        Caché propia `cusp-<hash de cuspide.py + cresta_curvas.py>-…`, también en el almacén."""
+        f = CACHE / f"cusp-{CUS.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        if traer_cache(f, f"cúspide {celdas}×{celdas}"):
+            z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
+        uno = lambda Ms: np.asarray([CUS.bloque(m, celdas) for m in Ms], np.float32)
+        t = time.time(); idx = self.ex if extra else self.tr
+        print(f"  calculando la cúspide {celdas}×{celdas} ({'extra' if extra else 'todos + train'})…", flush=True)
+        aum = np.concatenate([uno(np.stack([mover(x, *m) for x in self.M[idx]])) for m in self.aum])   # aum[0] = sin mover
+        if extra:
+            np.savez_compressed(f, ex=aum); guardar_cache(f, f"cúspide {celdas}×{celdas} extra"); print(f"  listo en {time.time() - t:.0f} s", flush=True); return (aum,)
+        todos = uno(self.M); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"cúspide {celdas}×{celdas}")
+        print(f"  listo en {time.time() - t:.0f} s", flush=True); return todos, aum
+
     def features(self, celdas: int):
         if celdas in self.X:
             return self.X[celdas]
-        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas); lt, ltr = self.vlibre(celdas)
-        self.X[celdas] = (np.concatenate([todos, vt, lt], 1), np.concatenate([tr, vtr, ltr], 1), ytr); return self.X[celdas]
+        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas); lt, ltr = self.vlibre(celdas); ct, ctr = self.cusp(celdas)
+        self.X[celdas] = (np.concatenate([todos, vt, lt, ct], 1), np.concatenate([tr, vtr, ltr, ctr], 1), ytr); return self.X[celdas]
 
     def _features_caract(self, celdas: int):
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
@@ -501,13 +528,13 @@ class Datos:
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
         if traer_cache(f, f"de features extra {celdas}×{celdas}"):
-            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0]], 1), z["yex"]
+            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0]], 1), z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self._features_caract(celdas)[0]
         ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}")
-        return np.concatenate([ex, self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0]], 1), yex
+        return np.concatenate([ex, self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0]], 1), yex
 
     def objetos(self, i: int) -> dict:
         with self._lock:
@@ -631,6 +658,8 @@ class Compositor:
              "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
         if any(pieza(b)[0] == "vertice_libre" for b in self.bloques):      # sólo quien lo usa: la huella de los demás no cambia
             h["vertice_libre"] = VLB.huella_modulo()
+        if any(pieza(b)[0] == "cuspide" for b in self.bloques):            # ídem: sólo quien usa la cúspide
+            h["cuspide"] = CUS.huella_modulo()
         if self.sub1:                                             # § 107: ídem con el 1 partido (sus etiquetas y su regla)
             h["sub1"] = True; h["etiquetas1"] = datos.hash_manuales1()
         return h
@@ -705,6 +734,13 @@ class Compositor:
                 "logits": [float(v) for v in lg.detach().numpy()], "semillas_que_fallan": int(self.veces[va_pos]) if va_pos is not None else None,
                 "semillas": len(self.semillas), "bloques": bloques, "pesan": [{"nombre": nombres[k], "valor": float(x[k]), "atr": float(atr[k]), **meta[k]} for k in orden],
                 "suma_por_bloque": {b: float(atr[a:zz].sum()) for b, (a, zz) in self.cortes(datos).items()}}
+
+
+def cuspides_para_pintar(M) -> list[dict]:
+    """Las cúspides de un dígito para la pantalla. Su dirección va como `punta` (N E S O): `serializar_objetos` trata la clave
+    `dir` como un vector (la de los entrantes) y con una letra fallaría."""
+    return [{"cx": c["cx"], "cy": c["cy"], "giro": c["giro"], "curvas": list(c["curvas"]), "rumbo": c["rumbo"], "punta": c["dir"], "pts": c["pts"]}
+            for c in CUS.cuspides(M)]
 
 
 def serializar_objetos(ob: dict) -> dict:
@@ -963,14 +999,15 @@ class App:
 
     def digito(self, i: int) -> dict:
         d = self.datos; ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i])   # el vértice sale de la TINTA (§ 95)
+        ob["cuspides"] = cuspides_para_pintar(d.M[i])
         return {"idx": int(i), "real": int(d.y[i]), "tinta": d.tinta[i].ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(),
                 "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist())), "sub4": (d.subgrupo4(i) if d.y[i] == 4 else None)}
 
     def miniaturas(self, ids: list[int]) -> list[dict]:
         d = self.datos; out = []
         for i in ids[:60]:
-            ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i]); s = serializar_objetos(ob)
-            out.append({"idx": int(i), "M": np.round(d.M[i], 2).ravel().tolist(), "objetos": {k: [{kk: v for kk, v in o.items() if kk in ("pts", "s", "o", "cx", "cy", "cono", "fuerza")} for o in s[k]] for k in ("rectas", "restos", "arcos", "lazos", "entrantes", "golpes", "vertices")}})
+            ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i]); ob["cuspides"] = cuspides_para_pintar(d.M[i]); s = serializar_objetos(ob)
+            out.append({"idx": int(i), "M": np.round(d.M[i], 2).ravel().tolist(), "objetos": {k: [{kk: v for kk, v in o.items() if kk in ("pts", "s", "o", "cx", "cy", "cono", "fuerza", "rumbo")} for o in s[k]] for k in ("rectas", "restos", "arcos", "lazos", "entrantes", "golpes", "vertices", "cuspides")}})
         return out
 
     def comparar(self, i: int, nombres: list[str]) -> dict:

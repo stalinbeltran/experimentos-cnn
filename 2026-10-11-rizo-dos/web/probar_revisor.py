@@ -151,6 +151,63 @@ class Columnas(unittest.TestCase):
         self.assertNotIn("vertice_libre", sin)                       # los compositores guardados conservan su huella y sus pesos
         self.assertEqual(con["vertice_libre"], S.VLB.huella_modulo())
 
+    @staticmethod
+    def _tres(fin=60, espejo=False, ese=False):
+        """Un 3 sintético de trazo de 3 px: dos arcos de radio 6 (centros (15, 10) y (15, 22)) que se encuentran en la cintura, cada
+        uno pasando `fin` grados de su punto más a la derecha. Con fin = 90 llegan en paralelo y el esqueleto los parte en un NUDO.
+        Con `ese`, el de abajo abre al otro lado (una S): + − sin el segundo +, no es cúspide."""
+        M = np.zeros((32, 32), np.float32); yy, xx = np.mgrid[0:32, 0:32] + 0.5
+        def arco(c, t0, t1):
+            t = np.radians(np.linspace(t0, t1, 40)); p = np.stack([c[0] + 6 * np.cos(t), c[1] + 6 * np.sin(t)], 1)
+            for (x0, y0), (x1, y1) in zip(p[:-1], p[1:]):
+                u = np.clip(((xx - x0) * (x1 - x0) + (yy - y0) * (y1 - y0)) / ((x1 - x0) ** 2 + (y1 - y0) ** 2 + 1e-9), 0, 1)
+                M[np.hypot(xx - (x0 + u * (x1 - x0)), yy - (y0 + u * (y1 - y0))) <= 1.5] = 1.0
+        if ese:
+            arco((15, 10), 30, 270); arco((15, 22), 270, 570)
+        else:
+            arco((15, 10), 200, 360 + fin); arco((15, 22), 360 - fin, 520)
+        return M[:, ::-1].copy() if espejo else M
+
+    def _cusp(self, M):
+        b = np.asarray(S.CUS.bloque(M, 3)); cols = S.columnas("cuspide", 3)
+        return {(c["sub"], c["celda"]): b[k] for k, c in enumerate(cols)}
+
+    def test_cuspide_columnas_casan_con_el_bloque(self):
+        """§ 111: las columnas que nombra el revisor son exactamente los números de nn/cuspide.py (R5), y va la ÚLTIMA."""
+        self.assertEqual(S.partes("cuspide"), ["rejilla", "giro", "curvas", "cuenta"])
+        for celdas in (3, 4):
+            self.assertEqual(len(S.columnas("cuspide", celdas)), len(S.CUS.bloque(self._tres(), celdas)))
+        B = S.rangos(3); self.assertEqual(B["cuspide"][0], B["vertice_libre"][1])             # detrás: los guardados no se mueven
+        self.assertEqual(B["cuspide"][1] - B["cuspide"][0], 4 * (3 * 9 + 1))
+        self.assertIn("cuspide", S.bloques_ofrecidos())
+
+    def test_cuspide_ve_la_cintura_del_3_y_hacia_donde_apunta(self):
+        """El 3 apunta al O, su espejo (Ɛ) al E, en la celda del centro, con cuenta 1 y nada en las demás direcciones; también
+        cuando la punta cae en un NUDO (fin = 90: el esqueleto deja un hueco y unir los brazos diluía el giro, 2026-10-17)."""
+        for fin in (60, 90):
+            if fin == 90:
+                self.assertGreaterEqual(len(S.CC.tramos(self._tres(90))[0]), 2, "el caso del nudo tiene que tener un nudo")
+            for espejo, d in ((False, "O"), (True, "E")):
+                v = self._cusp(self._tres(fin, espejo))
+                self.assertEqual(v[(d, 4)], 1.0, f"fin {fin}: presencia {d} en la celda del centro")
+                self.assertEqual(v[(d, None)], 1.0, f"fin {fin}: cuenta {d} = 1")
+                self.assertGreater(v[(f"{d} · giro", 4)], 15 / 90 - 1e-6); self.assertGreater(v[(f"{d} · curvas", 4)], 45 / 180 - 1e-6)
+                self.assertEqual(sum(x for (sub, _), x in v.items() if sub.split(" ")[0] != d), 0.0, f"fin {fin}: sólo {d}")
+
+    def test_cuspide_no_la_dan_una_s_ni_un_vertice(self):
+        """Una S (2, 5) es + − sin el segundo +; un Λ es UN giro entre dos rectas: ninguno es cúspide."""
+        for nombre, M in (("S", self._tres(ese=True)), ("Λ", self._lambda()), ("V", self._lambda(True))):
+            self.assertEqual(sum(self._cusp(M).values()), 0.0, nombre)
+
+    def test_la_huella_solo_cambia_para_quien_usa_la_cuspide(self):
+        class D:
+            hash = "abc"
+            def hash_manuales(self):
+                return "sin"
+        sin = S.Compositor("a", ["lazos_region", "vertice_libre:rejilla"]).huella(D()); con = S.Compositor("b", ["cuspide:rejilla"]).huella(D())
+        self.assertNotIn("cuspide", sin)                              # LEvertice y los demás conservan su huella y sus pesos
+        self.assertEqual(con["cuspide"], S.CUS.huella_modulo())
+
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 2); self.assertIn("no sé qué es", r.stdout)

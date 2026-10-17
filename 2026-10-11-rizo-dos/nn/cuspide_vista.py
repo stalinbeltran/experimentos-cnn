@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """rizo-2 § 110 — VISTA PREVIA: la CÚSPIDE, dos curvas que abren hacia el mismo lado y se encuentran en una punta (el dueño,
 2026-10-17: «dejemos el vértice como está… lo que busco es un cambio en la derivada: 2 curvas abiertas en la misma dirección que
-se encuentran en una punta. ¿Podemos detectar esa forma?»). Prototipo: no toca `cresta_curvas.py` ni el revisor; nada entrenado.
+se encuentran en una punta. ¿Podemos detectar esa forma?»). Prototipo; el detector se movió a `nn/cuspide.py` (§ 111).
 
 Sobre la cresta del DELGADO, con la MISMA curvatura con signo κ de `cresta_curvas` (suavizado σ 1,5, K_MIN). Al recorrer el centro
 de un 3, la tangente gira hacia un lado en el arco de arriba (+), da un giro corto AL REVÉS en la punta (−) y vuelve a girar hacia
@@ -34,63 +34,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt                                           # noqa: E402
 
 DELGADOS = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-k3x3.npz"
-G_ARCO = 45.0      # giro mínimo de cada curva, en sus VENT px junto a la punta
-G_PUNTA = 15.0     # giro mínimo de la punta (al revés)
-L_PUNTA = 12.0     # largo máximo de la punta (px de cresta); con 8 px el 3 baja del 80 al 70 %
-VENT = 12.0        # px de cada lado en los que se suma el giro de las curvas
-SUPR = 3.0
 FLECHA = {"N": (0, -1), "E": (1, 0), "S": (0, 1), "O": (-1, 0)}
-
-
-def _rumbo(b):
-    return float(np.degrees(np.arctan2(b[0], -b[1])) % 360)               # brújula: 0 N, 90 E (y crece hacia abajo)
-
-
-def en_camino(p, junta=None):
-    if len(p) < 5:
-        return []
-    ps = CC._suavizar(p, False); k, nrm = CC.curvatura(ps, False); paso = np.hypot(*np.gradient(ps, axis=0).T)
-    s = np.concatenate([[0], np.cumsum(paso)]); cl = np.where(np.abs(k) >= CC.K_MIN, np.sign(k), 0).astype(int)
-    out = []; i = 0; n = len(ps)
-    while i < n:
-        j = i
-        while j < n and cl[j] == cl[i]:
-            j += 1
-        c = cl[i]
-        if c != 0:
-            giro = np.degrees(np.sum(k[i:j] * paso[i:j])); largo = s[j] - s[i]
-            izq = s[i] - s[:i] <= VENT; der = s[j:n] - s[j] <= VENT
-            gi = -c * np.degrees(np.sum((k[:i] * paso[:i])[izq])); gd = -c * np.degrees(np.sum((k[j:] * paso[j:])[der]))
-            if abs(giro) >= G_PUNTA and largo <= L_PUNTA and gi >= G_ARCO and gd >= G_ARCO:
-                m = i + int(np.argmax(np.abs(k[i:j])))
-                if junta is None or np.hypot(*(ps[m] - junta)) <= SUPR:
-                    r = _rumbo(-nrm[i:j].mean(0))
-                    out.append({"cx": float(ps[m, 0]), "cy": float(ps[m, 1]), "giro": float(abs(giro)), "curvas": (float(gi), float(gd)),
-                                "rumbo": r, "dir": "NESO"[int(((r + 45) % 360) // 90)]})
-        i = j
-    return out
-
-
-def cuspides(M) -> list[dict]:
-    tr, _ = CC.tramos(M); cand = []
-    for t in CC.empalmar(tr):
-        cand += en_camino(np.asarray(t["pts"], float))
-    ext = {}
-    for t in tr:
-        p = np.asarray(t["pts"], float)
-        if t["a"] > 0:
-            ext.setdefault(t["a"], []).append(p)
-        if t["b"] > 0:
-            ext.setdefault(t["b"], []).append(p[::-1])
-    for br in ext.values():                                               # la punta EN un nudo: cada par de brazos, unidos
-        for x in range(len(br)):
-            for y in range(x + 1, len(br)):
-                cand += en_camino(np.concatenate([br[x][::-1], br[y][1:]]), junta=br[x][0])
-    out = []
-    for c in sorted(cand, key=lambda c: -c["giro"]):
-        if all(np.hypot(c["cx"] - o["cx"], c["cy"] - o["cy"]) >= SUPR for o in out):
-            out.append(c)
-    return out
+# El detector vive en nn/cuspide.py desde el 2026-10-17 (entró en el revisor, § 111): aquí sólo se dibuja.
+from cuspide import cuspides, G_ARCO, G_PUNTA, L_PUNTA, VENT              # noqa: E402,F401
 
 
 def pinta(a, M, i, y, cs, titulo=None):
@@ -148,7 +94,7 @@ def main():
             ax = fig.add_subplot(g[fila + 1, col]); pinta(ax, M[i], int(i), y[i], C[int(i)])
             if col == 0:
                 filas.append((ax, nombre))
-    fig.suptitle(f"La CÚSPIDE: dos curvas que abren al mismo lado y se encuentran en una punta (prototipo, cresta del delgado)\n"
+    fig.suptitle(f"La CÚSPIDE: dos curvas que abren al mismo lado y se encuentran en una punta (nn/cuspide.py, el del revisor; cresta del delgado)\n"
                  f"punta = giro al revés ≥ {G_PUNTA:.0f}° en ≤ {L_PUNTA:.0f} px · cada curva ≥ {G_ARCO:.0f}° en sus {VENT:.0f} px · flecha = hacia dónde apunta la punta",
                  fontsize=13)
     fig.tight_layout(rect=(0.015, 0, 1, 0.96))
@@ -157,7 +103,7 @@ def main():
     out = AQUI / "resultados" / "110-cuspide.png"; fig.savefig(out, dpi=95)
     res = {"parametros": {"G_ARCO": G_ARCO, "G_PUNTA": G_PUNTA, "L_PUNTA": L_PUNTA, "VENT": VENT, "K_MIN": CC.K_MIN},
            "pct_con_cuspide": np.round(100 * alguna / cnt, 1).tolist(), "pct_O_en_el_medio": np.round(100 * medio_o / cnt, 1).tolist(),
-           "direcciones": dirs, "409": C[409], "tres_sin_cuspide": [int(i) for i in va if y[i] == 3 and not C[int(i)]]}
+           "direcciones": dirs, "409": [{k_: v_ for k_, v_ in c_.items() if k_ != "pts"} for c_ in C[409]], "tres_sin_cuspide": [int(i) for i in va if y[i] == 3 and not C[int(i)]]}
     out.with_suffix(".json").write_text(json.dumps(res, ensure_ascii=False, indent=1)); print(out); print(json.dumps({k: v for k, v in res.items() if k != "tres_sin_cuspide"}, ensure_ascii=False))
 
 

@@ -1789,6 +1789,32 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 111 · La CÚSPIDE en el revisor: el bloque `cuspide`, con 4 piezas para elegir (el dueño, 2026-10-17: «procede»)
+
+El detector de § 110 pasa a **`nn/cuspide.py`** (la figura lo importa: una sola copia) y entra en el revisor como el bloque
+**`cuspide`**, sobre la cresta del DELGADO. Por dirección N, E, S, O (hacia dónde apunta la punta), cada pieza se marca o no en
+«entrenar otro»:
+
+| pieza | qué es | por celda |
+|---|---|---|
+| `rejilla` | presencia de la cúspide, en UNA celda | 0/1 |
+| `giro` | cuánto gira la punta al revés, / 90° | 0–1 |
+| `curvas` | el menor de los giros de las dos curvas (en sus 12 px), / 180° | 0–1 |
+| `cuenta` | cuántas hay en esa dirección | entero |
+
+Con 3×3: 4 × (3·9 + 1) = **112 números**, colocados **detrás** de `vertice_libre`: ningún bloque anterior se mueve, y su hash
+(`cuspide.py` + `cresta_curvas.py`) sólo entra en la huella de quien lo usa, así que **LazosEntrantes y LEvertice se restauran
+igual**. Caché propia `cusp-<hash>-3x3[-extra].npz`, también en el almacén. En la pantalla del dígito la cúspide se pinta (anillo
+morado y flecha hacia donde apunta) y sale en la lista de objetos con su giro y sus curvas. **Nada entrenado.**
+
+⚠ **Lo que destapó el test, y se arregló antes de entrar:** cuando la punta cae en un NUDO, el esqueleto deja un hueco de ~3 px y
+unir los dos brazos y suavizar diluía el giro (un 3 sintético en espejo: punta de ~150° medida como 17°; el detector de § 110 no lo
+veía y sí veía el mismo 3 sin espejar). Ahora, en un nudo cuyos otros brazos son cortos (≤ 6 px: la lengüeta), el giro se mide por
+geometría (dirección de llegada contra dirección de salida, a 3 px). Con otros brazos largos no: medido en val, eso disparaba en
+la unión del lazo y la cola del 9 (del 3 % al 33 %). Resultado en val, contra § 110: **3: 80 → 82 %** (todas O) · **8: 69 → 71 %**
+· **9: 3 → 5 %** · 0 y 4: 0 → 0,6 % · el resto, 0 %. 4 pruebas nuevas en `web/probar_revisor.py` (3 sintético, su espejo, el
+caso del nudo, una S y un Λ que NO la dan, y la huella); la del nudo falla con el detector de § 110.
+
 ### 110 · VISTA PREVIA: la CÚSPIDE — dos curvas que abren al mismo lado y se encuentran en una punta (el dueño, 2026-10-17)
 
 «Dejemos el vértice como está (§ 109 descartado). Lo que busco es un cambio en la derivada: 2 curvas abiertas en la misma dirección
@@ -1804,7 +1830,8 @@ Medido en val (% de dígitos con alguna cúspide): **3: 80 %** (todas apuntan al
 cintura: E 82, O 62) · **9: 3 %** · el resto, **0 %**, el 5 incluido (el 973 de § 100 era un 5 leído como 3). Con la punta de ≤ 8 px,
 el 3 baja al 70 % y el 8 al 56 %. Los 33 tres que se escapan, a la vista (no medido): la cintura es una panza redondeada o larga,
 no una punta, o las curvas junto a ella son casi rectas y no llegan a 45° en 12 px. Parámetros sin calibrar.
-⏳ **Pendiente: que el dueño decida** si entra en el revisor como bloque (rejilla N E S O, más el giro de la punta).
+✅ **Entró en el revisor ese mismo día** (§ 111); la figura se rehízo con el detector de allí (los números de arriba son los de
+esta primera versión).
 
 ### 109 · VISTA PREVIA: ampliar el ángulo del vértice libre (el dueño, 2026-10-17: «mantener el nombre, pero ampliar el ángulo, pues también tenemos un parámetro ángulo»)
 
