@@ -86,10 +86,11 @@ function dibujar(cv, M, ob, o={}) {
   (ob.cruces||[]).forEach((q,i)=>{ if (!o.cruces) return; g.strokeStyle='#e11d48'; g.lineWidth=2; const x=q.cx*n,y=q.cy*n; g.beginPath(); g.arc(x,y,n*0.8,0,6.3); g.stroke(); });
   function cruz(x,y,c,d){ g.strokeStyle=c; g.lineWidth=2; g.beginPath(); g.moveTo(x-d,y); g.lineTo(x+d,y); g.moveTo(x,y-d); g.lineTo(x,y+d); g.stroke(); }
 }
-function rejillaHTML(vals, lado, atr, titulo, color, marca=null, px=24) {
-  const w = lado*px; let cells='';
-  for (let i=0;i<lado*lado;i++){ const v=vals[i]; const k=Math.round(255-255*Math.min(Math.max(v,0),1)); const a = atr? atr[i]:0; const borde = i===marca ? 'outline:4px solid #0057ff;outline-offset:-4px;position:relative;z-index:1;' : Math.abs(a)>0.15 ? `box-shadow:inset 0 0 0 2px ${a>0?'#b22222':'#1f8a4c'};` : '';
-    cells += `<div style="width:${px}px;height:${px}px;background:rgb(${k},${k},${k});color:${v>0.55?'#fff':'#222'};font-size:${px>30?11:8}px;line-height:${px}px;${borde}" title="atr ${a.toFixed(2)}">${v.toFixed(2)}</div>`; }
+// `marca`: una celda (índice) o una lista de celdas; con `apaga`, las que NO están marcadas se atenúan (el filtro por celda).
+function rejillaHTML(vals, lado, atr, titulo, color, marca=null, px=24, apaga=false) {
+  const w = lado*px; let cells=''; const marcadas = Array.isArray(marca) ? marca : (marca===null ? [] : [marca]);
+  for (let i=0;i<lado*lado;i++){ const v=vals[i]; const k=Math.round(255-255*Math.min(Math.max(v,0),1)); const a = atr? atr[i]:0; const enSel = marcadas.includes(i); const borde = enSel ? 'outline:4px solid #0057ff;outline-offset:-4px;position:relative;z-index:1;' : Math.abs(a)>0.15 ? `box-shadow:inset 0 0 0 2px ${a>0?'#b22222':'#1f8a4c'};` : '';
+    cells += `<div style="width:${px}px;height:${px}px;background:rgb(${k},${k},${k});color:${v>0.55?'#fff':'#222'};font-size:${px>30?11:8}px;line-height:${px}px;${borde}${apaga&&!enSel?'opacity:.2;':''}" title="atr ${a.toFixed(2)}">${v.toFixed(2)}</div>`; }
   return `<div class="rej"><div class="t" style="color:${color||'#222'}">${h(titulo)}</div><div style="display:grid;grid-template-columns:repeat(${lado},${px}px);border:1.5px solid ${color||'#222'};width:${w+3}px">${cells}</div></div>`;
 }
 // ---------------------------------------------------------------- pantallas
@@ -158,6 +159,25 @@ async function verDigito() {
   main.querySelectorAll('.obj').forEach(el=> el.onclick=()=>{ S.sel = (S.sel&&S.sel.k===el.dataset.k)?null:{k:el.dataset.k}; verDigito(); });
   atarNav(verDigito);
 }
+// ---- filtro por celda del compositor (el dueño, 2026-10-17: «al clickear una celda, mostrar sólo los features de esa celda»)
+// Mismos nombres que `celdas_nombres` de servidor.py.
+function celdaNombre(L) { return L===3 ? ['arriba-izq','arriba-centro','arriba-der','centro-izq','centro','centro-der','abajo-izq','abajo-centro','abajo-der'] : [...Array(L*L)].map((_,i)=>`f${Math.floor(i/L)}c${i%L}`); }
+// Las celdas de una rejilla de `lado` que caen dentro de la celda elegida (en la rejilla del compositor). Casi siempre es
+// la misma; pero hay bloques que van SIEMPRE en 3×3 aunque el compositor sea 4×4, y ahí se cuenta por solape geométrico.
+function celdasQueTocan(F, lado) {
+  if (lado===F.L) return [F.r*F.L+F.c];
+  const tramo = (i, n) => [i*32/n, (i+1)*32/n], cruza = (a, b) => Math.min(a[1],b[1]) - Math.max(a[0],b[0]) > 1e-6;
+  const out = []; for (let r=0;r<lado;r++) for (let c=0;c<lado;c++) if (cruza(tramo(r,lado), tramo(F.r,F.L)) && cruza(tramo(c,lado), tramo(F.c,F.L))) out.push(r*lado+c);
+  return out;
+}
+// TODOS los features con posición de esa celda, de mayor a menor |atribución|, con la forma de `pesan` (así el popup sirve igual).
+function featuresDeCelda(L, F, NC) {
+  const out = [];
+  for (const b of L.bloques) for (const s of b.subs) if (s.lado) for (const k of celdasQueTocan(F, s.lado))
+    out.push({nombre: [b.etiqueta.split(' (')[0].split(' — ')[0], s.sub, celdaNombre(s.lado)[k]].filter(Boolean).join(' · '),
+              corto: [b.etiqueta.split(' (')[0].split(' — ')[0], s.sub, s.lado===F.L?'':celdaNombre(s.lado)[k]+' de su 3×3'].filter(Boolean).join(' · '), valor: s.rejilla[k], atr: s.rejilla_atr[k], bloque: b.bloque, sub: s.sub, celda: k, tipo: 'rejilla'});
+  return out.sort((a,b)=>Math.abs(b.atr)-Math.abs(a.atr));
+}
 async function verCompositor() {
   await cargarEstado(); const c = compActual();
   if (S.idx===null) { main.innerHTML = `<div>${selectorComp()}</div><div class="nota">Elige un dígito en la lista.</div>`; $('#selc').onchange=e=>{S.comp=e.target.value; verCompositor();}; return; }
@@ -165,8 +185,10 @@ async function verCompositor() {
   let L; try { L = await api('/api/leer',{c:S.comp, idx:S.idx}); } catch(e) { main.innerHTML += `<div class="err">${h(e.message)}</div>`; return; }
   const d = await cargarDigito(S.idx);
   const K = L.clases; const acierta = L.acierta; const finoMal = false; const vs = !acierta ? `lo lee ${K[L.predicho_fino]}` : `acierta (el rival es el ${K[L.contra]})`;
+  if (S.celda && S.celda.L !== c.celdas) S.celda = null;   // otra rejilla: la celda elegida ya no significa lo mismo
+  const F = S.celda; const NC = celdaNombre(c.celdas);
   let html = `<div>${selectorComp()}</div><div class="fila"><b>idx ${L.idx} · es un ${K[L.real_fino]} · ${vs}</b><span class="nota">${L.semillas_que_fallan!==null?`${L.semillas_que_fallan}/${L.semillas} semillas fallan`:''}</span></div>`;
-  html += `<div style="display:flex;gap:10px;align-items:flex-start"><canvas id="mini" style="width:120px;flex:none;border:1px solid #ddd"></canvas><div style="flex:1"><div class="nota" style="margin:0">logits · <span style="color:var(--rojo)">rojo = ${K[L.predicho_fino]} (leído)</span> · <span style="color:var(--verde)">verde = ${acierta&&!finoMal?K[L.contra]+' (rival)':K[L.real_fino]+' (real)'}</span> · p ${L.p_pred.toFixed(2)}${L.sub4?' · 4 en dos (4l = cerrado por arriba, 4a = abierto)':''}</div><div class="logits">${L.logits.map((v,k)=>{ const mx=Math.max(...L.logits.map(Math.abs)); const hh=Math.max(2,Math.abs(v)/mx*60); const col=k===L.predicho_fino?'#b22222':k===(acierta?L.contra:L.real_fino)?'#1f8a4c':'#bbb'; return `<div><div style="font-size:9px">${v.toFixed(1)}</div><div class="b" style="height:${hh}px;background:${col};opacity:${v<0?.35:1}"></div><div>${K[k]}</div></div>`; }).join('')}</div></div></div>`;
+  html += `<div style="display:flex;gap:10px;align-items:flex-start"><div style="flex:none;width:150px"><canvas id="mini" style="width:150px;border:1px solid #ddd;cursor:pointer"></canvas><div class="nota" style="margin:2px 0;font-size:11px">${F?`filtrado: <b>${h(NC[F.r*F.L+F.c])}</b> <button class="act" id="sinfiltro">quitar filtro</button>`:'toca una celda para ver sólo sus features'}</div></div><div style="flex:1"><div class="nota" style="margin:0">logits · <span style="color:var(--rojo)">rojo = ${K[L.predicho_fino]} (leído)</span> · <span style="color:var(--verde)">verde = ${acierta&&!finoMal?K[L.contra]+' (rival)':K[L.real_fino]+' (real)'}</span> · p ${L.p_pred.toFixed(2)}${L.sub4?' · 4 en dos (4l = cerrado por arriba, 4a = abierto)':''}</div><div class="logits">${L.logits.map((v,k)=>{ const mx=Math.max(...L.logits.map(Math.abs)); const hh=Math.max(2,Math.abs(v)/mx*60); const col=k===L.predicho_fino?'#b22222':k===(acierta?L.contra:L.real_fino)?'#1f8a4c':'#bbb'; return `<div><div style="font-size:9px">${v.toFixed(1)}</div><div class="b" style="height:${hh}px;background:${col};opacity:${v<0?.35:1}"></div><div>${K[k]}</div></div>`; }).join('')}</div></div></div>`;
   // Colapsada por defecto (el dueño, 2026-10-17): son decenas de rejillas y empujan «qué pesa» fuera de la pantalla.
   html += `<details style="margin-top:10px"><summary style="cursor:pointer;font-weight:600;font-size:15px;padding:6px 0">lo que recibe · ${c.n} entradas · ${c.celdas}×${c.celdas} <span class="nota" style="display:inline">(toca para abrir)</span></summary><div class="nota" style="margin-top:0">el borde rojo/verde de una celda marca que pesa (|atr| > 0,15); toca una para verla</div>`;
   for (const b of L.bloques) {
@@ -175,19 +197,29 @@ async function verCompositor() {
     for (const s of b.subs) {
       const cols = {'k→':'#c2410c','k←':'#2a78d6','k↓':'#1b7f3b','k↑':'#7c3aed','→ der':'#c2410c','← izq':'#2a78d6','↓ abajo':'#1b7f3b','↑ arriba':'#7c3aed','0° —':'#c2410c','45° /':'#2a78d6','90° |':'#1b7f3b','135° \\':'#7c3aed'}[s.sub]||col;
       const otros = s.otros.map(o=>`${o.nombre} ${o.valor.toFixed(2)}`).join(' · ');
-      if (s.lado) html += rejillaHTML(s.rejilla, s.lado, s.rejilla_atr, `${s.sub||''}${otros?' · '+otros:''}`, cols);
-      else html += `<div class="rej"><div class="t" style="color:${cols}">${h(s.sub)}</div>${otros}</div>`;
+      if (s.lado) html += rejillaHTML(s.rejilla, s.lado, s.rejilla_atr, `${s.sub||''}${otros?' · '+otros:''}`, cols, F?celdasQueTocan(F, s.lado):null, 24, !!F);
+      else if (!F) html += `<div class="rej"><div class="t" style="color:${cols}">${h(s.sub)}</div>${otros}</div>`;   // sin posición: no es de ninguna celda
     }
     html += `</div>`;
   }
   html += `</details>`;
   html += `<h3>qué pesa · <span style="color:var(--rojo)">rojo empuja al ${K[L.predicho_fino]}</span>, <span style="color:var(--verde)">verde al ${K[acierta?L.contra:L.real_fino]}</span></h3>`;
-  html += `<div class="nota" style="margin-top:0">por bloque: ${Object.entries(L.suma_por_bloque).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(1)}`).join(' · ')}</div>`;
-  const mx = Math.max(...L.pesan.map(p=>Math.abs(p.atr)));
-  html += L.pesan.map((p,k)=>`<div class="barra" data-pesa="${k}" style="cursor:pointer"><div class="n" title="${h(p.nombre)} (=${p.valor.toFixed(2)})">${h(p.nombre.split(' · ')[0])}</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
+  // Con una celda elegida, la lista no es el top 16 de todo: son TODOS los features de esa celda (salen de `bloques`, que
+  // trae cada rejilla entera con su atribución), y las sumas por bloque se rehacen sólo con ella (el dueño, 2026-10-17).
+  const P = F ? featuresDeCelda(L, F, NC) : L.pesan;
+  const suma = F ? P.reduce((o,p)=>(o[p.bloque]=(o[p.bloque]||0)+p.atr, o), {}) : L.suma_por_bloque;
+  html += `<div class="nota" style="margin-top:0">${F?`sólo la celda <b>${h(NC[F.r*F.L+F.c])}</b> · ${P.length} features (los sin posición quedan fuera) · `:''}por bloque: ${Object.entries(suma).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(F?2:1)}`).join(' · ')}</div>`;
+  const mx = Math.max(1e-9, ...P.map(p=>Math.abs(p.atr)));
+  html += P.map((p,k)=>`<div class="barra" data-pesa="${k}" style="cursor:pointer"><div class="n" title="${h(p.nombre)} (=${p.valor.toFixed(2)})">${h(F ? p.corto : p.nombre.split(' · ')[0])}${F?` <span style="color:var(--gris)">=${p.valor.toFixed(2)}</span>`:''}</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
   html += navegacion(); main.innerHTML = html; $('#selc').onchange=e=>{S.comp=e.target.value; S.lista=null; verCompositor();};
-  dibujar($('#mini'), d.M, d.objetos, {px:4, rejilla:c.celdas}); atarNav(verCompositor);
-  main.querySelectorAll('[data-pesa]').forEach(el=> el.onclick=()=> popupPesa(L, L.pesan[+el.dataset.pesa], d, K, mx));
+  const mini = $('#mini'); dibujar(mini, d.M, d.objetos, {px:5, rejilla:c.celdas}); atarNav(verCompositor);
+  if (F) { const g = mini.getContext('2d'); const q = mini.width/F.L; g.strokeStyle='#0057ff'; g.lineWidth=4; g.strokeRect(F.c*q+2, F.r*q+2, q-4, q-4); g.globalAlpha=0.15; g.fillStyle='#0057ff'; g.fillRect(F.c*q, F.r*q, q, q); g.globalAlpha=1; }
+  // Tocar una celda del dígito filtra la pantalla a esa celda; tocar la misma otra vez (o «quitar filtro») lo quita.
+  mini.onclick = e => { const r = mini.getBoundingClientRect(); const L_ = c.celdas;
+    const cc = Math.min(L_-1, Math.floor((e.clientX-r.left)/r.width*L_)), rr = Math.min(L_-1, Math.floor((e.clientY-r.top)/r.height*L_));
+    S.celda = (F && F.r===rr && F.c===cc) ? null : {r:rr, c:cc, L:L_}; verCompositor(); };
+  if ($('#sinfiltro')) $('#sinfiltro').onclick = () => { S.celda = null; verCompositor(); };
+  main.querySelectorAll('[data-pesa]').forEach(el=> el.onclick=()=> popupPesa(L, P[+el.dataset.pesa], d, K, mx));
 }
 // Al tocar una barra de «qué pesa»: la barra, la rejilla de ESE feature con su celda resaltada, y el dígito con la celda
 // marcada (el dueño, 2026-10-16: «así es más fácil ver cuál es»). Si la columna no es de rejilla (cuenta, largo…), se dice.
