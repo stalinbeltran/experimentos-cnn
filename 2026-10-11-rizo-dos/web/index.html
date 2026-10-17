@@ -106,6 +106,7 @@ async function verLista() {
   const f = S.filtros;
   html += `<div class="chips">${[['fallos','fallos'],['todas',`fallan ${c.semillas.length}/${c.semillas.length}`],['aciertos','aciertos'],['todos','todos']].map(([k,t])=>`<span class="chip ${f.modo===k?'on':''}" data-modo="${k}">${t}</span>`).join('')}</div>`;
   html += `<div class="chips">clase: ${[0,1,2,3,4,5,6,7,8,9].map(k=>`<span class="chip small ${f.clase===k&&!f.sub?'on':''}" data-clase="${k}">${k}</span>`).join('')}<span class="chip small ${f.clase===null?'on':''}" data-clase="">todas</span></div>`;
+  if (f.clase===1) html += `<div class="chips">el 1 en dos: <span class="chip small ${f.sub==='l'?'on':''}" data-sub="l">1l · sólo la recta</span><span class="chip small ${f.sub==='a'?'on':''}" data-sub="a">1a · los demás</span>${f.sub?`<span class="chip small" data-sub="">× los dos</span>`:''}</div>`;   // § 107, como el 4
   if (f.clase===4) html += `<div class="chips">el 4 en dos: <span class="chip small ${f.sub==='l'?'on':''}" data-sub="l">4l · cerrado</span><span class="chip small ${f.sub==='a'?'on':''}" data-sub="a">4a · abierto</span>${f.sub?`<span class="chip small" data-sub="">× los dos</span>`:''}</div>`;
   const confs = Object.entries(c.confusiones||{}).filter(([k])=>f.clase===null || k.startsWith(f.clase+'→')).slice(0,12);
   html += `<div class="chips">${confs.map(([k,n])=>`<span class="chip small ${f.conf===k?'on':''}" data-conf="${k}">${k} ×${n}</span>`).join('')}${f.conf?`<span class="chip small" data-conf="">× quitar</span>`:''}</div>`;
@@ -116,8 +117,9 @@ async function verLista() {
   main.querySelectorAll('[data-sub]').forEach(el=> el.onclick=()=>{ f.sub = el.dataset.sub||null; verLista(); });
   main.querySelectorAll('[data-conf]').forEach(el=> el.onclick=()=>{ f.conf = el.dataset.conf||null; verLista(); });
   const L = await api('/api/lista', {c:S.comp, modo:f.modo, clase:f.clase, conf:f.conf, hasta:120, sub:f.sub}); S.lista = L;
-  const pc = f.sub ? L.por_clase['4'+f.sub] : f.clase!==null ? L.por_clase[f.clase] : null;
-  $('#resumen').textContent = `${L.total} dígito(s)` + (L.total>120?' (se muestran 120)':'') + (pc?` · clase ${f.sub?'4'+f.sub:f.clase}: ${pc.fallos} fallos de ${pc.n}`:` · val ${c.val} · ${c.fallos_s0} fallos de ${S.estado.n_val}`) + (f.clase===4&&!f.sub?` · 4l ${L.por_clase['4l'].n} · 4a ${L.por_clase['4a'].n} (según el detector)`:'');
+  const gr = f.clase===1 ? '1' : '4';                       // el grupo partido de la clase elegida (§ 107: el 1 también)
+  const pc = f.sub ? L.por_clase[gr+f.sub] : f.clase!==null ? L.por_clase[f.clase] : null;
+  $('#resumen').textContent = `${L.total} dígito(s)` + (L.total>120?' (se muestran 120)':'') + (pc?` · clase ${f.sub?gr+f.sub:f.clase}: ${pc.fallos} fallos de ${pc.n}`:` · val ${c.val} · ${c.fallos_s0} fallos de ${S.estado.n_val}`) + (f.clase===4&&!f.sub?` · 4l ${L.por_clase['4l'].n} · 4a ${L.por_clase['4a'].n} (según el detector)`:'') + (f.clase===1&&!f.sub&&L.por_clase['1l']?` · 1l ${L.por_clase['1l'].n} · 1a ${L.por_clase['1a'].n} (separados a mano y por la regla)${c.sub1?'':' · ⚠ este compositor no parte el 1: lee «1»'}`:'');
   const et = (r) => { if (r.real_txt!==undefined) return r.fallo ? `${r.real_txt}→${r.leido_txt}` : `${r.real_txt} ✓`;   // § 107: el servidor manda los nombres (1l, 4a…)
     const re = r.real===4 && r.sub ? '4'+r.sub : ''+r.real; const pr = c.sub4 ? (r.predicho_fino===10?'4l':r.predicho_fino===4?'4a':''+r.predicho_fino) : ''+r.predicho; return r.fallo ? `${re}→${pr}` : `${re} ✓`; };
   const cards = $('#cards'); cards.innerHTML = L.filas.map(r=>`<div class="card" data-idx="${r.idx}"><div class="et ${r.fallo?'fallo':'acierto'}">${et(r)} · idx ${r.idx} · ${r.veces}/${c.semillas.length}${!r.fallo?` · p ${r.p.toFixed(2)}`:''}</div><canvas id="m${r.idx}"></canvas></div>`).join('');

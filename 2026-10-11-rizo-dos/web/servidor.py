@@ -928,9 +928,13 @@ class App:
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
         c = self.listo(nombre); d = self.datos; yf = d.etiquetas_finas()[d.va]; y = c.y_fino(d)[d.va] if c.partido else d.y[d.va]; p0 = c.preds[0]
         K = c.clases_finas() if c.partido else [str(k) for k in range(10)]   # § 107: los nombres van escritos en cada fila (1l, 4a…)
-        # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor; con sub4, y y p0 están en las 11 clases
+        # El GRUPO es del DÍGITO, lo parta el compositor o no (como el 4 desde § 85): 4l/4a por su regla + la mano, y desde § 107
+        # también 1l/1a (web/grupos.py + etiquetas-1.json). Con un compositor que no parte el 1, la tarjeta dice «1l → 1»: el
+        # dígito es un 1l y el compositor sólo sabe leer «1».
+        yc = d.y[d.va]; es4l = (yc == 4) & (yf == 10); es1l = (yc == 1) & (d.etiquetas_finas(False, True)[d.va] == 10)
+        grupo = lambda j: ("4l" if es4l[j] else "4a") if yc[j] == 4 else ("1l" if es1l[j] else "1a") if yc[j] == 1 else str(int(yc[j]))
         fino = lambda e: K.index(e) if e in K else 4 if e in ("4l", "4a") else 1 if e in ("1l", "1a") else int(e)
-        if sub in ("l", "a"):
+        if sub in ("l", "a") and clase is None:                    # compatibilidad: «sub» sin clase era el 4
             clase = 4
         sel = np.ones(len(d.va), bool)
         if modo == "fallos":
@@ -940,23 +944,21 @@ class App:
         elif modo == "aciertos":
             sel &= p0 == y
         if clase is not None:
-            sel &= d.y[d.va] == int(clase)                           # el dígito, sea cual sea su grupo (4l/4a, 1l/1a)
-        if sub == "l":
-            sel &= yf == 10
-        elif sub == "a":
-            sel &= (y == 4) & (yf == 4)
+            sel &= yc == int(clase)                                 # el dígito, sea cual sea su grupo (4l/4a, 1l/1a)
+        if sub in ("l", "a") and int(clase) in (1, 4):
+            g = es4l if int(clase) == 4 else es1l
+            sel &= g if sub == "l" else ~g
         if conf:
             a, b = conf.replace("->", "→").split("→"); sel &= (y == fino(a)) & (p0 == fino(b))
         ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy(); pf = c.finos[0]
-        filas = [{"idx": int(d.va[j]), "real": int(d.y[d.va][j]), "predicho": int(c.juntar(np.array([p0[j]]))[0]) if c.partido else int(p0[j]), "fallo": bool(p0[j] != y[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
-                  "sub": ("l" if yf[j] == 10 else "a") if d.y[d.va][j] == 4 else None, "predicho_fino": int(pf[j]),
-                  "real_txt": K[int(y[j])], "leido_txt": K[int(p0[j])]} for k, j in enumerate(ids)]
-        yc = d.y[d.va]; mal = p0 != y
+        filas = [{"idx": int(d.va[j]), "real": int(yc[j]), "predicho": int(c.juntar(np.array([p0[j]]))[0]) if c.partido else int(p0[j]), "fallo": bool(p0[j] != y[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
+                  "sub": grupo(j)[1] if yc[j] in (1, 4) else None, "predicho_fino": int(pf[j]),
+                  "real_txt": grupo(j), "leido_txt": K[int(p0[j])]} for k, j in enumerate(ids)]
+        mal = p0 != y
         por_clase = {str(k): {"n": int((yc == k).sum()), "fallos": int((mal & (yc == k)).sum())} for k in range(10)}
-        por_clase["4l"] = {"n": int((yf == 10).sum()), "fallos": int((mal & (yf == 10)).sum())}; por_clase["4a"] = {"n": int(((yc == 4) & (yf == 4)).sum()), "fallos": int((mal & (yc == 4) & (yf == 4)).sum())}
-        if c.sub1:
-            c1 = K.index("1l"); por_clase["1l"] = {"n": int((y == c1).sum()), "fallos": int((mal & (y == c1)).sum())}
-            por_clase["1a"] = {"n": int(((yc == 1) & (y == 1)).sum()), "fallos": int((mal & (yc == 1) & (y == 1)).sum())}
+        for dig, gl in ((4, es4l), (1, es1l)):
+            ga = (yc == dig) & ~gl
+            por_clase[f"{dig}l"] = {"n": int(gl.sum()), "fallos": int((mal & gl).sum())}; por_clase[f"{dig}a"] = {"n": int(ga.sum()), "fallos": int((mal & ga).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:
