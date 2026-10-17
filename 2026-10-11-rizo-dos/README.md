@@ -1789,6 +1789,29 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 102 · VISTA PREVIA: el vértice LIBRE — donde esté, 4 direcciones, UNA celda y su AMPLITUD (el dueño, 2026-10-17)
+
+Pedido: «debe detectarlos donde estén… en posición única (si caen en medio de 2 celdas), pues nos sirve por si se ven varios
+vértices; y otro con la misma posición que refleje el ángulo: 0 = 0°, 1 = 180°». **Prototipo** (`nn/vertice_libre_vista.py`;
+no toca `cresta_curvas.vertices` ni el revisor). Se busca en la **cresta** y no en los bordes de la tinta: el detector de § 95 mira
+desde la cima del dígito y por construcción sólo ve la punta del extremo (§ 101). Vértice = dos brazos de cresta ≥ 4 px con
+< 90° medidos a 6 px (y < 120° a 3 px, para no confundir una curva cerrada con una esquina), a mitad de un tramo o en un nudo, sin
+contar los **cruces** (los dos brazos siguen de largo por trazos distintos: la X del 8 daba 168 N y 152 S sin esa regla). Por
+dirección: rejilla 3×3 de **presencia en una sola celda** + rejilla 3×3 de **amplitud** (ángulo/180) + cuenta = 4 × 19 = **76
+números**. Parámetros **sin calibrar**. Figura `resultados/102-vertice-libre.png`, números en `.json`.
+
+Medido en val (1617 dígitos, 7 ms por dígito):
+- **el 4 cerrado (4l) tiene vértice N en 23 de 26** (el de hoy: 16 de 26); el 4 abierto (4a), 7 de 137, **ninguno en la fila de
+  arriba** (el de hoy: 0 de 137).
+- **varios vértices**: 230 dígitos con 2 y 71 con ≥ 3; sólo 6 veces caen dos de la misma dirección en la misma celda (lo recoge la cuenta).
+- **posición única**: el 36 % de los vértices está a < 1 px de un borde de celda (con la mancha de § 95 encenderían dos).
+- ⚠ **el precio de la celda única, por la regla de desplazamientos**: moviendo la entrada 1 px cambia la rejilla de presencia en el
+  5–12 % de los dígitos; 2 px, en el 15–21 %.
+- ⚠ **amplitud**: con el límite de 90° sólo usa la mitad de la escala (0–0,5; mediana 72–75°). Que 0 sea también «no hay vértice»
+  lo resuelve la rejilla de presencia, que va al lado.
+- dispara además en el 1 (N 49: la bandera; E 22: el pie), el 2 (O 101), el 7, el 9 y el 8 (N 76 / S 77: la cintura donde se tocan
+  los dos lazos).
+
 ### 101 · VISTA PREVIA: el vértice en 4 direcciones N, S, E, O (el dueño, 2026-10-17: «muéstrame cómo quedarían en la matriz 3×3 antes de proceder»)
 
 Nada cambiado ni entrenado: `nn/vertice_4dir_vista.py` gira la tinta 90/180/270°, pasa el **mismo** `cresta_curvas.vertices`
