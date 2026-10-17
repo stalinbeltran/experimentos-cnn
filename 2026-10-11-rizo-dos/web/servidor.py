@@ -685,6 +685,9 @@ class App:
         with self._lock:
             self.comps.pop(nombre, None)
         self.guardar_recetas()
+        # 2026-10-17: borrar escribía recetas.json en el almacén y NO lo empujaba: el freno lo veía como «sin empujar» y un
+        # dev nuevo habría resucitado lo borrado. Los .pt no se tocan (el almacén no borra; un borrado es reversible).
+        empujar_almacen(f"rizo-2 revisor: recetas tras borrar «{nombre}»")
 
     def _bucle(self):
         while True:
