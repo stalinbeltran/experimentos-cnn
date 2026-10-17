@@ -1789,6 +1789,32 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 105 · El VÉRTICE LIBRE en el revisor: un bloque con 6 piezas para elegir (el dueño, 2026-10-17: «métELOS en el app»)
+
+«Me gustan todas estas definiciones de redondez… al entrenar compositores yo debo poder elegir cuál entreno.» El bloque
+**`vertice_libre`** (`nn/vertice_libre.py`, al que se movió el núcleo de los prototipos de § 102–104; los scripts de figuras lo
+importan) va sobre la cresta del **DELGADO**. Por dirección N, E, S, O tiene seis piezas, y cada una se marca o no en
+«entrenar otro»:
+
+| pieza | qué es | por celda |
+|---|---|---|
+| `rejilla` | presencia del vértice, en UNA celda | 0/1 |
+| `amplitud` | ángulo / 180 | 0–0,5 (el límite es 90°) |
+| `despegue` | (a) de § 104, escalado a 4 px | 0–1 |
+| `cerca` | (b) «se abre de cerca», escalado a 90° | 0–1 |
+| `radio` | (c) radio de la punta, escalado a 6 px | 0–1 |
+| `cuenta` | cuántos vértices hay en esa dirección | entero |
+
+Con 3×3: 4 × (5·9 + 1) = **184 números**. En la pantalla de lectura cada medida es su propia rejilla («N · radio»…). Si dos vértices
+de la misma dirección caen en la misma celda, la celda lleva los del más agudo y la cuenta dice cuántos. Se calcula **fuera de
+`cresta_curvas.py`** y su hash sólo entra en la huella de los compositores que lo usan: los dos guardados (LazosConcavidades y
+LazosEntrantes) se restauran igual. Caché propia `vlibre-<hash>-3x3[-extra].npz`, también en el almacén. **Nada entrenado.**
+
+⚠ **Lo que destapó el test, medido ese día con Λ sintéticos de grosor 0,6 a 2 px: la amplitud SOBREESTIMA en trazos gruesos.**
+Se mide con la cuerda a 6 px desde la punta de la cresta, y el esqueleto se curva en una punta aguda: un Λ de 44° sale entre
+**44° y 68°** según el grosor, y uno de 30° entre 29° y 47°. El ángulo entre **rectas ajustadas a los brazos** (de 3 a 9 px) queda en
+**±6°** en los mismos casos. ⏳ **Propuesto al dueño, sin aplicar**: la amplitud que él aprobó es la de hoy, y cambiarla es su decisión.
+
 ### 104 · La REDONDEZ del vértice: tres definiciones para elegir (el dueño, 2026-10-17: «muéstrame las imágenes… vamos a definirlas ahora»)
 
 `nn/redondez_vista.py` → `resultados/104-redondez.{png,json}`. Sobre los 1416 vértices libres de val (§ 102–103, cresta del

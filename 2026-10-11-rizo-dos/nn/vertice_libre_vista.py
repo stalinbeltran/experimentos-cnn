@@ -42,134 +42,15 @@ import matplotlib.pyplot as plt                                           # noqa
 
 DATASET = "uci-optdigits-orig-32px-r20261005"
 DELGADOS = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-k3x3.npz"
-N = 32
-BRAZO = 6.0          # px de cresta a los que se mide la amplitud (cuerda desde el vértice)
-BRAZO_CORTO = 3.0    # px a los que se comprueba que es una esquina y no una curva
-BRAZO_MIN = 4.0      # un brazo más corto (un espolón del esqueleto) no cuenta
-A_MAX = 90.0         # el dueño, 2026-10-16: «por supuesto debe ser menor de 90°»
-A_MAX_CORTO = 120.0
-SUPR = 3.0           # px: dos candidatos más cerca son el mismo vértice
-ANG_SIGUE = 40.0     # en un nudo, un brazo «sigue de largo» si otro sale a ≥ 140° de él (= cresta_curvas.ANG_CRUZ). Si los DOS
-                     # brazos de un par siguen de largo por trazos distintos, es un cruce (la X del 8), no un vértice: medido en la
-                     # 1.ª pasada, sin esta regla el 8 daba 168 N y 152 S en val
+# El núcleo (detector, parámetros, celda) vive en `vertice_libre.py` desde el 2026-10-17, que es lo que usa el revisor: dos
+# copias de un detector divergen. Aquí sólo queda lo de la figura.
+import vertice_libre as _VLB                                             # noqa: E402
+from vertice_libre import (N, BRAZO, BRAZO_CORTO, BRAZO_MIN, A_MAX, A_MAX_CORTO, SUPR, ANG_SIGUE, ALCANCE,  # noqa: E402,F401
+                           vertices_libres, celda)
+_brazo, _camino, _angulo, _direccion, _rumbo = _VLB._brazo, _VLB._camino, _VLB._angulo, _VLB._direccion, _VLB._rumbo
 DIRS = ["N", "S", "E", "O"]
 CELDAS = ["NO", "N", "NE", "O", "C", "E", "SO", "S", "SE"]
 COLOR = {"N": "#c2410c", "S": "#2a78d6", "E": "#1b7f3b", "O": "#7c3aed"}
-
-
-def _brazo(p, i, paso, L, cerrado):
-    """Cuerda desde p[i] hasta el punto a L px de cresta en el sentido `paso` (±1). (vector, largo recorrido)."""
-    n = len(p); acc, j = 0.0, i
-    while acc < L:
-        k = j + paso
-        if cerrado:
-            k %= n
-        elif k < 0 or k >= n:
-            break
-        acc += float(np.hypot(*(p[k] - p[j]))); j = k
-        if cerrado and j == i:
-            break
-    return p[j] - p[i], acc
-
-
-def _camino(p, i, paso, L, cerrado) -> np.ndarray:
-    """Los puntos de la cresta desde p[i] (incluido) hasta L px de recorrido en el sentido `paso`: el BRAZO entero, no sólo su
-    cuerda. Lo usan las medidas de REDONDEZ (`redondez_vista.py`, 2026-10-17); no interviene en la detección."""
-    n = len(p); acc, j = 0.0, i; out = [p[i]]
-    while acc < L:
-        k = j + paso
-        if cerrado:
-            k %= n
-        elif k < 0 or k >= n:
-            break
-        acc += float(np.hypot(*(p[k] - p[j]))); j = k; out.append(p[j])
-        if cerrado and j == i:
-            break
-    return np.asarray(out)
-
-
-ALCANCE = 9.0        # px de brazo que se guardan con cada vértice (para medir su redondez)
-
-
-def _angulo(u, v):
-    return float(np.degrees(np.arccos(np.clip(np.dot(u, v) / (np.hypot(*u) * np.hypot(*v) + 1e-9), -1, 1))))
-
-
-def _direccion(u, v) -> str:
-    """El sector de 90° del rumbo (ver `_rumbo`): N [315°, 45°), E [45°, 135°), S [135°, 225°), O [225°, 315°). Sale del MISMO
-    rumbo para que las fronteras sean exactamente las escritas (2026-10-17: la versión anterior empataba distinto en 135° y 315°;
-    en val no pasaba nunca, 0 de 1416)."""
-    return "NESO"[int(((_rumbo(u, v) + 45) % 360) // 90)]
-
-
-def _rumbo(u, v) -> float:
-    """Hacia dónde apunta la punta, como una brújula: 0° = N, 90° = E, 180° = S, 270° = O. `_direccion` lo parte en 4
-    sectores de 90° (±45° alrededor de cada uno): no hay NE; un vértice a 30° es N y uno a 60° es E (el dueño, 2026-10-17)."""
-    b = -(u / (np.hypot(*u) + 1e-9) + v / (np.hypot(*v) + 1e-9))
-    return float((np.degrees(np.arctan2(b[1], b[0])) + 90) % 360)
-
-
-def _candidato(x, y, u, v, uc, vc):
-    a, ac = _angulo(u, v), _angulo(uc, vc)
-    if a < A_MAX and ac < A_MAX_CORTO:
-        return {"cx": float(x), "cy": float(y), "ang": a, "dir": _direccion(u, v), "rumbo": _rumbo(u, v)}
-    return None
-
-
-def vertices_libres(M) -> list[dict]:
-    tr, puros = CC.tramos(M)
-    cand = []
-    # (1) a mitad de un tramo, o de un ciclo puro: mínimos locales del ángulo
-    for p, cerrado in [(np.asarray(t["pts"], float), False) for t in tr] + [(np.asarray(c["pts"], float), True) for c in puros]:
-        n = len(p); angs = np.full(n, 180.0); res = [None] * n
-        for i in range(n):
-            u, lu = _brazo(p, i, -1, BRAZO, cerrado); v, lv = _brazo(p, i, +1, BRAZO, cerrado)
-            if lu < BRAZO_MIN or lv < BRAZO_MIN:
-                continue
-            uc, _ = _brazo(p, i, -1, BRAZO_CORTO, cerrado); vc, _ = _brazo(p, i, +1, BRAZO_CORTO, cerrado)
-            angs[i] = _angulo(u, v); res[i] = _candidato(*p[i], u, v, uc, vc)
-            if res[i] is not None:
-                res[i]["brazos"] = (_camino(p, i, -1, ALCANCE, cerrado), _camino(p, i, +1, ALCANCE, cerrado))
-        for i in range(n):
-            vec = [angs[(i - 1) % n], angs[(i + 1) % n]] if cerrado else [angs[i - 1] if i > 0 else 180, angs[i + 1] if i < n - 1 else 180]
-            if res[i] is not None and angs[i] <= min(vec):
-                cand.append(res[i])
-    # (2) en un racimo: cada par de tramos que salen de él (un lazo de un racimo a sí mismo aporta sus dos extremos)
-    ext = {}
-    for t in tr:
-        p = np.asarray(t["pts"], float)
-        if t["a"] > 0:
-            ext.setdefault(t["a"], []).append(p)
-        if t["b"] > 0:
-            ext.setdefault(t["b"], []).append(p[::-1])                   # siempre empezando en el racimo
-    for brazos in ext.values():
-        largo = [_brazo(b, 0, +1, BRAZO, False) for b in brazos]
-        def opuesto(k):                                                  # el brazo casi opuesto a k (su trazo PASA por el nudo), o None
-            c = [(_angulo(largo[k][0], uj), j) for j, (uj, lj) in enumerate(largo) if j != k and lj >= BRAZO_MIN]
-            c = [t for t in c if t[0] >= 180 - ANG_SIGUE]
-            return max(c)[1] if c else None
-        par = [opuesto(k) for k in range(len(brazos))]
-        for x in range(len(brazos)):
-            for y in range(x + 1, len(brazos)):
-                p, q = brazos[x], brazos[y]
-                (u, lu), (v, lv) = largo[x], largo[y]
-                # un CRUCE (§ 69) es cuando los DOS siguen de largo por trazos DISTINTOS (la X del 8); si los dos se oponen
-                # al MISMO brazo es una λ (la punta del 4 con el palo asomando por arriba, val #390): eso sí es un vértice
-                if lu < BRAZO_MIN or lv < BRAZO_MIN or (par[x] is not None and par[y] is not None and par[x] != par[y]):
-                    continue
-                uc, _ = _brazo(p, 0, +1, BRAZO_CORTO, False); vc, _ = _brazo(q, 0, +1, BRAZO_CORTO, False)
-                c = _candidato(*((p[0] + q[0]) / 2), u, v, uc, vc)
-                if c is not None:
-                    c["brazos"] = (_camino(p, 0, +1, ALCANCE, False), _camino(q, 0, +1, ALCANCE, False)); cand.append(c)
-    out = []
-    for c in sorted(cand, key=lambda c: c["ang"]):                       # supresión: el más agudo de cada sitio
-        if all(np.hypot(c["cx"] - o["cx"], c["cy"] - o["cy"]) >= SUPR for o in out):
-            out.append(c)
-    return out
-
-
-def celda(v) -> int:
-    return min(int(v["cy"] * 3 / N), 2) * 3 + min(int(v["cx"] * 3 / N), 2)
 
 
 def rejillas(vs) -> dict:

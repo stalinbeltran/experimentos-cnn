@@ -35,67 +35,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt                                           # noqa: E402
 from matplotlib.patches import Circle                                     # noqa: E402
 
-TOPE = {"a": 4.0, "b": 90.0, "c": 6.0}
+from vertice_libre import TOPE                                            # noqa: E402
 NOMBRE = {"a": "(a) DESPEGUE: punta ↔ cruce (×) de las rectas de los brazos",
           "b": "(b) SE ABRE DE CERCA: ángulo a 2 px (verde) − a 6 px (azul)",
           "c": "(c) RADIO del círculo que encaja en la punta"}
 UNIDAD = {"a": "px", "b": "°", "c": "px"}
 
 
-def _largo(b):
-    return np.concatenate([[0.0], np.cumsum(np.hypot(*np.diff(b, axis=0).T))])
-
-
-def _en(b, L):
-    """El punto del brazo a L px de recorrido (interpolado)."""
-    s = _largo(b)
-    if L >= s[-1]:
-        return b[-1]
-    k = int(np.searchsorted(s, L)); t = (L - s[k - 1]) / (s[k] - s[k - 1] + 1e-9); return b[k - 1] + t * (b[k] - b[k - 1])
-
-
-def _recta(b, desde=2.0, hasta=6.0):
-    """Recta ajustada al tramo del brazo entre `desde` y `hasta` px de la punta: (punto, dirección unitaria hacia FUERA).
-    Primera versión: de 3 a 9 px, y en brazos curvos (el lazo de un 6) las rectas se cruzaban a 112 px de la punta."""
-    s = _largo(b); q = b[(s >= desde) & (s <= hasta)]
-    if len(q) < 2:
-        q = b[len(b) // 2:]
-    m = q.mean(0); _, vec = np.linalg.eigh(np.cov((q - m).T)); d = vec[:, 1]
-    if np.dot(d, b[-1] - b[0]) < 0:
-        d = -d
-    return m, d
-
-
-def medir(v) -> dict:
-    b1, b2 = v["brazos"]; P = (b1[0] + b2[0]) / 2
-    # (a) despegue
-    (m1, d1), (m2, d2) = _recta(b1), _recta(b2)
-    A = np.array([d1, -d2]).T
-    if abs(np.linalg.det(A)) < 1e-3:
-        X, da = None, TOPE["a"]
-    else:
-        t = np.linalg.solve(A, m2 - m1); X = m1 + t[0] * d1; da = float(np.hypot(*(X - P)))
-    # (b) se abre de cerca
-    def ang(L):
-        return VL._angulo(_en(b1, L) - b1[0], _en(b2, L) - b2[0])
-    db = max(0.0, float(ang(2.0) - ang(6.0)))   # en un cruce raro salía negativo (de cerca MÁS cerrado): eso no es redondez
-    # (c) radio: círculo ajustado (mínimos cuadrados, Kåsa) a los puntos de la cresta a ≤ 3 px de la punta por cada brazo, SIN
-    # suavizar. Primera versión: 1/curvatura máxima de la cresta suavizada; el suavizado (σ 1,5) movía la punta y el radio
-    # medía sobre todo el suavizado (casi todos entre 2 y 4 px, círculos que no tocaban la punta).
-    q = np.concatenate([b1[_largo(b1) <= 3.0][::-1], b2[_largo(b2) <= 3.0][1:]])
-    A3 = np.c_[2 * q, np.ones(len(q))]; rhs = (q ** 2).sum(1)
-    try:
-        sol, *_ = np.linalg.lstsq(A3, rhs, rcond=None); centro = sol[:2]; r = float(np.sqrt(max(sol[2] + (centro ** 2).sum(), 0)))
-    except np.linalg.LinAlgError:
-        centro, r = P, 99.0
-    if not np.isfinite(r) or len(q) < 3:
-        centro, r = P, 99.0
-    return {"a": da, "b": db, "c": r, "cruce": X, "P": P, "rectas": ((m1, d1), (m2, d2)), "cerca": (_en(b1, 2.0), _en(b2, 2.0)),
-            "lejos": (_en(b1, 6.0), _en(b2, 6.0)), "circulo": (centro, r), "puntos_c": q}
-
-
-def escala(k, x):
-    return float(np.clip(x / TOPE[k], 0, 1))
+from vertice_libre import _largo, _en, _recta, medir, escala   # noqa: E402  (el núcleo vive en vertice_libre.py desde el 2026-10-17)
 
 
 def panel(a, M, v, m, k, titulo):

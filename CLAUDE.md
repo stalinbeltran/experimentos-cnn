@@ -197,7 +197,8 @@ no leída fichero a fichero.
 `vertice_1` son **RETIRADOS** en el revisor (`web/servidor.py: RETIRADOS`): no salen en «entrenar otro» ni en archivados, y un
 compositor nuevo que los pida se niega (400). **Siguen en el código** porque los dos compositores vivos (LazosConcavidades,
 LazosEntrantes) los usan; los quita el dueño cuando borre esos compositores. Lo que sigue pendiente de la tabla es pasar el
-vértice al delgado (el vértice libre) y quitar `tinta` de `caract`.
+vértice al delgado y quitar `tinta` de `caract`. ✅ El sustituto ya está en el revisor desde el mismo día: el bloque
+`vertice_libre` (`rizo-2` § 105), sobre el delgado, con 6 piezas elegibles; no se ha entrenado ningún compositor con él.
 
 El sustituto natural es el **vértice libre** sobre la cresta del delgado (`rizo-2` § 102–103), pero **cambiarlo cambia la
 huella de los compositores guardados** y el dueño ordenó el 2026-10-17 **no entrenar ningún compositor por ahora**. Cuando

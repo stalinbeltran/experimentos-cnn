@@ -58,6 +58,7 @@ import torch.nn.functional as F
 AQUI = Path(__file__).resolve().parents[1]                        # 2026-10-11-rizo-dos
 sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 import cresta_curvas as CC                                        # noqa: E402
+import vertice_libre as VLB                                       # noqa: E402  (el vértice LIBRE, sobre el delgado: § 105)
 from expcnn import exigir_dataset, ruta_datos                     # noqa: E402
 
 PUERTO = 8050
@@ -165,6 +166,10 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     "cruces": ("cruces (§ 69)", "rejilla 3×3 + cuenta", "cruces"),
     "vertice": ("vértice del 4 (bordes de la tinta, § 95)", "rejilla + cuenta", "vertice"),
     "vertice_1": ("vértice del 4 en UNA celda (prueba, 2026-10-16)", "rejilla one-hot: la celda que contiene el centro, sin mancha ni solape + cuenta", "vertice"),
+    # El vértice LIBRE (§ 105, el dueño, 2026-10-17: «métELOS en el app… yo debo poder elegir cuál entreno»): en cualquier sitio de
+    # la cresta del DELGADO, 4 direcciones N E S O, UNA celda, y por celda presencia + amplitud + las tres redondeces de § 104.
+    # Cada una es una PIEZA: se elige al entrenar. Calculado en nn/vertice_libre.py, fuera de cresta_curvas.py (su hash es aparte).
+    "vertice_libre": ("vértice LIBRE en el delgado (§ 105)", "N E S O × (rejilla + amplitud + despegue + cerca + radio + cuenta)", "vertices_libres"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 # RETIRADOS (el dueño, 2026-10-17: «elimina los features de tinta… aunque por el compositor existente deban seguir existiendo en
@@ -226,6 +231,12 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
         c3 = celdas_nombres(3)
         for o in range(4):
             out += [{"sub": DIR4[o], "celda": k, "tipo": "rejilla", "nombre": c3[k]} for k in range(9)]
+    elif bloque == "vertice_libre":                               # mismo orden que VLB.bloque: por dirección, sus piezas
+        for d in VLB.ORDEN:
+            out += [{"sub": d, "celda": k, "tipo": "rejilla", "nombre": cn[k]} for k in range(c)]
+            for q in VLB.PIEZAS[1:-1]:                                # cada medida, su propia rejilla («N · radio»…)
+                out += [{"sub": f"{d} · {q}", "celda": k, "tipo": q, "nombre": cn[k]} for k in range(c)]
+            out += [{"sub": d, "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     elif bloque == "cruces":
         c3 = celdas_nombres(3)
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": c3[k]} for k in range(9)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
@@ -247,7 +258,8 @@ def bloque_vertice_1(tinta, celdas: int = 3) -> list[float]:
 def rangos(celdas: int) -> dict:
     """Dónde está cada bloque en la matriz que usa la app: los de caract (CC.bloques) y, al final, los que se calculan aquí."""
     B = dict(CC.bloques(celdas)); n = max(z for _, z in B.values())
-    B["vertice_1"] = (n, n + celdas * celdas + 1)
+    B["vertice_1"] = (n, n + celdas * celdas + 1); n = B["vertice_1"][1]
+    B["vertice_libre"] = (n, n + len(columnas("vertice_libre", celdas)))
     return B
 
 
@@ -430,11 +442,27 @@ class Datos:
         todos = self._v1(self.tinta, celdas); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"vertice_1 {celdas}×{celdas}")
         return todos, aum
 
+    def vlibre(self, celdas: int, extra: bool = False):
+        """Las columnas de `vertice_libre` (sobre el DELGADO) para (todos, train aumentado) o para los extra aumentados, en el MISMO
+        orden que caract. ~8 ms por dígito (medido 2026-10-17): ~1 min todos + train, ~7 min los extra. Caché propia
+        `vlibre-<hash de vertice_libre.py + cresta_curvas.py>-…`, también en el almacén."""
+        f = CACHE / f"vlibre-{VLB.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        if traer_cache(f, f"vértice libre {celdas}×{celdas}"):
+            z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
+        uno = lambda Ms: np.asarray([VLB.bloque(m, celdas) for m in Ms], np.float32)
+        t = time.time(); idx = self.ex if extra else self.tr
+        print(f"  calculando el vértice libre {celdas}×{celdas} ({'extra' if extra else 'todos + train'})…", flush=True)
+        aum = np.concatenate([uno(np.stack([mover(x, *m) for x in self.M[idx]])) for m in self.aum])   # aum[0] = sin mover
+        if extra:
+            np.savez_compressed(f, ex=aum); guardar_cache(f, f"vértice libre {celdas}×{celdas} extra"); print(f"  listo en {time.time() - t:.0f} s", flush=True); return (aum,)
+        todos = uno(self.M); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"vértice libre {celdas}×{celdas}")
+        print(f"  listo en {time.time() - t:.0f} s", flush=True); return todos, aum
+
     def features(self, celdas: int):
         if celdas in self.X:
             return self.X[celdas]
-        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas)
-        self.X[celdas] = (np.concatenate([todos, vt], 1), np.concatenate([tr, vtr], 1), ytr); return self.X[celdas]
+        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas); lt, ltr = self.vlibre(celdas)
+        self.X[celdas] = (np.concatenate([todos, vt, lt], 1), np.concatenate([tr, vtr, ltr], 1), ytr); return self.X[celdas]
 
     def _features_caract(self, celdas: int):
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
@@ -453,13 +481,13 @@ class Datos:
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
         if traer_cache(f, f"de features extra {celdas}×{celdas}"):
-            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0]], 1), z["yex"]
+            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0]], 1), z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self._features_caract(celdas)[0]
         ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}")
-        return np.concatenate([ex, self.vert1(celdas, extra=True)[0]], 1), yex
+        return np.concatenate([ex, self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0]], 1), yex
 
     def objetos(self, i: int) -> dict:
         with self._lock:
@@ -541,8 +569,11 @@ class Compositor:
 
     # --- pesos que sobreviven al dev (el dueño, 2026-10-16). `huella` dice CON QUÉ se entrenaron; guardar/restaurar no tocan Datos
     def huella(self, datos: Datos) -> dict:
-        return {"dataset": DATASET, "cresta": datos.hash, "etiquetas4": datos.hash_manuales(), "bloques": list(self.bloques), "celdas": self.celdas,
-                "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
+        h = {"dataset": DATASET, "cresta": datos.hash, "etiquetas4": datos.hash_manuales(), "bloques": list(self.bloques), "celdas": self.celdas,
+             "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
+        if any(pieza(b)[0] == "vertice_libre" for b in self.bloques):      # sólo quien lo usa: la huella de los demás no cambia
+            h["vertice_libre"] = VLB.huella_modulo()
+        return h
 
     def fichero(self, carpeta: Path) -> Path:
         limpio = "".join(ch if ch.isalnum() else "-" for ch in self.nombre.lower()).strip("-")[:40]
@@ -597,7 +628,7 @@ class Compositor:
             subs = []
             for sub in dict.fromkeys(c["sub"] for c in cols):
                 idx = [k for k, c in enumerate(cols) if c["sub"] == sub]
-                rej = [k for k in idx if cols[k]["tipo"] == "rejilla"]; otros = [k for k in idx if cols[k]["tipo"] != "rejilla"]
+                rej = [k for k in idx if cols[k]["celda"] is not None]; otros = [k for k in idx if cols[k]["celda"] is None]   # = tipo «rejilla» en los demás bloques
                 lado = int(round(len(rej) ** 0.5)) if rej else 0
                 subs.append({"sub": sub, "lado": lado, "rejilla": [float(vals[k]) for k in rej], "rejilla_atr": [float(at[k]) for k in rej],
                              "otros": [{"nombre": cols[k]["nombre"], "valor": float(vals[k]), "atr": float(at[k])} for k in otros]})

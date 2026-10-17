@@ -85,7 +85,7 @@ class Columnas(unittest.TestCase):
         self.assertEqual(g, [0, 1, 0, 0, 0, 0, 0, 0, 0, 1.0])
         with um.patch.object(S.CC, "vertices", return_value=[]):
             self.assertEqual(S.bloque_vertice_1(np.zeros((32, 32)), 3), [0.0] * 10)
-        B = S.rangos(3); fin = max(z for k, (_, z) in B.items() if k != "vertice_1")
+        B = S.rangos(3); fin = max(z for _, z in S.CC.bloques(3).values())   # justo detrás de caract (desde § 105 le sigue vertice_libre)
         self.assertEqual(B["vertice_1"], (fin, fin + 10))
         self.assertEqual(S.partes("vertice_1"), ["rejilla", "cuenta"])
 
@@ -103,6 +103,53 @@ class Columnas(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "TINTA"):
             S.comprobar_nuevo(["lazos_region:rejilla", "vertice_1:rejilla"])
         S.comprobar_nuevo(["rectas", "lazos_region:rejilla"])       # sin retirados: pasa
+
+    @staticmethod
+    def _lambda(abajo=False):
+        """Un Λ de trazo de 3 px (un «delgado» sintético): punta en (16, 5), patas a (7, 27) y (25, 27). Con abajo, una V."""
+        M = np.zeros((32, 32), np.float32); yy, xx = np.mgrid[0:32, 0:32] + 0.5
+        for (x0, y0), (x1, y1) in (((16, 5), (7, 27)), ((16, 5), (25, 27))):
+            t = np.clip(((xx - x0) * (x1 - x0) + (yy - y0) * (y1 - y0)) / ((x1 - x0) ** 2 + (y1 - y0) ** 2), 0, 1)
+            M[np.hypot(xx - (x0 + t * (x1 - x0)), yy - (y0 + t * (y1 - y0))) <= 1.5] = 1.0
+        return M[::-1].copy() if abajo else M
+
+    def test_vertice_libre_columnas_casan_con_el_bloque(self):
+        """§ 105: las columnas que nombra el revisor son exactamente los números que calcula nn/vertice_libre.py (R5)."""
+        self.assertEqual(S.partes("vertice_libre"), ["rejilla", "amplitud", "despegue", "cerca", "radio", "cuenta"])
+        for celdas in (3, 4):
+            self.assertEqual(len(S.columnas("vertice_libre", celdas)), len(S.VLB.bloque(self._lambda(), celdas)))
+        B = S.rangos(3); self.assertEqual(B["vertice_libre"][0], B["vertice_1"][1])          # va DESPUÉS: los guardados no se mueven
+        subs = {}
+        for c in S.columnas("vertice_libre", 3):
+            if c["celda"] is not None:
+                subs[c["sub"]] = subs.get(c["sub"], 0) + 1
+        self.assertEqual(set(subs.values()), {9}); self.assertEqual(len(subs), 4 * 5)        # 4 direcciones × 5 rejillas 3×3
+        self.assertIn("vertice_libre", S.bloques_ofrecidos())
+
+    def test_vertice_libre_ve_la_punta_y_su_direccion(self):
+        for abajo, d in ((False, "N"), (True, "S")):
+            b = np.asarray(S.VLB.bloque(self._lambda(abajo), 3)); cols = S.columnas("vertice_libre", 3)
+            val = {(c["sub"], c["celda"]): b[k] for k, c in enumerate(cols)}
+            fila = 0 if d == "N" else 2
+            self.assertEqual(val[(d, fila * 3 + 1)], 1.0, f"{d}: presencia en la celda del centro de su fila")
+            # ⚠ La amplitud de hoy (cuerda a 6 px desde la punta de la CRESTA) SOBREESTIMA en trazos gruesos: el esqueleto se curva
+            # en una punta aguda. Medido el 2026-10-17 con Λ sintéticos: 44° reales salen 44–68° según el grosor; el ángulo entre
+            # rectas ajustadas a los brazos (3–9 px) queda en ±6° (propuesto al dueño, § 105). Aquí se fija lo que SÍ se cumple:
+            # nunca se queda corta en más de 5° y nunca pasa del límite de 90°.
+            amp = val[(f"{d} · amplitud", fila * 3 + 1)] * 180
+            self.assertGreaterEqual(amp, 44 - 5); self.assertLess(amp, 90)
+            self.assertEqual(sum(v for (sub, celda), v in val.items() if celda is None and sub == d), 1.0)   # cuenta 1
+            otras = [x for x in S.VLB.ORDEN if x != d]
+            self.assertEqual(sum(v for (sub, celda), v in val.items() if sub.split(" ")[0] in otras), 0.0)
+
+    def test_la_huella_solo_cambia_para_quien_usa_el_vertice_libre(self):
+        class D:
+            hash = "abc"
+            def hash_manuales(self):
+                return "sin"
+        sin = S.Compositor("a", ["lazos_region", "vertice_1:rejilla"]).huella(D()); con = S.Compositor("b", ["vertice_libre:rejilla+radio"]).huella(D())
+        self.assertNotIn("vertice_libre", sin)                       # los compositores guardados conservan su huella y sus pesos
+        self.assertEqual(con["vertice_libre"], S.VLB.huella_modulo())
 
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
