@@ -1789,6 +1789,23 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 110 · VISTA PREVIA: la CÚSPIDE — dos curvas que abren al mismo lado y se encuentran en una punta (el dueño, 2026-10-17)
+
+«Dejemos el vértice como está (§ 109 descartado). Lo que busco es un cambio en la derivada: 2 curvas abiertas en la misma dirección
+que se encuentran en una punta. ¿Podemos detectarla?» `nn/cuspide_vista.py` → `resultados/110-cuspide.{png,json}`. Prototipo:
+no toca `cresta_curvas.py` ni el revisor; nada entrenado.
+
+**Sí, y es la firma + − + de la curvatura con signo** (la κ de `cresta_curvas`, sobre la cresta del DELGADO). En el #409: curva de
+arriba **+126°**, punta **−23°** (un giro corto AL REVÉS), curva de abajo **+201°**. Regla: un run de κ con |giro| ≥ 15° en ≤ 12 px,
+y ≥ 45° del signo contrario en los 12 px de cada lado. Una S (2, 5) es + − sin el segundo +, y no la da. También se busca en los
+nudos (cada par de brazos unidos), para el 3 con lengüeta. Dirección = hacia dónde apunta la punta (N E S O).
+
+Medido en val (% de dígitos con alguna cúspide): **3: 80 %** (todas apuntan al O; 76 % en la fila del medio) · **8: 69 %** (la
+cintura: E 82, O 62) · **9: 3 %** · el resto, **0 %**, el 5 incluido (el 973 de § 100 era un 5 leído como 3). Con la punta de ≤ 8 px,
+el 3 baja al 70 % y el 8 al 56 %. Los 33 tres que se escapan, a la vista (no medido): la cintura es una panza redondeada o larga,
+no una punta, o las curvas junto a ella son casi rectas y no llegan a 45° en 12 px. Parámetros sin calibrar.
+⏳ **Pendiente: que el dueño decida** si entra en el revisor como bloque (rejilla N E S O, más el giro de la punta).
+
 ### 109 · VISTA PREVIA: ampliar el ángulo del vértice libre (el dueño, 2026-10-17: «mantener el nombre, pero ampliar el ángulo, pues también tenemos un parámetro ángulo»)
 
 `nn/vertice_ampliar_vista.py` → `resultados/109-vertice-ampliar.{png,json}`. Nada cambiado en `vertice_libre.py` ni entrenado.
@@ -1803,7 +1820,7 @@ Medido en val (vértices por dígito; el 3 con vértice O en la fila del medio):
 
 ⚠ El precio: el 0, que hoy no tiene vértices, pasa a 4–5 en 150°: cada curva se vuelve un rosario de vértices obtusos. Sólo la
 pieza **amplitud** los distingue de los agudos, y **LEvertice** (el compositor del dueño de ese día) usa sólo `vertice_libre:rejilla`.
-⏳ **Pendiente: que el dueño elija el límite.** Cambiarlo cambia la huella de LEvertice y obliga a reentrenarlo.
+✅ **Decidido por el dueño ese día: el vértice se queda como está** (< 90° / < 120°). Lo que buscaba era la cúspide, § 110.
 
 ### 108 · El centro de un 3 (val #409) NO es vértice: 144°, contra el límite de < 90° (el dueño, 2026-10-17)
 
