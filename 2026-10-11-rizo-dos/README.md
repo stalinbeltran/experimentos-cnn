@@ -1789,6 +1789,28 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 116 · El SUBCONJUNTO de los dígitos GRUESOS, y los 1l con ramas que quedan sin ellos (el dueño, 2026-10-17)
+
+«Vamos a crear un subset, que no vamos a usar por ahora, para los dígitos gruesos. Volvamos al punto de partida donde veíamos las
+ramas en el 1l, y dime cuántos quedan con ramas si quitamos los gruesos. Muéstrame los que quedan.» `nn/gruesos.py` →
+`resultados/116-gruesos.{png,json}`; **el JSON es el subconjunto** (la lista `gruesos`, el umbral y el grosor de los 5620). No lo usa
+ningún compositor ni el revisor.
+
+**Grosor** = 2 × la distancia media al borde de la tinta, medida sobre la cresta del delgado de siempre (continuo; vale igual para un
+1 que para un 8). **Grueso** = el 5 % más grueso del dataset: **≥ 7,86 px, 281 dígitos**. Punto de partida (§ 112): delgado de
+siempre, rama = cresta con ≥ 3 tramos.
+
+| | 1l | con ramas |
+|---|---|---|
+| todos | 264 | 93 (35 %) |
+| sin los gruesos | **70** | **16 (23 %)** |
+
+⚠ **Lo que destapó: los 1 son, con mucho, los dígitos más gruesos del dataset** (grosor mediano 7,8 px; las demás clases 4,7–5,8),
+así que «los gruesos» son casi todos 1s (269 de 281) y quitarlos deja sólo 70 de los 264 1l. Las ramas sí se concentran en los más
+gruesos (1l con ramas: mediana 9,2 px; sin ramas: 8,7), pero quitar los gruesos no las elimina: de los 16 que quedan, a la vista
+(no medido), casi todas salen de **salientes del contorno escalonado** (#2949, #3019, #1546) y unos pocos no son un palo recto
+(#3395, #1668, #3724). Otros umbrales, medidos ese día: el 10 % más grueso (≥ 6,84 px) deja 12 1l, 2 con ramas; el 20 %, 3 y 1.
+
 ### 115 · Un ADELGAZADOR NUEVO entrenado con tinta gris σ 1,5 — sólo imágenes (el dueño, 2026-10-17: «usemos 1.5… sí»)
 
 `delgado-cnn`: `nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 1.5 --nombre k3x3-g1.5` (lo mismo que el k3x3 de
