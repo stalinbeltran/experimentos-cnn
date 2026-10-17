@@ -7,6 +7,12 @@ Primer tanteo (2026-10-13, pedido por el dueño): 20 trazos de entrenamiento, ¿
     python nn/entrenar_local.py                 # 20 trazos, 5 capas de 8 canales, 400 épocas (segundos en CPU)
     python nn/entrenar_local.py --n 20 --capas 5 --canales 8 --epocas 400 --sigma 0.8
 
+ENTRADA GRIS (2026-10-17, el dueño: «no necesito el binarizado… usemos 1.5»): con `--suavizar σ` la tinta sintética pasa por la
+MISMA gaussiana que `exportar_delgados.py --suavizar σ --gris` aplica a los dígitos (scipy, mode constant), sin rebinarizar. La
+verdad (la línea media) no cambia: la red aprende a adelgazar lo que de verdad va a ver.
+
+    python nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 1.5 --nombre k3x3-g1.5
+
 Salidas: nn/pesos/<nombre>/{best.pt,config.json,metrics.jsonl} (nombre = k3x3, k5x5… o --nombre) y
          resultados/1-kernels-<n>-<nombre>.png  (entrada, verdad, salida: los 20 vistos y 10 NUEVOS, semilla aparte)
 """
@@ -21,6 +27,7 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
+from scipy import ndimage
 
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -35,14 +42,17 @@ def verdad(puntos: np.ndarray, sigma: float) -> np.ndarray:
     return np.exp(-d2 / (2 * sigma**2))
 
 
-def conjunto(n: int, semilla: int, sigma: float) -> tuple[np.ndarray, np.ndarray, list[dict]]:
+def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0) -> tuple[np.ndarray, np.ndarray, list[dict]]:
     rng = np.random.default_rng(semilla)
     X, T, cs = [], [], []
     while len(X) < n:
         c = curva_natural(rng)
         if len(c["puntos"]) * 0.25 < 10:
             continue
-        X.append(engrosar(c["puntos"], c["grosor"])); T.append(verdad(c["puntos"], sigma)); cs.append(c)
+        x = engrosar(c["puntos"], c["grosor"]).astype(np.float32)
+        if suavizar > 0:                                     # la misma gaussiana que exportar_delgados.py --suavizar σ --gris
+            x = ndimage.gaussian_filter(x, suavizar, mode="constant")
+        X.append(x); T.append(verdad(c["puntos"], sigma)); cs.append(c)
     return np.stack(X).astype(np.float32), np.stack(T).astype(np.float32), cs
 
 
@@ -70,13 +80,14 @@ def main() -> int:
     ap.add_argument("--sigma", type=float, default=0.8)
     ap.add_argument("--semilla", type=int, default=101)
     ap.add_argument("--kernel", type=int, default=3, help="lado del kernel (impar): 3 o 5")
+    ap.add_argument("--suavizar", type=float, default=0.0, help="σ (px) de la gaussiana sobre la tinta, sin rebinarizar; 0 = binaria")
     ap.add_argument("--nombre", default=None, help="carpeta de pesos nn/pesos/<nombre>; por defecto k<kernel>x<kernel>")
     a = ap.parse_args()
     a.nombre = a.nombre or f"k{a.kernel}x{a.kernel}"
     torch.manual_seed(a.semilla)
 
-    X, T, cs = conjunto(a.n, a.semilla, a.sigma)
-    Xn, Tn, csn = conjunto(10, 202, a.sigma)                 # NUNCA vistos: ¿generaliza o memoriza?
+    X, T, cs = conjunto(a.n, a.semilla, a.sigma, a.suavizar)
+    Xn, Tn, csn = conjunto(10, 202, a.sigma, a.suavizar)                 # NUNCA vistos: ¿generaliza o memoriza?
     x, t = torch.from_numpy(X)[:, None], torch.from_numpy(T)[:, None]
     xn, tn = torch.from_numpy(Xn)[:, None], torch.from_numpy(Tn)[:, None]
     red = SoloKernels(a.capas, a.canales, a.kernel)
