@@ -31,14 +31,32 @@ function render(){
  const nA=todos.filter(c=>clase(c)===A).length, nman=todos.filter(c=>c.manual).length;
  let h=`<div class="chips">${['todas','train','extra','val'].map(p=>`<span class="chip ${S.parte===p?'on':''}" data-p="${p}">${p}</span>`).join('')}</div>`;
  h+=`<div class="chips">${[['todos','todos'],[A,A],[B,B],['manual','corregidos a mano']].map(([k,t])=>`<span class="chip ${S.ver===k?'on':''}" data-v="${k}">${t}</span>`).join('')}</div>`;
- h+=`<div class="nota">${sel.length} de ${todos.length} · ${A}: ${nA} · ${B}: ${todos.length-nA} · corregidos a mano: ${nman} · <b>verde = ${A}</b> (${D.texto[A]}), gris = ${B} (${D.texto[B]}), borde ocre = decidido a mano. Un toque cambia la clase y se guarda al instante en web/${D.fichero}.</div>`;
- h+=`<div class="grid">${sel.map(c=>`<div class="c ${clase(c)===A?'l':'a'} ${c.manual?'m':''}" data-i="${c.idx}"><canvas id="c${c.idx}"></canvas>${c.idx} · ${c.parte}<br><b>${clase(c)}</b>${c.manual?' (mano)':' (regla)'}</div>`).join('')}</div>`;
+ h+=`<div class="nota"><span id="cuenta">${cuentas(sel)}</span> · <b>verde = ${A}</b> (${D.texto[A]}), gris = ${B} (${D.texto[B]}), borde ocre = decidido a mano. Un toque cambia la clase y se guarda al instante en web/${D.fichero}.</div>`;
+ h+=`<div class="grid">${sel.map(c=>`<div class="c ${clase(c)===A?'l':'a'} ${c.manual?'m':''}" data-i="${c.idx}"><canvas id="c${c.idx}"></canvas><span class="t">${texto(c)}</span></div>`).join('')}</div>`;
  h+=`<h3>exportar</h3><div class="nota">las decisiones a mano, para pegarlas en el chat si hace falta:</div><textarea id="exp" readonly></textarea>`;
  main.innerHTML=h; sel.forEach(c=>pinta(document.getElementById('c'+c.idx),D.M[c.idx]));
  main.querySelectorAll('[data-p]').forEach(e=>e.onclick=()=>{S.parte=e.dataset.p;render();});
  main.querySelectorAll('[data-v]').forEach(e=>e.onclick=()=>{S.ver=e.dataset.v;render();});
- main.querySelectorAll('.c').forEach(e=>e.onclick=async()=>{const i=+e.dataset.i;const c=todos.find(x=>x.idx===i);const nueva=clase(c)===A?B:A;await api('/api/grupo/marcar',{idx:i,clase:nueva===c.regla?'auto':nueva});c.manual=nueva===c.regla?null:nueva;render();window.scrollTo(0,e.offsetTop-80);});
- const man=todos.filter(c=>c.manual); document.getElementById('exp').value=`${D.fichero} (${new Date().toISOString().slice(0,16)}Z)\n${A}: ${man.filter(c=>c.manual===A).map(c=>c.idx).join(', ')||'—'}\n${B}: ${man.filter(c=>c.manual===B).map(c=>c.idx).join(', ')||'—'}`;
+ // 2026-10-17 (el dueño: «cuando toco un dígito la pantalla se refresca y se desplaza, y pierdo la ubicación»): un toque ya NO
+ // vuelve a dibujar la pantalla. Sólo cambia ESA tarjeta (borde y texto), los contadores y el texto de exportar. Un dígito que
+ // deja de cumplir el filtro se queda donde está hasta que se cambie de filtro: quitarlo movería todo lo de debajo.
+ main.querySelectorAll('.c').forEach(e=>e.onclick=async()=>{
+  if (e.dataset.ocupado) return; e.dataset.ocupado=1;                       // un doble toque no manda dos marcas
+  const i=+e.dataset.i, c=todos.find(x=>x.idx===i), antes=c.manual, nueva=clase(c)===A?B:A;
+  c.manual=nueva===c.regla?null:nueva; pintaTarjeta(e,c);                   // al instante: el toque se nota aunque la red tarde
+  try{ await api('/api/grupo/marcar',{idx:i,clase:c.manual||'auto'}); }
+  catch(err){ c.manual=antes; pintaTarjeta(e,c); alert('no se guardó: '+err.message); }   // si falla, vuelve a como estaba y lo dice
+  delete e.dataset.ocupado; resumen(sel);
+ });
+ resumen(sel);
+}
+function texto(c){ return `${c.idx} · ${c.parte}<br><b>${clase(c)}</b>${c.manual?' (mano)':' (regla)'}`; }
+function pintaTarjeta(e,c){ const A=S.datos.clases[0]; e.className=`c ${clase(c)===A?'l':'a'} ${c.manual?'m':''}`; e.querySelector('.t').innerHTML=texto(c); }
+function cuentas(sel){ const [A,B]=S.datos.clases, todos=S.datos.elementos, nA=todos.filter(c=>clase(c)===A).length;
+ return `${sel.length} de ${todos.length} · ${A}: ${nA} · ${B}: ${todos.length-nA} · corregidos a mano: ${todos.filter(c=>c.manual).length}`; }
+function resumen(sel){ const D=S.datos, [A,B]=D.clases, todos=D.elementos, man=todos.filter(c=>c.manual);
+ document.getElementById('cuenta').textContent=cuentas(sel);
+ document.getElementById('exp').value=`${D.fichero} (${new Date().toISOString().slice(0,16)}Z)\n${A}: ${man.filter(c=>c.manual===A).map(c=>c.idx).join(', ')||'—'}\n${B}: ${man.filter(c=>c.manual===B).map(c=>c.idx).join(', ')||'—'}`;
 }
 (async()=>{try{S.datos=await api('/api/grupo');document.getElementById('hd').textContent=`rizo-2 · separar los ${S.datos.digito}: toca para cambiar ${S.datos.clases.join(' ⇄ ')}`;render();}catch(e){main.innerHTML='<div class="nota">'+e.message+'</div>';}})();
 </script></body></html>
