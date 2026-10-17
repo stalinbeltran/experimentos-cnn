@@ -1798,6 +1798,19 @@ siempre, con los trazos sintéticos pasados por la MISMA gaussiana σ 1,5, en gr
 `nn/adelgazador_gris_vista.py` → `resultados/115-adelgazador-gris.png`: los 8 1l de § 113, hoy · σ 1,5 gris con el adelgazador de
 siempre · σ 1,5 gris con el NUEVO. Sin medir, a propósito (el dueño). Nada cambiado en el revisor.
 
+**Revisado después, a petición del dueño («revisa los dígitos»)**, con las medidas de § 113 sobre los 264 1l y val:
+
+| variante | 1l con entrantes | 1l ramificados | 1l con lazo FALSO | lazos 8 · 9 · 6 | entrantes/díg. 7 |
+|---|---|---|---|---|---|
+| hoy | 57 % | 35 % | 0 | 1,83 · 0,98 · 0,98 | 3,3 |
+| σ 1,5 rebinarizado | **19 %** | **4 %** | 0 | 1,65 · 0,89 · 0,91 | 2,5 |
+| σ 1,5 gris, adelgazador viejo | 43 % | 12 % | 2 | 1,85 · 0,97 · 0,98 | 2,9 |
+| σ 1,5 gris, adelgazador NUEVO | 41 % | 17 % | **10** | **1,87 · 0,99 · 0,98** | 3,3 |
+
+El NUEVO **conserva los lazos** (el rebinarizado cerraba ~10 %) y deja las demás clases como hoy, pero limpia **menos** los 1l
+(41 % contra 19 %) y **crea lazos falsos** en 10 1l (298, 869, 1757, 2499, 3022, 4053, 4545, 5192, 5365, 5465): en el gris el
+trazo grueso es una meseta y la red dibuja dos crestas que se cierran (el #4053 de la figura).
+
 ### 114 · Los mismos 1l con la tinta suavizada en GRIS, en varios grados — sólo imágenes (el dueño, 2026-10-17)
 
 «No necesito el binarizado… muéstrame las mismas imágenes que mostraste binarizadas, pero en gris. No las evalúes.»
