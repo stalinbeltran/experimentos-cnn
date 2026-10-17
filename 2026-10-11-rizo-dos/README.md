@@ -1789,6 +1789,34 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 113 · SUAVIZAR la tinta antes de adelgazar, medido sobre los 1l (el dueño, 2026-10-17)
+
+«Tenemos ya un preproceso que adelgaza los dígitos. Vamos a crear otro que los suavice. Y nuestra medida van a ser estos 1l.
+Aplícales un gaussian… Esto se genera por lo ruidoso de los dígitos originales que están binarizados, su suavidad original se
+perdió.» El suavizado vive en `delgado-cnn` (`nn/exportar_delgados.py --suavizar σ [--gris]`: gaussiana de σ px sobre la tinta
+binaria y rebinarizar a 0,5, porque la red se entrenó con tinta BINARIA); aquí se lee como dato. `nn/suavizado_vista.py` →
+`resultados/113-suavizado.{png,json}`. **Nada cambiado en el revisor ni entrenado**: el delgado de siempre sigue idéntico (comprobado).
+
+Medido ese día, con los mismos objetos del revisor (1l = los 264 de § 107; las demás clases, val):
+
+| variante | 1l con entrantes | 1l con la cresta ramificada | lazos/dígito 8 · 6 · 9 | trazos rotos |
+|---|---|---|---|---|
+| hoy (sin suavizar) | **57 %** | 35 % | 1,83 · 0,98 · 0,98 | 0,4 % |
+| σ 0,7 | 49 % | 28 % | 1,83 · 0,98 · 0,96 | 0,4 % |
+| σ 1 | 38 % | 16 % | 1,78 · 0,97 · 0,93 | 0 % |
+| **σ 1,5** | **19 %** | **4 %** | 1,65 · 0,91 · 0,89 | 0 % |
+| σ 1 sin rebinarizar ⚠ | 47 % | 19 % | 1,86 · 0,98 · 0,98 | 0 % |
+
+- **La hipótesis del dueño se confirma**: suavizar el contorno escalonado quita los espolones de la cresta, y con ellos los
+  entrantes falsos de los 1l (57 → 19 % con σ 1,5).
+- **El precio**: las demás clases conservan casi todos sus entrantes (el 7 baja de 3,3 a 2,5 por dígito con σ 1,5), pero los
+  **lazos pequeños se cierran**: el 8 pierde un 10 % de sus lazos, el 9 un 9 %, el 6 un 7 %. Con σ 1 el coste es la mitad o menos.
+- Pasar la gaussiana **sin rebinarizar** (gris) rinde menos que rebinarizar con el mismo σ: la red no vio grises al entrenar.
+- Los delgados suavizados (`delgados-k3x3-s*.npz`) no van a git (`*.npz`, como el de siempre); se rehacen con el comando, en segundos.
+
+⏳ **Pendiente: que el dueño elija σ** (y si entra como la entrada del revisor; eso cambia la huella de todos los compositores y
+obliga a reentrenarlos).
+
 ### 112 · El 1552 (un 7 leído 1l) y los ENTRANTES de los 1l: el 57 % tiene alguno (el dueño, 2026-10-17)
 
 «Analiza el 1552. Sus entrantes conos lo identifican como 1l. Busca cuáles 1l tienen entrantes.» `nn/entrantes_1l_vista.py` →

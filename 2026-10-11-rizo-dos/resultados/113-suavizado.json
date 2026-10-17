@@ -1,0 +1,471 @@
+{
+ "variantes": {
+  "hoy (sin suavizar)": "delgados-k3x3.npz",
+  "σ 0,7": "delgados-k3x3-s0.7.npz",
+  "σ 1": "delgados-k3x3-s1.npz",
+  "σ 1,5": "delgados-k3x3-s1.5.npz",
+  "σ 1 gris ⚠": "delgados-k3x3-s1g.npz"
+ },
+ "muestra": [
+  736,
+  2849,
+  4661,
+  5538,
+  3517,
+  4053,
+  1668,
+  5266
+ ],
+ "medidas": {
+  "hoy (sin suavizar)": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 57.196969696969695,
+    "ramificada": 35.22727272727273,
+    "entrantes_por_digito": 1.071969696969697,
+    "lazos_por_digito": 0.003787878787878788,
+    "rotos": 0.3787878787878788
+   },
+   "1a": {
+    "n": 307,
+    "con_entrantes": 97.71986970684038,
+    "ramificada": 88.27361563517915,
+    "entrantes_por_digito": 1.8110749185667752,
+    "lazos_por_digito": 0.006514657980456026,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 6.25,
+    "ramificada": 1.875,
+    "entrantes_por_digito": 0.11875,
+    "lazos_por_digito": 0.95,
+    "rotos": 0.625
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 34.59119496855346,
+    "entrantes_por_digito": 2.1761006289308176,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 9.090909090909092,
+    "entrantes_por_digito": 2.587878787878788,
+    "lazos_por_digito": 0.012121212121212121,
+    "rotos": 0.6060606060606061
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 100.0,
+    "ramificada": 96.93251533742331,
+    "entrantes_por_digito": 2.687116564417178,
+    "lazos_por_digito": 0.12883435582822086,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 99.39024390243902,
+    "ramificada": 12.195121951219512,
+    "entrantes_por_digito": 2.4634146341463414,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 22.085889570552148,
+    "ramificada": 16.56441717791411,
+    "entrantes_por_digito": 0.2392638036809816,
+    "lazos_por_digito": 0.9815950920245399,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 100.0,
+    "ramificada": 93.16770186335404,
+    "entrantes_por_digito": 3.329192546583851,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 25.0,
+    "ramificada": 57.05128205128205,
+    "entrantes_por_digito": 0.4230769230769231,
+    "lazos_por_digito": 1.8269230769230769,
+    "rotos": 0.6410256410256411
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 22.839506172839506,
+    "entrantes_por_digito": 1.0246913580246915,
+    "lazos_por_digito": 0.9753086419753086,
+    "rotos": 1.2345679012345678
+   }
+  },
+  "σ 0,7": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 49.24242424242424,
+    "ramificada": 28.40909090909091,
+    "entrantes_por_digito": 0.8295454545454546,
+    "lazos_por_digito": 0.003787878787878788,
+    "rotos": 0.3787878787878788
+   },
+   "1a": {
+    "n": 307,
+    "con_entrantes": 96.74267100977198,
+    "ramificada": 87.94788273615636,
+    "entrantes_por_digito": 1.765472312703583,
+    "lazos_por_digito": 0.003257328990228013,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 5.0,
+    "ramificada": 1.25,
+    "entrantes_por_digito": 0.0875,
+    "lazos_por_digito": 0.95625,
+    "rotos": 0.625
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 35.84905660377358,
+    "entrantes_por_digito": 2.157232704402516,
+    "lazos_por_digito": 0.006289308176100629,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 8.484848484848484,
+    "entrantes_por_digito": 2.5575757575757576,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.6060606060606061
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 100.0,
+    "ramificada": 96.93251533742331,
+    "entrantes_por_digito": 2.6625766871165646,
+    "lazos_por_digito": 0.11042944785276074,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 99.39024390243902,
+    "ramificada": 14.634146341463415,
+    "entrantes_por_digito": 2.481707317073171,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 19.01840490797546,
+    "ramificada": 12.883435582822086,
+    "entrantes_por_digito": 0.20245398773006135,
+    "lazos_por_digito": 0.9754601226993865,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 100.0,
+    "ramificada": 91.30434782608695,
+    "entrantes_por_digito": 3.2049689440993787,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 25.641025641025642,
+    "ramificada": 57.05128205128205,
+    "entrantes_por_digito": 0.46153846153846156,
+    "lazos_por_digito": 1.8333333333333333,
+    "rotos": 0.6410256410256411
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 22.839506172839506,
+    "entrantes_por_digito": 1.0493827160493827,
+    "lazos_por_digito": 0.9567901234567902,
+    "rotos": 0.6172839506172839
+   }
+  },
+  "σ 1": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 37.878787878787875,
+    "ramificada": 15.530303030303031,
+    "entrantes_por_digito": 0.571969696969697,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "1a": {
+    "n": 307,
+    "con_entrantes": 96.74267100977198,
+    "ramificada": 85.99348534201954,
+    "entrantes_por_digito": 1.710097719869707,
+    "lazos_por_digito": 0.003257328990228013,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 3.75,
+    "ramificada": 0.0,
+    "entrantes_por_digito": 0.06875,
+    "lazos_por_digito": 0.9625,
+    "rotos": 0.0
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 33.9622641509434,
+    "entrantes_por_digito": 2.1132075471698113,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 99.39393939393939,
+    "ramificada": 10.303030303030303,
+    "entrantes_por_digito": 2.5454545454545454,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 99.38650306748467,
+    "ramificada": 93.25153374233129,
+    "entrantes_por_digito": 2.478527607361963,
+    "lazos_por_digito": 0.12269938650306748,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 99.39024390243902,
+    "ramificada": 12.195121951219512,
+    "entrantes_por_digito": 2.3902439024390243,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 10.429447852760736,
+    "ramificada": 3.6809815950920246,
+    "entrantes_por_digito": 0.1165644171779141,
+    "lazos_por_digito": 0.9693251533742331,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 100.0,
+    "ramificada": 90.06211180124224,
+    "entrantes_por_digito": 3.093167701863354,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 22.435897435897434,
+    "ramificada": 49.35897435897436,
+    "entrantes_por_digito": 0.3782051282051282,
+    "lazos_por_digito": 1.7820512820512822,
+    "rotos": 0.0
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 19.753086419753085,
+    "entrantes_por_digito": 1.0061728395061729,
+    "lazos_por_digito": 0.9259259259259259,
+    "rotos": 0.6172839506172839
+   }
+  },
+  "σ 1,5": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 19.318181818181817,
+    "ramificada": 3.787878787878788,
+    "entrantes_por_digito": 0.24242424242424243,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "1a": {
+    "n": 307,
+    "con_entrantes": 94.46254071661238,
+    "ramificada": 77.52442996742671,
+    "entrantes_por_digito": 1.5374592833876222,
+    "lazos_por_digito": 0.003257328990228013,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 6.875,
+    "ramificada": 0.0,
+    "entrantes_por_digito": 0.11875,
+    "lazos_por_digito": 0.93125,
+    "rotos": 0.625
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 23.270440251572328,
+    "entrantes_por_digito": 2.0377358490566038,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 7.2727272727272725,
+    "entrantes_por_digito": 2.3393939393939394,
+    "lazos_por_digito": 0.012121212121212121,
+    "rotos": 0.0
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 99.38650306748467,
+    "ramificada": 93.25153374233129,
+    "entrantes_por_digito": 2.3865030674846626,
+    "lazos_por_digito": 0.12883435582822086,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 98.78048780487805,
+    "ramificada": 6.097560975609756,
+    "entrantes_por_digito": 2.231707317073171,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.0
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 7.975460122699387,
+    "ramificada": 1.2269938650306749,
+    "entrantes_por_digito": 0.07975460122699386,
+    "lazos_por_digito": 0.9141104294478528,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 99.37888198757764,
+    "ramificada": 78.26086956521739,
+    "entrantes_por_digito": 2.484472049689441,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 17.307692307692307,
+    "ramificada": 34.61538461538461,
+    "entrantes_por_digito": 0.28205128205128205,
+    "lazos_por_digito": 1.6474358974358974,
+    "rotos": 0.0
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.80246913580247,
+    "ramificada": 11.11111111111111,
+    "entrantes_por_digito": 0.9444444444444444,
+    "lazos_por_digito": 0.8888888888888888,
+    "rotos": 0.6172839506172839
+   }
+  },
+  "σ 1 gris ⚠": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 46.59090909090909,
+    "ramificada": 18.560606060606062,
+    "entrantes_por_digito": 0.7196969696969697,
+    "lazos_por_digito": 0.003787878787878788,
+    "rotos": 0.0
+   },
+   "1a": {
+    "n": 307,
+    "con_entrantes": 99.3485342019544,
+    "ramificada": 90.87947882736157,
+    "entrantes_por_digito": 1.710097719869707,
+    "lazos_por_digito": 0.006514657980456026,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 3.75,
+    "ramificada": 0.0,
+    "entrantes_por_digito": 0.06875,
+    "lazos_por_digito": 0.9625,
+    "rotos": 0.625
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 30.81761006289308,
+    "entrantes_por_digito": 2.0817610062893084,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 11.515151515151516,
+    "entrantes_por_digito": 2.515151515151515,
+    "lazos_por_digito": 0.01818181818181818,
+    "rotos": 0.0
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 100.0,
+    "ramificada": 95.70552147239263,
+    "entrantes_por_digito": 2.687116564417178,
+    "lazos_por_digito": 0.12883435582822086,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 100.0,
+    "ramificada": 7.926829268292683,
+    "entrantes_por_digito": 2.451219512195122,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 15.337423312883436,
+    "ramificada": 8.588957055214724,
+    "entrantes_por_digito": 0.1656441717791411,
+    "lazos_por_digito": 0.9815950920245399,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 100.0,
+    "ramificada": 91.30434782608695,
+    "entrantes_por_digito": 3.1801242236024843,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 23.076923076923077,
+    "ramificada": 49.35897435897436,
+    "entrantes_por_digito": 0.3525641025641026,
+    "lazos_por_digito": 1.858974358974359,
+    "rotos": 0.6410256410256411
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 86.41975308641975,
+    "ramificada": 18.51851851851852,
+    "entrantes_por_digito": 1.0185185185185186,
+    "lazos_por_digito": 0.9753086419753086,
+    "rotos": 0.6172839506172839
+   }
+  }
+ }
+}

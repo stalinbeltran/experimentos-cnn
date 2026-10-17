@@ -47,3 +47,10 @@ el compositor «todo objetos» con rectas y gris leyendo el mapa **sin binarizar
 **0,9781 val / 0,9715 a ciegas**, contra 0,9775 / 0,9592 sobre la tinta: +1,2 a ciegas. Binarizado, no aporta.
 ⚠ Los 11 criterios de `instrucciones/02-criterio.md` (posición, delgadez, topología en sintéticos; desplazamientos)
 **siguen sin medirse**; los lazos macizos **no** están en los sintéticos (el dueño pidió dejarlos fuera por ahora).
+
+## SUAVIZADO previo (2026-10-17, el dueño: «vamos a crear otro preproceso que los suavice»)
+
+`python nn/exportar_delgados.py --suavizar σ [--gris]` → `resultados/delgados-k3x3-s<σ>[g].npz`: antes de la red, la tinta binaria
+pasa por una gaussiana de σ px y se rebinariza a 0,5 (con `--gris`, no: fuera de lo que vio la red al entrenar). Sin la opción, el
+resultado es idéntico al de siempre (comprobado ese día comparando M). Medido en rizo-2 § 113: con σ 1,5 los 1l con entrantes falsos
+bajan del 57 al 19 %, a cambio de cerrar ~10 % de los lazos del 8 y el 9.

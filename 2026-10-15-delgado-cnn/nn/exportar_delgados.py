@@ -4,6 +4,14 @@
 leer como dato (nunca importando código de aquí) para medir sus detectores sobre dígitos adelgazados.
 
     python nn/exportar_delgados.py [--pesos k3x3]   → resultados/delgados-k3x3.npz
+
+SUAVIZADO previo (el dueño, 2026-10-17: «tenemos un preproceso que adelgaza; vamos a crear otro que los suavice… lo ruidoso viene
+de que los dígitos originales están binarizados: su suavidad original se perdió»). Antes de la red, la tinta binaria pasa por una
+gaussiana de `--suavizar σ` px y se vuelve a binarizar a 0,5: el contorno escalonado se redondea y la red sigue viendo lo que vio al
+entrenar (tinta BINARIA de curvas suaves, nn/sinteticos.py). Con `--gris` la gaussiana entra tal cual, sin rebinarizar
+(⚠ FUERA de lo que vio la red al entrenar).
+
+    python nn/exportar_delgados.py --suavizar 1.0 [--gris]   → resultados/delgados-k3x3-s1.0[g].npz
 """
 from __future__ import annotations
 
@@ -14,6 +22,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from scipy import ndimage
 
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI.parents[0])); sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -23,15 +32,24 @@ from aplicar_digitos import DATASET  # noqa: E402
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(); ap.add_argument("--pesos", default="k3x3"); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument("--pesos", default="k3x3")
+    ap.add_argument("--suavizar", type=float, default=0.0, help="σ (px) de la gaussiana previa; 0 = sin suavizar (lo de siempre)")
+    ap.add_argument("--gris", action="store_true", help="con --suavizar: NO rebinarizar (fuera de lo que vio la red)"); a = ap.parse_args()
     d = np.load(exigir_dataset(DATASET) / "datos.npz")
-    X = torch.from_numpy((d["imagenes"] > 0).astype(np.float32))[:, None]
+    T = (d["imagenes"] > 0).astype(np.float32)
+    if a.suavizar > 0:
+        T = np.stack([ndimage.gaussian_filter(t, a.suavizar, mode="constant") for t in T])
+        if not a.gris:
+            T = (T > 0.5).astype(np.float32)
+    X = torch.from_numpy(T)[:, None]
     pesos = AQUI / "nn" / "pesos" / a.pesos; cfg = json.loads((pesos / "config.json").read_text())
     red = SoloKernels(cfg["capas"], cfg["canales"], cfg.get("kernel", 3)); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
     with torch.no_grad():
         M = torch.cat([red(X[i:i + 256])[:, 0] for i in range(0, len(X), 256)]).numpy().astype(np.float16)
-    out = AQUI / "resultados" / f"delgados-{a.pesos}.npz"
-    np.savez_compressed(out, M=M, etiquetas=d["etiquetas"], particion=d["particion"], dataset=DATASET, pesos=a.pesos)
+    suf = f"-s{a.suavizar:g}{'g' if a.gris else ''}" if a.suavizar > 0 else ""
+    out = AQUI / "resultados" / f"delgados-{a.pesos}{suf}.npz"
+    np.savez_compressed(out, M=M, etiquetas=d["etiquetas"], particion=d["particion"], dataset=DATASET, pesos=a.pesos,
+                        suavizar=a.suavizar, gris=a.gris, tinta=T.astype(np.float16))
     print(f"→ {out.relative_to(AQUI)}  {M.shape}  {out.stat().st_size // 1024} KB")
     return 0
 
