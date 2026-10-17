@@ -54,3 +54,10 @@ el compositor «todo objetos» con rectas y gris leyendo el mapa **sin binarizar
 pasa por una gaussiana de σ px y se rebinariza a 0,5 (con `--gris`, no: fuera de lo que vio la red al entrenar). Sin la opción, el
 resultado es idéntico al de siempre (comprobado ese día comparando M). Medido en rizo-2 § 113: con σ 1,5 los 1l con entrantes falsos
 bajan del 57 al 19 %, a cambio de cerrar ~10 % de los lazos del 8 y el 9.
+
+## Adelgazador para tinta GRIS: `k3x3-g1.5` (2026-10-17, el dueño: «usemos 1.5»)
+
+`python nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 1.5 --nombre k3x3-g1.5`: el k3x3 de siempre, entrenado con los
+trazos sintéticos suavizados por la MISMA gaussiana que `exportar_delgados.py --suavizar 1.5 --gris` aplica a los dígitos. 111 s en
+el dev (2 vCPU), pérdida en nuevos 0,1406 (k3x3: 0,1389). Delgados: `exportar_delgados.py --pesos k3x3-g1.5 --suavizar 1.5 --gris` →
+`resultados/delgados-k3x3-g1.5-s1.5g.npz`. Las imágenes, en rizo-2 § 115.

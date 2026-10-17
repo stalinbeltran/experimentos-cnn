@@ -1789,6 +1789,15 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 115 · Un ADELGAZADOR NUEVO entrenado con tinta gris σ 1,5 — sólo imágenes (el dueño, 2026-10-17: «usemos 1.5… sí»)
+
+`delgado-cnn`: `nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 1.5 --nombre k3x3-g1.5` (lo mismo que el k3x3 de
+siempre, con los trazos sintéticos pasados por la MISMA gaussiana σ 1,5, en gris; la línea media de verdad no cambia) y
+`nn/exportar_delgados.py --pesos k3x3-g1.5 --suavizar 1.5 --gris`. Medido ese día en este dev: **111 s** de entrenamiento (400
+épocas; se estimaron ~3 min), 2 min 39 s con la exportación. Pérdida en 10 trazos nunca vistos: 0,1406 (el k3x3 binario: 0,1389).
+`nn/adelgazador_gris_vista.py` → `resultados/115-adelgazador-gris.png`: los 8 1l de § 113, hoy · σ 1,5 gris con el adelgazador de
+siempre · σ 1,5 gris con el NUEVO. Sin medir, a propósito (el dueño). Nada cambiado en el revisor.
+
 ### 114 · Los mismos 1l con la tinta suavizada en GRIS, en varios grados — sólo imágenes (el dueño, 2026-10-17)
 
 «No necesito el binarizado… muéstrame las mismas imágenes que mostraste binarizadas, pero en gris. No las evalúes.»
