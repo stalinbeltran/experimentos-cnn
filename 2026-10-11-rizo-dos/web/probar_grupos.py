@@ -106,5 +106,52 @@ class Huella(unittest.TestCase):
                 os.environ.pop("REVISOR_ETIQUETAS_DIR", None)
 
 
+class ClaseNueva(unittest.TestCase):
+    """§ 107: el 1l es una CLASE del entrenamiento (el dueño: «que ésta sea la nueva clase en el app y para el entrenamiento»)."""
+
+    def test_clases_y_salidas_en_las_cuatro_combinaciones(self):
+        import servidor as S
+        casos = {(False, False): (10, None, None), (True, False): (11, 10, None), (False, True): (11, None, 10), (True, True): (12, 10, 11)}
+        for (s4, s1), (n, i4l, i1l) in casos.items():
+            c = S.Compositor("x", ["rectas"], sub4=s4, sub1=s1); K = c.clases_finas()
+            self.assertEqual((c.salidas, len(K)), (n, n), (s4, s1))
+            self.assertEqual(K.index("4l") if "4l" in K else None, i4l); self.assertEqual(K.index("1l") if "1l" in K else None, i1l)
+            self.assertEqual(K[4], "4a" if s4 else "4"); self.assertEqual(K[1], "1a" if s1 else "1")
+            todas = np.arange(n); self.assertEqual(c.juntar(todas).tolist(), list(range(10)) + ([4] if s4 else []) + ([1] if s1 else []))
+        self.assertEqual(S.Compositor("x", ["rectas"], sub4=True).clases_finas(), S.Compositor.CLASES_FINAS)   # el 4 solo: como siempre
+
+    def _datos(self):
+        import servidor as S
+        D = datos_de_pega(); D.subgrupo4 = lambda i: True; D.manuales = lambda: {}; D._finas_c = {}
+        return S, D
+
+    def test_etiquetas_finas_el_4_solo_no_cambia_y_el_1_entra_detras(self):
+        with tempfile.TemporaryDirectory() as d:
+            os.environ["REVISOR_ETIQUETAS_DIR"] = d; GR._REGLA.clear()
+            try:
+                S, D = self._datos(); GR.marcar(D, "1", 1, "1l")       # idx 0: palo (1l por regla), 1: bandera (1l a mano), 2: un 4
+                calc = lambda a, b: S.Datos._finas_calc(D, a, b).tolist()
+                self.assertEqual(calc(True, False), [1, 1, 10])         # = lo de siempre: el 4 partido, el 1 intacto
+                self.assertEqual(calc(True, True), [11, 11, 10])        # 1l detrás del 4l
+                self.assertEqual(calc(False, True), [10, 10, 4])        # sin partir el 4, el 1l es la 10
+                GR.marcar(D, "1", 0, "1a"); self.assertEqual(calc(True, True), [1, 11, 10])   # la mano manda sobre la regla
+            finally:
+                os.environ.pop("REVISOR_ETIQUETAS_DIR", None)
+
+    def test_la_huella_del_1_solo_la_lleva_quien_lo_parte(self):
+        import servidor as S
+        with tempfile.TemporaryDirectory() as d:
+            os.environ["REVISOR_ETIQUETAS_DIR"] = d; GR._REGLA.clear()
+            try:
+                D = types.SimpleNamespace(hash="abc", hash_manuales=lambda: "h4", hash_manuales1=lambda: S.Datos.hash_manuales1(None))
+                solo4 = S.Compositor("a", ["rectas"], sub4=True); con1 = S.Compositor("b", ["rectas"], sub4=True, sub1=True)
+                h4, h1 = solo4.huella(D), con1.huella(D)
+                self.assertNotIn("etiquetas1", h4); self.assertNotIn("sub1", h4)          # LazosEntrantes y compañía: sin cambios
+                GR.marcar(datos_de_pega(), "1", 0, "1a")
+                self.assertEqual(solo4.huella(D), h4); self.assertNotEqual(con1.huella(D)["etiquetas1"], h1["etiquetas1"])
+            finally:
+                os.environ.pop("REVISOR_ETIQUETAS_DIR", None)
+
+
 if __name__ == "__main__":
     unittest.main()

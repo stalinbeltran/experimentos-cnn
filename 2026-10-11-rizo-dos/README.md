@@ -1789,6 +1789,23 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 107 · El 1l, CLASE del entrenamiento: «el 1 en dos», igual que el 4 (el dueño, 2026-10-17)
+
+«Revisa si mis cambios se guardaron. Checa que ésta sea la nueva clase en el app y por supuesto para el entrenamiento.» Sus marcas:
+**196 a mano** (192 → 1l, 4 → 1a; `web/etiquetas-1.json`, commiteado ese día, y la copia del almacén idéntica). Con la regla de
+§ 106: **1l = 264** (8 train · 82 val · 174 extra), **1a = 307**. Hasta ese momento el 1l NO era una clase: sólo se revisaba.
+
+Ahora, en «entrenar otro», la casilla **«el 1 en dos clases»** (marcada por defecto, como la del 4) da un compositor con el 1
+partido: la clase «1» deja de existir y aparecen «1a» y «1l». Las clases extra van en orden FIJO: 4l (10) y luego 1l (11 si el 4
+también está partido, 10 si no). Medida igual que el 4: val en las clases finas, «juntando» aparte, y un resumen «1 en dos»
+(train/val 1l y 1a, cómo se lee cada uno) en la ficha del compositor.
+
+Lo que NO cambia, comprobado: con sólo el 4 partido las etiquetas son **idénticas** a las de antes sobre los 5620 dígitos, y la
+huella de un compositor sin el 1 partido no cambia (LazosEntrantes se restaura igual). Separar unos en `/separar` sólo cambia la
+huella de los compositores que parten el 1 (`etiquetas1` = etiquetas-1.json + grupos.py). Marcar un 1 vacía la caché de etiquetas;
+**no reentrena nada**. ⚠ Train sin extra tiene sólo 8 1l, como el 4l tenía pocos: hace falta «+extra». Nada entrenado. 3 pruebas
+nuevas en `web/probar_grupos.py`.
+
 ### 106 · Pantalla SEPARADORA del 1: 1l (sólo la recta vertical) y 1a (los demás) (el dueño, 2026-10-17)
 
 «Separemos los 1 en 2 grupos: los que son sólo una vertical única y los otros… 1l es sólo la recta vertical (también parece una

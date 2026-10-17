@@ -24,14 +24,14 @@ import servidor as S  # noqa: E402
 def emular(c: S.Compositor, datos: S.Datos, marca: str):
     todos, Xtr, _ = datos.features(c.celdas); Xtr, Xva = c.corta(Xtr, datos), c.corta(todos[datos.va], datos)
     c.n = Xtr.shape[1]; c.redes = []; preds = []; finos = []; accs = []
-    y = datos.etiquetas_finas()[datos.va] if c.sub4 else datos.y[datos.va]
+    y = c.y_fino(datos)[datos.va] if c.partido else datos.y[datos.va]           # § 107: el 4 y/o el 1 partidos
     for s in c.semillas:
         torch.manual_seed(s); mu, sd = Xtr.mean(0), Xtr.std(0) + 1e-6
-        red = torch.nn.Sequential(torch.nn.Linear(c.n, S.OCULTA), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(S.OCULTA, 11 if c.sub4 else 10)); red.eval()
+        red = torch.nn.Sequential(torch.nn.Linear(c.n, S.OCULTA), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(S.OCULTA, c.salidas)); red.eval()
         c.redes.append((red, mu, sd))
         with torch.no_grad():
             lg = red(torch.from_numpy((Xva - mu) / sd).float()).numpy()
-        pf = lg.argmax(1); finos.append(pf); p = pf if c.sub4 else np.where(pf == 10, 4, pf); preds.append(p); accs.append(float((p == y).mean()))
+        pf = lg.argmax(1); finos.append(pf); p = pf if c.partido else c.juntar(pf); preds.append(p); accs.append(float((p == y).mean()))
         if s == c.semillas[0]:
             c.logits_va = lg
     c.preds = np.stack(preds); c.finos = np.stack(finos); c.veces = (c.preds != y).sum(0); p0 = preds[0]; c.segundos = 0.0
@@ -39,7 +39,7 @@ def emular(c: S.Compositor, datos: S.Datos, marca: str):
                  "val": round(float(np.mean(accs)), 4), "val_rango": [round(min(accs), 4), round(max(accs), 4)],
                  "fallos_s0": int((p0 != y).sum()), "fallan_en_todas": int((c.veces == len(c.semillas)).sum()), "confusiones": {},
                  "cuota": {b: 0.0 for b in c.bloques}, "segundos": 0.0, "sin_posicion": [b for b in c.bloques if b in S.SIN_POSICION],
-                 "sub4": c.sub4, "sub4_resumen": None, "extra": c.extra, "n_train": 0, "emulado": marca}
+                 "sub4": c.sub4, "sub4_resumen": None, "sub1": c.sub1, "sub1_resumen": None, "clases": c.clases_finas(), "extra": c.extra, "n_train": 0, "emulado": marca}
     c.estado = "listo"
 
 
@@ -53,7 +53,7 @@ def main() -> int:
     datos = S.Datos(); datos.features(3)                           # ~30 s la primera vez; va a la caché local y al almacén
     comps = []
     for nombre, r in recetas.items():
-        c = S.Compositor(nombre, r["bloques"], r.get("celdas", 3), r.get("semillas", S.SEMILLAS), r.get("sub4", False), r.get("extra", False))
+        c = S.Compositor(nombre, r["bloques"], r.get("celdas", 3), r.get("semillas", S.SEMILLAS), r.get("sub4", False), r.get("extra", False), sub1=r.get("sub1", False))
         emular(c, datos, marca); comps.append(c)
         print(f"  {c.nombre}: n={c.n} · val {c.resumen['val']} (al azar) → {c.fichero(alm).name}")
         if not seco:

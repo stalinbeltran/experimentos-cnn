@@ -351,7 +351,7 @@ class Datos:
         self.aum = [(0, 0)] + [(k, 0) for k in AUM] + [(0, k) for k in AUM]
         self.hash = hashlib.sha1((AQUI / "nn" / "cresta_curvas.py").read_bytes()).hexdigest()[:10]
         self.X = {}                                               # celdas → (X_todos (5620,394), X_tr_aum (180·13,394), Y_tr_aum)
-        self._ob = {}; self._lock = threading.Lock(); self._finas = None
+        self._ob = {}; self._lock = threading.Lock(); self._finas_c = {}
 
     def subgrupo4(self, i: int) -> bool:
         """El 4 CERRADO por arriba = «4l» (el dueño, 2026-10-15, tercera versión: «198, 225, 239 y 250 son un 4l… el lazo no está
@@ -377,10 +377,19 @@ class Datos:
             return len(ext)
         yn = min(q[1] for q in nud); return int(sum(q[1] < yn - margen for q in ext))
 
-    def etiquetas_finas(self) -> np.ndarray:
-        """y con el 4 partido: 4 = «4a» (abierto), 10 = «4l» (cerrado por arriba: lazo, o un solo extremo sobre el nudo). Se calcula una vez (sólo los 4: ~570 dígitos, segundos)."""
-        if self._finas is None:
-            f = self.y.copy()
+    def etiquetas_finas(self, sub4: bool = True, sub1: bool = False) -> np.ndarray:
+        """y con dígitos PARTIDOS. Por defecto, el 4 (lo de siempre): 4 = «4a» (abierto), 10 = «4l» (cerrado por arriba). Con
+        sub1 (§ 107, el dueño, 2026-10-17: «que ésta sea la nueva clase en el app y para el entrenamiento»), el 1 también: 1 = «1a»,
+        y «1l» (sólo la recta vertical) va a 11 si el 4 está partido y a 10 si no. Las clases extra van en ese orden FIJO (4l, 1l),
+        así que un compositor con sólo el 4 partido ve exactamente las mismas etiquetas que antes. Se calcula una vez por combinación."""
+        k = (bool(sub4), bool(sub1))
+        if k not in self._finas_c:
+            self._finas_c[k] = self._finas_calc(*k)
+        return self._finas_c[k]
+
+    def _finas_calc(self, sub4: bool, sub1: bool) -> np.ndarray:
+        f = self.y.copy()
+        if sub4:
             for i in np.flatnonzero(self.y == 4):
                 if self.subgrupo4(i):
                     f[i] = 10
@@ -389,8 +398,18 @@ class Datos:
             for i, cl in self.manuales().items():
                 if self.y[i] == 4:
                     f[i] = 10 if cl == "4l" else 4
-            self._finas = f
-        return self._finas
+        if sub1:                                                  # el 1 partido: la mano (web/etiquetas-1.json) manda sobre la regla de grupos.py
+            c1 = 11 if sub4 else 10
+            for e in GR.elementos(self, "1", almacen_revisor()):
+                if (e["manual"] or e["regla"]) == "1l":
+                    f[e["idx"]] = c1
+        return f
+
+    def hash_manuales1(self) -> str:
+        """Huella de lo que decide el 1l (§ 107): las decisiones a mano (etiquetas-1.json) Y la regla (grupos.py). Sólo entra en la
+        huella de los compositores con el 1 partido: la de los demás no cambia al separar unos."""
+        f = GR.carpeta() / "etiquetas-1.json"
+        return hashlib.sha1((f.read_bytes() if f.is_file() else b"sin") + (AQUI / "web" / "grupos.py").read_bytes()).hexdigest()[:10]
 
     def hash_manuales(self) -> str:
         """Huella de las etiquetas a mano: cambiarlas cambia las clases finas, así que unos pesos guardados con otras no valen."""
@@ -419,7 +438,7 @@ class Datos:
         f.write_text(json.dumps({"4l": sorted(k for k, v in m.items() if v == "4l"), "4a": sorted(k for k, v in m.items() if v == "4a"),
                                  "quien": "el dueño, desde /etiquetar", "cuando": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
                                  "regla_base": "Datos.subgrupo4 (§ 85f): lazo, o un solo extremo libre sobre el nudo"}, indent=1) + "\n")
-        self._finas = None
+        self._finas_c.clear()
 
     def cuatros(self) -> list[dict]:
         """Todos los 4 del dataset con su parte, la clase por la REGLA y la decisión a mano si la hay."""
@@ -503,9 +522,39 @@ class Compositor:
     CLASES = [str(k) for k in range(10)] + ["4l"]              # la 11.ª sólo existe con sub4; entonces la «4» es la 4a (abierta)
     CLASES_FINAS = [str(k) if k != 4 else "4a" for k in range(10)] + ["4l"]
 
-    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False):
+    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False, sub1: bool = False):
         self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
+        self.sub1 = bool(sub1)                                    # § 107: el 1 partido en 1l (sólo la recta vertical) / 1a
         self.estado = "pendiente"; self.error = ""; self.redes = []; self.segundos = 0.0; self.resumen = {}
+
+    # --- las clases (§ 107). Las extra van en orden FIJO: «4l» (si el 4 está partido) y luego «1l» (si el 1 lo está). Con sólo el
+    # 4 partido todo queda como antes (10 = 4l), y por eso un compositor viejo se lee y se restaura igual.
+    @property
+    def partido(self) -> bool:
+        return self.sub4 or self.sub1
+
+    @property
+    def salidas(self) -> int:
+        return 10 + int(self.sub4) + int(self.sub1)
+
+    def clases_finas(self) -> list[str]:
+        base = [str(k) for k in range(10)]
+        if self.sub4:
+            base[4] = "4a"
+        if self.sub1:
+            base[1] = "1a"
+        return base + (["4l"] if self.sub4 else []) + (["1l"] if self.sub1 else [])
+
+    def juntar(self, p) -> np.ndarray:
+        """De las clases finas a los 10 dígitos: 4l → 4, 1l → 1 (para la medida «juntando», comparable con las recetas sin partir)."""
+        p = np.asarray(p); out = p.copy(); k = 10
+        for d, si in ((4, self.sub4), (1, self.sub1)):
+            if si:
+                out[p == k] = d; k += 1
+        return out
+
+    def y_fino(self, datos) -> np.ndarray:
+        return datos.etiquetas_finas(self.sub4, self.sub1)
 
     def cortes(self, datos: Datos | None = None) -> dict:
         n = 0; out = {}
@@ -530,28 +579,36 @@ class Compositor:
                 Xex, Yex = datos.features_extra(self.celdas); Xtr = np.concatenate([Xtr, self.corta(Xex, datos)]); Ytr = np.concatenate([Ytr, Yex])
                 idx_tr = np.concatenate([idx_tr, np.concatenate([datos.ex] * len(datos.aum))])
             self.n = Xtr.shape[1]; self.redes = []; preds = []; finos = []; accs = []; accs_finos = []; cuotas = []
-            if self.sub4:                                         # el 4 partido en dos: 11 salidas; el acierto se mide con 4l → 4 (comparable) y también con las dos separadas
-                yf = datos.etiquetas_finas(); Ytr = yf[idx_tr]; assert len(Ytr) == len(Xtr)
+            if self.partido:                                      # el 4 y/o el 1 partidos: una salida más por cada uno; el acierto se mide en las clases finas, y «juntando» aparte
+                yf = self.y_fino(datos); Ytr = yf[idx_tr]; assert len(Ytr) == len(Xtr)
             for s in self.semillas:
-                red, mu, sd = entrenar(Xtr, Ytr, s, salidas=11 if self.sub4 else 10); self.redes.append((red, mu, sd))
+                red, mu, sd = entrenar(Xtr, Ytr, s, salidas=self.salidas); self.redes.append((red, mu, sd))
                 with torch.no_grad():
                     lg = red(torch.from_numpy((Xva - mu) / sd).float()).numpy()
-                pf = lg.argmax(1); finos.append(pf); pj = np.where(pf == 10, 4, pf)
+                pf = lg.argmax(1); finos.append(pf); pj = self.juntar(pf)
                 # ⚠ Con el 4 en dos, la clase «4» NO EXISTE (el dueño, 2026-10-15): se evalúa en las 11 clases, y un 4l leído 4a es
                 # un fallo. «Juntando» queda sólo como dato secundario (val_juntando) para comparar con las recetas sin partir.
-                p = pf if self.sub4 else pj; preds.append(p); accs.append(float((p == (yf[datos.va] if self.sub4 else datos.y[datos.va])).mean()))
-                if self.sub4:
+                p = pf if self.partido else pj; preds.append(p); accs.append(float((p == (yf[datos.va] if self.partido else datos.y[datos.va])).mean()))
+                if self.partido:
                     accs_finos.append(float((pj == datos.y[datos.va]).mean()))   # = val_juntando
                 W = red[0].weight.detach().numpy(); wt = (W ** 2).sum(); cuotas.append({b: float((W[:, a:z] ** 2).sum() / wt) for b, (a, z) in self.cortes(datos).items()})
                 if s == self.semillas[0]:
                     self.logits_va = lg
-            y = datos.etiquetas_finas()[datos.va] if self.sub4 else datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]; self.finos = np.stack(finos)
-            et = lambda k: self.CLASES_FINAS[k] if self.sub4 else str(k)
-            sub = None
+            y = self.y_fino(datos)[datos.va] if self.partido else datos.y[datos.va]; self.preds = np.stack(preds); self.veces = (self.preds != y).sum(0); p0 = preds[0]; self.finos = np.stack(finos)
+            K = self.clases_finas(); et = lambda k: K[k] if self.partido else str(k)
+            sub = sub1 = None
+            if self.sub1:                                         # § 107: cómo le va al 1 partido (semilla 0), igual que al 4
+                yf1 = self.y_fino(datos); yv1, pf1 = yf1[datos.va], finos[0]; c1 = K.index("1l"); es1 = datos.y[datos.va] == 1
+                cu = lambda real, lee: int(((yv1 == real) & (pf1 == lee)).sum())
+                sub1 = {"train_1l": int((yf1[idx_tr] == c1).sum() // len(datos.aum)), "train_1a": int((yf1[idx_tr] == 1).sum() // len(datos.aum)),
+                        "val_1l": int((yv1 == c1).sum()), "val_1a": int((yv1 == 1).sum()),
+                        "1l_leido_1l": cu(c1, c1), "1l_leido_1a": cu(c1, 1), "1l_leido_otro": int(((yv1 == c1) & (pf1 != c1) & (pf1 != 1)).sum()),
+                        "1a_leido_1a": cu(1, 1), "1a_leido_1l": cu(1, c1), "1a_leido_otro": int(((yv1 == 1) & (pf1 != c1) & (pf1 != 1)).sum()),
+                        "otros_leidos_1l": int((~es1 & (pf1 == c1)).sum())}
             if self.sub4:                                         # cómo le va al 4 partido (semilla 0): cuántos hay y cómo se leen
-                yf = datos.etiquetas_finas(); yv, pf = yf[datos.va], finos[0]; es4 = datos.y[datos.va] == 4
+                yf = self.y_fino(datos); yv, pf = yf[datos.va], finos[0]; es4 = datos.y[datos.va] == 4
                 cuenta = lambda real, lee: int(((yv == real) & (pf == lee)).sum())
-                sub = {"val_juntando": round(float(np.mean(accs_finos)), 4), "val_juntando_rango": [round(min(accs_finos), 4), round(max(accs_finos), 4)], "fallos_juntando_s0": int((np.where(finos[0] == 10, 4, finos[0]) != datos.y[datos.va]).sum()), "train_4l": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4a": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4l": int((yv == 10).sum()), "val_4a": int((yv == 4).sum()),
+                sub = {"val_juntando": round(float(np.mean(accs_finos)), 4), "val_juntando_rango": [round(min(accs_finos), 4), round(max(accs_finos), 4)], "fallos_juntando_s0": int((self.juntar(finos[0]) != datos.y[datos.va]).sum()), "train_4l": int((yf[idx_tr] == 10).sum() // len(datos.aum)), "train_4a": int((yf[idx_tr] == 4).sum() // len(datos.aum)), "val_4l": int((yv == 10).sum()), "val_4a": int((yv == 4).sum()),
                        "4l_leido_4l": cuenta(10, 10), "4l_leido_4a": cuenta(10, 4), "4l_leido_otro": int(((yv == 10) & (pf != 10) & (pf != 4)).sum()),
                        "4a_leido_4a": cuenta(4, 4), "4a_leido_4l": cuenta(4, 10), "4a_leido_otro": int(((yv == 4) & (pf != 10) & (pf != 4)).sum()),
                        "otros_leidos_4l": int((~es4 & (pf == 10)).sum()), "otros_leidos_4a": int((~es4 & (pf == 4)).sum())}
@@ -563,7 +620,7 @@ class Compositor:
                             "val": round(float(np.mean(accs)), 4), "val_rango": [round(min(accs), 4), round(max(accs), 4)],
                             "fallos_s0": int((p0 != y).sum()), "fallan_en_todas": int((self.veces == len(self.semillas)).sum()),
                             "confusiones": dict(sorted(conf.items(), key=lambda z: -z[1])), "cuota": {b: round(float(np.mean([c[b] for c in cuotas])), 3) for b in self.bloques},
-                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if pieza(b)[0] in SIN_POSICION], "sub4": self.sub4, "sub4_resumen": sub, "extra": self.extra, "n_train": int(len(idx_tr) // len(datos.aum))}
+                            "segundos": round(self.segundos, 1), "sin_posicion": [b for b in self.bloques if pieza(b)[0] in SIN_POSICION], "sub4": self.sub4, "sub4_resumen": sub, "sub1": self.sub1, "sub1_resumen": sub1, "clases": K, "extra": self.extra, "n_train": int(len(idx_tr) // len(datos.aum))}
             self.estado = "listo"
         except Exception as e:                                    # noqa: BLE001
             self.estado = "error"; self.error = f"{type(e).__name__}: {e}"; traceback.print_exc()
@@ -574,6 +631,8 @@ class Compositor:
              "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
         if any(pieza(b)[0] == "vertice_libre" for b in self.bloques):      # sólo quien lo usa: la huella de los demás no cambia
             h["vertice_libre"] = VLB.huella_modulo()
+        if self.sub1:                                             # § 107: ídem con el 1 partido (sus etiquetas y su regla)
+            h["sub1"] = True; h["etiquetas1"] = datos.hash_manuales1()
         return h
 
     def fichero(self, carpeta: Path) -> Path:
@@ -607,7 +666,7 @@ class Compositor:
             return False
         self.n = int(z["n"]); self.redes = []
         for sd_red, mu, sd in z["redes"]:
-            red = torch.nn.Sequential(torch.nn.Linear(self.n, OCULTA), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(OCULTA, 11 if self.sub4 else 10))
+            red = torch.nn.Sequential(torch.nn.Linear(self.n, OCULTA), torch.nn.ReLU(), torch.nn.Dropout(0.3), torch.nn.Linear(OCULTA, self.salidas))
             red.load_state_dict(sd_red); red.eval(); self.redes.append((red, mu, sd))
         self.preds, self.veces, self.finos, self.logits_va = z["preds"], z["veces"], z["finos"], z["logits_va"]
         self.segundos = float(z["segundos"]); self.resumen = {**z["resumen"], "restaurado": z.get("guardado", "?")}; self.estado = "listo"
@@ -619,8 +678,8 @@ class Compositor:
         """Lo que recibe y decide el compositor para el dígito i (semilla 0): entradas por bloque, logits, atribución."""
         todos, _, _ = datos.features(self.celdas); x = self.corta(todos[i:i + 1], datos)[0]; red, mu, sd = self.redes[0]
         z = torch.from_numpy((x - mu) / sd).float()[None].requires_grad_(True); lg = red(z)[0]
-        pf = int(lg.argmax()); pred = 4 if pf == 10 else pf; real = int(datos.y[i]); p = torch.softmax(lg, 0).detach().numpy()
-        real_f = int(datos.etiquetas_finas()[i]) if self.sub4 else real   # con sub4 la explicación va en el espacio FINO (4l ≠ 4a)
+        pf = int(lg.argmax()); pred = int(self.juntar(np.array([pf]))[0]); real = int(datos.y[i]); p = torch.softmax(lg, 0).detach().numpy()
+        real_f = int(self.y_fino(datos)[i]) if self.partido else real   # partido: la explicación va en el espacio FINO (4l ≠ 4a, 1l ≠ 1a)
         contra = real_f if real_f != pf else int(np.argsort(lg.detach().numpy())[-2])   # si acierta, se explica contra el segundo
         (lg[pf] - lg[contra]).backward(); atr = (z.grad[0] * z.detach()[0]).numpy()
         bloques = []
@@ -642,7 +701,7 @@ class Compositor:
         orden = np.argsort(-np.abs(atr))[:16]
         va_pos = int(np.flatnonzero(datos.va == i)[0]) if i in set(datos.va.tolist()) else None
         return {"idx": int(i), "real": real, "predicho": pred, "contra": contra, "p_pred": float(p[pf]), "p_real": float(p[real_f]),
-                "predicho_fino": pf, "real_fino": real_f, "clases": self.CLASES_FINAS if self.sub4 else self.CLASES[:10], "sub4": self.sub4, "acierta": (pf == real_f) if self.sub4 else (pred == real),
+                "predicho_fino": pf, "real_fino": real_f, "clases": self.clases_finas() if self.partido else self.CLASES[:10], "sub4": self.sub4, "sub1": self.sub1, "acierta": (pf == real_f) if self.partido else (pred == real),
                 "logits": [float(v) for v in lg.detach().numpy()], "semillas_que_fallan": int(self.veces[va_pos]) if va_pos is not None else None,
                 "semillas": len(self.semillas), "bloques": bloques, "pesan": [{"nombre": nombres[k], "valor": float(x[k]), "atr": float(atr[k]), **meta[k]} for k in orden],
                 "suma_por_bloque": {b: float(atr[a:zz].sum()) for b, (a, zz) in self.cortes(datos).items()}}
@@ -768,14 +827,14 @@ class App:
         self.datos = Datos(); self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
         self.hilo = threading.Thread(target=self._bucle, daemon=True); self.hilo.start()
         for nombre, bl in self.recetas_guardadas().items():
-            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), existente=True)
+            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), existente=True, sub1=bl.get("sub1", False))
 
     def recetas_guardadas(self) -> dict:
         return recetas_guardadas()
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
-        texto = json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1)
+        texto = json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1)
         (CACHE / "recetas.json").write_text(texto)
         alm = almacen_revisor()
         if alm:                                                   # la copia que sobrevive al dev; se empuja con los pesos
@@ -793,7 +852,7 @@ class App:
         except Exception as e:                                    # noqa: BLE001
             print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
-    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False, existente=False) -> Compositor:
+    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False, existente=False, sub1=False) -> Compositor:
         if not bloques:
             raise ValueError("sin bloques")
         bloques = [normalizar(b) for b in bloques]                 # se niega ante un bloque o pieza desconocidos
@@ -801,8 +860,8 @@ class App:
             comprobar_nuevo(bloques)
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
-        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · +extra" if extra else "")
-        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra); alm = almacen_revisor()
+        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · 1 en dos" if sub1 else "") + (" · +extra" if extra else "")
+        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra, sub1=sub1); alm = almacen_revisor()
         restaurado = bool(alm) and c.restaurar(alm, c.huella(self.datos))   # del dev anterior, si la huella coincide: ni cola ni espera
         with self._lock:
             self.comps[nombre] = c
@@ -844,7 +903,7 @@ class App:
         n = 0
         with self._lock:
             for c in list(self.comps.values()):
-                if (c.nombre == nombre if nombre is not None else c.sub4) and c not in self.cola:
+                if (c.nombre == nombre if nombre is not None else c.partido) and c not in self.cola:
                     c.reentrenar = True
                     if c.estado != "entrenando":
                         c.estado = "pendiente"
@@ -861,15 +920,16 @@ class App:
 
     # --- lo que contesta
     def estado(self) -> dict:
-        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
+        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra, **c.resumen} for c in self.comps.values()],
                 "bloques": [{"clave": k, "etiqueta": BLOQUES[k][0], "forma": BLOQUES[k][1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k in bloques_ofrecidos()],
                 "bloques_defecto": BLOQUES_DEFECTO, "archivados": archivados(),                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
-        c = self.listo(nombre); d = self.datos; yf = d.etiquetas_finas()[d.va]; y = yf if c.sub4 else d.y[d.va]; p0 = c.preds[0]
+        c = self.listo(nombre); d = self.datos; yf = d.etiquetas_finas()[d.va]; y = c.y_fino(d)[d.va] if c.partido else d.y[d.va]; p0 = c.preds[0]
+        K = c.clases_finas() if c.partido else [str(k) for k in range(10)]   # § 107: los nombres van escritos en cada fila (1l, 4a…)
         # el subgrupo del 4 es del DÍGITO (detector), exista o no sub4 en el compositor; con sub4, y y p0 están en las 11 clases
-        fino = lambda e: 10 if e == "4l" else 4 if e == "4a" else int(e)
+        fino = lambda e: K.index(e) if e in K else 4 if e in ("4l", "4a") else 1 if e in ("1l", "1a") else int(e)
         if sub in ("l", "a"):
             clase = 4
         sel = np.ones(len(d.va), bool)
@@ -880,7 +940,7 @@ class App:
         elif modo == "aciertos":
             sel &= p0 == y
         if clase is not None:
-            sel &= (d.y[d.va] == int(clase)) if not c.sub4 or int(clase) != 4 else ((y == 4) | (y == 10))
+            sel &= d.y[d.va] == int(clase)                           # el dígito, sea cual sea su grupo (4l/4a, 1l/1a)
         if sub == "l":
             sel &= yf == 10
         elif sub == "a":
@@ -888,11 +948,15 @@ class App:
         if conf:
             a, b = conf.replace("->", "→").split("→"); sel &= (y == fino(a)) & (p0 == fino(b))
         ids = np.flatnonzero(sel); p = torch.softmax(torch.from_numpy(c.logits_va[ids]), 1).numpy(); pf = c.finos[0]
-        filas = [{"idx": int(d.va[j]), "real": int(d.y[d.va][j]), "predicho": int(np.where(p0[j] == 10, 4, p0[j])), "fallo": bool(p0[j] != y[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
-                  "sub": ("l" if yf[j] == 10 else "a") if y[j] == 4 else None, "predicho_fino": int(pf[j])} for k, j in enumerate(ids)]
+        filas = [{"idx": int(d.va[j]), "real": int(d.y[d.va][j]), "predicho": int(c.juntar(np.array([p0[j]]))[0]) if c.partido else int(p0[j]), "fallo": bool(p0[j] != y[j]), "veces": int(c.veces[j]), "p": float(p[k, pf[j]]),
+                  "sub": ("l" if yf[j] == 10 else "a") if d.y[d.va][j] == 4 else None, "predicho_fino": int(pf[j]),
+                  "real_txt": K[int(y[j])], "leido_txt": K[int(p0[j])]} for k, j in enumerate(ids)]
         yc = d.y[d.va]; mal = p0 != y
         por_clase = {str(k): {"n": int((yc == k).sum()), "fallos": int((mal & (yc == k)).sum())} for k in range(10)}
         por_clase["4l"] = {"n": int((yf == 10).sum()), "fallos": int((mal & (yf == 10)).sum())}; por_clase["4a"] = {"n": int(((yc == 4) & (yf == 4)).sum()), "fallos": int((mal & (yc == 4) & (yf == 4)).sum())}
+        if c.sub1:
+            c1 = K.index("1l"); por_clase["1l"] = {"n": int((y == c1).sum()), "fallos": int((mal & (y == c1)).sum())}
+            por_clase["1a"] = {"n": int(((yc == 1) & (y == 1)).sum()), "fallos": int((mal & (yc == 1) & (y == 1)).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
     def digito(self, i: int) -> dict:
@@ -942,6 +1006,7 @@ class Handler(BaseHTTPRequestHandler):
         d = str(pide("d", "1")); g = GR.grupo(d); D = self.app.datos; alm = almacen_revisor()
         if ruta == "/api/grupo/marcar":
             GR.respaldar(GR.marcar(D, d, int(pide("idx")), pide("clase", "auto"), alm), alm, empujar_almacen)
+            D._finas_c.clear()                                    # § 107: la próxima lectura ve el 1l nuevo (no reentrena nada)
             return self._json({"ok": True})
         els = GR.elementos(D, d, alm)
         return self._json({"digito": g["digito"], "clases": g["clases"], "texto": g["texto"], "fichero": g["fichero"], "elementos": els,
@@ -979,7 +1044,7 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/comparar":
                 return self._json(self.app.comparar(int(pide("idx")), [x for x in pide("cs", "").split("|") if x]))
             if u.path == "/api/nuevo":
-                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"))
+                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"), sub1=pide("sub1", "0") in ("1", "true"))
                 return self._json({"ok": True, "nombre": c.nombre, "estado": c.estado})
             if u.path == "/api/archivar":                          # ?bloque=…&si=1|0 (2026-10-17)
                 return self._json({"ok": True, "archivados": archivar(pide("bloque", ""), pide("si", "1") in ("1", "true"))})
@@ -1127,7 +1192,7 @@ def entrenar_consola(que: list[str], seco: bool) -> int:
             if alm is None:
                 print("✗ `emulados` necesita el repo de datos (almacén), y no está clonado"); return 2
             for n, bl in rec.items():
-                c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
+                c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), sub1=bl.get("sub1", False))
                 f = c.fichero(alm)
                 try:
                     z = torch.load(f, weights_only=False, map_location="cpu") if f.is_file() else None
@@ -1151,7 +1216,7 @@ def entrenar_consola(que: list[str], seco: bool) -> int:
         return 0
     datos = Datos(); mal = 0
     for n in elegidas:
-        bl = rec[n]; c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
+        bl = rec[n]; c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), sub1=bl.get("sub1", False))
         print(f"\n==== {time.strftime('%H:%M:%S', time.gmtime())} UTC · entrenando «{n}»", flush=True); c.entrenar(datos)
         if c.estado != "listo":
             print(f"  ✗ «{n}»: {c.error}", flush=True); mal += 1; continue
