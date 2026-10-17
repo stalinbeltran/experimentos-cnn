@@ -1789,6 +1789,19 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 101 · VISTA PREVIA: el vértice en 4 direcciones N, S, E, O (el dueño, 2026-10-17: «muéstrame cómo quedarían en la matriz 3×3 antes de proceder»)
+
+Nada cambiado ni entrenado: `nn/vertice_4dir_vista.py` gira la tinta 90/180/270°, pasa el **mismo** `cresta_curvas.vertices`
+y devuelve la posición al dígito; la rejilla es la del bloque `vertice` (σ 2 px, máximo por celda). Figura
+`resultados/101-vertice-4-direcciones.png`. Convención propuesta: el vértice se nombra por hacia dónde **apunta**; un entrante
+por hacia dónde **abre** (conos 60°: der→E, izq→O, abajo→S, arriba→N); las celdas, NO N NE / O C E / SO S SE.
+
+Medido en val (1617 dígitos): **N 121** (1: 76, 4: 16) · **S 84** (4: 48, 7: 14, 1: 12) · **E 28** (1: 20, 5: 4) · **O 4**.
+⚠ **Cada dirección cae sólo en su borde de la rejilla** (N siempre en la fila de arriba, S en la de abajo, E en la columna
+derecha, O en la izquierda): el detector busca la punta desde el **extremo** del dígito (su «cima»), así que de las 9 celdas
+cada dirección usa 3. ⚠ La regla de bordes del N es **asimétrica** a propósito (el palo del 4 vertical a la derecha, § 95), y al
+girarla la asimetría gira con ella. Pendiente de decidir con el dueño antes de implementar.
+
 ### 100 · El 973 (un 5 leído como 3): qué concavidades ve y cuánto aporta cada feature al 5 y al 3 POR SEPARADO (el dueño, 2026-10-17)
 
 ![objetos](resultados/100-973-objetos.png)
