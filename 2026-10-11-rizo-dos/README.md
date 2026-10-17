@@ -1789,6 +1789,22 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 109 · VISTA PREVIA: ampliar el ángulo del vértice libre (el dueño, 2026-10-17: «mantener el nombre, pero ampliar el ángulo, pues también tenemos un parámetro ángulo»)
+
+`nn/vertice_ampliar_vista.py` → `resultados/109-vertice-ampliar.{png,json}`. Nada cambiado en `vertice_libre.py` ni entrenado.
+Medido en val (vértices por dígito; el 3 con vértice O en la fila del medio):
+
+| límite a 6 px / a 3 px | 0 | 3 | 8 | 9 | el 3 con O en el medio | #409 |
+|---|---|---|---|---|---|---|
+| < 90° / < 120° (hoy) | 0,1 | 0,5 | 1,5 | 1,3 | 17 / 165 | sólo N 86° |
+| < 120° / < 150° | 1,9 | 2,7 | 4,4 | 3,7 | 107 / 165 | + E 120° |
+| < 135° / < 160° | 3,3 | 3,8 | 5,1 | 4,9 | 141 / 165 | + S 125° |
+| < 150° / < 160° | 4,4 | 4,2 | 5,4 | 5,3 | 153 / 165 | + **O 144° (el centro)** |
+
+⚠ El precio: el 0, que hoy no tiene vértices, pasa a 4–5 en 150°: cada curva se vuelve un rosario de vértices obtusos. Sólo la
+pieza **amplitud** los distingue de los agudos, y **LEvertice** (el compositor del dueño de ese día) usa sólo `vertice_libre:rejilla`.
+⏳ **Pendiente: que el dueño elija el límite.** Cambiarlo cambia la huella de LEvertice y obliga a reentrenarlo.
+
 ### 108 · El centro de un 3 (val #409) NO es vértice: 144°, contra el límite de < 90° (el dueño, 2026-10-17)
 
 «Un detector de vértices no encuentra el vértice en el centro de un 3, id 409… muéstrame el ángulo hallado, en una imagen.»
