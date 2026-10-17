@@ -1789,6 +1789,28 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 112 · El 1552 (un 7 leído 1l) y los ENTRANTES de los 1l: el 57 % tiene alguno (el dueño, 2026-10-17)
+
+«Analiza el 1552. Sus entrantes conos lo identifican como 1l. Busca cuáles 1l tienen entrantes.» `nn/entrantes_1l_vista.py` →
+`resultados/112-entrantes-1l.{png,json}` (el JSON trae la lista de los 151 con sus entrantes). Nada cambiado ni entrenado.
+
+El **1552 es un 7** (con barra) que **Cuspide y LEvertice leen 1l en las 3 semillas** (p 0,60 y 0,62; el 7, 0,32). Lo que más
+empuja hacia 1l son dos celdas de `entrantes60`: **→ der en arriba-centro** (+1,24 en Cuspide, +1,95 en LEvertice) y **↓ abajo en el
+centro** (+1,21 / +0,77). Sus tres entrantes son pequeños: 10, 11 y 16 px².
+
+Medido ese día sobre los 1l del entrenamiento (`grupos.py` + `etiquetas-1.json`, § 107):
+- **151 de los 264 1l (57 %) tienen algún entrante**, cuando un palo recto no debería tener ninguno (1a: 300/307; 7: 565/566).
+  De esos 151, **127 los marcó el dueño a mano** y 24 la regla; 105 son de extra, 40 de val y 6 de train.
+- Son **pequeños**: mediana 7 px² (los de los 7, 13) y casi todos **esquinas** (205 de 283).
+- **De dónde salen: la cresta de esos 1l se RAMIFICA.** El 60 % tiene ≥ 3 tramos (los 1l sin entrantes, el 2 %); son algo más
+  gruesos (ancho de tinta mediano 11,6 px contra 9,7). Los entrantes son las esquinas entre esos espolones y el palo.
+- 8 1l tienen las DOS celdas del 1552 (736, 1250, 2613, 2849, 2969, 3395, 4661, 5538); 7 con las dos: 45.
+
+O sea que el compositor aprendió «entrantes pequeños en la columna del centro» como cosa de 1l, y el 1552 —un 7 de trazo fino
+con entrantes pequeños— cae ahí. Un umbral de área no lo arregla solo: con ≥ 10 px² los 1l pasan de 151 a 63 dígitos con
+entrantes, pero los 7 pierden también el 37 % de los suyos y al 1552 le quedan dos. ⏳ **Pendiente: que el dueño decida** qué
+hacer (podar los espolones de la cresta antes de los entrantes, un área mínima, o revisar esos 1l).
+
 ### 111 · La CÚSPIDE en el revisor: el bloque `cuspide`, con 4 piezas para elegir (el dueño, 2026-10-17: «procede»)
 
 El detector de § 110 pasa a **`nn/cuspide.py`** (la figura lo importa: una sola copia) y entra en el revisor como el bloque

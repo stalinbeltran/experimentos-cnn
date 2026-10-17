@@ -1,0 +1,3188 @@
+{
+ "n_1l": 264,
+ "1l_con_entrantes": [
+  {
+   "idx": 349,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 3.8,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 27.1
+    }
+   ]
+  },
+  {
+   "idx": 363,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.2,
+     "tipo": "esquina",
+     "cx": 15.0,
+     "cy": 20.9
+    },
+    {
+     "cono": "→ der",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 14.8,
+     "cy": 17.7
+    }
+   ]
+  },
+  {
+   "idx": 397,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 7.3,
+     "tipo": "esquina",
+     "cx": 14.9,
+     "cy": 12.4
+    }
+   ]
+  },
+  {
+   "idx": 485,
+   "parte": "train",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 10.4,
+     "tipo": "esquina",
+     "cx": 14.9,
+     "cy": 12.5
+    }
+   ]
+  },
+  {
+   "idx": 615,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 4.6,
+     "tipo": "arco",
+     "cx": 17.2,
+     "cy": 26.1
+    }
+   ]
+  },
+  {
+   "idx": 647,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 17.3,
+     "tipo": "esquina",
+     "cx": 14.5,
+     "cy": 7.0
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 7.4,
+     "tipo": "esquina",
+     "cx": 16.7,
+     "cy": 4.7
+    }
+   ]
+  },
+  {
+   "idx": 693,
+   "parte": "train",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 2.6,
+     "tipo": "arco",
+     "cx": 13.3,
+     "cy": 18.0
+    }
+   ]
+  },
+  {
+   "idx": 702,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 3.3,
+     "tipo": "arco",
+     "cx": 16.1,
+     "cy": 7.3
+    }
+   ]
+  },
+  {
+   "idx": 716,
+   "parte": "train",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 11.9,
+     "tipo": "arco",
+     "cx": 14.9,
+     "cy": 24.7
+    }
+   ]
+  },
+  {
+   "idx": 726,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.0,
+     "tipo": "esquina",
+     "cx": 19.8,
+     "cy": 8.6
+    }
+   ]
+  },
+  {
+   "idx": 731,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.6,
+     "tipo": "esquina",
+     "cx": 10.8,
+     "cy": 14.0
+    }
+   ]
+  },
+  {
+   "idx": 736,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 20.4,
+     "tipo": "esquina",
+     "cx": 11.9,
+     "cy": 9.3
+    },
+    {
+     "cono": "→ der",
+     "area": 16.5,
+     "tipo": "esquina",
+     "cx": 17.6,
+     "cy": 7.9
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 13.6,
+     "tipo": "esquina",
+     "cx": 14.6,
+     "cy": 4.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 9.0,
+     "tipo": "esquina",
+     "cx": 15.6,
+     "cy": 12.8
+    }
+   ]
+  },
+  {
+   "idx": 745,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 11.1,
+     "cy": 20.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.7,
+     "tipo": "esquina",
+     "cx": 11.2,
+     "cy": 23.5
+    }
+   ]
+  },
+  {
+   "idx": 753,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.2,
+     "tipo": "esquina",
+     "cx": 19.3,
+     "cy": 7.2
+    }
+   ]
+  },
+  {
+   "idx": 777,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 3.7,
+     "tipo": "arco",
+     "cx": 15.6,
+     "cy": 28.4
+    }
+   ]
+  },
+  {
+   "idx": 787,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 3.4,
+     "tipo": "arco",
+     "cx": 18.0,
+     "cy": 28.3
+    }
+   ]
+  },
+  {
+   "idx": 797,
+   "parte": "train",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.9,
+     "tipo": "esquina",
+     "cx": 15.3,
+     "cy": 5.1
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.6,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 5.2
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 4.0,
+     "tipo": "arco",
+     "cx": 15.8,
+     "cy": 27.1
+    }
+   ]
+  },
+  {
+   "idx": 818,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 16.4,
+     "tipo": "esquina",
+     "cx": 15.6,
+     "cy": 15.3
+    },
+    {
+     "cono": "→ der",
+     "area": 15.2,
+     "tipo": "esquina",
+     "cx": 16.0,
+     "cy": 19.5
+    }
+   ]
+  },
+  {
+   "idx": 823,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 10.5,
+     "tipo": "arco",
+     "cx": 16.0,
+     "cy": 27.5
+    }
+   ]
+  },
+  {
+   "idx": 846,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 12.6,
+     "tipo": "esquina",
+     "cx": 17.6,
+     "cy": 6.2
+    }
+   ]
+  },
+  {
+   "idx": 856,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 5.7,
+     "tipo": "arco",
+     "cx": 15.5,
+     "cy": 27.0
+    }
+   ]
+  },
+  {
+   "idx": 861,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 11.8,
+     "tipo": "arco",
+     "cx": 13.8,
+     "cy": 25.5
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 17.7,
+     "cy": 6.9
+    }
+   ]
+  },
+  {
+   "idx": 875,
+   "parte": "train",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.2,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 11.4
+    }
+   ]
+  },
+  {
+   "idx": 883,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 7.2,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 7.1
+    }
+   ]
+  },
+  {
+   "idx": 1030,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.8,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 9.9
+    }
+   ]
+  },
+  {
+   "idx": 1107,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 14.8,
+     "cy": 16.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.1,
+     "tipo": "esquina",
+     "cx": 15.2,
+     "cy": 19.8
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 2.3,
+     "tipo": "arco",
+     "cx": 16.5,
+     "cy": 4.5
+    }
+   ]
+  },
+  {
+   "idx": 1117,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.2,
+     "tipo": "esquina",
+     "cx": 18.3,
+     "cy": 11.1
+    },
+    {
+     "cono": "→ der",
+     "area": 6.1,
+     "tipo": "esquina",
+     "cx": 17.0,
+     "cy": 18.7
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 6.0,
+     "tipo": "arco",
+     "cx": 15.1,
+     "cy": 27.7
+    },
+    {
+     "cono": "← izq",
+     "area": 2.7,
+     "tipo": "esquina",
+     "cx": 16.6,
+     "cy": 21.5
+    }
+   ]
+  },
+  {
+   "idx": 1120,
+   "parte": "train",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 7.9,
+     "tipo": "arco",
+     "cx": 16.3,
+     "cy": 27.2
+    }
+   ]
+  },
+  {
+   "idx": 1199,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 9.4,
+     "tipo": "esquina",
+     "cx": 16.1,
+     "cy": 26.3
+    }
+   ]
+  },
+  {
+   "idx": 1250,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 5.4,
+     "tipo": "arco",
+     "cx": 15.7,
+     "cy": 27.4
+    },
+    {
+     "cono": "→ der",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 16.8,
+     "cy": 7.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 16.8,
+     "cy": 10.9
+    }
+   ]
+  },
+  {
+   "idx": 1357,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 5.6,
+     "tipo": "arco",
+     "cx": 15.4,
+     "cy": 26.8
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.3,
+     "tipo": "arco",
+     "cx": 16.2,
+     "cy": 4.3
+    }
+   ]
+  },
+  {
+   "idx": 1372,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 18.9,
+     "cy": 25.8
+    }
+   ]
+  },
+  {
+   "idx": 1380,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 3.7,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 28.2
+    }
+   ]
+  },
+  {
+   "idx": 1546,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 5.9,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 12.1
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.4,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 15.2
+    }
+   ]
+  },
+  {
+   "idx": 1668,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 33.8,
+     "tipo": "esquina",
+     "cx": 17.3,
+     "cy": 22.1
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 7.5,
+     "tipo": "esquina",
+     "cx": 12.3,
+     "cy": 13.7
+    }
+   ]
+  },
+  {
+   "idx": 1678,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.0,
+     "tipo": "arco",
+     "cx": 18.4,
+     "cy": 6.8
+    }
+   ]
+  },
+  {
+   "idx": 1688,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 19.0,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 23.6
+    },
+    {
+     "cono": "→ der",
+     "area": 11.3,
+     "tipo": "esquina",
+     "cx": 16.3,
+     "cy": 13.2
+    },
+    {
+     "cono": "→ der",
+     "area": 8.8,
+     "tipo": "esquina",
+     "cx": 16.1,
+     "cy": 9.5
+    }
+   ]
+  },
+  {
+   "idx": 1709,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 12.6,
+     "tipo": "arco",
+     "cx": 18.7,
+     "cy": 26.0
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 2.2,
+     "tipo": "arco",
+     "cx": 17.6,
+     "cy": 5.1
+    }
+   ]
+  },
+  {
+   "idx": 1723,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 8.8,
+     "tipo": "arco",
+     "cx": 17.1,
+     "cy": 24.9
+    }
+   ]
+  },
+  {
+   "idx": 1737,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 6.1,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 9.5
+    },
+    {
+     "cono": "← izq",
+     "area": 3.6,
+     "tipo": "esquina",
+     "cx": 13.3,
+     "cy": 13.3
+    }
+   ]
+  },
+  {
+   "idx": 1747,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.5,
+     "tipo": "esquina",
+     "cx": 16.7,
+     "cy": 10.3
+    }
+   ]
+  },
+  {
+   "idx": 1752,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 12.4,
+     "tipo": "esquina",
+     "cx": 14.4,
+     "cy": 9.6
+    },
+    {
+     "cono": "← izq",
+     "area": 12.3,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 6.9
+    },
+    {
+     "cono": "← izq",
+     "area": 11.0,
+     "tipo": "esquina",
+     "cx": 13.4,
+     "cy": 5.3
+    }
+   ]
+  },
+  {
+   "idx": 1757,
+   "parte": "val",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 5.4,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 23.6
+    }
+   ]
+  },
+  {
+   "idx": 1760,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 12.7,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 19.9
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 8.0,
+     "tipo": "arco",
+     "cx": 16.5,
+     "cy": 25.5
+    }
+   ]
+  },
+  {
+   "idx": 1766,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.7,
+     "tipo": "esquina",
+     "cx": 19.7,
+     "cy": 7.1
+    },
+    {
+     "cono": "← izq",
+     "area": 14.9,
+     "tipo": "esquina",
+     "cx": 13.3,
+     "cy": 11.6
+    },
+    {
+     "cono": "→ der",
+     "area": 14.8,
+     "tipo": "esquina",
+     "cx": 17.7,
+     "cy": 11.6
+    },
+    {
+     "cono": "← izq",
+     "area": 12.6,
+     "tipo": "esquina",
+     "cx": 12.8,
+     "cy": 7.0
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 9.9,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 4.9
+    }
+   ]
+  },
+  {
+   "idx": 1774,
+   "parte": "val",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 5.8,
+     "tipo": "arco",
+     "cx": 17.7,
+     "cy": 6.3
+    }
+   ]
+  },
+  {
+   "idx": 1947,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 10.6,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 7.4
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 7.2,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 4.7
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 3.4,
+     "tipo": "arco",
+     "cx": 14.4,
+     "cy": 27.5
+    }
+   ]
+  },
+  {
+   "idx": 1968,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 3.1,
+     "tipo": "arco",
+     "cx": 14.8,
+     "cy": 24.3
+    }
+   ]
+  },
+  {
+   "idx": 1987,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 8.6,
+     "tipo": "esquina",
+     "cx": 11.8,
+     "cy": 20.6
+    },
+    {
+     "cono": "→ der",
+     "area": 5.0,
+     "tipo": "arco",
+     "cx": 16.5,
+     "cy": 6.7
+    }
+   ]
+  },
+  {
+   "idx": 2185,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 9.3,
+     "tipo": "esquina",
+     "cx": 12.8,
+     "cy": 14.5
+    },
+    {
+     "cono": "← izq",
+     "area": 9.2,
+     "tipo": "esquina",
+     "cx": 12.5,
+     "cy": 18.2
+    },
+    {
+     "cono": "→ der",
+     "area": 2.6,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 27.4
+    }
+   ]
+  },
+  {
+   "idx": 2222,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 9.1,
+     "tipo": "arco",
+     "cx": 17.1,
+     "cy": 25.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.8,
+     "tipo": "arco",
+     "cx": 14.6,
+     "cy": 6.0
+    }
+   ]
+  },
+  {
+   "idx": 2231,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 19.1,
+     "tipo": "esquina",
+     "cx": 15.2,
+     "cy": 15.6
+    },
+    {
+     "cono": "← izq",
+     "area": 18.7,
+     "tipo": "esquina",
+     "cx": 15.0,
+     "cy": 19.3
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 10.9,
+     "tipo": "esquina",
+     "cx": 20.0,
+     "cy": 7.3
+    },
+    {
+     "cono": "→ der",
+     "area": 9.4,
+     "tipo": "esquina",
+     "cx": 18.9,
+     "cy": 4.3
+    }
+   ]
+  },
+  {
+   "idx": 2450,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 9.9,
+     "tipo": "esquina",
+     "cx": 18.5,
+     "cy": 8.4
+    }
+   ]
+  },
+  {
+   "idx": 2483,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 9.0,
+     "tipo": "esquina",
+     "cx": 13.6,
+     "cy": 12.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 5.3,
+     "tipo": "esquina",
+     "cx": 12.7,
+     "cy": 18.9
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 3.4,
+     "tipo": "arco",
+     "cx": 16.4,
+     "cy": 26.2
+    }
+   ]
+  },
+  {
+   "idx": 2596,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 3.7,
+     "tipo": "arco",
+     "cx": 15.7,
+     "cy": 5.5
+    }
+   ]
+  },
+  {
+   "idx": 2611,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 25.8,
+     "tipo": "esquina",
+     "cx": 17.8,
+     "cy": 25.0
+    }
+   ]
+  },
+  {
+   "idx": 2613,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.3,
+     "tipo": "esquina",
+     "cx": 18.5,
+     "cy": 12.3
+    },
+    {
+     "cono": "→ der",
+     "area": 9.2,
+     "tipo": "esquina",
+     "cx": 17.6,
+     "cy": 9.1
+    },
+    {
+     "cono": "← izq",
+     "area": 3.4,
+     "tipo": "esquina",
+     "cx": 15.0,
+     "cy": 24.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 2.1,
+     "tipo": "arco",
+     "cx": 17.0,
+     "cy": 5.1
+    }
+   ]
+  },
+  {
+   "idx": 2615,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 2.9,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 26.9
+    }
+   ]
+  },
+  {
+   "idx": 2636,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 5.1,
+     "tipo": "arco",
+     "cx": 16.2,
+     "cy": 5.0
+    },
+    {
+     "cono": "→ der",
+     "area": 3.8,
+     "tipo": "esquina",
+     "cx": 18.5,
+     "cy": 23.7
+    }
+   ]
+  },
+  {
+   "idx": 2637,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 11.9,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 13.3
+    },
+    {
+     "cono": "→ der",
+     "area": 8.5,
+     "tipo": "esquina",
+     "cx": 15.5,
+     "cy": 16.3
+    },
+    {
+     "cono": "→ der",
+     "area": 4.1,
+     "tipo": "arco",
+     "cx": 14.1,
+     "cy": 6.0
+    },
+    {
+     "cono": "→ der",
+     "area": 3.7,
+     "tipo": "arco",
+     "cx": 15.1,
+     "cy": 26.1
+    }
+   ]
+  },
+  {
+   "idx": 2661,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 23.0,
+     "tipo": "esquina",
+     "cx": 14.5,
+     "cy": 18.1
+    },
+    {
+     "cono": "← izq",
+     "area": 17.3,
+     "tipo": "esquina",
+     "cx": 14.4,
+     "cy": 13.4
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 7.0,
+     "tipo": "arco",
+     "cx": 20.2,
+     "cy": 26.3
+    }
+   ]
+  },
+  {
+   "idx": 2704,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 19.0,
+     "tipo": "esquina",
+     "cx": 14.4,
+     "cy": 15.0
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 18.1,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 19.8
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 6.7,
+     "tipo": "arco",
+     "cx": 18.7,
+     "cy": 26.3
+    }
+   ]
+  },
+  {
+   "idx": 2849,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 12.4,
+     "tipo": "esquina",
+     "cx": 18.6,
+     "cy": 7.6
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 8.4,
+     "tipo": "esquina",
+     "cx": 17.5,
+     "cy": 12.2
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 5.9,
+     "tipo": "arco",
+     "cx": 16.8,
+     "cy": 24.8
+    }
+   ]
+  },
+  {
+   "idx": 2865,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 14.3,
+     "tipo": "esquina",
+     "cx": 17.5,
+     "cy": 21.2
+    }
+   ]
+  },
+  {
+   "idx": 2872,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 10.7,
+     "tipo": "esquina",
+     "cx": 17.2,
+     "cy": 23.0
+    }
+   ]
+  },
+  {
+   "idx": 2901,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 4.9,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 15.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.0,
+     "tipo": "esquina",
+     "cx": 12.9,
+     "cy": 18.9
+    }
+   ]
+  },
+  {
+   "idx": 2906,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 2.4,
+     "tipo": "arco",
+     "cx": 17.4,
+     "cy": 24.6
+    }
+   ]
+  },
+  {
+   "idx": 2949,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 15.9,
+     "tipo": "esquina",
+     "cx": 12.8,
+     "cy": 14.6
+    },
+    {
+     "cono": "← izq",
+     "area": 14.9,
+     "tipo": "esquina",
+     "cx": 12.5,
+     "cy": 10.4
+    }
+   ]
+  },
+  {
+   "idx": 2969,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 16.8,
+     "tipo": "esquina",
+     "cx": 15.7,
+     "cy": 7.0
+    },
+    {
+     "cono": "→ der",
+     "area": 6.6,
+     "tipo": "esquina",
+     "cx": 15.3,
+     "cy": 10.7
+    },
+    {
+     "cono": "← izq",
+     "area": 6.2,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 23.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.6,
+     "tipo": "esquina",
+     "cx": 16.3,
+     "cy": 13.1
+    },
+    {
+     "cono": "← izq",
+     "area": 3.2,
+     "tipo": "esquina",
+     "cx": 14.4,
+     "cy": 26.7
+    }
+   ]
+  },
+  {
+   "idx": 2971,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 13.4,
+     "tipo": "esquina",
+     "cx": 19.8,
+     "cy": 23.0
+    },
+    {
+     "cono": "→ der",
+     "area": 12.9,
+     "tipo": "esquina",
+     "cx": 17.9,
+     "cy": 18.9
+    }
+   ]
+  },
+  {
+   "idx": 2995,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.2,
+     "tipo": "arco",
+     "cx": 13.8,
+     "cy": 6.9
+    },
+    {
+     "cono": "→ der",
+     "area": 2.7,
+     "tipo": "arco",
+     "cx": 15.5,
+     "cy": 23.2
+    }
+   ]
+  },
+  {
+   "idx": 2997,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 10.7,
+     "tipo": "esquina",
+     "cx": 14.9,
+     "cy": 21.1
+    },
+    {
+     "cono": "→ der",
+     "area": 3.5,
+     "tipo": "esquina",
+     "cx": 18.9,
+     "cy": 24.9
+    }
+   ]
+  },
+  {
+   "idx": 3019,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 25.6,
+     "tipo": "esquina",
+     "cx": 17.7,
+     "cy": 22.9
+    },
+    {
+     "cono": "← izq",
+     "area": 14.0,
+     "tipo": "esquina",
+     "cx": 12.4,
+     "cy": 9.6
+    }
+   ]
+  },
+  {
+   "idx": 3022,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 5.1,
+     "tipo": "esquina",
+     "cx": 13.7,
+     "cy": 19.9
+    },
+    {
+     "cono": "← izq",
+     "area": 4.9,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 16.7
+    },
+    {
+     "cono": "→ der",
+     "area": 4.3,
+     "tipo": "arco",
+     "cx": 17.1,
+     "cy": 26.9
+    }
+   ]
+  },
+  {
+   "idx": 3051,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 16.5,
+     "tipo": "esquina",
+     "cx": 17.5,
+     "cy": 23.2
+    },
+    {
+     "cono": "← izq",
+     "area": 11.9,
+     "tipo": "esquina",
+     "cx": 14.0,
+     "cy": 22.3
+    }
+   ]
+  },
+  {
+   "idx": 3058,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 12.2,
+     "tipo": "esquina",
+     "cx": 16.8,
+     "cy": 26.3
+    }
+   ]
+  },
+  {
+   "idx": 3069,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 8.4,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 10.2
+    }
+   ]
+  },
+  {
+   "idx": 3080,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 19.5,
+     "tipo": "esquina",
+     "cx": 16.4,
+     "cy": 21.8
+    },
+    {
+     "cono": "→ der",
+     "area": 8.5,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 23.1
+    },
+    {
+     "cono": "← izq",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 13.2,
+     "cy": 11.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.2,
+     "tipo": "esquina",
+     "cx": 12.8,
+     "cy": 14.9
+    }
+   ]
+  },
+  {
+   "idx": 3231,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 3.4,
+     "tipo": "arco",
+     "cx": 17.0,
+     "cy": 28.8
+    }
+   ]
+  },
+  {
+   "idx": 3291,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 8.3,
+     "tipo": "esquina",
+     "cx": 17.0,
+     "cy": 5.8
+    }
+   ]
+  },
+  {
+   "idx": 3385,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.3,
+     "tipo": "esquina",
+     "cx": 17.7,
+     "cy": 7.5
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 6.4,
+     "tipo": "esquina",
+     "cx": 15.3,
+     "cy": 24.9
+    },
+    {
+     "cono": "← izq",
+     "area": 5.2,
+     "tipo": "esquina",
+     "cx": 13.5,
+     "cy": 22.5
+    }
+   ]
+  },
+  {
+   "idx": 3388,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 7.9,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 5.8
+    }
+   ]
+  },
+  {
+   "idx": 3395,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 24.5,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 8.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 21.4,
+     "tipo": "esquina",
+     "cx": 13.2,
+     "cy": 13.8
+    },
+    {
+     "cono": "← izq",
+     "area": 9.8,
+     "tipo": "esquina",
+     "cx": 15.2,
+     "cy": 21.4
+    },
+    {
+     "cono": "→ der",
+     "area": 3.5,
+     "tipo": "esquina",
+     "cx": 17.1,
+     "cy": 23.0
+    }
+   ]
+  },
+  {
+   "idx": 3404,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 11.0,
+     "tipo": "esquina",
+     "cx": 12.9,
+     "cy": 8.2
+    },
+    {
+     "cono": "← izq",
+     "area": 7.8,
+     "tipo": "esquina",
+     "cx": 12.4,
+     "cy": 4.7
+    }
+   ]
+  },
+  {
+   "idx": 3443,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 21.0,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 13.8
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 9.1,
+     "tipo": "esquina",
+     "cx": 19.5,
+     "cy": 9.1
+    },
+    {
+     "cono": "← izq",
+     "area": 5.4,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 10.3
+    }
+   ]
+  },
+  {
+   "idx": 3517,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 36.5,
+     "tipo": "esquina",
+     "cx": 16.6,
+     "cy": 7.0
+    }
+   ]
+  },
+  {
+   "idx": 3544,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 4.8,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 21.7
+    }
+   ]
+  },
+  {
+   "idx": 3590,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 8.5,
+     "tipo": "esquina",
+     "cx": 15.5,
+     "cy": 14.2
+    },
+    {
+     "cono": "← izq",
+     "area": 7.0,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 8.9
+    }
+   ]
+  },
+  {
+   "idx": 3610,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 6.6,
+     "tipo": "esquina",
+     "cx": 15.2,
+     "cy": 20.8
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 5.5,
+     "tipo": "esquina",
+     "cx": 15.6,
+     "cy": 16.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 2.4,
+     "tipo": "arco",
+     "cx": 14.8,
+     "cy": 5.4
+    }
+   ]
+  },
+  {
+   "idx": 3637,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.3,
+     "tipo": "esquina",
+     "cx": 16.3,
+     "cy": 5.6
+    }
+   ]
+  },
+  {
+   "idx": 3651,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 5.0,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 11.3
+    },
+    {
+     "cono": "→ der",
+     "area": 2.3,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 25.4
+    }
+   ]
+  },
+  {
+   "idx": 3657,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 7.6,
+     "tipo": "esquina",
+     "cx": 19.3,
+     "cy": 10.3
+    }
+   ]
+  },
+  {
+   "idx": 3658,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.4,
+     "tipo": "esquina",
+     "cx": 17.2,
+     "cy": 27.2
+    },
+    {
+     "cono": "← izq",
+     "area": 7.7,
+     "tipo": "esquina",
+     "cx": 14.2,
+     "cy": 10.5
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 7.4,
+     "tipo": "esquina",
+     "cx": 14.6,
+     "cy": 14.2
+    }
+   ]
+  },
+  {
+   "idx": 3664,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 10.1,
+     "tipo": "esquina",
+     "cx": 16.1,
+     "cy": 16.9
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 9.0,
+     "tipo": "esquina",
+     "cx": 16.4,
+     "cy": 20.6
+    }
+   ]
+  },
+  {
+   "idx": 3695,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 3.8,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 5.9
+    }
+   ]
+  },
+  {
+   "idx": 3714,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.8,
+     "tipo": "esquina",
+     "cx": 21.3,
+     "cy": 22.5
+    },
+    {
+     "cono": "→ der",
+     "area": 11.8,
+     "tipo": "esquina",
+     "cx": 19.4,
+     "cy": 18.3
+    }
+   ]
+  },
+  {
+   "idx": 3717,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 12.6,
+     "tipo": "arco",
+     "cx": 14.7,
+     "cy": 25.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 6.6
+    }
+   ]
+  },
+  {
+   "idx": 3724,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.2,
+     "tipo": "esquina",
+     "cx": 17.9,
+     "cy": 23.4
+    },
+    {
+     "cono": "→ der",
+     "area": 11.5,
+     "tipo": "esquina",
+     "cx": 15.6,
+     "cy": 20.3
+    },
+    {
+     "cono": "→ der",
+     "area": 5.8,
+     "tipo": "esquina",
+     "cx": 14.9,
+     "cy": 12.5
+    }
+   ]
+  },
+  {
+   "idx": 3754,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 15.6,
+     "cy": 25.1
+    },
+    {
+     "cono": "→ der",
+     "area": 4.1,
+     "tipo": "esquina",
+     "cx": 14.6,
+     "cy": 21.8
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.9,
+     "tipo": "esquina",
+     "cx": 14.6,
+     "cy": 19.3
+    },
+    {
+     "cono": "→ der",
+     "area": 3.9,
+     "tipo": "esquina",
+     "cx": 14.4,
+     "cy": 16.1
+    }
+   ]
+  },
+  {
+   "idx": 3795,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 17.1,
+     "tipo": "esquina",
+     "cx": 17.6,
+     "cy": 22.0
+    },
+    {
+     "cono": "→ der",
+     "area": 8.7,
+     "tipo": "esquina",
+     "cx": 17.1,
+     "cy": 16.5
+    }
+   ]
+  },
+  {
+   "idx": 3861,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 10.5,
+     "tipo": "esquina",
+     "cx": 19.2,
+     "cy": 26.0
+    }
+   ]
+  },
+  {
+   "idx": 3885,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 4.4,
+     "tipo": "esquina",
+     "cx": 15.2,
+     "cy": 25.8
+    }
+   ]
+  },
+  {
+   "idx": 4008,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 8.8,
+     "tipo": "esquina",
+     "cx": 13.8,
+     "cy": 13.2
+    },
+    {
+     "cono": "← izq",
+     "area": 5.4,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 10.3
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 4.4,
+     "tipo": "arco",
+     "cx": 19.3,
+     "cy": 25.8
+    }
+   ]
+  },
+  {
+   "idx": 4053,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 35.4,
+     "tipo": "esquina",
+     "cx": 18.8,
+     "cy": 24.1
+    },
+    {
+     "cono": "← izq",
+     "area": 5.7,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 25.5
+    }
+   ]
+  },
+  {
+   "idx": 4062,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 14.6,
+     "tipo": "arco",
+     "cx": 18.0,
+     "cy": 26.7
+    },
+    {
+     "cono": "→ der",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 13.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.1,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 16.9
+    }
+   ]
+  },
+  {
+   "idx": 4074,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.3,
+     "tipo": "arco",
+     "cx": 17.1,
+     "cy": 27.0
+    }
+   ]
+  },
+  {
+   "idx": 4114,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.5,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 28.2
+    }
+   ]
+  },
+  {
+   "idx": 4144,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 16.1,
+     "tipo": "esquina",
+     "cx": 14.7,
+     "cy": 12.3
+    }
+   ]
+  },
+  {
+   "idx": 4148,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 6.6,
+     "tipo": "esquina",
+     "cx": 16.0,
+     "cy": 4.4
+    },
+    {
+     "cono": "→ der",
+     "area": 6.3,
+     "tipo": "esquina",
+     "cx": 18.3,
+     "cy": 23.7
+    }
+   ]
+  },
+  {
+   "idx": 4149,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 14.7,
+     "tipo": "esquina",
+     "cx": 15.5,
+     "cy": 12.3
+    },
+    {
+     "cono": "← izq",
+     "area": 14.4,
+     "tipo": "esquina",
+     "cx": 15.3,
+     "cy": 16.5
+    }
+   ]
+  },
+  {
+   "idx": 4164,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 3.5,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 7.6
+    }
+   ]
+  },
+  {
+   "idx": 4303,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 10.0,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 26.0
+    },
+    {
+     "cono": "← izq",
+     "area": 5.9,
+     "tipo": "arco",
+     "cx": 15.8,
+     "cy": 5.2
+    }
+   ]
+  },
+  {
+   "idx": 4339,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 5.4,
+     "tipo": "esquina",
+     "cx": 13.5,
+     "cy": 24.9
+    },
+    {
+     "cono": "← izq",
+     "area": 3.8,
+     "tipo": "esquina",
+     "cx": 15.3,
+     "cy": 27.1
+    }
+   ]
+  },
+  {
+   "idx": 4361,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 10.3,
+     "tipo": "esquina",
+     "cx": 14.5,
+     "cy": 7.2
+    },
+    {
+     "cono": "→ der",
+     "area": 8.9,
+     "tipo": "esquina",
+     "cx": 19.8,
+     "cy": 22.9
+    },
+    {
+     "cono": "→ der",
+     "area": 4.9,
+     "tipo": "esquina",
+     "cx": 17.9,
+     "cy": 18.7
+    }
+   ]
+  },
+  {
+   "idx": 4433,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 11.7,
+     "tipo": "arco",
+     "cx": 15.3,
+     "cy": 26.5
+    }
+   ]
+  },
+  {
+   "idx": 4442,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 16.8,
+     "tipo": "arco",
+     "cx": 15.4,
+     "cy": 25.5
+    }
+   ]
+  },
+  {
+   "idx": 4451,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 9.6,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 25.4
+    },
+    {
+     "cono": "← izq",
+     "area": 8.3,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 5.9
+    }
+   ]
+  },
+  {
+   "idx": 4460,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 8.5,
+     "tipo": "arco",
+     "cx": 15.8,
+     "cy": 24.8
+    }
+   ]
+  },
+  {
+   "idx": 4500,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 10.1,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 7.2
+    },
+    {
+     "cono": "→ der",
+     "area": 8.9,
+     "tipo": "esquina",
+     "cx": 18.2,
+     "cy": 14.5
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 8.4,
+     "tipo": "esquina",
+     "cx": 18.5,
+     "cy": 18.2
+    }
+   ]
+  },
+  {
+   "idx": 4545,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 13.7,
+     "tipo": "esquina",
+     "cx": 18.3,
+     "cy": 7.3
+    },
+    {
+     "cono": "→ der",
+     "area": 4.5,
+     "tipo": "arco",
+     "cx": 13.6,
+     "cy": 27.3
+    }
+   ]
+  },
+  {
+   "idx": 4565,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 5.6,
+     "tipo": "esquina",
+     "cx": 15.7,
+     "cy": 6.3
+    },
+    {
+     "cono": "→ der",
+     "area": 3.7,
+     "tipo": "arco",
+     "cx": 18.1,
+     "cy": 26.8
+    }
+   ]
+  },
+  {
+   "idx": 4589,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.2,
+     "tipo": "esquina",
+     "cx": 14.5,
+     "cy": 9.3
+    }
+   ]
+  },
+  {
+   "idx": 4599,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 4.7,
+     "tipo": "esquina",
+     "cx": 13.1,
+     "cy": 14.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 3.4,
+     "tipo": "esquina",
+     "cx": 12.9,
+     "cy": 17.9
+    }
+   ]
+  },
+  {
+   "idx": 4621,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 9.0,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 6.0
+    },
+    {
+     "cono": "→ der",
+     "area": 5.7,
+     "tipo": "arco",
+     "cx": 13.5,
+     "cy": 25.6
+    }
+   ]
+  },
+  {
+   "idx": 4644,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 13.4,
+     "tipo": "esquina",
+     "cx": 17.1,
+     "cy": 24.9
+    }
+   ]
+  },
+  {
+   "idx": 4661,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 10.2,
+     "tipo": "esquina",
+     "cx": 17.7,
+     "cy": 8.3
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 9.3,
+     "tipo": "esquina",
+     "cx": 16.0,
+     "cy": 14.2
+    }
+   ]
+  },
+  {
+   "idx": 4762,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.3,
+     "tipo": "arco",
+     "cx": 16.2,
+     "cy": 7.5
+    }
+   ]
+  },
+  {
+   "idx": 4770,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 12.5,
+     "tipo": "arco",
+     "cx": 18.2,
+     "cy": 28.0
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 6.0,
+     "tipo": "esquina",
+     "cx": 16.3,
+     "cy": 19.1
+    }
+   ]
+  },
+  {
+   "idx": 4825,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.6,
+     "tipo": "esquina",
+     "cx": 18.5,
+     "cy": 25.3
+    }
+   ]
+  },
+  {
+   "idx": 5022,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 7.6,
+     "tipo": "arco",
+     "cx": 17.6,
+     "cy": 24.7
+    }
+   ]
+  },
+  {
+   "idx": 5064,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 15.9,
+     "tipo": "esquina",
+     "cx": 16.1,
+     "cy": 25.8
+    },
+    {
+     "cono": "← izq",
+     "area": 6.8,
+     "tipo": "esquina",
+     "cx": 13.2,
+     "cy": 25.8
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 5.3,
+     "tipo": "arco",
+     "cx": 14.2,
+     "cy": 4.5
+    }
+   ]
+  },
+  {
+   "idx": 5069,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 3.2,
+     "tipo": "arco",
+     "cx": 17.3,
+     "cy": 5.8
+    }
+   ]
+  },
+  {
+   "idx": 5091,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 3.0,
+     "tipo": "arco",
+     "cx": 16.2,
+     "cy": 24.5
+    }
+   ]
+  },
+  {
+   "idx": 5161,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 2.2,
+     "tipo": "arco",
+     "cx": 15.2,
+     "cy": 5.7
+    }
+   ]
+  },
+  {
+   "idx": 5184,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 26.9,
+     "tipo": "esquina",
+     "cx": 16.0,
+     "cy": 22.1
+    }
+   ]
+  },
+  {
+   "idx": 5198,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 2.3,
+     "tipo": "arco",
+     "cx": 18.9,
+     "cy": 8.5
+    }
+   ]
+  },
+  {
+   "idx": 5266,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 23.9,
+     "tipo": "esquina",
+     "cx": 13.9,
+     "cy": 16.1
+    },
+    {
+     "cono": "→ der",
+     "area": 15.4,
+     "tipo": "esquina",
+     "cx": 19.4,
+     "cy": 24.3
+    },
+    {
+     "cono": "← izq",
+     "area": 11.0,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 24.4
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 5.6,
+     "tipo": "esquina",
+     "cx": 17.3,
+     "cy": 7.9
+    }
+   ]
+  },
+  {
+   "idx": 5340,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 2.1,
+     "tipo": "arco",
+     "cx": 17.1,
+     "cy": 28.0
+    }
+   ]
+  },
+  {
+   "idx": 5403,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 5.1,
+     "tipo": "arco",
+     "cx": 15.7,
+     "cy": 27.9
+    }
+   ]
+  },
+  {
+   "idx": 5453,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 9.0,
+     "tipo": "esquina",
+     "cx": 14.2,
+     "cy": 18.5
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 7.5,
+     "tipo": "esquina",
+     "cx": 14.1,
+     "cy": 21.8
+    },
+    {
+     "cono": "← izq",
+     "area": 4.2,
+     "tipo": "arco",
+     "cx": 14.9,
+     "cy": 7.1
+    }
+   ]
+  },
+  {
+   "idx": 5465,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.7,
+     "tipo": "arco",
+     "cx": 16.0,
+     "cy": 25.8
+    }
+   ]
+  },
+  {
+   "idx": 5468,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 19.8,
+     "tipo": "arco",
+     "cx": 14.6,
+     "cy": 24.2
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 7.1,
+     "tipo": "esquina",
+     "cx": 15.1,
+     "cy": 7.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 16.3,
+     "cy": 10.1
+    }
+   ]
+  },
+  {
+   "idx": 5473,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 4.5,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 16.7
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 4.0,
+     "tipo": "esquina",
+     "cx": 16.2,
+     "cy": 19.9
+    }
+   ]
+  },
+  {
+   "idx": 5507,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 2.2,
+     "tipo": "arco",
+     "cx": 14.4,
+     "cy": 5.1
+    }
+   ]
+  },
+  {
+   "idx": 5519,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "← izq",
+     "area": 11.7,
+     "tipo": "esquina",
+     "cx": 14.6,
+     "cy": 17.5
+    },
+    {
+     "cono": "→ der",
+     "area": 10.8,
+     "tipo": "esquina",
+     "cx": 17.6,
+     "cy": 21.2
+    },
+    {
+     "cono": "← izq",
+     "area": 7.3,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 13.7
+    }
+   ]
+  },
+  {
+   "idx": 5520,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.8,
+     "tipo": "esquina",
+     "cx": 15.0,
+     "cy": 17.3
+    },
+    {
+     "cono": "← izq",
+     "area": 9.5,
+     "tipo": "esquina",
+     "cx": 15.4,
+     "cy": 14.1
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 5.1,
+     "tipo": "arco",
+     "cx": 15.8,
+     "cy": 5.3
+    },
+    {
+     "cono": "↑ arriba",
+     "area": 2.2,
+     "tipo": "arco",
+     "cx": 15.1,
+     "cy": 26.9
+    }
+   ]
+  },
+  {
+   "idx": 5538,
+   "parte": "extra",
+   "decidido": "regla",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 9.6,
+     "tipo": "esquina",
+     "cx": 17.0,
+     "cy": 7.2
+    },
+    {
+     "cono": "↓ abajo",
+     "area": 7.2,
+     "tipo": "esquina",
+     "cx": 15.4,
+     "cy": 14.0
+    },
+    {
+     "cono": "→ der",
+     "area": 3.7,
+     "tipo": "esquina",
+     "cx": 15.8,
+     "cy": 10.8
+    }
+   ]
+  },
+  {
+   "idx": 5540,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 2.4,
+     "tipo": "arco",
+     "cx": 16.6,
+     "cy": 25.4
+    }
+   ]
+  },
+  {
+   "idx": 5544,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "→ der",
+     "area": 16.9,
+     "tipo": "esquina",
+     "cx": 16.8,
+     "cy": 18.5
+    },
+    {
+     "cono": "→ der",
+     "area": 13.6,
+     "tipo": "esquina",
+     "cx": 16.5,
+     "cy": 14.3
+    }
+   ]
+  },
+  {
+   "idx": 5560,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↑ arriba",
+     "area": 2.1,
+     "tipo": "arco",
+     "cx": 14.8,
+     "cy": 26.0
+    }
+   ]
+  },
+  {
+   "idx": 5567,
+   "parte": "extra",
+   "decidido": "a mano",
+   "entrantes": [
+    {
+     "cono": "↓ abajo",
+     "area": 4.9,
+     "tipo": "arco",
+     "cx": 16.9,
+     "cy": 5.0
+    }
+   ]
+  }
+ ],
+ "1a_con": 300,
+ "n_1a": 307,
+ "7_con": 565,
+ "n_7": 566,
+ "1l_con_por_parte": {
+  "val": 40,
+  "train": 6,
+  "extra": 105
+ },
+ "1l_con_decididos": {
+  "a mano": 127,
+  "regla": 24
+ },
+ "area_mediana": {
+  "1l": 7.295779859584101,
+  "7": 13.349158344583117
+ },
+ "celdas_1l": [
+  {
+   "cono": "→ der",
+   "celda": "abajo-centro",
+   "n": 55
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "centro",
+   "n": 48
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "arriba-centro",
+   "n": 42
+  },
+  {
+   "cono": "→ der",
+   "celda": "centro",
+   "n": 37
+  },
+  {
+   "cono": "← izq",
+   "celda": "centro",
+   "n": 34
+  },
+  {
+   "cono": "← izq",
+   "celda": "arriba-centro",
+   "n": 30
+  },
+  {
+   "cono": "↑ arriba",
+   "celda": "abajo-centro",
+   "n": 28
+  },
+  {
+   "cono": "→ der",
+   "celda": "arriba-centro",
+   "n": 22
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "abajo-centro",
+   "n": 16
+  },
+  {
+   "cono": "← izq",
+   "celda": "abajo-centro",
+   "n": 16
+  },
+  {
+   "cono": "↑ arriba",
+   "celda": "arriba-centro",
+   "n": 7
+  },
+  {
+   "cono": "← izq",
+   "celda": "centro-izq",
+   "n": 6
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "arriba-der",
+   "n": 5
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "centro-izq",
+   "n": 5
+  },
+  {
+   "cono": "← izq",
+   "celda": "arriba-izq",
+   "n": 5
+  },
+  {
+   "cono": "→ der",
+   "celda": "abajo-der",
+   "n": 5
+  },
+  {
+   "cono": "→ der",
+   "celda": "centro-der",
+   "n": 3
+  },
+  {
+   "cono": "← izq",
+   "celda": "abajo-izq",
+   "n": 2
+  },
+  {
+   "cono": "↑ arriba",
+   "celda": "abajo-der",
+   "n": 2
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "abajo-izq",
+   "n": 1
+  },
+  {
+   "cono": "→ der",
+   "celda": "arriba-der",
+   "n": 1
+  },
+  {
+   "cono": "↑ arriba",
+   "celda": "centro",
+   "n": 1
+  },
+  {
+   "cono": "↓ abajo",
+   "celda": "centro-der",
+   "n": 1
+  }
+ ],
+ "1l_con_los_dos_del_1552": [
+  736,
+  1250,
+  2613,
+  2849,
+  2969,
+  3395,
+  4661,
+  5538
+ ],
+ "7_con_los_dos": 45
+}
