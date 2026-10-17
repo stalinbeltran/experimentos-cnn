@@ -193,6 +193,12 @@ Inventario hecho ese día leyendo el código, y revisado por el agente `verifica
 anteriores al delgado y no alimentan el revisor; si se van a reutilizar, primero se pasan al delgado. Lista sacada con `grep`,
 no leída fichero a fichero.
 
+✅ **Hecho el 2026-10-17 (el dueño: «elimina los features de tinta… ya no deben aparecer como opciones para elegir»)**: `vertice` y
+`vertice_1` son **RETIRADOS** en el revisor (`web/servidor.py: RETIRADOS`): no salen en «entrenar otro» ni en archivados, y un
+compositor nuevo que los pida se niega (400). **Siguen en el código** porque los dos compositores vivos (LazosConcavidades,
+LazosEntrantes) los usan; los quita el dueño cuando borre esos compositores. Lo que sigue pendiente de la tabla es pasar el
+vértice al delgado (el vértice libre) y quitar `tinta` de `caract`.
+
 El sustituto natural es el **vértice libre** sobre la cresta del delgado (`rizo-2` § 102–103), pero **cambiarlo cambia la
 huella de los compositores guardados** y el dueño ordenó el 2026-10-17 **no entrenar ningún compositor por ahora**. Cuando
 se haga: la tabla de arriba es la lista; quitar `tinta` de `caract` y del revisor; y medir la curva de desplazamientos.

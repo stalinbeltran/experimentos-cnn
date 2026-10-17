@@ -89,6 +89,21 @@ class Columnas(unittest.TestCase):
         self.assertEqual(B["vertice_1"], (fin, fin + 10))
         self.assertEqual(S.partes("vertice_1"), ["rejilla", "cuenta"])
 
+    def test_los_de_tinta_no_se_ofrecen_pero_siguen_existiendo(self):
+        """El dueño, 2026-10-17: los features de TINTA no aparecen como opción; los compositores ya entrenados con ellos cargan."""
+        ofrecidos = S.bloques_ofrecidos()
+        for b in ("vertice", "vertice_1"):
+            self.assertIn(b, S.RETIRADOS); self.assertNotIn(b, ofrecidos); self.assertNotIn(b, S.archivados())
+            self.assertIn(b, S.BLOQUES)                               # siguen en el código: LazosConcavidades/LazosEntrantes los usan
+        self.assertEqual(S.normalizar("vertice_1:rejilla"), "vertice_1:rejilla")
+        self.assertEqual(set(ofrecidos) | set(S.RETIRADOS), set(S.BLOQUES))
+        self.assertFalse([b for b in S.BLOQUES_DEFECTO if S.pieza(b)[0] in S.RETIRADOS], "el defecto no puede llevar un retirado")
+
+    def test_un_compositor_nuevo_con_un_retirado_se_niega(self):
+        with self.assertRaisesRegex(ValueError, "TINTA"):
+            S.comprobar_nuevo(["lazos_region:rejilla", "vertice_1:rejilla"])
+        S.comprobar_nuevo(["rectas", "lazos_region:rejilla"])       # sin retirados: pasa
+
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 2); self.assertIn("no sé qué es", r.stdout)
@@ -238,6 +253,28 @@ class Pesos(unittest.TestCase):
         c.preds = np.zeros((len(semillas), 5), int); c.veces = np.zeros(5, int); c.finos = c.preds.copy(); c.logits_va = np.zeros((5, 10))
         c.segundos = 1.0; c.resumen = {"nombre": nombre, "val": 0.5}; c.estado = "listo"
         return c, X
+
+    def test_borrar_quita_sus_pesos_y_limpiar_quita_los_huerfanos(self):
+        """El dueño, 2026-10-17: «si los borro es porque ya no son necesarios»: borrar un compositor quita su .pt del almacén, y
+        `limpiar-pesos` quita los de compositores borrados antes (cuando borrar no los tocaba). Los de recetas vivas se quedan."""
+        with tempfile.TemporaryDirectory() as d:
+            alm = Path(d); vivo, muerto, viejo = (S.Compositor(n, ["rectas"]) for n in ("Vivo", "Muerto", "Viejo de ayer"))
+            for c in (vivo, muerto, viejo):
+                c.fichero(alm).write_bytes(b"x")
+            real = (S.almacen_revisor, S.recetas_guardadas, S.empujar_almacen, S.CACHE); empujes = []
+            S.almacen_revisor = lambda: alm; S.recetas_guardadas = lambda: {"Vivo": {}}; S.empujar_almacen = empujes.append
+            S.CACHE = alm / "cache-local"                             # la caché del test, nunca la de la app viva
+            self.assertEqual(S.limpiar_pesos(seco=True), 2)           # sin ningún recetas.json legible se NIEGA (no adivina cuáles viven)
+            (alm / "recetas.json").write_text('{"Vivo": {}}')
+            try:
+                self.assertEqual(S.borrar_pesos([muerto]), [muerto.fichero(alm).name])
+                self.assertFalse(muerto.fichero(alm).exists()); self.assertTrue(vivo.fichero(alm).exists())
+                self.assertEqual([f.name for f in S.pesos_huerfanos(alm, {"Vivo": {}})], [viejo.fichero(alm).name])
+                self.assertEqual(S.limpiar_pesos(seco=True), 0); self.assertTrue(viejo.fichero(alm).exists()); self.assertEqual(empujes, [])
+                self.assertEqual(S.limpiar_pesos(seco=False), 0)
+                self.assertFalse(viejo.fichero(alm).exists()); self.assertTrue(vivo.fichero(alm).exists()); self.assertEqual(len(empujes), 1)
+            finally:
+                S.almacen_revisor, S.recetas_guardadas, S.empujar_almacen, S.CACHE = real
 
     def test_guardar_y_restaurar_da_los_mismos_logits(self):
         c, X = self._listo(); huella = {"cresta": "abc", "etiquetas4": "sin", "bloques": ["rectas"]}

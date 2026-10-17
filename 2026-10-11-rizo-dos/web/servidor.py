@@ -167,6 +167,23 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     "vertice_1": ("vértice del 4 en UNA celda (prueba, 2026-10-16)", "rejilla one-hot: la celda que contiene el centro, sin mancha ni solape + cuenta", "vertice"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
+# RETIRADOS (el dueño, 2026-10-17: «elimina los features de tinta… aunque por el compositor existente deban seguir existiendo en
+# el código, ya no deben aparecer como opciones para elegir»). Regla del repo: TODO se calcula sobre el DELGADO, y estos dos miran
+# la TINTA. Siguen en BLOQUES para que los compositores ya entrenados con ellos carguen y se lean; no se ofrecen en «entrenar
+# otro» (`bloques_ofrecidos`) y un compositor NUEVO que los pida se niega (`comprobar_nuevo`).
+RETIRADOS = {"vertice": "usa la TINTA (regla: todo sobre el delgado)", "vertice_1": "usa la TINTA (regla: todo sobre el delgado)"}
+
+
+def bloques_ofrecidos() -> list[str]:
+    """Los bloques que se pueden ELEGIR para entrenar: todos menos los retirados."""
+    return [k for k in BLOQUES if k not in RETIRADOS]
+
+
+def comprobar_nuevo(bloques: list[str]):
+    """Un compositor NUEVO no puede llevar un bloque retirado (los ya guardados sí cargan: ver App.nuevo(existente=True))."""
+    malos = [b for b in bloques if pieza(b)[0] in RETIRADOS]
+    if malos:
+        raise ValueError("bloque retirado: " + "; ".join(f"«{pieza(b)[0]}» {RETIRADOS[pieza(b)[0]]}" for b in malos))
 
 RECETAS_BASE = {   # las corridas de 144 del README, por nombre: lo que un compositor «es» son sus bloques
     # ⚠ Regla del dueño (2026-10-16): los GOLPES NO van por defecto en un compositor NUEVO (CLAUDE.md del repo). Estas
@@ -176,8 +193,8 @@ RECETAS_BASE = {   # las corridas de 144 del README, por nombre: lo que un compo
     "lazo área (§ 79)": ["rectas_todo", "arcos", "golpes", "lazos_area", "entrantes60"],
     "conos 60° sin restos (§ 66)": ["rectas", "arcos", "golpes", "lazos", "entrantes60"],
 }
-BLOQUES_DEFECTO = ["rectas_todo", "arcos", "lazos_region", "entrantes60", "vertice"]   # aprobadas + vértice, SIN golpes (el dueño, 2026-10-16)
-RECETA_DEFECTO = "aprobadas + vértice, sin golpes · 4 en dos · +extra"
+BLOQUES_DEFECTO = ["rectas_todo", "arcos", "lazos_region", "entrantes60"]   # aprobadas, SIN golpes (el dueño, 2026-10-16) y SIN el vértice
+RECETA_DEFECTO = "aprobadas, sin golpes · 4 en dos · +extra"                  # de tinta (retirado el 2026-10-17, ver RETIRADOS)
 CORRIDA_DE = {   # receta → JSON de su corrida, para que el test compruebe que esto reproduce los números del README
     "aprobada: lazo región (§ 79)": "40-entrada-cresta-lazos-region.json",
     "restos fundido, lazo presencia (§ 74)": "40-entrada-cresta-restos-fundido.json",
@@ -623,7 +640,7 @@ def archivados() -> list[str]:
     for f in [CACHE / "archivados.json"] + ([alm / "archivados.json"] if alm else []):
         if f.is_file():
             try:
-                return [b for b in json.loads(f.read_text()) if b in BLOQUES]
+                return [b for b in json.loads(f.read_text()) if b in BLOQUES and b not in RETIRADOS]   # un retirado ya no se ofrece ni archivado
             except (json.JSONDecodeError, TypeError):
                 pass
     return []
@@ -640,6 +657,58 @@ def archivar(bloque: str, si: bool) -> list[str]:
         alm.mkdir(parents=True, exist_ok=True); (alm / "archivados.json").write_text(texto)
         empujar_almacen(f"rizo-2 revisor: {'archivado' if si else 'desarchivado'} el feature «{bloque}»")
     return lst
+
+
+def borrar_pesos(comps) -> list[str]:
+    """Quita del almacén el `.pt` de cada compositor dado (si lo hay). Devuelve los nombres quitados. NO empuja (lo hace quien
+    llama, junto con las recetas). Nunca lanza."""
+    alm = almacen_revisor(); out = []
+    if alm is None:
+        return out
+    for c in comps:
+        try:
+            f = c.fichero(alm)
+            if f.is_file():
+                f.unlink(); out.append(f.name)
+        except OSError as e:
+            print(f"  ⚠ no pude quitar los pesos de «{c.nombre}»: {e}", flush=True)
+    return out
+
+
+def pesos_huerfanos(alm: Path, recetas: dict) -> list[Path]:
+    """Los `.pt` del almacén que NO son de ninguna receta guardada: de compositores ya borrados. La identidad es el nombre de
+    fichero que `Compositor.fichero` deriva del NOMBRE de la receta (sha1), no una lista escrita a mano (R16)."""
+    vivos = {Compositor(n, ["rectas"]).fichero(alm).name for n in recetas}
+    return sorted(f for f in alm.glob("*.pt") if f.name not in vivos)
+
+
+def _json_ok(f: Path) -> bool:
+    try:
+        return f.is_file() and isinstance(json.loads(f.read_text()), dict)
+    except (OSError, json.JSONDecodeError):
+        return False
+
+
+def limpiar_pesos(seco: bool) -> int:
+    """`servidor.py limpiar-pesos [--seco]`: quita del almacén los pesos de compositores que ya no están en las recetas (los
+    borrados antes del 2026-10-17, cuando borrar no tocaba los .pt) y empuja. Con --seco sólo los lista."""
+    alm = almacen_revisor()
+    if alm is None:
+        print("✗ sin repo de datos (almacén): nada que limpiar"); return 2
+    # Sólo con recetas LEÍDAS de un fichero: sin recetas.json (o roto) `recetas_guardadas` cae a la receta por defecto, y entonces
+    # los pesos de las recetas de verdad parecerían huérfanos (lo señaló el agente revisor, 2026-10-17).
+    if not any(_json_ok(f) for f in (CACHE / "recetas.json", alm / "recetas.json")):
+        print("✗ no hay recetas.json legible (ni local ni en el almacén): no sé cuáles son las vivas, no quito nada"); return 2
+    rec = recetas_guardadas(); h = pesos_huerfanos(alm, rec)
+    print(f"recetas vivas: {', '.join(rec) or '(ninguna)'}\npesos huérfanos en {alm}: {len(h)}")
+    for f in h:
+        print(f"  {'(seco) ' if seco else ''}quito {f.name}")
+    if seco or not h:
+        return 0
+    for f in h:
+        f.unlink()
+    empujar_almacen(f"rizo-2 revisor: quitados {len(h)} pesos de compositores ya borrados ({', '.join(f.name for f in h)})")
+    return 0
 
 
 def recetas_guardadas() -> dict:
@@ -667,7 +736,7 @@ class App:
         self.datos = Datos(); self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
         self.hilo = threading.Thread(target=self._bucle, daemon=True); self.hilo.start()
         for nombre, bl in self.recetas_guardadas().items():
-            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False))
+            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), existente=True)
 
     def recetas_guardadas(self) -> dict:
         return recetas_guardadas()
@@ -692,10 +761,12 @@ class App:
         except Exception as e:                                    # noqa: BLE001
             print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
-    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False) -> Compositor:
+    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False, existente=False) -> Compositor:
         if not bloques:
             raise ValueError("sin bloques")
         bloques = [normalizar(b) for b in bloques]                 # se niega ante un bloque o pieza desconocidos
+        if not existente:                                         # uno guardado (al arrancar) carga aunque lleve un retirado
+            comprobar_nuevo(bloques)
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
         nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · +extra" if extra else "")
@@ -709,11 +780,14 @@ class App:
 
     def borrar(self, nombre: str):
         with self._lock:
-            self.comps.pop(nombre, None)
+            c = self.comps.pop(nombre, None)
         self.guardar_recetas()
         # 2026-10-17: borrar escribía recetas.json en el almacén y NO lo empujaba: el freno lo veía como «sin empujar» y un
-        # dev nuevo habría resucitado lo borrado. Los .pt no se tocan (el almacén no borra; un borrado es reversible).
-        empujar_almacen(f"rizo-2 revisor: recetas tras borrar «{nombre}»")
+        # dev nuevo habría resucitado lo borrado. Y desde ese mismo día (el dueño: «si los borro es porque ya no son necesarios»)
+        # se quitan también sus PESOS del almacén: cada dev nuevo los clonaba sin que nadie los fuera a usar. Quitarlos es un
+        # commit, no reescribir historia: siguen recuperables con git (y el volumen no encoge por esto).
+        quitados = borrar_pesos([c] if c is not None else [])
+        empujar_almacen(f"rizo-2 revisor: borrado «{nombre}» (recetas" + (f" y sus pesos {', '.join(quitados)})" if quitados else ")"))
 
     def _bucle(self):
         while True:
@@ -756,7 +830,7 @@ class App:
     # --- lo que contesta
     def estado(self) -> dict:
         return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "extra": c.extra, **c.resumen} for c in self.comps.values()],
-                "bloques": [{"clave": k, "etiqueta": v[0], "forma": v[1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k, v in BLOQUES.items()],
+                "bloques": [{"clave": k, "etiqueta": BLOQUES[k][0], "forma": BLOQUES[k][1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k in bloques_ofrecidos()],
                 "bloques_defecto": BLOQUES_DEFECTO, "archivados": archivados(),                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
@@ -1046,7 +1120,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--puerto", type=int, default=int(os.environ.get("REVISOR_PUERTO", PUERTO))); ap.add_argument("--host", default="0.0.0.0")
     ap.add_argument("--seco", action="store_true", help="con `entrenar`: dice qué entrenaría y sale")
-    ap.add_argument("modo", nargs="*", default=[], help="url · estado · instalar · abrir · cerrar · entrenar <emulados|todas|id|nombre…> [--seco] · (vacío: servir)")
+    ap.add_argument("modo", nargs="*", default=[], help="url · estado · instalar · abrir · cerrar · entrenar <emulados|todas|id|nombre…> [--seco] · limpiar-pesos [--seco] · (vacío: servir)")
     a = ap.parse_args()
     modo = " ".join(a.modo).strip().lower()                       # se fija AQUÍ y no se relee (2026-09-08)
     print(f"rizo2-revisor: modo `{modo or 'servir'}`", file=sys.stderr)
@@ -1058,6 +1132,8 @@ def main() -> int:
         return cortafuegos(a.puerto, modo == "abrir")
     if a.modo and a.modo[0].lower() == "entrenar":
         return entrenar_consola(a.modo[1:], a.seco)
+    if modo == "limpiar-pesos":
+        return limpiar_pesos(a.seco)
     if modo == "url":
         t = _token_de_disco(crear=False)
         if not t:
@@ -1066,7 +1142,7 @@ def main() -> int:
             return 1
         print(f"http://{_ip()}:{a.puerto}/?t={t}"); print(f"etiquetar los 4: http://{_ip()}:{a.puerto}/etiquetar?t={t}"); return 0
     if modo not in ("", "servir"):                                # se NIEGA, no adivina
-        print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · entrenar … · (nada: levantarla)\n"); return 2
+        print(f"\n✗ no sé qué es «{modo}».\n  url · estado · instalar · abrir · cerrar · entrenar … · limpiar-pesos · (nada: levantarla)\n"); return 2
     return servir(a.puerto, a.host)
 
 
