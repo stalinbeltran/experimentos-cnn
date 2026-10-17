@@ -209,7 +209,9 @@ async function verCompositor() {
   const P = F ? featuresDeCelda(L, F, NC) : L.pesan;
   const suma = F ? P.reduce((o,p)=>(o[p.bloque]=(o[p.bloque]||0)+p.atr, o), {}) : L.suma_por_bloque;
   html += `<div class="nota" style="margin-top:0">${F?`sólo la celda <b>${h(NC[F.r*F.L+F.c])}</b> · ${P.length} features (los sin posición quedan fuera) · `:''}por bloque: ${Object.entries(suma).map(([k,v])=>`${k} ${v>=0?'+':''}${v.toFixed(F?2:1)}`).join(' · ')}</div>`;
-  const mx = Math.max(1e-9, ...P.map(p=>Math.abs(p.atr)));
+  // La escala es SIEMPRE la de la lista completa (el dueño, 2026-10-17: «que las barras mantengan los tamaños que tienen
+  // cuando están todas»): filtrar no agranda las barras, así una barra corta en la celda sigue siendo corta.
+  const mx = Math.max(1e-9, ...L.pesan.map(p=>Math.abs(p.atr)));
   html += P.map((p,k)=>`<div class="barra" data-pesa="${k}" style="cursor:pointer"><div class="n" title="${h(p.nombre)} (=${p.valor.toFixed(2)})">${h(F ? p.corto : p.nombre.split(' · ')[0])}${F?` <span style="color:var(--gris)">=${p.valor.toFixed(2)}</span>`:''}</div><div class="b" style="width:${Math.abs(p.atr)/mx*48}%;background:${p.atr>0?'#b22222':'#1f8a4c'}"></div><div style="padding-left:4px">${p.atr>=0?'+':''}${p.atr.toFixed(2)}</div></div>`).join('');
   html += navegacion(); main.innerHTML = html; $('#selc').onchange=e=>{S.comp=e.target.value; S.lista=null; verCompositor();};
   const mini = $('#mini'); dibujar(mini, d.M, d.objetos, {px:5, rejilla:c.celdas}); atarNav(verCompositor);
