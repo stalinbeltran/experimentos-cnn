@@ -128,7 +128,7 @@ async function verLista() {
   const et = (r) => { if (r.real_txt!==undefined) return r.fallo ? `${r.real_txt}→${r.leido_txt}` : `${r.real_txt} ✓`;   // § 107: el servidor manda los nombres (1l, 4a…)
     const re = r.real===4 && r.sub ? '4'+r.sub : ''+r.real; const pr = c.sub4 ? (r.predicho_fino===10?'4l':r.predicho_fino===4?'4a':''+r.predicho_fino) : ''+r.predicho; return r.fallo ? `${re}→${pr}` : `${re} ✓`; };
   const cards = $('#cards'); cards.innerHTML = L.filas.map(r=>`<div class="card" data-idx="${r.idx}"><div class="et ${r.fallo?'fallo':'acierto'}">${et(r)} · idx ${r.idx} · ${r.veces}/${c.semillas.length}${!r.fallo?` · p ${r.p.toFixed(2)}`:''}</div><canvas id="m${r.idx}"></canvas></div>`).join('');
-  cards.querySelectorAll('.card').forEach(el=> el.onclick=()=>{ S.idx=+el.dataset.idx; S.sel=null; ir('digito'); });
+  cards.querySelectorAll('.card').forEach(el=> el.onclick=()=>{ S.idx=+el.dataset.idx; S.sel=null; ir('compositor'); });   // a la pantalla compositor (el dueño, 2026-10-17); antes iba a «dígito»
   const ids = L.filas.map(r=>r.idx).filter(i=>!S.mini[i]);
   for (let k=0;k<ids.length;k+=30) { const lote = await api('/api/miniaturas',{ids:ids.slice(k,k+30).join(',')}); lote.forEach(m=> S.mini[m.idx]=m); pinta(); }
   pinta();
