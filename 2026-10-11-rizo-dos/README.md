@@ -1789,6 +1789,14 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 114 · Los mismos 1l con la tinta suavizada en GRIS, en varios grados — sólo imágenes (el dueño, 2026-10-17)
+
+«No necesito el binarizado… muéstrame las mismas imágenes que mostraste binarizadas, pero en gris. No las evalúes.»
+`nn/suavizado_gris_vista.py` → `resultados/114-suavizado-gris.png`: los 8 1l de § 113 con σ 0,7 · 1 · 1,5 en gris (sin rebinarizar),
+pasados por el adelgazador de siempre (entrenado con tinta BINARIA). Delgados de `delgado-cnn --suavizar σ --gris`. Sin medidas,
+a propósito. ⏳ Pendiente de que el dueño decida si se entrena un adelgazador nuevo con entrada gris (estimado ese día: ~2,5 min
+de máquina por red en este dev, ~15 min el plan completo de una red por σ).
+
 ### 113 · SUAVIZAR la tinta antes de adelgazar, medido sobre los 1l (el dueño, 2026-10-17)
 
 «Tenemos ya un preproceso que adelgaza los dígitos. Vamos a crear otro que los suavice. Y nuestra medida van a ser estos 1l.
