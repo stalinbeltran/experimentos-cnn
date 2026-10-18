@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 119 · Un ADELGAZADOR entrenado con trazos GRISES suavizados (σ 0,7), sobre el dataset de MISMO TRAZO (el dueño, 2026-10-18)
+
+«Entrena el adelgazador con trazos grises suavizados. ¿Se puede?» Sí. `delgado-cnn`: `entrenar_local.py --suavizar 0.7 --nombre
+k3x3-g0.7` (el k3x3 de siempre con la tinta sintética desenfocada en gris), porque σ 0,7 es el desenfoque del borde **medido** en el
+dataset de § 118 (σ ≈ 0,77 px, mediana de 11.584 bordes; un sintético con σ 0,7 mide 0,76). 136 s en este dev; pérdida en trazos
+nunca vistos 0,1380 (k3x3 binario: 0,1389). `exportar_delgados.py` acepta ahora `--dataset` (gris entra tal cual).
+`nn/adelgazador_trazo_vista.py` → `resultados/119-adelgazador-trazo.{png,json}`. Medido ese día:
+
+| variante | 1l con entrantes | 1l con ramas | lazos 0 · 6 · 8 · 9 | entrantes por 7 · 3 |
+|---|---|---|---|---|
+| hoy (NIST binario + adelgazador binario) | 57 % | 35 % | 0,95 · 0,98 · 1,83 · 0,98 | 3,3 · 2,6 |
+| mismo trazo + adelgazador binario | 8 % | 0 % | 0,96 · 0,98 · 1,84 · 0,98 | 1,8 · 2,1 |
+| **mismo trazo + adelgazador NUEVO** | **3 %** | **0 %** | 0,96 · 0,97 · 1,83 · 0,96 | 2,0 · 2,2 |
+
+- **El problema de § 112 desaparece**: los 1l pasan de 57 % con entrantes a 3 %, y de 35 % con ramas a 0. La mayor parte la hace el
+  dataset de mismo trazo (8 %); el adelgazador gris remata (3 %).
+- **Los lazos se conservan** (el rebinarizado de § 113 cerraba ~10 %), y no se inventa ninguno en los 1l (el de § 115 inventaba 10).
+- ⚠ **Pendiente de mirar**: los 7 bajan de 3,3 a 2,0 entrantes por dígito y los 3 de 2,6 a 2,2. Puede ser que se vayan entrantes
+  falsos (como en los 1l) o verdaderos; no está medido cuáles. El 1552 (el 7 leído 1l de § 112) se queda sin ninguno.
+- Nada cambiado en el revisor: pasar a este dataset y este adelgazador obliga a recalcular todo y reentrenar los compositores.
+
 ### 118 · Un DATASET con el MISMO TRAZO: `uci-optdigits-orig-32px-trazo4-r20261018` (el dueño, 2026-10-18)
 
 «El objetivo es hallar el grosor real de cada dígito… para un humano esos 1l se ven demasiado extraños. Ajústalos,

@@ -61,3 +61,9 @@ bajan del 57 al 19 %, a cambio de cerrar ~10 % de los lazos del 8 y el 9.
 trazos sintéticos suavizados por la MISMA gaussiana que `exportar_delgados.py --suavizar 1.5 --gris` aplica a los dígitos. 111 s en
 el dev (2 vCPU), pérdida en nuevos 0,1406 (k3x3: 0,1389). Delgados: `exportar_delgados.py --pesos k3x3-g1.5 --suavizar 1.5 --gris` →
 `resultados/delgados-k3x3-g1.5-s1.5g.npz`. Las imágenes, en rizo-2 § 115.
+
+## `k3x3-g0.7` y `--dataset` (2026-10-18): el adelgazador para el dataset de MISMO TRAZO
+
+`python nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 0.7 --nombre k3x3-g0.7` (σ 0,7 = el desenfoque del borde medido
+en `uci-optdigits-orig-32px-trazo4-r20261018`); 136 s, pérdida en nuevos 0,1380. `exportar_delgados.py --pesos k3x3-g0.7 --dataset
+<nombre>` lee cualquier dataset publicado (gris tal cual). Medido en rizo-2 § 119: los 1l con entrantes, del 57 % al 3 %.
