@@ -1789,6 +1789,31 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 121 · Reentrenar el adelgazador con DOS TRAZOS (T y X) NO recupera la barra del 7 — y la poda tampoco (el dueño, 2026-10-18: «sí»)
+
+Criterio escrito ANTES de medir: (1) 1l ≤ 5 % con ramas y ≤ 10 % con entrantes; (2) 7 con algún nudo ≥ 75 % (hoy 87 %, gris de
+§ 119 45 %); (3) a la vista, los 12 sietes que la perdían la muestran. Sólo entonces se publicaría el dataset de 32 px (§ 120).
+
+`delgado-cnn`: `sinteticos.dos_trazos` (un segundo trazo anclado en el primero: T o X; la mitad corto, 5–14 px, como una barra) y
+`entrenar_local.py --dos 0.5`; `k3x3-g0.7x` = 600 ejemplos, gris σ 0,7, 177 s, pérdida en nuevos 0,1479. `nn/adelgazador_cruces_vista.py`
+→ `resultados/121-adelgazador-cruces.{png,json}`. Medido ese día:
+
+| adelgazador | 1l con ramas | 1l con entrantes | 7 con nudo | 4 con nudo |
+|---|---|---|---|---|
+| hoy | 35 % | 57 % | 87 % | 95 % |
+| gris (§ 119) | 0 % | 3 % | 45 % | 78 % |
+| gris + DOS TRAZOS | 0 % | 6 % | **46 %** | 69 % |
+
+**NO se cumple el criterio (2): no se publica el dataset de 32 px.** Lo que enseña la figura es peor que «falta la barra»: **la
+cresta se CORTA en el cruce** (el palo del 7 acaba encima de la barra y vuelve a empezar debajo, con ~6 px sin cresta), con los dos
+adelgazadores grises. Entrenar con cruces no lo cambia; la hipótesis de § 120 era, como mucho, parte de la causa.
+
+Y la alternativa barata —tomar la cresta de NIST, que sí tiene la barra, y PODAR sus ramitas falsas— tampoco
+(`nn/poda_cruces.py`): **los brazos de la barra de un 7 miden lo mismo que las ramitas de un 1l (3–5 px)**. Podar lo < 5 px deja los
+1l en 4 % con ramas pero los 7 en 28 % con nudo; respetando los cruces (un brazo corto se queda si al otro lado del nudo hay otro
+casi alineado), el máximo es 48 % de los 7 con 7 % de 1l con ramas. Con estas crestas a 32 px, una barra corta y una ramita no se
+distinguen por una regla sencilla. ⏳ Pendiente de que el dueño decida el camino (ver el mensaje de ese día).
+
 ### 120 · De vuelta a 32 px de alto SIN engordar el trazo: se escala la LÍNEA MEDIA, no la imagen (el dueño, 2026-10-18) — ⏳ sin publicar
 
 «Necesitamos una forma de escalarlos de vuelta a una altura de 32 px sin que se pongan más anchos y sin introducir artifacts.»
