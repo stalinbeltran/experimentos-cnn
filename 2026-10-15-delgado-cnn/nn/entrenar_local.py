@@ -31,7 +31,7 @@ from scipy import ndimage
 
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sinteticos import N, _XX, _YY, curva_natural, engrosar  # noqa: E402
+from sinteticos import N, _XX, _YY, curva_natural, dos_trazos, engrosar  # noqa: E402
 
 
 def verdad(puntos: np.ndarray, sigma: float) -> np.ndarray:
@@ -42,17 +42,23 @@ def verdad(puntos: np.ndarray, sigma: float) -> np.ndarray:
     return np.exp(-d2 / (2 * sigma**2))
 
 
-def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0) -> tuple[np.ndarray, np.ndarray, list[dict]]:
+def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0, dos: float = 0.0) -> tuple[np.ndarray, np.ndarray, list[dict]]:
     rng = np.random.default_rng(semilla)
     X, T, cs = [], [], []
     while len(X) < n:
         c = curva_natural(rng)
         if len(c["puntos"]) * 0.25 < 10:
             continue
-        x = engrosar(c["puntos"], c["grosor"]).astype(np.float32)
+        x = engrosar(c["puntos"], c["grosor"]).astype(np.float32); pts = c["puntos"]
+        if dos > 0 and rng.random() < dos:                   # § DOS TRAZOS (2026-10-18): una T o una X, con la verdad de los dos
+            c2 = dos_trazos(rng, c)
+            if c2 is None:
+                continue
+            x = np.maximum(x, engrosar(c2["puntos"], c2["grosor"]).astype(np.float32)); pts = np.concatenate([pts, c2["puntos"]])
+            c = {**c, "tipo": f"{c['tipo']}+{c2['tipo']}"}
         if suavizar > 0:                                     # la misma gaussiana que exportar_delgados.py --suavizar σ --gris
             x = ndimage.gaussian_filter(x, suavizar, mode="constant")
-        X.append(x); T.append(verdad(c["puntos"], sigma)); cs.append(c)
+        X.append(x); T.append(verdad(pts, sigma)); cs.append(c)
     return np.stack(X).astype(np.float32), np.stack(T).astype(np.float32), cs
 
 
@@ -81,13 +87,14 @@ def main() -> int:
     ap.add_argument("--semilla", type=int, default=101)
     ap.add_argument("--kernel", type=int, default=3, help="lado del kernel (impar): 3 o 5")
     ap.add_argument("--suavizar", type=float, default=0.0, help="σ (px) de la gaussiana sobre la tinta, sin rebinarizar; 0 = binaria")
+    ap.add_argument("--dos", type=float, default=0.0, help="fracción de ejemplos con DOS trazos (una T o una X); 0 = como siempre")
     ap.add_argument("--nombre", default=None, help="carpeta de pesos nn/pesos/<nombre>; por defecto k<kernel>x<kernel>")
     a = ap.parse_args()
     a.nombre = a.nombre or f"k{a.kernel}x{a.kernel}"
     torch.manual_seed(a.semilla)
 
-    X, T, cs = conjunto(a.n, a.semilla, a.sigma, a.suavizar)
-    Xn, Tn, csn = conjunto(10, 202, a.sigma, a.suavizar)                 # NUNCA vistos: ¿generaliza o memoriza?
+    X, T, cs = conjunto(a.n, a.semilla, a.sigma, a.suavizar, a.dos)
+    Xn, Tn, csn = conjunto(10, 202, a.sigma, a.suavizar, a.dos)                 # NUNCA vistos: ¿generaliza o memoriza?
     x, t = torch.from_numpy(X)[:, None], torch.from_numpy(T)[:, None]
     xn, tn = torch.from_numpy(Xn)[:, None], torch.from_numpy(Tn)[:, None]
     red = SoloKernels(a.capas, a.canales, a.kernel)

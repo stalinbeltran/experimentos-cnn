@@ -74,6 +74,23 @@ def curva_natural(rng, largo_px: float | None = None, paso: float = 0.25,
     return {"puntos": pts, "grosor": g, "tipo": str(tipo)}
 
 
+def dos_trazos(rng, c1: dict, margen: float = 1.5) -> dict | None:
+    """Un SEGUNDO trazo anclado en el primero (2026-10-18, rizo-2 § 121: el adelgazador sólo había visto una curva por imagen y
+    borraba la barra del 7): con prob. ½ empieza en un punto de c1 (una T: la barra o el brazo que sale de un trazo) y si no, lo
+    cruza por su mitad (una X). La mitad de las veces es CORTO (5–14 px, como la barra de un 7). None si no cabe en el lienzo."""
+    c2 = curva_natural(rng, largo_px=rng.uniform(5, 14) if rng.random() < 0.5 else None)
+    p1, p2 = c1["puntos"], c2["puntos"]
+    if len(p1) < 8 or len(p2) < 8:
+        return None
+    q = p1[rng.integers(len(p1) // 6, len(p1) - len(p1) // 6)]               # ni en las puntas
+    ancla = 0 if rng.random() < 0.5 else len(p2) // 2
+    p2 = p2 - p2[ancla] + q
+    dentro = (p2.min(1) >= margen) & (p2.max(1) <= N - margen)
+    if dentro.sum() < 8:
+        return None
+    return {"puntos": p2[dentro], "grosor": c2["grosor"][dentro], "tipo": "T" if ancla == 0 else "X"}
+
+
 def engrosar(puntos: np.ndarray, grosor: np.ndarray) -> np.ndarray:
     """Tinta binaria 32×32: unión de discos de radio grosor/2 en cada punto de la polilínea."""
     x = np.zeros((N, N), bool)

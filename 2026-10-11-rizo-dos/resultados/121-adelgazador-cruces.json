@@ -1,0 +1,282 @@
+{
+ "medidas": {
+  "hoy": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 57.196969696969695,
+    "ramificada": 35.22727272727273,
+    "entrantes_por_digito": 1.071969696969697,
+    "lazos_por_digito": 0.003787878787878788,
+    "rotos": 0.3787878787878788
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 6.25,
+    "ramificada": 1.875,
+    "entrantes_por_digito": 0.11875,
+    "lazos_por_digito": 0.95,
+    "rotos": 0.625
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 34.59119496855346,
+    "entrantes_por_digito": 2.1761006289308176,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 9.090909090909092,
+    "entrantes_por_digito": 2.587878787878788,
+    "lazos_por_digito": 0.012121212121212121,
+    "rotos": 0.6060606060606061
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 100.0,
+    "ramificada": 96.93251533742331,
+    "entrantes_por_digito": 2.687116564417178,
+    "lazos_por_digito": 0.12883435582822086,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 99.39024390243902,
+    "ramificada": 12.195121951219512,
+    "entrantes_por_digito": 2.4634146341463414,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 22.085889570552148,
+    "ramificada": 16.56441717791411,
+    "entrantes_por_digito": 0.2392638036809816,
+    "lazos_por_digito": 0.9815950920245399,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 100.0,
+    "ramificada": 93.16770186335404,
+    "entrantes_por_digito": 3.329192546583851,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 25.0,
+    "ramificada": 57.05128205128205,
+    "entrantes_por_digito": 0.4230769230769231,
+    "lazos_por_digito": 1.8269230769230769,
+    "rotos": 0.6410256410256411
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 22.839506172839506,
+    "entrantes_por_digito": 1.0246913580246915,
+    "lazos_por_digito": 0.9753086419753086,
+    "rotos": 1.2345679012345678
+   },
+   "nudo_7": 87.27915194346289,
+   "nudo_4": 94.8943661971831,
+   "nudo_2": 28.725314183123878,
+   "nudo_5": 3.584229390681003
+  },
+  "gris (§ 119)": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 3.0303030303030303,
+    "ramificada": 0.0,
+    "entrantes_por_digito": 0.030303030303030304,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.3787878787878788
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 5.0,
+    "ramificada": 0.625,
+    "entrantes_por_digito": 0.08125,
+    "lazos_por_digito": 0.95625,
+    "rotos": 1.25
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 99.37106918238993,
+    "ramificada": 10.062893081761006,
+    "entrantes_por_digito": 1.9811320754716981,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 3.0303030303030303,
+    "entrantes_por_digito": 2.206060606060606,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 97.54601226993866,
+    "ramificada": 81.59509202453988,
+    "entrantes_por_digito": 2.208588957055215,
+    "lazos_por_digito": 0.10429447852760736,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 100.0,
+    "ramificada": 1.2195121951219512,
+    "entrantes_por_digito": 2.152439024390244,
+    "lazos_por_digito": 0.0,
+    "rotos": 1.2195121951219512
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 14.723926380368098,
+    "ramificada": 7.361963190184049,
+    "entrantes_por_digito": 0.147239263803681,
+    "lazos_por_digito": 0.9693251533742331,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 96.27329192546584,
+    "ramificada": 62.732919254658384,
+    "entrantes_por_digito": 2.031055900621118,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 16.666666666666668,
+    "ramificada": 41.666666666666664,
+    "entrantes_por_digito": 0.26282051282051283,
+    "lazos_por_digito": 1.8269230769230769,
+    "rotos": 0.0
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 17.901234567901234,
+    "entrantes_por_digito": 0.9814814814814815,
+    "lazos_por_digito": 0.9629629629629629,
+    "rotos": 0.6172839506172839
+   },
+   "nudo_7": 45.053003533568905,
+   "nudo_4": 78.16901408450704,
+   "nudo_2": 9.694793536804308,
+   "nudo_5": 0.35842293906810035
+  },
+  "gris + DOS TRAZOS": {
+   "1l": {
+    "n": 264,
+    "con_entrantes": 6.0606060606060606,
+    "ramificada": 0.0,
+    "entrantes_por_digito": 0.06439393939393939,
+    "lazos_por_digito": 0.003787878787878788,
+    "rotos": 0.0
+   },
+   "0": {
+    "n": 160,
+    "con_entrantes": 4.375,
+    "ramificada": 0.625,
+    "entrantes_por_digito": 0.075,
+    "lazos_por_digito": 0.9625,
+    "rotos": 0.0
+   },
+   "2": {
+    "n": 159,
+    "con_entrantes": 100.0,
+    "ramificada": 9.433962264150944,
+    "entrantes_por_digito": 1.9559748427672956,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "3": {
+    "n": 165,
+    "con_entrantes": 100.0,
+    "ramificada": 3.6363636363636362,
+    "entrantes_por_digito": 2.1636363636363636,
+    "lazos_por_digito": 0.012121212121212121,
+    "rotos": 0.0
+   },
+   "4": {
+    "n": 163,
+    "con_entrantes": 96.31901840490798,
+    "ramificada": 73.61963190184049,
+    "entrantes_por_digito": 2.067484662576687,
+    "lazos_por_digito": 0.11042944785276074,
+    "rotos": 0.0
+   },
+   "5": {
+    "n": 164,
+    "con_entrantes": 100.0,
+    "ramificada": 1.829268292682927,
+    "entrantes_por_digito": 2.0853658536585367,
+    "lazos_por_digito": 0.006097560975609756,
+    "rotos": 0.6097560975609756
+   },
+   "6": {
+    "n": 163,
+    "con_entrantes": 15.950920245398773,
+    "ramificada": 5.521472392638037,
+    "entrantes_por_digito": 0.1656441717791411,
+    "lazos_por_digito": 0.9754601226993865,
+    "rotos": 1.2269938650306749
+   },
+   "7": {
+    "n": 161,
+    "con_entrantes": 96.8944099378882,
+    "ramificada": 60.24844720496895,
+    "entrantes_por_digito": 1.9627329192546583,
+    "lazos_por_digito": 0.0,
+    "rotos": 0.0
+   },
+   "8": {
+    "n": 156,
+    "con_entrantes": 18.58974358974359,
+    "ramificada": 40.38461538461539,
+    "entrantes_por_digito": 0.27564102564102566,
+    "lazos_por_digito": 1.8461538461538463,
+    "rotos": 0.6410256410256411
+   },
+   "9": {
+    "n": 162,
+    "con_entrantes": 85.18518518518519,
+    "ramificada": 16.049382716049383,
+    "entrantes_por_digito": 0.9629629629629629,
+    "lazos_por_digito": 0.9753086419753086,
+    "rotos": 0.6172839506172839
+   },
+   "nudo_7": 45.75971731448763,
+   "nudo_4": 69.19014084507043,
+   "nudo_2": 10.053859964093357,
+   "nudo_5": 1.4336917562724014
+  }
+ },
+ "criterio": {
+  "1l_ramas_<=5": true,
+  "1l_entrantes_<=10": true,
+  "7_nudo_>=75": false
+ },
+ "sietes": [
+  17,
+  44,
+  112,
+  118,
+  137,
+  147,
+  182,
+  211,
+  216,
+  222,
+  236,
+  263,
+  1552
+ ]
+}
