@@ -1789,6 +1789,22 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 120 · De vuelta a 32 px de alto SIN engordar el trazo: se escala la LÍNEA MEDIA, no la imagen (el dueño, 2026-10-18) — ⏳ sin publicar
+
+«Necesitamos una forma de escalarlos de vuelta a una altura de 32 px sin que se pongan más anchos y sin introducir artifacts.»
+`nn/dataset_alto32.py`: la cresta del dígito de mismo trazo (§ 118) según el adelgazador gris (§ 119), suavizada a lo largo de la
+curva y con los nudos cerrados, se ESCALA hasta que el dígito dibujado mide 32 px de alto (sin pasar de 32 de ancho) y se VUELVE A
+DIBUJAR con una pluma fija de 4 px y borde suave σ 0,7 (distancia exacta a la polilínea + erf). El trazo no depende de la escala y no
+se remuestrea nada. **En la muestra funciona** (`resultados/120-alto32-muestra.png`): los 16 dígitos a 32 px de alto con un trazo
+medido de 4,0–4,4 px; los 1l gruesos quedan como 1s normales (el #1888 se agranda ×8,5).
+
+⚠⚠ **NO se ha publicado el dataset, y por qué** (medido ese día): el resultado sólo puede dibujar lo que la cresta tiene, y la cresta
+de § 119 **pierde la BARRA del 7**: los 7 con algún nudo pasan del 87 % (hoy) al 45 %, y unos 240 sietes que hoy la tienen se quedan
+sin ella (el 1552 entre ellos, que es la caída de entrantes de los 7 que § 119 dejó pendiente); los 4 con nudo bajan del 95 al 78 %.
+Bajar el umbral de la cresta no lo arregla (0,4 → 0,1: los 7 siguen en 42–47 %). **Hipótesis, sin comprobar**: el adelgazador se
+entrenó con UNA curva por imagen (`sinteticos.curva_natural`), nunca vio un cruce ni una T, y en los dígitos encogidos de § 118 los
+brazos cortos de un cruce miden como un espolón. ⏳ Propuesto: reentrenarlo con sintéticos de dos trazos que se cruzan o se tocan.
+
 ### 119 · Un ADELGAZADOR entrenado con trazos GRISES suavizados (σ 0,7), sobre el dataset de MISMO TRAZO (el dueño, 2026-10-18)
 
 «Entrena el adelgazador con trazos grises suavizados. ¿Se puede?» Sí. `delgado-cnn`: `entrenar_local.py --suavizar 0.7 --nombre
