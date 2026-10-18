@@ -1789,6 +1789,28 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 118 · Un DATASET con el MISMO TRAZO: `uci-optdigits-orig-32px-trazo4-r20261018` (el dueño, 2026-10-18)
+
+«El objetivo es hallar el grosor real de cada dígito… para un humano esos 1l se ven demasiado extraños. Ajústalos,
+proporcionalmente, hasta que todos tengan el mismo trazo. Guárdalo como un dataset aparte. Suavízalos si es necesario.»
+`nn/dataset_trazo.py --T 4 --publicar` → el dataset en el repo de datos (`experimentos-cnn/uci-optdigits-orig-32px-trazo4-r20261018/`,
+4,3 MB, mismo orden, etiquetas y partición que el origen) y `resultados/118-trazo-comun.{png,json}`. **No lo usa nada todavía.**
+
+Cada dígito se ENCOGE uniformemente con f = T / grosor (T = 4 px; grosor = 2 × distancia media al borde sobre el esqueleto de la
+tinta, autocontenido: Spearman 0,974 con el de § 116), se suaviza con una gaussiana de σ = max(0,8; 0,5/f) px **sin binarizar**
+(gris [0, 1]) y se centra por su caja. Medido ese día:
+
+| | grosor 10 % · 50 % · 90 % | alto de los 1 | alto típico |
+|---|---|---|---|
+| antes (NIST) | 4,4 · 5,4 · 6,8 px | 32 px | 32 px |
+| después | **4,0 · 4,3 · 4,7 px** | 16 px | 22–26 px |
+
+- **161 dígitos (2,9 %) son más finos que 4 px y no se tocan** (sólo se suavizan; `no_llega`): en 32×32 no cabe agrandar lo que ya
+  mide 32 de alto. Con T = 4,5 serían el 14 %; con 5, el 34 %.
+- ⚠ **Los 1 más extremos no llegan a 4 px**: el #1888 (×0,37) queda como una mancha de ~6 px de alto con grosor medido 5,3. Cuando
+  el trazo es casi tan ancho como largo, «grosor» deja de estar bien definido; la mediana de los 1 queda en 4,5 px.
+- El generador **se niega a pisar** un dataset ya publicado (comprobado), la regla del repo de datos.
+
 ### 117 · ¿De qué tamaño eran originalmente? Los 1 se escribieron a ~70 % del alto típico (el dueño, 2026-10-18)
 
 «Sospecho que estos dígitos fueron escalados distinto que el resto… originalmente fueron dígitos muy cortos; para estandarizar sus

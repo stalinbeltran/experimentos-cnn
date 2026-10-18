@@ -1,0 +1,79 @@
+{
+ "nombre": "uci-optdigits-orig-32px-trazo4-r20261018",
+ "T": 4.0,
+ "sigma_min": 0.8,
+ "no_llegan": 161,
+ "no_llegan_pct": 2.9,
+ "grosor_antes": {
+  "p10": 4.355758620409323,
+  "p50": 5.392517361057085,
+  "p90": 6.750431763868996
+ },
+ "grosor_despues": {
+  "p10": 4.027568102455537,
+  "p50": 4.276122267135722,
+  "p90": 4.66855695955543
+ },
+ "por_clase": {
+  "0": {
+   "grosor_antes": 4.723313988961853,
+   "grosor_despues": 4.223662610272085,
+   "alto_despues": 26.0,
+   "escala": 0.8468635863775194
+  },
+  "1": {
+   "grosor_antes": 7.385549039983603,
+   "grosor_despues": 4.5161237755614945,
+   "alto_despues": 16.0,
+   "escala": 0.5415981910545787
+  },
+  "2": {
+   "grosor_antes": 5.617546501931818,
+   "grosor_despues": 4.244412113182343,
+   "alto_despues": 22.0,
+   "escala": 0.7120546307225832
+  },
+  "3": {
+   "grosor_antes": 5.30405410129863,
+   "grosor_despues": 4.210022794200031,
+   "alto_despues": 24.0,
+   "escala": 0.7541401280110915
+  },
+  "4": {
+   "grosor_antes": 5.623464843344701,
+   "grosor_despues": 4.334106788471681,
+   "alto_despues": 22.0,
+   "escala": 0.7113053493510759
+  },
+  "5": {
+   "grosor_antes": 5.425752257590878,
+   "grosor_despues": 4.158275878693949,
+   "alto_despues": 22.0,
+   "escala": 0.7372258562645275
+  },
+  "6": {
+   "grosor_antes": 5.146273183345439,
+   "grosor_despues": 4.33923928527355,
+   "alto_despues": 24.0,
+   "escala": 0.777263329848358
+  },
+  "7": {
+   "grosor_antes": 5.744153047830711,
+   "grosor_despues": 4.240405090866871,
+   "alto_despues": 22.0,
+   "escala": 0.6963603589881775
+  },
+  "8": {
+   "grosor_antes": 4.815922261665369,
+   "grosor_despues": 4.344167844740307,
+   "alto_despues": 26.0,
+   "escala": 0.8305788601363424
+  },
+  "9": {
+   "grosor_antes": 4.93554913050032,
+   "grosor_despues": 4.28472998172401,
+   "alto_despues": 26.0,
+   "escala": 0.810446812250714
+  }
+ }
+}
