@@ -1789,6 +1789,25 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 117 · ¿De qué tamaño eran originalmente? Los 1 se escribieron a ~70 % del alto típico (el dueño, 2026-10-18)
+
+«Sospecho que estos dígitos fueron escalados distinto que el resto… originalmente fueron dígitos muy cortos; para estandarizar sus
+tamaños fueron agrandados y eso los dejó así. ¿Podrías hacer unas pruebas para ver su verdadero tamaño?» `nn/tamano_original.py` →
+`resultados/117-tamano-original.{png,json}`. Medido ese día sobre los 5620 dígitos (tinta 32×32; el dataset no guarda el escritor):
+
+1. **La normalización llevó el ALTO a 32 px**: el 95 % mide 32 de alto y el 100 % ≥ 30; ninguno mide 32 de ancho (mediana 18–22).
+2. **El escalado fue el MISMO en las dos direcciones**: grosor de los trazos casi verticales (a lo ancho) / de los casi horizontales
+   (a lo alto) ≈ 1 en cada clase (0,71–1,00), y no depende de la forma de la caja (Spearman 0,04). No hubo estiramiento a lo ancho.
+3. **Entonces el grosor dice cuánto se agrandó cada dígito**, y el alto original relativo es 5,45 px (mediana del dataset) / grosor.
+   El bolígrafo es del escritor y cada escritor hizo todas las clases, así que un exceso de grosor PROPIO de una clase sólo puede
+   venir del escalado: **los 1 se escribieron a ~0,70 del alto típico** (los 1l, 0,62; los gruesos de § 116, 0,60); las demás
+   clases, entre 0,95 y 1,15.
+
+**La hipótesis del dueño se sostiene**: los 1 gruesos son 1s pequeños agrandados hasta 32 px de alto, y el trazo se engordó con
+ellos. ⚠ Lo que esto NO prueba: dígito a dígito el grosor mezcla el bolígrafo de cada escritor con su tamaño; agrupar por escritor
+no se pudo (el orden del fichero apenas los reúne: correlación de grosor entre dígitos consecutivos 0,13, al azar 0,01). Y la
+fila «en el papel» de la figura dibuja cada dígito encogido a su alto estimado, pero no agranda los que pasan de 1 (el 0 y el 8).
+
 ### 116 · El SUBCONJUNTO de los dígitos GRUESOS, y los 1l con ramas que quedan sin ellos (el dueño, 2026-10-17)
 
 «Vamos a crear un subset, que no vamos a usar por ahora, para los dígitos gruesos. Volvamos al punto de partida donde veíamos las
