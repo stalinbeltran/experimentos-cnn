@@ -170,6 +170,10 @@ media (la cresta del adelgazador gris `k3x3-g0.7` de `delgado-cnn`) y se vuelve 
   (NIST: {res['grosor_nist']['p10']:.2f}–{res['grosor_nist']['p90']:.2f}).
 - {res['alto_32_pct']:.1f} % mide 32 px de alto; {res['limitados_por_ancho']} quedan limitados por el ancho (no caben a 32 de alto).
 - Lo genera `experimentos-cnn/2026-10-11-rizo-dos/nn/dataset_alto32.py --publicar`; detalle en rizo-2 § 120.
+
+⚠ **Defecto CONOCIDO, publicado así por orden del dueño (2026-10-18)**: la línea media sale del adelgazador gris `k3x3-g0.7`, que
+**corta la cresta en los cruces**: ~240 sietes pierden la BARRA (7 con algún nudo: 45 %, contra 87 % en NIST) y parte de los 4 pierden
+el cruce (78 % contra 95 %). Lo que no está en la línea media no se dibuja. Detalle en rizo-2 § 121.
 """)
         print("publicado en", dst)
 

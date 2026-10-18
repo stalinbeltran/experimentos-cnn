@@ -1814,7 +1814,7 @@ Y la alternativa barata —tomar la cresta de NIST, que sí tiene la barra, y PO
 casi alineado), el máximo es 48 % de los 7 con 7 % de 1l con ramas. Con estas crestas a 32 px, una barra corta y una ramita no se
 distinguen por una regla sencilla. ⏳ Pendiente de que el dueño decida el camino (ver el mensaje de ese día).
 
-### 120 · De vuelta a 32 px de alto SIN engordar el trazo: se escala la LÍNEA MEDIA, no la imagen (el dueño, 2026-10-18) — ⏳ sin publicar
+### 120 · De vuelta a 32 px de alto SIN engordar el trazo: se escala la LÍNEA MEDIA, no la imagen (el dueño, 2026-10-18) — ✅ PUBLICADO con su defecto
 
 «Necesitamos una forma de escalarlos de vuelta a una altura de 32 px sin que se pongan más anchos y sin introducir artifacts.»
 `nn/dataset_alto32.py`: la cresta del dígito de mismo trazo (§ 118) según el adelgazador gris (§ 119), suavizada a lo largo de la
@@ -1823,7 +1823,11 @@ DIBUJAR con una pluma fija de 4 px y borde suave σ 0,7 (distancia exacta a la p
 se remuestrea nada. **En la muestra funciona** (`resultados/120-alto32-muestra.png`): los 16 dígitos a 32 px de alto con un trazo
 medido de 4,0–4,4 px; los 1l gruesos quedan como 1s normales (el #1888 se agranda ×8,5).
 
-⚠⚠ **NO se ha publicado el dataset, y por qué** (medido ese día): el resultado sólo puede dibujar lo que la cresta tiene, y la cresta
+✅ **PUBLICADO por orden del dueño, con el defecto anotado** (2026-10-18, tras § 121): **`uci-optdigits-orig-32px-trazo4-alto32-r20261018`**
+en el repo de datos. Los 5620: el 99,98 % mide 32 px de alto y el trazo medido queda en **4,1 · 4,2 · 4,4 px** (10 · 50 · 90 %; NIST:
+4,4 · 5,4 · 6,8); `resultados/120-alto32.{png,json}`. ⚠ El #2865 (un 1) sale EN BLANCO: sin cresta. Y el defecto de abajo va dentro.
+
+⚠⚠ **Por qué NO se publicó al principio** (medido ese día): el resultado sólo puede dibujar lo que la cresta tiene, y la cresta
 de § 119 **pierde la BARRA del 7**: los 7 con algún nudo pasan del 87 % (hoy) al 45 %, y unos 240 sietes que hoy la tienen se quedan
 sin ella (el 1552 entre ellos, que es la caída de entrantes de los 7 que § 119 dejó pendiente); los 4 con nudo bajan del 95 al 78 %.
 Bajar el umbral de la cresta no lo arregla (0,4 → 0,1: los 7 siguen en 42–47 %). **Hipótesis, sin comprobar**: el adelgazador se
