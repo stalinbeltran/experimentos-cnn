@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 123 · VALIDAR el adelgazador RE-TRAZANDO su línea media (el dueño, 2026-10-18: «¿has probado a validar la eficacia del delgado volviendo a retrazar…?»)
+
+No se había probado. `nn/retrazo.py` → `resultados/123-retrazo.{png,json}`: la línea media se vuelve a dibujar con el grosor medido del
+propio dígito y se compara con su tinta, **sin ninguna verdad hecha a mano**: SIN EXPLICAR = tinta que el re-trazo no cubre (falta
+línea media) e INVENTADO = re-trazo fuera de la tinta (sobra). Medido ese día (mediana sobre los 5620; entre paréntesis, el 7):
+
+| adelgazador | sin explicar | inventado |
+|---|---|---|
+| NIST + binario (hoy) | 12,7 % (7: 14 %) | 6,4 % |
+| mismo trazo + gris (§ 119) | 13,0 % (7: 22 %) | 8,5 % |
+| mismo trazo + gris + dos trazos (§ 121) | 13,8 % (7: 24 %) | 8,4 % |
+
+**Señala exactamente el fallo de § 120–121**: en los 7 peor explicados la tinta sin línea media (roja en la figura) es la BARRA, y en
+NIST también los extremos de los trazos gruesos (el esqueleto se acorta en las puntas). ⚠ Ni un adelgazador perfecto daría 0 (la pluma
+es de grosor constante y NIST no): sirve para COMPARAR y para encontrar los peores.
+
+**Y puede darle feedback al aprendizaje** (propuesto, no hecho): el re-trazo es diferenciable si se hace sobre el mapa M —convolución
+de M con un disco del grosor del dígito— y su diferencia con la tinta es una pérdida que se puede calcular sobre los DÍGITOS REALES,
+que no tienen línea media de verdad. Sumada a la pérdida supervisada de los sintéticos (que mantiene M fina), castigaría justo la
+barra perdida.
+
 ### 121 · Reentrenar el adelgazador con DOS TRAZOS (T y X) NO recupera la barra del 7 — y la poda tampoco (el dueño, 2026-10-18: «sí»)
 
 Criterio escrito ANTES de medir: (1) 1l ≤ 5 % con ramas y ≤ 10 % con entrantes; (2) 7 con algún nudo ≥ 75 % (hoy 87 %, gris de
