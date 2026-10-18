@@ -67,6 +67,19 @@ PUERTO = 8050
 UNIDAD = "rizo2-revisor"
 DATASET = "uci-optdigits-orig-32px-r20261005"                    # el de rizo-2 (nn/evaluar.py)
 DELGADOS = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-k3x3.npz"
+# Las FUENTES de dígitos (§ 124, el dueño, 2026-10-18: «vamos a llevar el dataset mejorado al app, y voy a entrenar un compositor»).
+# Es un dato DEL COMPOSITOR: los que no lo dicen son «nist» (lo de siempre: misma huella, sus pesos se restauran igual). Cada fuente
+# trae su dataset publicado y su delgado; las clases finas (4l, 1l) se calculan SIEMPRE sobre «nist», porque son del dígito y no de
+# cómo se dibuje: un 1l es el mismo 1l en las dos fuentes.
+FUENTES = {
+    "nist": {"etiqueta": "NIST (binario, el de siempre)", "dataset": DATASET, "delgado": DELGADOS},
+    "alto32x64": {"etiqueta": "mismo trazo, 32 px de alto (§ 122)", "dataset": "uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018",
+                  # su delgado EXACTO: la línea media con la que se dibujó (nn/dataset_alto32.py --exportar-linea; 8,5 min la primera vez)
+                  "delgado": AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / "delgados-exacto-uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018.npz",
+                  "regenerar": [["2026-10-15-delgado-cnn", "nn/exportar_delgados.py", "--pesos", "k3x3-g0.7x-64", "--dataset", "uci-optdigits-orig-32px-trazo4-r20261018", "--ampliar", "2"],
+                                ["2026-10-11-rizo-dos", "nn/dataset_alto32.py", "--exportar-linea", "delgados-k3x3-g0.7x-64-uci-optdigits-orig-32px-trazo4-r20261018-x2.npz",
+                                 "uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018"]]},
+}
 CACHE = AQUI / "web" / "cache"
 AUM = (-3, -2, -1, 1, 2, 3)                                       # resistencia.AUM: 13 copias por dígito de train
 SEMILLAS = (0, 1, 2)
@@ -352,18 +365,36 @@ def _limpio(o):
 class Datos:
     """El dataset, el delgado y las 394 columnas de todos los dígitos (y del train aumentado), por rejilla."""
 
-    def __init__(self):
-        d = dict(np.load(exigir_dataset(DATASET) / "datos.npz"))
-        self.tinta = (d["imagenes"] > 0).astype(np.uint8); self.y = d["etiquetas"].astype(int); part = d["particion"]
-        if not DELGADOS.is_file():
-            print(f"  no está {DELGADOS.name}: lo regenero con exportar_delgados.py (segundos)…", flush=True)
-            subprocess.run([sys.executable, str(DELGADOS.parents[1] / "nn" / "exportar_delgados.py")], cwd=DELGADOS.parents[1], check=True)
-        self.M = np.load(DELGADOS)["M"].astype(np.float32)
+    def __init__(self, fuente: str = "nist", ref: "Datos | None" = None):
+        cfg = FUENTES[fuente]; self.fuente, self.ref = fuente, ref       # ref: los Datos de «nist», de donde salen las clases finas
+        self.pre = "" if fuente == "nist" else f"{fuente}-"         # prefijo de las cachés: las de «nist» conservan su nombre
+        d = dict(np.load(exigir_dataset(cfg["dataset"]) / "datos.npz")); img = d["imagenes"]
+        self.gris = np.issubdtype(img.dtype, np.floating)
+        self.imagen = img.astype(np.float32) if self.gris else None   # la imagen tal cual (gris) para enseñarla
+        self.tinta = ((img > 0.5) if self.gris else (img > 0)).astype(np.uint8); self.y = d["etiquetas"].astype(int); part = d["particion"]
+        self.M = self._delgado(cfg)
         self.tr, self.va, self.ex = np.flatnonzero(part == "train"), np.flatnonzero(part == "val"), np.flatnonzero(part == "extra")
         self.aum = [(0, 0)] + [(k, 0) for k in AUM] + [(0, k) for k in AUM]
         self.hash = hashlib.sha1((AQUI / "nn" / "cresta_curvas.py").read_bytes()).hexdigest()[:10]
         self.X = {}                                               # celdas → (X_todos (5620,394), X_tr_aum (180·13,394), Y_tr_aum)
         self._ob = {}; self._lock = threading.Lock(); self._finas_c = {}
+
+    def _delgado(self, cfg) -> np.ndarray:
+        """El delgado de la fuente. «nist»: el de delgado-cnn, como siempre. Las demás: de la caché (local o almacén, `delg-<fuente>.npz`)
+        o regenerado con sus comandos (`regenerar`) y guardado en la caché y el almacén."""
+        if self.fuente == "nist":
+            if not DELGADOS.is_file():
+                print(f"  no está {DELGADOS.name}: lo regenero con exportar_delgados.py (segundos)…", flush=True)
+                subprocess.run([sys.executable, str(DELGADOS.parents[1] / "nn" / "exportar_delgados.py")], cwd=DELGADOS.parents[1], check=True)
+            return np.load(DELGADOS)["M"].astype(np.float32)
+        c = CACHE / f"delg-{self.fuente}.npz"; CACHE.mkdir(parents=True, exist_ok=True)
+        if not traer_cache(c, f"delgado de «{self.fuente}»"):
+            if not cfg["delgado"].is_file():
+                for paso in cfg.get("regenerar", []):
+                    print(f"  delgado de «{self.fuente}»: {' '.join(paso[1:])} …", flush=True)
+                    subprocess.run([sys.executable, *paso[1:]], cwd=AQUI.parent / paso[0], check=True)
+            shutil.copyfile(cfg["delgado"], c); guardar_cache(c, f"delgado de «{self.fuente}»")
+        return np.load(c)["M"].astype(np.float32)
 
     def subgrupo4(self, i: int) -> bool:
         """El 4 CERRADO por arriba = «4l» (el dueño, 2026-10-15, tercera versión: «198, 225, 239 y 250 son un 4l… el lazo no está
@@ -394,6 +425,8 @@ class Datos:
         sub1 (§ 107, el dueño, 2026-10-17: «que ésta sea la nueva clase en el app y para el entrenamiento»), el 1 también: 1 = «1a»,
         y «1l» (sólo la recta vertical) va a 11 si el 4 está partido y a 10 si no. Las clases extra van en ese orden FIJO (4l, 1l),
         así que un compositor con sólo el 4 partido ve exactamente las mismas etiquetas que antes. Se calcula una vez por combinación."""
+        if self.ref is not None:                                  # las clases son del dígito: las de «nist» (§ 124)
+            return self.ref.etiquetas_finas(sub4, sub1)
         k = (bool(sub4), bool(sub1))
         if k not in self._finas_c:
             self._finas_c[k] = self._finas_calc(*k)
@@ -464,7 +497,7 @@ class Datos:
     def vert1(self, celdas: int, extra: bool = False):
         """Las columnas de `vertice_1` para (todos, train aumentado) o para los extra aumentados, en el MISMO orden que caract.
         ~30 s todo (0,6 ms por dígito, medido 2026-10-16); caché propia `vert1-…`, también en el almacén."""
-        f = CACHE / f"vert1-{self.hash}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        f = CACHE / f"{self.pre}vert1-{self.hash}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
         if traer_cache(f, f"vertice_1 {celdas}×{celdas}"):
             z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
         idx = self.ex if extra else self.tr
@@ -478,7 +511,7 @@ class Datos:
         """Las columnas de `vertice_libre` (sobre el DELGADO) para (todos, train aumentado) o para los extra aumentados, en el MISMO
         orden que caract. ~8 ms por dígito (medido 2026-10-17): ~1 min todos + train, ~7 min los extra. Caché propia
         `vlibre-<hash de vertice_libre.py + cresta_curvas.py>-…`, también en el almacén."""
-        f = CACHE / f"vlibre-{VLB.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        f = CACHE / f"{self.pre}vlibre-{VLB.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
         if traer_cache(f, f"vértice libre {celdas}×{celdas}"):
             z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
         uno = lambda Ms: np.asarray([VLB.bloque(m, celdas) for m in Ms], np.float32)
@@ -493,7 +526,7 @@ class Datos:
     def cusp(self, celdas: int, extra: bool = False):
         """Las columnas de `cuspide` (sobre el DELGADO), igual que `vlibre`: (todos, train aumentado) o los extra aumentados.
         Caché propia `cusp-<hash de cuspide.py + cresta_curvas.py>-…`, también en el almacén."""
-        f = CACHE / f"cusp-{CUS.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        f = CACHE / f"{self.pre}cusp-{CUS.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
         if traer_cache(f, f"cúspide {celdas}×{celdas}"):
             z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
         uno = lambda Ms: np.asarray([CUS.bloque(m, celdas) for m in Ms], np.float32)
@@ -512,7 +545,7 @@ class Datos:
         self.X[celdas] = (np.concatenate([todos, vt, lt, ct], 1), np.concatenate([tr, vtr, ltr, ctr], 1), ytr); return self.X[celdas]
 
     def _features_caract(self, celdas: int):
-        CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}.npz"
+        CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"{self.pre}caract-{self.hash}-{celdas}x{celdas}.npz"
         if traer_cache(f, f"de features {celdas}×{celdas}"):      # local, o la copia del almacén (del dev anterior)
             z = np.load(f); return z["todos"], z["tr"], z["ytr"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de {len(self.M)} + {len(self.tr) * 12} dígitos…", flush=True)
@@ -526,7 +559,7 @@ class Datos:
         """Las 394 columnas de los 3823 «extra» × 13 desplazamientos, para entrenar con MÁS dígitos (§ 819: 180 + extra = 4003).
         ⚠ Con extra en train no queda conjunto a ciegas: val es la única medida. Se calcula una vez (~7 min estimados: 50 k dígitos
         a 8 ms) y se cachea como las demás."""
-        f = CACHE / f"caract-{self.hash}-{celdas}x{celdas}-extra.npz"
+        f = CACHE / f"{self.pre}caract-{self.hash}-{celdas}x{celdas}-extra.npz"
         if traer_cache(f, f"de features extra {celdas}×{celdas}"):
             z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0]], 1), z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
@@ -549,7 +582,10 @@ class Compositor:
     CLASES = [str(k) for k in range(10)] + ["4l"]              # la 11.ª sólo existe con sub4; entonces la «4» es la 4a (abierta)
     CLASES_FINAS = [str(k) if k != 4 else "4a" for k in range(10)] + ["4l"]
 
-    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False, sub1: bool = False):
+    def __init__(self, nombre: str, bloques: list[str], celdas: int = 3, semillas=SEMILLAS, sub4: bool = False, extra: bool = False, sub1: bool = False, fuente: str = "nist"):
+        if fuente not in FUENTES:
+            raise ValueError(f"fuente desconocida: {fuente} (hay {', '.join(FUENTES)})")
+        self.fuente = fuente                                      # § 124: de qué dataset salen sus dígitos
         self.nombre, self.bloques, self.celdas, self.semillas, self.sub4, self.extra = nombre, list(bloques), int(celdas), tuple(semillas), bool(sub4), bool(extra)
         self.sub1 = bool(sub1)                                    # § 107: el 1 partido en 1l (sólo la recta vertical) / 1a
         self.estado = "pendiente"; self.error = ""; self.redes = []; self.segundos = 0.0; self.resumen = {}
@@ -654,7 +690,7 @@ class Compositor:
 
     # --- pesos que sobreviven al dev (el dueño, 2026-10-16). `huella` dice CON QUÉ se entrenaron; guardar/restaurar no tocan Datos
     def huella(self, datos: Datos) -> dict:
-        h = {"dataset": DATASET, "cresta": datos.hash, "etiquetas4": datos.hash_manuales(), "bloques": list(self.bloques), "celdas": self.celdas,
+        h = {"dataset": FUENTES[self.fuente]["dataset"], "cresta": datos.hash, "etiquetas4": datos.hash_manuales(), "bloques": list(self.bloques), "celdas": self.celdas,
              "semillas": list(self.semillas), "sub4": self.sub4, "extra": self.extra, "oculta": OCULTA, "pasos": PASOS, "aum": list(AUM)}
         if any(pieza(b)[0] == "vertice_libre" for b in self.bloques):      # sólo quien lo usa: la huella de los demás no cambia
             h["vertice_libre"] = VLB.huella_modulo()
@@ -662,6 +698,8 @@ class Compositor:
             h["cuspide"] = CUS.huella_modulo()
         if self.sub1:                                             # § 107: ídem con el 1 partido (sus etiquetas y su regla)
             h["sub1"] = True; h["etiquetas1"] = datos.hash_manuales1()
+        if self.fuente != "nist":                                 # § 124: sólo si no es la de siempre (las huellas viejas no cambian)
+            h["fuente"] = self.fuente; h["delgado"] = FUENTES[self.fuente]["delgado"].name
         return h
 
     def fichero(self, carpeta: Path) -> Path:
@@ -860,17 +898,29 @@ def recetas_guardadas() -> dict:
 
 class App:
     def __init__(self):
-        self.datos = Datos(); self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
+        self.datos = Datos(); self._fuentes = {"nist": self.datos}; self._lock_f = threading.Lock()
+        self.comps: dict[str, Compositor] = {}; self.cola = []; self._lock = threading.Lock()
         self.hilo = threading.Thread(target=self._bucle, daemon=True); self.hilo.start()
         for nombre, bl in self.recetas_guardadas().items():
-            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), existente=True, sub1=bl.get("sub1", False))
+            self.nuevo(nombre, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), existente=True, sub1=bl.get("sub1", False), fuente=bl.get("fuente", "nist"))
+
+    def datos_de(self, fuente: str = "nist") -> Datos:
+        """Los Datos de una fuente (§ 124), cargados la primera vez que se piden; las clases finas, de «nist»."""
+        with self._lock_f:
+            if fuente not in self._fuentes:
+                self._fuentes[fuente] = Datos(fuente, ref=self.datos)
+            return self._fuentes[fuente]
+
+    def datos_comp(self, c: "Compositor") -> Datos:
+        return self.datos_de(getattr(c, "fuente", "nist"))
 
     def recetas_guardadas(self) -> dict:
         return recetas_guardadas()
 
     def guardar_recetas(self):
         CACHE.mkdir(parents=True, exist_ok=True)
-        texto = json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra} for c in self.comps.values()}, ensure_ascii=False, indent=1)
+        texto = json.dumps({c.nombre: {"bloques": c.bloques, "celdas": c.celdas, "semillas": list(c.semillas), "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra,
+                                       **({"fuente": c.fuente} if c.fuente != "nist" else {})} for c in self.comps.values()}, ensure_ascii=False, indent=1)
         (CACHE / "recetas.json").write_text(texto)
         alm = almacen_revisor()
         if alm:                                                   # la copia que sobrevive al dev; se empuja con los pesos
@@ -883,12 +933,12 @@ class App:
         if alm is None:
             print("  ⚠ sin repo de datos: los pesos NO sobreviven a rehacer el dev", flush=True); return
         try:
-            f = c.guardar(alm, c.huella(self.datos)); self.guardar_recetas()
+            f = c.guardar(alm, c.huella(self.datos_comp(c))); self.guardar_recetas()
             print(f"  pesos → {f.name}", flush=True); empujar_almacen(f"rizo-2 revisor: pesos de «{c.nombre}» (val {c.resumen.get('val')})")
         except Exception as e:                                    # noqa: BLE001
             print(f"  ⚠ no pude guardar los pesos de «{c.nombre}»: {type(e).__name__}: {e}", flush=True)
 
-    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False, existente=False, sub1=False) -> Compositor:
+    def nuevo(self, nombre: str, bloques: list[str], celdas=3, semillas=SEMILLAS, sub4=False, extra=False, existente=False, sub1=False, fuente="nist") -> Compositor:
         if not bloques:
             raise ValueError("sin bloques")
         bloques = [normalizar(b) for b in bloques]                 # se niega ante un bloque o pieza desconocidos
@@ -896,9 +946,9 @@ class App:
             comprobar_nuevo(bloques)
         if int(celdas) not in (3, 4):
             raise ValueError("celdas: 3 o 4")
-        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · 1 en dos" if sub1 else "") + (" · +extra" if extra else "")
-        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra, sub1=sub1); alm = almacen_revisor()
-        restaurado = bool(alm) and c.restaurar(alm, c.huella(self.datos))   # del dev anterior, si la huella coincide: ni cola ni espera
+        nombre = nombre.strip() or " + ".join(bloques) + (f" · {celdas}×{celdas}" if int(celdas) != 3 else "") + (" · 4 en dos" if sub4 else "") + (" · 1 en dos" if sub1 else "") + (" · +extra" if extra else "") + (f" · {fuente}" if fuente != "nist" else "")
+        c = Compositor(nombre, bloques, celdas, semillas, sub4, extra, sub1=sub1, fuente=fuente); alm = almacen_revisor()
+        restaurado = bool(alm) and c.restaurar(alm, c.huella(self.datos_comp(c)))   # del dev anterior, si la huella coincide: ni cola ni espera
         with self._lock:
             self.comps[nombre] = c
             if not restaurado:
@@ -926,7 +976,12 @@ class App:
                 continue
             if c.estado == "listo" and not getattr(c, "reentrenar", False):   # ya entrenado desde que se encoló («reentrenar» dos veces): no se repite
                 continue
-            c.reentrenar = False; c.entrenar(self.datos)
+            c.reentrenar = False
+            try:
+                d = self.datos_comp(c)
+            except Exception as e:                                # noqa: BLE001  (una fuente que no carga no tumba el bucle)
+                c.estado = "error"; c.error = f"fuente «{c.fuente}»: {type(e).__name__}: {e}"; traceback.print_exc(); continue
+            c.entrenar(d)
             if c.estado == "listo":
                 self._persistir(c)
 
@@ -956,13 +1011,14 @@ class App:
 
     # --- lo que contesta
     def estado(self) -> dict:
-        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra, **c.resumen} for c in self.comps.values()],
+        return {"compositores": [{"nombre": c.nombre, "estado": c.estado, "error": c.error, "bloques": c.bloques, "celdas": c.celdas, "sub4": c.sub4, "sub1": c.sub1, "extra": c.extra, "fuente": c.fuente, **c.resumen} for c in self.comps.values()],
+                "fuentes": [{"clave": k, "etiqueta": v["etiqueta"]} for k, v in FUENTES.items()],
                 "bloques": [{"clave": k, "etiqueta": BLOQUES[k][0], "forma": BLOQUES[k][1], "sin_posicion": k in SIN_POSICION, "partes": partes(k)} for k in bloques_ofrecidos()],
                 "bloques_defecto": BLOQUES_DEFECTO, "archivados": archivados(),                # lo que viene marcado en «entrenar otro» (el dueño, 2026-10-16: sólo las aprobadas + vértice, sin golpes)
                 "n_val": int(len(self.datos.va)), "hash_cresta": self.datos.hash, "pendientes": len(self.cola)}
 
     def lista(self, nombre: str, modo="fallos", clase=None, conf=None, hasta=200, sub=None) -> dict:
-        c = self.listo(nombre); d = self.datos; yf = d.etiquetas_finas()[d.va]; y = c.y_fino(d)[d.va] if c.partido else d.y[d.va]; p0 = c.preds[0]
+        c = self.listo(nombre); d = self.datos_comp(c); yf = d.etiquetas_finas()[d.va]; y = c.y_fino(d)[d.va] if c.partido else d.y[d.va]; p0 = c.preds[0]
         K = c.clases_finas() if c.partido else [str(k) for k in range(10)]   # § 107: los nombres van escritos en cada fila (1l, 4a…)
         # El GRUPO es del DÍGITO, lo parta el compositor o no (como el 4 desde § 85): 4l/4a por su regla + la mano, y desde § 107
         # también 1l/1a (web/grupos.py + etiquetas-1.json). Con un compositor que no parte el 1, la tarjeta dice «1l → 1»: el
@@ -997,21 +1053,21 @@ class App:
             por_clase[f"{dig}l"] = {"n": int(gl.sum()), "fallos": int((mal & gl).sum())}; por_clase[f"{dig}a"] = {"n": int(ga.sum()), "fallos": int((mal & ga).sum())}
         return {"total": len(filas), "filas": filas[:hasta], "por_clase": por_clase, "confusiones": c.resumen.get("confusiones", {})}
 
-    def digito(self, i: int) -> dict:
-        d = self.datos; ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i])   # el vértice sale de la TINTA (§ 95)
+    def digito(self, i: int, fuente: str = "nist") -> dict:
+        d = self.datos_de(fuente); ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i])   # el vértice sale de la TINTA (§ 95)
         ob["cuspides"] = cuspides_para_pintar(d.M[i])
-        return {"idx": int(i), "real": int(d.y[i]), "tinta": d.tinta[i].ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(),
+        return {"idx": int(i), "real": int(d.y[i]), "tinta": (np.round(d.imagen[i], 2) if d.gris else d.tinta[i]).ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(), "fuente": d.fuente,
                 "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist())), "sub4": (d.subgrupo4(i) if d.y[i] == 4 else None)}
 
-    def miniaturas(self, ids: list[int]) -> list[dict]:
-        d = self.datos; out = []
+    def miniaturas(self, ids: list[int], fuente: str = "nist") -> list[dict]:
+        d = self.datos_de(fuente); out = []
         for i in ids[:60]:
             ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i]); ob["cuspides"] = cuspides_para_pintar(d.M[i]); s = serializar_objetos(ob)
             out.append({"idx": int(i), "M": np.round(d.M[i], 2).ravel().tolist(), "objetos": {k: [{kk: v for kk, v in o.items() if kk in ("pts", "s", "o", "cx", "cy", "cono", "fuerza", "rumbo")} for o in s[k]] for k in ("rectas", "restos", "arcos", "lazos", "entrantes", "golpes", "vertices", "cuspides")}})
         return out
 
     def comparar(self, i: int, nombres: list[str]) -> dict:
-        lecturas = {n: self.listo(n).leer(self.datos, i) for n in nombres}
+        lecturas = {n: self.listo(n).leer(self.datos_comp(self.listo(n)), i) for n in nombres}
         # qué bloques difieren entre compositores (misma clave y mismos valores → «idéntico»)
         firmas = {}
         for n, L in lecturas.items():
@@ -1051,6 +1107,14 @@ class Handler(BaseHTTPRequestHandler):
         return self._json({"digito": g["digito"], "clases": g["clases"], "texto": g["texto"], "fichero": g["fichero"], "elementos": els,
                            "M": {e["idx"]: np.round(D.M[e["idx"]], 2).ravel().tolist() for e in els}})
 
+    def _fuente(self, pide) -> str:
+        """La fuente con la que enseñar un dígito (§ 124): la del compositor `c` si viene, o `fuente`; por defecto «nist»."""
+        c = self.app.comps.get(pide("c", "") or "")
+        f = c.fuente if c is not None else (pide("fuente", "nist") or "nist")
+        if f not in FUENTES:
+            raise ValueError(f"fuente desconocida: {f}")
+        return f
+
     def do_GET(self):                                             # noqa: N802
         u, pide = self._ruta()
         if u.path == "/salud":                                    # sin token, a propósito
@@ -1075,15 +1139,15 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/lista":
                 return self._json(self.app.lista(pide("c"), pide("modo", "fallos"), pide("clase"), pide("conf"), int(pide("hasta", 200)), pide("sub")))
             if u.path == "/api/digito":
-                return self._json(self.app.digito(int(pide("idx"))))
+                return self._json(self.app.digito(int(pide("idx")), self._fuente(pide)))
             if u.path == "/api/miniaturas":
-                return self._json(self.app.miniaturas([int(x) for x in pide("ids", "").split(",") if x]))
+                return self._json(self.app.miniaturas([int(x) for x in pide("ids", "").split(",") if x], self._fuente(pide)))
             if u.path == "/api/leer":
-                return self._json(self.app.listo(pide("c")).leer(self.app.datos, int(pide("idx"))))
+                c = self.app.listo(pide("c")); return self._json(c.leer(self.app.datos_comp(c), int(pide("idx"))))
             if u.path == "/api/comparar":
                 return self._json(self.app.comparar(int(pide("idx")), [x for x in pide("cs", "").split("|") if x]))
             if u.path == "/api/nuevo":
-                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"), sub1=pide("sub1", "0") in ("1", "true"))
+                c = self.app.nuevo(pide("nombre", ""), [x for x in pide("bloques", "").split(",") if x], int(pide("celdas", 3)), tuple(range(int(pide("semillas", 3)))), pide("sub4", "0") in ("1", "true"), pide("extra", "0") in ("1", "true"), sub1=pide("sub1", "0") in ("1", "true"), fuente=pide("fuente", "nist") or "nist")
                 return self._json({"ok": True, "nombre": c.nombre, "estado": c.estado})
             if u.path == "/api/archivar":                          # ?bloque=…&si=1|0 (2026-10-17)
                 return self._json({"ok": True, "archivados": archivar(pide("bloque", ""), pide("si", "1") in ("1", "true"))})
@@ -1253,9 +1317,12 @@ def entrenar_consola(que: list[str], seco: bool) -> int:
         print(f"  {hashlib.sha1(n.encode()).hexdigest()[:8]} · {n}")
     if seco:
         return 0
-    datos = Datos(); mal = 0
+    nist = Datos(); fuentes = {"nist": nist}; mal = 0
     for n in elegidas:
-        bl = rec[n]; c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), sub1=bl.get("sub1", False))
+        bl = rec[n]; c = Compositor(n, bl["bloques"], bl.get("celdas", 3), bl.get("semillas", SEMILLAS), bl.get("sub4", False), bl.get("extra", False), sub1=bl.get("sub1", False), fuente=bl.get("fuente", "nist"))
+        if c.fuente not in fuentes:
+            fuentes[c.fuente] = Datos(c.fuente, ref=nist)
+        datos = fuentes[c.fuente]
         print(f"\n==== {time.strftime('%H:%M:%S', time.gmtime())} UTC · entrenando «{n}»", flush=True); c.entrenar(datos)
         if c.estado != "listo":
             print(f"  ✗ «{n}»: {c.error}", flush=True); mal += 1; continue

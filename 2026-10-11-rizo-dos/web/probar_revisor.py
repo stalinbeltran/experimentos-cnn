@@ -208,6 +208,21 @@ class Columnas(unittest.TestCase):
         self.assertNotIn("cuspide", sin)                              # LEvertice y los demás conservan su huella y sus pesos
         self.assertEqual(con["cuspide"], S.CUS.huella_modulo())
 
+    def test_la_fuente_no_cambia_la_huella_de_nist_y_entra_en_la_de_las_demas(self):
+        """§ 124: un compositor sin fuente es «nist» y su huella es la de siempre (los guardados se restauran igual); con otra fuente,
+        la huella dice el dataset, la fuente y el delgado (unos pesos de una fuente nunca sirven para otra). Una fuente desconocida, no."""
+        class D:
+            hash = "abc"
+            def hash_manuales(self):
+                return "sin"
+        viejo = S.Compositor("a", ["lazos_region", "entrantes60"], sub4=True).huella(D())
+        self.assertEqual(viejo["dataset"], S.DATASET); self.assertNotIn("fuente", viejo); self.assertNotIn("delgado", viejo)
+        nuevo = S.Compositor("a", ["lazos_region", "entrantes60"], sub4=True, fuente="alto32x64").huella(D())
+        self.assertEqual(nuevo["dataset"], S.FUENTES["alto32x64"]["dataset"]); self.assertEqual(nuevo["fuente"], "alto32x64")
+        self.assertEqual(nuevo["delgado"], S.FUENTES["alto32x64"]["delgado"].name); self.assertNotEqual(viejo, nuevo)
+        with self.assertRaises(ValueError):
+            S.Compositor("a", ["rectas"], fuente="no-existe")
+
     def test_modo_desconocido_se_niega(self):
         r = subprocess.run([sys.executable, str(AQUI / "web" / "servidor.py"), "lo", "que", "sea"], capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 2); self.assertIn("no sé qué es", r.stdout)

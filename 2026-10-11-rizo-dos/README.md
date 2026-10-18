@@ -1789,6 +1789,24 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 124 · El dataset mejorado en el REVISOR: la FUENTE de los dígitos es un dato del compositor (el dueño, 2026-10-18: «vamos a llevar el dataset mejorado al app, y voy a entrenar un compositor»)
+
+En «entrenar otro» hay ahora **«dígitos»**: *NIST (binario, el de siempre)* o *mismo trazo, 32 px de alto (§ 122)* =
+`uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018`. Cómo (web/servidor.py, `FUENTES`):
+
+- **Es un dato DEL COMPOSITOR** (`fuente` en `recetas.json`, sólo si no es «nist»). Los que no lo dicen son «nist» y su huella **no
+  cambia**: LazosEntrantes, LEvertice y Cuspide se restauran igual. Con otra fuente, la huella lleva el dataset, la fuente y el delgado.
+- **El delgado de la fuente nueva es EXACTO**: la línea media con la que se dibujó cada dígito (`nn/dataset_alto32.py --exportar-linea`),
+  campana σ 0,8 como la verdad de los sintéticos; reproduce las imágenes publicadas al bit. Volver a adelgazar a 32 px con la red no
+  ganaba nada (7 con nudo 75 % con `k3x3-g0.7x`, 74 % el exacto, medido ese día): ⚠ **a 32 px un brazo de barra de 1–2 px desaparece
+  al esqueletizar**, así que ese ~75 % es el techo de la medida a 32 px (el 89 % de § 122 es a 64 px). Va en la caché
+  (`delg-alto32x64.npz`, también en el almacén); un dev sin ella lo regenera (exportar a 64 px + `--exportar-linea`, ~9 min).
+- **Las clases finas (4l, 1l) salen SIEMPRE de «nist»**: son del dígito, no de cómo se dibuje (comprobado: idénticas).
+- **Las cachés de features llevan el prefijo de la fuente** (`alto32x64-caract-…`); las de «nist» no cambian de nombre. Las de todos
+  + train se calcularon ese día (187 s; mismo ancho, 710 columnas); las de extra, la primera vez que se entrene con extra (~15 min).
+- La lista, el dígito y las miniaturas se enseñan **como los ve el compositor elegido** (su fuente); la tinta gris se pinta por valor.
+- Un test nuevo en `web/probar_revisor.py` (huella de «nist» intacta, la de otra fuente distinta, fuente desconocida se niega).
+
 ### 122 · El adelgazador a 64 px SÍ conserva la barra del 7 → dataset `uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018` (el dueño, 2026-10-18: «prueba 1, para generar otro dataset»)
 
 `delgado-cnn`: `entrenar_local.py --n 600 --capas 8 --canales 8 --suavizar 0.7 --dos 0.5 --ampliar 2 --nombre k3x3-g0.7x-64` (los

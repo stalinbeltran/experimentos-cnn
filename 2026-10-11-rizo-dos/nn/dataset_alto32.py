@@ -84,8 +84,19 @@ def dibujar(S, k, desp) -> np.ndarray:
     return (0.5 * (1 - special.erf((d - PLUMA / 2) / (BORDE * np.sqrt(2))))).reshape(N, N).astype(np.float32)
 
 
-def alto32(M):
-    """(imagen, k) o (None, nan) si no hay cresta."""
+def linea_exacta(S, k, desp, sigma=0.8) -> np.ndarray:
+    """El DELGADO EXACTO del dígito dibujado: exp(−d²/2σ²) con d la distancia a la MISMA polilínea con la que se dibujó (la forma de la
+    verdad de los sintéticos de delgado-cnn, σ 0,8). El revisor lo usa como M de este dataset (§ 124): volver a adelgazar la imagen a
+    32 px perdía parte de las barras del 7 (75 % con nudo, contra 89 % de la línea con que se dibujó; medido 2026-10-18)."""
+    A = S[:, 0] * k + desp; B = S[:, 1] * k + desp
+    yy, xx = np.mgrid[0:N, 0:N] + 0.5; P = np.stack([xx.ravel(), yy.ravel()], 1)[:, None, :]
+    AB = (B - A)[None]; t = np.clip(((P - A[None]) * AB).sum(-1) / ((AB ** 2).sum(-1) + 1e-9), 0, 1)
+    d = np.sqrt((((A[None] + t[..., None] * AB) - P) ** 2).sum(-1)).min(1)
+    return np.exp(-d ** 2 / (2 * sigma ** 2)).reshape(N, N).astype(np.float32)
+
+
+def alto32(M, exacta=False):
+    """(imagen, k) o (None, nan) si no hay cresta. Con `exacta`, (imagen, k, delgado exacto)."""
     S = segmentos(M)
     if not len(S):
         return None, float("nan")
@@ -94,6 +105,8 @@ def alto32(M):
     if w * k + PLUMA > N:                                                # sin pasar de N de ancho
         k = (N - PLUMA) / max(w, 1e-3)
     desp = np.array([N / 2, N / 2]) - (lo + hi) / 2 * k
+    if exacta:
+        return dibujar(S, k, desp), float(k), linea_exacta(S, k, desp)
     return dibujar(S, k, desp), float(k)
 
 
@@ -182,5 +195,24 @@ media (la cresta de `delgado-cnn/resultados/{delg.name}`) y se vuelve a dibujar 
         print("publicado en", dst)
 
 
+
+
+def exportar_linea(delgado: str, dataset: str):
+    """Guarda el delgado EXACTO de un dataset de este generador (§ 124) en delgado-cnn/resultados/delgados-exacto-<dataset>.npz,
+    con el mismo formato que exportar_delgados.py (M float16). Comprueba que la imagen redibujada es la publicada."""
+    M = np.load(DELG.parent / delgado)["M"].astype(np.float32); pub = np.load(exigir_dataset(dataset) / "datos.npz")
+    L = np.zeros((len(M), N, N), np.float32); dif = 0.0
+    for i in range(len(M)):
+        r = alto32(M[i], exacta=True)
+        if r[0] is not None:
+            L[i] = r[2]; dif = max(dif, float(np.abs(r[0].astype(np.float16).astype(np.float32) - pub["imagenes"][i].astype(np.float32)).max()))
+    out = DELG.parent / f"delgados-exacto-{dataset}.npz"
+    np.savez_compressed(out, M=L.astype(np.float16), etiquetas=pub["etiquetas"], particion=pub["particion"], dataset=dataset, pesos=f"exacto:{delgado}")
+    print(f"→ {out.name}  · diferencia máxima con las imágenes publicadas: {dif:.4f}")
+
+
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) == 4 and sys.argv[1] == "--exportar-linea":     # --exportar-linea <delgado de 64 px> <dataset publicado>
+        exportar_linea(sys.argv[2], sys.argv[3])
+    else:
+        main()
