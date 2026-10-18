@@ -67,3 +67,10 @@ el dev (2 vCPU), pérdida en nuevos 0,1406 (k3x3: 0,1389). Delgados: `exportar_d
 `python nn/entrenar_local.py --n 300 --capas 6 --canales 8 --suavizar 0.7 --nombre k3x3-g0.7` (σ 0,7 = el desenfoque del borde medido
 en `uci-optdigits-orig-32px-trazo4-r20261018`); 136 s, pérdida en nuevos 0,1380. `exportar_delgados.py --pesos k3x3-g0.7 --dataset
 <nombre>` lee cualquier dataset publicado (gris tal cual). Medido en rizo-2 § 119: los 1l con entrantes, del 57 % al 3 %.
+
+## `k3x3-g0.7x-64` y `--ampliar` (2026-10-18): adelgazar a 64 px
+
+`--dos 0.5` (sintéticos de dos trazos, T y X: `sinteticos.dos_trazos`) y `--ampliar 2` (entrenar y exportar a 64 px; la tinta ampliada
+con `entrenar_local.ampliar`, la verdad calculada a 64 px). `python nn/entrenar_local.py --n 600 --capas 8 --canales 8 --suavizar 0.7 --dos 0.5
+--ampliar 2 --nombre k3x3-g0.7x-64` (33 min, pérdida en nuevos 0,0862) y `exportar_delgados.py --pesos k3x3-g0.7x-64 --dataset <…> --ampliar 2`
+(M de 64×64). A 32 px, entrenar con dos trazos (`k3x3-g0.7x`) NO recuperaba la barra del 7 (46 %); a 64 px, sí (89 %). Rizo-2 § 121–122.

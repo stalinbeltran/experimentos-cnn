@@ -41,7 +41,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(); ap.add_argument("--pesos", default="k3x3")
     ap.add_argument("--suavizar", type=float, default=0.0, help="σ (px) de la gaussiana previa; 0 = sin suavizar (lo de siempre)")
     ap.add_argument("--gris", action="store_true", help="con --suavizar: NO rebinarizar (fuera de lo que vio la red)")
-    ap.add_argument("--dataset", default=DATASET, help="dataset publicado; si es gris (float) entra tal cual"); a = ap.parse_args()
+    ap.add_argument("--dataset", default=DATASET, help="dataset publicado; si es gris (float) entra tal cual")
+    ap.add_argument("--ampliar", type=int, default=1, help="ampliar ×k (gris) antes de la red: M sale de 32·k px (rizo-2 § 122)"); a = ap.parse_args()
     d = np.load(exigir_dataset(a.dataset) / "datos.npz")
     gris = np.issubdtype(d["imagenes"].dtype, np.floating)
     T = d["imagenes"].astype(np.float32) if gris else (d["imagenes"] > 0).astype(np.float32)
@@ -49,12 +50,15 @@ def main() -> int:
         T = np.stack([ndimage.gaussian_filter(t, a.suavizar, mode="constant") for t in T])
         if not a.gris:
             T = (T > 0.5).astype(np.float32)
+    if a.ampliar > 1:
+        from entrenar_local import ampliar
+        T = np.stack([ampliar(t, a.ampliar) for t in T]).astype(np.float32)
     X = torch.from_numpy(T)[:, None]
     pesos = AQUI / "nn" / "pesos" / a.pesos; cfg = json.loads((pesos / "config.json").read_text())
     red = SoloKernels(cfg["capas"], cfg["canales"], cfg.get("kernel", 3)); red.load_state_dict(torch.load(pesos / "best.pt")); red.eval()
     with torch.no_grad():
         M = torch.cat([red(X[i:i + 256])[:, 0] for i in range(0, len(X), 256)]).numpy().astype(np.float16)
-    suf = (f"-s{a.suavizar:g}{'g' if a.gris else ''}" if a.suavizar > 0 else "") + ("" if a.dataset == DATASET else f"-{a.dataset}")
+    suf = (f"-s{a.suavizar:g}{'g' if a.gris else ''}" if a.suavizar > 0 else "") + ("" if a.dataset == DATASET else f"-{a.dataset}") + (f"-x{a.ampliar}" if a.ampliar > 1 else "")
     out = AQUI / "resultados" / f"delgados-{a.pesos}{suf}.npz"
     np.savez_compressed(out, M=M, etiquetas=d["etiquetas"], particion=d["particion"], dataset=a.dataset, pesos=a.pesos,
                         suavizar=a.suavizar, gris=a.gris, tinta=T.astype(np.float16))

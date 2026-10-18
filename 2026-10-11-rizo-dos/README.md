@@ -1789,6 +1789,35 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 122 · El adelgazador a 64 px SÍ conserva la barra del 7 → dataset `uci-optdigits-orig-32px-trazo4-alto32-x64-r20261018` (el dueño, 2026-10-18: «prueba 1, para generar otro dataset»)
+
+`delgado-cnn`: `entrenar_local.py --n 600 --capas 8 --canales 8 --suavizar 0.7 --dos 0.5 --ampliar 2 --nombre k3x3-g0.7x-64` (los
+sintéticos —uno y dos trazos, gris σ 0,7— ampliados ×2 con la MISMA función que los dígitos, `ampliar`, y la línea media de verdad
+calculada a 64 px; 8 capas porque a 64 px los trazos miden ~8 y los cruces ~16). **33 min** en este dev (se estimaron 28; 1,7 GB de
+memoria). `exportar_delgados.py --ampliar 2`. `nn/adelgazador_64_vista.py` → `resultados/122-adelgazador-64.{png,json}`.
+
+Mismo criterio que § 121, escrito antes: **SE CUMPLE**.
+
+| adelgazador | 7 con nudo | 4 con nudo | 1l con ramas | sin explicar (§ 123) | inventado (§ 123) |
+|---|---|---|---|---|---|
+| hoy (NIST) | 87 % | 95 % | 35 % | 12,7 % (7: 14 %) | 6,4 % |
+| gris 32 px (§ 119) | 45 % | 78 % | 0 % | 13,0 % (7: 22 %) | 8,5 % |
+| **gris 64 px** | **89 %** | **96 %** | **4 %** | **7,4 %** (7: 9 %) | 9,2 % |
+
+La validación por re-trazo de § 123 lo confirma: la tinta sin explicar baja a la mitad. ⚠ **El precio**: algunos 0 abren el lazo (la
+cresta se corta 1–2 px donde la tinta es más débil): lazos por 0 en val 0,95 → 0,82. Con la línea media de 64 px se generó y publicó el
+segundo dataset de 32 px (`nn/dataset_alto32.py --delgado …-x2.npz --nombre …-x64-…`; `resultados/122-alto32-x64.png`): el 100 % mide
+32 px de alto, trazo 4,2 px de mediana, ningún dígito en blanco. Medido sobre las imágenes publicadas (`nn/agujeros.py`), con agujero
+cerrado:
+
+| | 0 | 6 | 8 (dos) | 9 | 4 |
+|---|---|---|---|---|---|
+| NIST | 96 % | 94 % | 79 % | 93 % | 8 % |
+| alto32 (§ 120) | 95 % | 93 % | 77 % | 93 % | 5 % |
+| **alto32-x64** | **90 %** | 93 % | 75 % | 92 % | 7 % |
+
+O sea: el x64 recupera la barra del 7 y pierde ~6 % de los 0 cerrados (la pluma de 4 px no tapa todos los cortes).
+
 ### 123 · VALIDAR el adelgazador RE-TRAZANDO su línea media (el dueño, 2026-10-18: «¿has probado a validar la eficacia del delgado volviendo a retrazar…?»)
 
 No se había probado. `nn/retrazo.py` → `resultados/123-retrazo.{png,json}`: la línea media se vuelve a dibujar con el grosor medido del
@@ -1800,6 +1829,7 @@ línea media) e INVENTADO = re-trazo fuera de la tinta (sobra). Medido ese día 
 | NIST + binario (hoy) | 12,7 % (7: 14 %) | 6,4 % |
 | mismo trazo + gris (§ 119) | 13,0 % (7: 22 %) | 8,5 % |
 | mismo trazo + gris + dos trazos (§ 121) | 13,8 % (7: 24 %) | 8,4 % |
+| mismo trazo + gris a **64 px** (§ 122) | **7,4 %** (7: 9 %) | 9,2 % |
 
 **Señala exactamente el fallo de § 120–121**: en los 7 peor explicados la tinta sin línea media (roja en la figura) es la BARRA, y en
 NIST también los extremos de los trazos gruesos (el esqueleto se acorta en las puntas). ⚠ Ni un adelgazador perfecto daría 0 (la pluma

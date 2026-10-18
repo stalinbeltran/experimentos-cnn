@@ -42,7 +42,21 @@ def verdad(puntos: np.ndarray, sigma: float) -> np.ndarray:
     return np.exp(-d2 / (2 * sigma**2))
 
 
-def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0, dos: float = 0.0) -> tuple[np.ndarray, np.ndarray, list[dict]]:
+def ampliar(x: np.ndarray, k: int) -> np.ndarray:
+    """×k en gris, por ÁREAS de píxel (grid_mode): un punto p en coordenadas de 32 px cae en p·k. La MISMA función amplía los dígitos
+    reales en exportar_delgados.py --ampliar (2026-10-18, rizo-2 § 122)."""
+    return ndimage.zoom(x, k, order=1, grid_mode=True, mode="grid-constant") if k > 1 else x
+
+
+def verdad_n(puntos: np.ndarray, sigma: float, n: int) -> np.ndarray:
+    """`verdad` en una rejilla de n×n (centros de píxel en i + 0,5)."""
+    yy, xx = np.mgrid[0:n, 0:n] + 0.5; d2 = np.full((n, n), np.inf)
+    for px, py in puntos:
+        d2 = np.minimum(d2, (xx - px) ** 2 + (yy - py) ** 2)
+    return np.exp(-d2 / (2 * sigma**2))
+
+
+def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0, dos: float = 0.0, ampl: int = 1) -> tuple[np.ndarray, np.ndarray, list[dict]]:
     rng = np.random.default_rng(semilla)
     X, T, cs = [], [], []
     while len(X) < n:
@@ -58,6 +72,8 @@ def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0, dos: flo
             c = {**c, "tipo": f"{c['tipo']}+{c2['tipo']}"}
         if suavizar > 0:                                     # la misma gaussiana que exportar_delgados.py --suavizar σ --gris
             x = ndimage.gaussian_filter(x, suavizar, mode="constant")
+        if ampl > 1:                                         # § 122: a 32·k px, la tinta ampliada y la verdad calculada ya a esa escala
+            X.append(ampliar(x, ampl)); T.append(verdad_n(pts * ampl, sigma, N * ampl)); cs.append(c); continue
         X.append(x); T.append(verdad(pts, sigma)); cs.append(c)
     return np.stack(X).astype(np.float32), np.stack(T).astype(np.float32), cs
 
@@ -88,13 +104,14 @@ def main() -> int:
     ap.add_argument("--kernel", type=int, default=3, help="lado del kernel (impar): 3 o 5")
     ap.add_argument("--suavizar", type=float, default=0.0, help="σ (px) de la gaussiana sobre la tinta, sin rebinarizar; 0 = binaria")
     ap.add_argument("--dos", type=float, default=0.0, help="fracción de ejemplos con DOS trazos (una T o una X); 0 = como siempre")
+    ap.add_argument("--ampliar", type=int, default=1, help="entrenar a 32·k px: la tinta sintética ampliada ×k (gris)")
     ap.add_argument("--nombre", default=None, help="carpeta de pesos nn/pesos/<nombre>; por defecto k<kernel>x<kernel>")
     a = ap.parse_args()
     a.nombre = a.nombre or f"k{a.kernel}x{a.kernel}"
     torch.manual_seed(a.semilla)
 
-    X, T, cs = conjunto(a.n, a.semilla, a.sigma, a.suavizar, a.dos)
-    Xn, Tn, csn = conjunto(10, 202, a.sigma, a.suavizar, a.dos)                 # NUNCA vistos: ¿generaliza o memoriza?
+    X, T, cs = conjunto(a.n, a.semilla, a.sigma, a.suavizar, a.dos, a.ampliar)
+    Xn, Tn, csn = conjunto(10, 202, a.sigma, a.suavizar, a.dos, a.ampliar)                 # NUNCA vistos: ¿generaliza o memoriza?
     x, t = torch.from_numpy(X)[:, None], torch.from_numpy(T)[:, None]
     xn, tn = torch.from_numpy(Xn)[:, None], torch.from_numpy(Tn)[:, None]
     red = SoloKernels(a.capas, a.canales, a.kernel)

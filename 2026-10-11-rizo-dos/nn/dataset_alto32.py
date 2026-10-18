@@ -44,6 +44,11 @@ ORIGEN = "uci-optdigits-orig-32px-trazo4-r20261018"
 NIST = "uci-optdigits-orig-32px-r20261005"
 DELG = AQUI.parent / "2026-10-15-delgado-cnn" / "resultados" / f"delgados-k3x3-g0.7-{ORIGEN}.npz"
 ALTO, PLUMA, BORDE, SIGMA_CURVA = 32, 4.0, 0.7, 1.0
+AVISO_G07 = """
+⚠ **Defecto CONOCIDO, publicado así por orden del dueño (2026-10-18)**: la línea media sale del adelgazador gris `k3x3-g0.7`, que
+**corta la cresta en los cruces**: ~240 sietes pierden la BARRA (7 con algún nudo: 45 %, contra 87 % en NIST) y parte de los 4 pierden
+el cruce (78 % contra 95 %). Lo que no está en la línea media no se dibuja. Detalle en rizo-2 § 121.
+"""
 N = 32
 
 
@@ -101,9 +106,11 @@ def grosor(t):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--muestra", action="store_true"); ap.add_argument("--publicar", action="store_true")
-    a = ap.parse_args()
+    ap.add_argument("--delgado", default=DELG.name, help="fichero de delgado-cnn/resultados (§ 122: el de 64 px)")
+    ap.add_argument("--nombre", default="uci-optdigits-orig-32px-trazo4-alto32-r20261018"); ap.add_argument("--fig", default="120-alto32")
+    a = ap.parse_args(); delg = DELG.parent / a.delgado
     o = np.load(exigir_dataset(ORIGEN) / "datos.npz"); nist = np.load(exigir_dataset(NIST) / "datos.npz")["imagenes"]
-    M = np.load(DELG)["M"].astype(np.float32); y = o["etiquetas"]; n = len(y)
+    M = np.load(delg)["M"].astype(np.float32); y = o["etiquetas"]; n = len(y)   # a 32·k px si se amplió: alto32 normaliza la escala
     MUESTRA = [736, 2849, 4661, 5538, 1888, 3517, 1668, 1552, 0, 2, 3, 4, 5, 6, 8, 9]
     ids = MUESTRA if a.muestra else range(n)
     X = np.zeros((n, N, N), np.float32); K = np.full(n, np.nan)
@@ -123,13 +130,13 @@ def main():
 
     fig = plt.figure(figsize=(1.6 * len(MUESTRA) + 1, 9.5), layout="constrained"); axs = fig.subplots(4, len(MUESTRA))
     filas = [("NIST (binario)", lambda i: nist[i]), ("mismo trazo (§ 118)", lambda i: o["imagenes"][i].astype(np.float32)),
-             ("su cresta (§ 119)", None), ("NUEVO: 32 px de alto,\npluma 4 px", lambda i: X[i])]
+             (f"su cresta\n({delg.name.split('-uci')[0].replace('delgados-', '')})", None), ("NUEVO: 32 px de alto,\npluma 4 px", lambda i: X[i])]
     for f, (nombre, fn) in enumerate(filas):
         for c, i in enumerate(MUESTRA):
             ax = axs[f, c]; ax.set_xticks([]); ax.set_yticks([])
             if fn is None:
                 ax.imshow(o["imagenes"][i].astype(np.float32), cmap="Greys", vmin=0, vmax=3, extent=(0, N, N, 0))
-                for s in segmentos(M[i]):
+                for s in segmentos(M[i]) / (M.shape[-1] // N):              # a coordenadas de 32 px si el delgado es ampliado
                     ax.plot(s[:, 0], s[:, 1], "-", color="#9333ea", lw=1.2)
                 ax.set_xlim(0, N); ax.set_ylim(N, 0)
             else:
@@ -142,11 +149,11 @@ def main():
                 ax.set_ylabel(nombre, fontsize=9, fontweight="bold")
     fig.suptitle("De vuelta a 32 px de alto con el MISMO trazo: se agranda la LÍNEA MEDIA y se vuelve a dibujar con una pluma de 4 px "
                  "(no se agranda la imagen)", fontsize=12)
-    out = AQUI / "resultados" / ("120-alto32-muestra.png" if a.muestra else "120-alto32.png"); fig.savefig(out, dpi=90); print(out)
+    out = AQUI / "resultados" / (f"{a.fig}-muestra.png" if a.muestra else f"{a.fig}.png"); fig.savefig(out, dpi=90); print(out)
     if not a.muestra:
         out.with_suffix(".json").write_text(json.dumps(res, ensure_ascii=False, indent=1))
     if a.publicar and not a.muestra:
-        nombre = f"uci-optdigits-orig-32px-trazo4-alto32-r20261018"; dst = ruta_datos() / "experimentos-cnn" / nombre
+        nombre = a.nombre; dst = ruta_datos() / "experimentos-cnn" / nombre
         if (dst / "manifiesto.json").exists():
             sys.exit(f"✗ {nombre} ya está publicado y un dataset publicado no se reescribe.")
         dst.mkdir(parents=True, exist_ok=True); img = X.astype(np.float16)
@@ -155,7 +162,7 @@ def main():
         (dst / "manifiesto.json").write_text(json.dumps({
             "nombre": nombre, "experimento": "rizo-2", "generado": "2026-10-18", "derivado_de": ORIGEN, "n": int(n),
             "generador": "experimentos-cnn/2026-10-11-rizo-dos/nn/dataset_alto32.py",
-            "delgado": f"delgado-cnn/resultados/{DELG.name} (exportar_delgados.py --pesos k3x3-g0.7 --dataset {ORIGEN})",
+            "delgado": f"delgado-cnn/resultados/{delg.name}",
             "parametros": {"alto": ALTO, "pluma": PLUMA, "borde": BORDE, "sigma_curva": SIGMA_CURVA},
             "campos": {"imagenes": "(N,32,32) float16 gris [0,1]: la línea media escalada a 32 px de alto y dibujada con pluma fija",
                        "etiquetas": "= origen", "particion": "= origen", "origen": "= origen", "escala": "k aplicado a la línea media (NaN: sin cresta)"},
@@ -163,18 +170,15 @@ def main():
         (dst / "README.md").write_text(f"""# `{nombre}`
 
 Los 5620 dígitos de [`{ORIGEN}`](../{ORIGEN}/) (mismo trazo) **de vuelta a 32 px de alto sin engordar el trazo**: se agranda la línea
-media (la cresta del adelgazador gris `k3x3-g0.7` de `delgado-cnn`) y se vuelve a dibujar con una pluma fija de {PLUMA:g} px y borde suave
+media (la cresta de `delgado-cnn/resultados/{delg.name}`) y se vuelve a dibujar con una pluma fija de {PLUMA:g} px y borde suave
 (σ {BORDE:g}), en vez de agrandar la imagen. Mismo orden, etiquetas y partición. Gris [0, 1].
 
 - Grosor medido sobre el resultado: mediana {res['grosor_nuevo']['p50']:.2f} px, 10–90 % {res['grosor_nuevo']['p10']:.2f}–{res['grosor_nuevo']['p90']:.2f}
   (NIST: {res['grosor_nist']['p10']:.2f}–{res['grosor_nist']['p90']:.2f}).
 - {res['alto_32_pct']:.1f} % mide 32 px de alto; {res['limitados_por_ancho']} quedan limitados por el ancho (no caben a 32 de alto).
-- Lo genera `experimentos-cnn/2026-10-11-rizo-dos/nn/dataset_alto32.py --publicar`; detalle en rizo-2 § 120.
-
-⚠ **Defecto CONOCIDO, publicado así por orden del dueño (2026-10-18)**: la línea media sale del adelgazador gris `k3x3-g0.7`, que
-**corta la cresta en los cruces**: ~240 sietes pierden la BARRA (7 con algún nudo: 45 %, contra 87 % en NIST) y parte de los 4 pierden
-el cruce (78 % contra 95 %). Lo que no está en la línea media no se dibuja. Detalle en rizo-2 § 121.
-""")
+- Lo genera `experimentos-cnn/2026-10-11-rizo-dos/nn/dataset_alto32.py --delgado {delg.name} --nombre {nombre} --publicar`; detalle en rizo-2 § 120–122.
+- Sin cresta (salen en blanco): {[int(i) for i in np.flatnonzero(np.isnan(K))]}.
+{"" if delg.name != DELG.name else AVISO_G07}""")
         print("publicado en", dst)
 
 
