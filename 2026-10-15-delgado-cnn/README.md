@@ -82,3 +82,11 @@ con un disco del grosor del dígito, tiene que cubrir el núcleo de la tinta (`-
 borrar la barra del 7). Sólo train + extra; val queda fuera. `python nn/afinar_retrazo.py --lambda 1 --inventado 0 --pasos 1500`
 (1,3 s por paso en el dev). El criterio, las pruebas y el resultado, en rizo-2 § 125.
 
+
+## `sinteticos.casi_cerrado` (2026-10-19): el 0 que no cierra en el punto exacto — sólo VISTA, sin entrenar
+
+El dueño: «empiezas en un punto, haces casi todo el trazo como un cero pero en vez de cerrar en el punto exacto donde empezaste
+terminas un poco más arriba o más abajo». Óvalo que empieza arriba, da −25° … +60° de más sobre la vuelta, y en el último tercio se
+desvía 2–5 px (dentro/fuera) y 1–3 px (arriba/abajo). `nn/casi_cerrado_vista.py` → `resultados/4-casi-cerrado.png`, con 5 ceros
+reales de val de referencia y lo que hace con ellos `k3x3-g0.7x-64-rt`, que nunca vio uno. Con 1–3,5 px el final caía dentro de la
+tinta del principio y no se veía nada; con 2–5 px algunos ya parecen un 6 o una U. No entra en el entrenamiento.

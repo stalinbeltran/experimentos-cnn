@@ -91,6 +91,31 @@ def dos_trazos(rng, c1: dict, margen: float = 1.5) -> dict | None:
     return {"puntos": p2[dentro], "grosor": c2["grosor"][dentro], "tipo": "T" if ancla == 0 else "X"}
 
 
+def casi_cerrado(rng, paso: float = 0.25, g_min: float = 3.0, g_max: float = 6.0, margen: float = 1.5) -> dict:
+    """Un trazo CASI CERRADO, como un 0 hecho de un tirón (2026-10-19, el dueño: «empiezas en un punto, haces casi todo el trazo como
+    un cero pero en vez de cerrar en el punto exacto donde empezaste terminas un poco más arriba o más abajo»).
+
+    Un óvalo con el radio ondulando despacio; se empieza arriba (± 50°) y se da algo menos o algo más de una vuelta (−25° … +60°).
+    En el último tercio del trazo el bolígrafo se DESVÍA de la trayectoria cerrada (2–5 px hacia dentro o hacia fuera, y 1–3 px arriba o
+    abajo; con 1–3,5 px el final caía dentro de la tinta del principio y no se veía), así que el final no cae sobre el principio: queda una puntita o un solapamiento corrido, que es la tinta que se ve en
+    los 0 reales (#304, #357, #980 de val, rizo-2 § 125). La verdad es la polilínea entera, puntita incluida."""
+    a, b = rng.uniform(4.5, 8.5), rng.uniform(8.0, 12.5)                    # semiejes: más alto que ancho, como un 0
+    cx, cy = rng.uniform(N / 2 - 2, N / 2 + 2), rng.uniform(N / 2 - 1.5, N / 2 + 1.5)
+    giro = rng.choice([-1, 1]); t0 = -np.pi / 2 + np.radians(rng.uniform(-50, 50))   # empieza arriba (y crece hacia abajo)
+    total = 2 * np.pi + np.radians(rng.uniform(-25, 60))
+    n = int(total * (a + b) / 2 / paso)
+    t = t0 + giro * np.linspace(0, total, n)
+    r = 1 + _suave(rng, n, escala=0.04, sigma_pasos=40)
+    pts = np.stack([cx + a * r * np.cos(t), cy + b * r * np.sin(t)], 1)
+    rampa = np.clip((np.arange(n) / n - 2 / 3) * 3, 0, 1) ** 1.5             # 0 hasta 2/3 del trazo, 1 al final
+    desvio = rng.uniform(2.0, 5.0) * rng.choice([-1, 1])
+    radial = np.stack([np.cos(t), np.sin(t)], 1)                             # + hacia fuera, − hacia dentro
+    pts = pts + rampa[:, None] * (desvio * radial + np.array([0, rng.uniform(1.0, 3.0) * rng.choice([-1, 1])]))
+    g = np.clip(rng.uniform(g_min, g_max) + _suave(rng, n, escala=0.6, sigma_pasos=15), g_min, g_max)
+    dentro = (pts.min(1) >= margen) & (pts.max(1) <= N - margen)
+    return {"puntos": pts[dentro], "grosor": g[dentro], "tipo": f"casi-0 {np.degrees(total) - 360:+.0f}° {desvio:+.1f}px"}
+
+
 def engrosar(puntos: np.ndarray, grosor: np.ndarray) -> np.ndarray:
     """Tinta binaria 32×32: unión de discos de radio grosor/2 en cada punto de la polilínea."""
     x = np.zeros((N, N), bool)
