@@ -208,6 +208,50 @@ class Columnas(unittest.TestCase):
         self.assertNotIn("cuspide", sin)                              # LEvertice y los demás conservan su huella y sus pesos
         self.assertEqual(con["cuspide"], S.CUS.huella_modulo())
 
+    @staticmethod
+    def _ovalo(cy, ry, rx=5.0, cx=16.0, palo=None, M=None):
+        """Un óvalo de trazo de 3 px (un «delgado» sintético) con centro (cx, cy) y semiejes (rx, ry); `palo` = (y0, y1) añade un palo
+        vertical a la derecha (un 9 o un 6). Se puede pintar encima de otro M."""
+        M = np.zeros((32, 32), np.float32) if M is None else M; yy, xx = np.mgrid[0:32, 0:32] + 0.5
+        t = np.linspace(0, 2 * np.pi, 200); p = np.stack([cx + rx * np.cos(t), cy + ry * np.sin(t)], 1)
+        segs = list(zip(p[:-1], p[1:])) + ([((cx + rx, palo[0]), (cx + rx, palo[1]))] if palo else [])
+        for (x0, y0), (x1, y1) in segs:
+            u = np.clip(((xx - x0) * (x1 - x0) + (yy - y0) * (y1 - y0)) / ((x1 - x0) ** 2 + (y1 - y0) ** 2 + 1e-9), 0, 1)
+            M[np.hypot(xx - (x0 + u * (x1 - x0)), yy - (y0 + u * (y1 - y0))) <= 1.5] = 1.0
+        return M
+
+    def _alt(self, M):
+        b = np.asarray(S.LAL.bloque(M, 3)); return b[:9].reshape(3, 3), b[9]
+
+    def test_lazos_altura_columnas_casan_con_el_bloque(self):
+        """§ 128: las columnas que nombra el revisor son los números de nn/lazo_altura.py (R5), y va la ÚLTIMA (detrás de la cúspide)."""
+        self.assertEqual(S.partes("lazos_altura"), ["rejilla", "cuenta"])
+        for celdas in (3, 4):
+            self.assertEqual(len(S.columnas("lazos_altura", celdas)), len(S.LAL.bloque(self._ovalo(16, 11), celdas)))
+        B = S.rangos(3); self.assertEqual(B["lazos_altura"][0], B["cuspide"][1]); self.assertEqual(B["lazos_altura"][1] - B["lazos_altura"][0], 10)
+        self.assertIn("lazos_altura", S.bloques_ofrecidos())
+
+    def test_lazos_altura_un_cero_vale_uno_y_un_nueve_menos(self):
+        """Un 0 (el lazo ES el dígito) da ≈ 1 en la celda del centro; un 9 (lazo de 10 px arriba, palo hasta abajo) da ≈ 0,4 arriba."""
+        g, n = self._alt(self._ovalo(16, 11)); self.assertEqual(n, 1.0); self.assertGreater(g[1, 1], 0.9); self.assertAlmostEqual(g[1, 1], g.max())
+        g, n = self._alt(self._ovalo(9, 5, palo=(9, 28))); self.assertEqual(n, 1.0)
+        self.assertEqual(int(np.argmax(g)) // 3, 0, "el pico va en la fila de ARRIBA")
+        self.assertTrue(0.3 < g.max() < 0.55, f"altura relativa {g.max():.2f}")
+
+    def test_lazos_altura_no_depende_del_tamano_en_px(self):
+        """El dueño: «relativa a 1, así es independiente del tamaño en px». El mismo 9 a dos escalas da la misma altura (± 0,05)."""
+        a = self._alt(self._ovalo(9, 5, palo=(9, 28)))[0].max(); b = self._alt(self._ovalo(11, 3.5, rx=3.5, palo=(11, 24)))[0].max()
+        self.assertAlmostEqual(a, b, delta=0.05)
+        self.assertEqual(self._alt(np.zeros((32, 32), np.float32))[1], 0.0, "sin cresta: cuenta 0 y no se cae")
+
+    def test_la_huella_solo_cambia_para_quien_usa_lazos_altura(self):
+        class D:
+            hash = "abc"
+            def hash_manuales(self):
+                return "sin"
+        sin = S.Compositor("a", ["lazos_region", "cuspide:rejilla"]).huella(D()); con = S.Compositor("b", ["lazos_altura"]).huella(D())
+        self.assertNotIn("lazos_altura", sin); self.assertEqual(con["lazos_altura"], S.LAL.huella_modulo())
+
     def test_la_fuente_no_cambia_la_huella_de_nist_y_entra_en_la_de_las_demas(self):
         """§ 124: un compositor sin fuente es «nist» y su huella es la de siempre (los guardados se restauran igual); con otra fuente,
         la huella dice el dataset, la fuente y el delgado (unos pesos de una fuente nunca sirven para otra). Una fuente desconocida, no."""

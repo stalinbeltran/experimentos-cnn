@@ -60,6 +60,7 @@ sys.path.insert(0, str(AQUI / "nn")); sys.path.insert(0, str(AQUI.parent))
 import cresta_curvas as CC                                        # noqa: E402
 import vertice_libre as VLB                                       # noqa: E402  (el vértice LIBRE, sobre el delgado: § 105)
 import cuspide as CUS                                             # noqa: E402  (la CÚSPIDE, sobre el delgado: § 111)
+import lazo_altura as LAL                                         # noqa: E402  (el LAZO con su ALTURA relativa: § 128)
 sys.path.insert(0, str(AQUI / "web")); import grupos as GR        # noqa: E402,E702  (separar el 1 en 1l/1a: § 106)
 from expcnn import exigir_dataset, ruta_datos                     # noqa: E402
 
@@ -189,6 +190,9 @@ BLOQUES = {   # clave de caract → (etiqueta, familia, qué lista de objetos pi
     # la firma + − + de la curvatura de la cresta del DELGADO. N E S O = hacia dónde apunta la punta; UNA celda; cada medida, una
     # pieza. Calculado en nn/cuspide.py, fuera de cresta_curvas.py (su hash es aparte).
     "cuspide": ("CÚSPIDE: dos curvas y una punta (§ 111)", "N E S O × (rejilla + giro + curvas + cuenta)", "cuspides"),
+    # El LAZO con su ALTURA (§ 127–128, el dueño, 2026-10-19: «como el lazo con posición de su centro, y que indique cuál es su altura…
+    # relativa a 1»): gaussiana en el centro con pico = alto del lazo / alto del dígito. Calculado en nn/lazo_altura.py.
+    "lazos_altura": ("lazos ALTURA relativa (§ 128)", "rejilla (pico = alto del lazo / alto del dígito) + cuenta", "lazos"),
 }
 SIN_POSICION = {"entrantes4", "entrantes4n"}   # regla del dueño (2026-10-15): se DICE cuál no lleva posición
 # RETIRADOS (el dueño, 2026-10-17: «elimina los features de tinta… aunque por el compositor existente deban seguir existiendo en
@@ -242,7 +246,7 @@ def columnas(bloque: str, celdas: int) -> list[dict]:
         for o in range(4):
             out += [{"sub": et[o], "celda": k, "tipo": "rejilla", "nombre": f"{cn[k]}"} for k in range(c)]
             out += [{"sub": et[o], "celda": None, "tipo": "cuenta", "nombre": "cuenta"}, {"sub": et[o], "celda": None, "tipo": "largo", "nombre": extra}]
-    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area", "vertice", "vertice_1"):
+    elif bloque in ("golpes", "lazos", "lazos_region", "lazos_area", "lazos_altura", "vertice", "vertice_1"):
         out += [{"sub": "", "celda": k, "tipo": "rejilla", "nombre": cn[k]} for k in range(c)] + [{"sub": "", "celda": None, "tipo": "cuenta", "nombre": "cuenta"}]
     elif bloque in ("entrantes4", "entrantes4n"):
         out += [{"sub": DIR4[o], "celda": None, "tipo": "fuerza" if bloque == "entrantes4" else "cuenta", "nombre": "fuerza" if bloque == "entrantes4" else "cuenta"} for o in range(4)]
@@ -285,7 +289,8 @@ def rangos(celdas: int) -> dict:
     B = dict(CC.bloques(celdas)); n = max(z for _, z in B.values())
     B["vertice_1"] = (n, n + celdas * celdas + 1); n = B["vertice_1"][1]
     B["vertice_libre"] = (n, n + len(columnas("vertice_libre", celdas))); n = B["vertice_libre"][1]
-    B["cuspide"] = (n, n + len(columnas("cuspide", celdas)))     # el ÚLTIMO: los bloques de antes no se mueven (sus pesos valen)
+    B["cuspide"] = (n, n + len(columnas("cuspide", celdas))); n = B["cuspide"][1]
+    B["lazos_altura"] = (n, n + len(columnas("lazos_altura", celdas)))   # el ÚLTIMO: los bloques de antes no se mueven (sus pesos valen)
     return B
 
 
@@ -538,11 +543,26 @@ class Datos:
         todos = uno(self.M); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"cúspide {celdas}×{celdas}")
         print(f"  listo en {time.time() - t:.0f} s", flush=True); return todos, aum
 
+    def laz(self, celdas: int, extra: bool = False):
+        """Las columnas de `lazos_altura` (sobre el DELGADO), igual que `cusp`: (todos, train aumentado) o los extra aumentados.
+        Caché propia `lazalt-<hash de lazo_altura.py + cresta_curvas.py>-…`, también en el almacén."""
+        f = CACHE / f"{self.pre}lazalt-{LAL.huella_modulo()}-{celdas}x{celdas}{'-extra' if extra else ''}.npz"
+        if traer_cache(f, f"lazos altura {celdas}×{celdas}"):
+            z = np.load(f); return (z["ex"],) if extra else (z["todos"], z["tr"])
+        uno = lambda Ms: np.asarray([LAL.bloque(m, celdas) for m in Ms], np.float32)
+        t = time.time(); idx = self.ex if extra else self.tr
+        print(f"  calculando lazos altura {celdas}×{celdas} ({'extra' if extra else 'todos + train'})…", flush=True)
+        aum = np.concatenate([uno(np.stack([mover(x, *m) for x in self.M[idx]])) for m in self.aum])   # aum[0] = sin mover
+        if extra:
+            np.savez_compressed(f, ex=aum); guardar_cache(f, f"lazos altura {celdas}×{celdas} extra"); print(f"  listo en {time.time() - t:.0f} s", flush=True); return (aum,)
+        todos = uno(self.M); np.savez_compressed(f, todos=todos, tr=aum); guardar_cache(f, f"lazos altura {celdas}×{celdas}")
+        print(f"  listo en {time.time() - t:.0f} s", flush=True); return todos, aum
+
     def features(self, celdas: int):
         if celdas in self.X:
             return self.X[celdas]
-        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas); lt, ltr = self.vlibre(celdas); ct, ctr = self.cusp(celdas)
-        self.X[celdas] = (np.concatenate([todos, vt, lt, ct], 1), np.concatenate([tr, vtr, ltr, ctr], 1), ytr); return self.X[celdas]
+        todos, tr, ytr = self._features_caract(celdas); vt, vtr = self.vert1(celdas); lt, ltr = self.vlibre(celdas); ct, ctr = self.cusp(celdas); at, atr = self.laz(celdas)
+        self.X[celdas] = (np.concatenate([todos, vt, lt, ct, at], 1), np.concatenate([tr, vtr, ltr, ctr, atr], 1), ytr); return self.X[celdas]
 
     def _features_caract(self, celdas: int):
         CACHE.mkdir(parents=True, exist_ok=True); f = CACHE / f"{self.pre}caract-{self.hash}-{celdas}x{celdas}.npz"
@@ -561,13 +581,13 @@ class Datos:
         a 8 ms) y se cachea como las demás."""
         f = CACHE / f"{self.pre}caract-{self.hash}-{celdas}x{celdas}-extra.npz"
         if traer_cache(f, f"de features extra {celdas}×{celdas}"):
-            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0]], 1), z["yex"]
+            z = np.load(f); return np.concatenate([z["ex"], self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0], self.laz(celdas, extra=True)[0]], 1), z["yex"]
         t = time.time(); print(f"  calculando caract {celdas}×{celdas} de los {len(self.ex)} extra × {len(self.aum)}…", flush=True)
         todos = self._features_caract(celdas)[0]
         ex = np.concatenate([todos[self.ex]] + [CC.caract(np.stack([mover(x, *m) for x in self.M[self.ex]]), celdas, np.stack([mover(x, *m) for x in self.tinta[self.ex]])) for m in self.aum[1:]])
         yex = np.concatenate([self.y[self.ex]] * len(self.aum)); np.savez_compressed(f, ex=ex, yex=yex)
         print(f"  listo en {time.time() - t:.0f} s → {f.name}", flush=True); guardar_cache(f, f"de features extra {celdas}×{celdas}")
-        return np.concatenate([ex, self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0]], 1), yex
+        return np.concatenate([ex, self.vert1(celdas, extra=True)[0], self.vlibre(celdas, extra=True)[0], self.cusp(celdas, extra=True)[0], self.laz(celdas, extra=True)[0]], 1), yex
 
     def objetos(self, i: int) -> dict:
         with self._lock:
@@ -696,6 +716,8 @@ class Compositor:
             h["vertice_libre"] = VLB.huella_modulo()
         if any(pieza(b)[0] == "cuspide" for b in self.bloques):            # ídem: sólo quien usa la cúspide
             h["cuspide"] = CUS.huella_modulo()
+        if any(pieza(b)[0] == "lazos_altura" for b in self.bloques):       # ídem: sólo quien usa el lazo con altura
+            h["lazos_altura"] = LAL.huella_modulo()
         if self.sub1:                                             # § 107: ídem con el 1 partido (sus etiquetas y su regla)
             h["sub1"] = True; h["etiquetas1"] = datos.hash_manuales1()
         if self.fuente != "nist":                                 # § 124: sólo si no es la de siempre (las huellas viejas no cambian)
@@ -1056,6 +1078,7 @@ class App:
     def digito(self, i: int, fuente: str = "nist") -> dict:
         d = self.datos_de(fuente); ob = dict(d.objetos(i)); ob["vertices"] = CC.vertices(d.tinta[i])   # el vértice sale de la TINTA (§ 95)
         ob["cuspides"] = cuspides_para_pintar(d.M[i])
+        ad = LAL.alto_digito(d.M[i]); ob["lazos"] = [{**z, "altura": LAL.altura_relativa(z, ad)} for z in ob["lazos"]]   # § 128 (copia: no toca la caché)
         return {"idx": int(i), "real": int(d.y[i]), "tinta": (np.round(d.imagen[i], 2) if d.gris else d.tinta[i]).ravel().tolist(), "M": np.round(d.M[i], 2).ravel().tolist(), "fuente": d.fuente,
                 "objetos": serializar_objetos(ob), "en_val": bool(i in set(d.va.tolist())), "sub4": (d.subgrupo4(i) if d.y[i] == 4 else None)}
 

@@ -1789,6 +1789,27 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 128 · El LAZO con su ALTURA relativa, en el REVISOR (el dueño, 2026-10-19: «procede») — bloque `lazos_altura`
+
+Lo de § 127, como bloque elegible en «entrenar otro»: **«lazos ALTURA relativa (§ 128)»**, piezas rejilla + cuenta (celdas² + 1, como
+`lazos`). `nn/lazo_altura.py` (fuera de `cresta_curvas.py`, como la cúspide: su hash no cambia, así que las huellas y cachés de los
+compositores guardados siguen valiendo); en `web/servidor.py` va el ÚLTIMO de `rangos` (detrás de la cúspide), con caché propia
+`lazalt-<huella>-…` (también en el almacén) y en la huella sólo de quien lo usa. En la lista de objetos de un dígito, cada lazo dice
+ahora «altura X del dígito». ⚠ Sus columnas se calculan la primera vez que el revisor construye las features de una FUENTE, para
+cualquier compositor y no sólo para quien lo use (como la cúspide): unos segundos por fuente, ~7 min la primera vez con extra *(estimado)*.
+
+Comprobado ese día: 4 tests nuevos en `web/probar_revisor.py` (columnas = bloque y el último; un 0 ≈ 1 en el centro y un 9 ≈ 0,4
+arriba; **el mismo 9 a dos escalas da la misma altura** —0,40 y 0,37—, que con el alto en px fallaría: alto/25 da 0,35 y 0,25; la huella
+sólo para quien lo usa). Las 30 pruebas sin servidor pasan. ⚠ Las 7 de `ConDato` (servidor de verdad, 35 min) FALLAN, y no por esto
+(revisado por el agente verificador): piden la receta «aprobada: lazo región (§ 79)», que ya no está entre las vivas
+(`web/cache/recetas.json`) → 400; esperan el 110 sin etiqueta a mano y es «4a» desde el 2026-10-15; y tres agotan su espera mientras
+ese servidor reentrena los compositores sin almacén (causa no aislada). Esas pruebas se quedaron atrás de las recetas: pendiente
+ponerlas al día. Y en el revisor vivo, tras reiniciarlo: el bloque sale en la lista y la API da 0 #552 → 0,97 · 9 #971 → 0,42 · 8 #508 → 0,44 y 0,99.
+
+⏳ **PENDIENTE (el dueño, 2026-10-19: «anota mostrarme imagen del caso del 8»)**: enseñarle la imagen de los ochos con un lazo EXTERIOR
+que rodea a los dos (val: #414, #482, #500, #508, #513; vale ≈ 0,99, como un 0) para que decida si se deja o se ignora el lazo que
+contiene a otro. Hoy se deja como está.
+
 ### 127 · VISTA PREVIA: el LAZO con la posición de su centro y su ALTURA RELATIVA (el dueño, 2026-10-19) — sólo imagen, el revisor no cambia
 
 «Crear un nuevo feature, que sea como el lazo con posición de su centro, y que indique cuál es su altura», y después «haz que la
