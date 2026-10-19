@@ -1789,7 +1789,7 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
-### 125 · AFINAR el adelgazador de 64 px con el FEEDBACK DEL RE-TRAZO (el dueño, 2026-10-19: «procede») — ⏳ entrenando
+### 125 · AFINAR el adelgazador de 64 px con el FEEDBACK DEL RE-TRAZO (el dueño, 2026-10-19: «procede») — ❌ criterio NO cumplido por 0,33 puntos, pero mejora todo lo de estructura
 
 La propuesta de § 123, hecha. `delgado-cnn/nn/afinar_retrazo.py` parte de `k3x3-g0.7x-64` (§ 122) y a la pérdida de los sintéticos
 (la de siempre, que mantiene M fina) le suma una de RE-TRAZO sobre los dígitos REALES de mismo trazo (×2): la cresta suave
@@ -1817,8 +1817,25 @@ adelgazando. Lo que sí es estructura (la barra perdida, el lazo abierto) son lo
 
 **Las tres primeras ENSEÑAN A BORRAR**: la pluma redonda se pasa de la tinta en cada punta, y un brazo corto —la barra del 7— es casi
 todo puntas, así que el término de inventado premia quitarlo. Ni la tolerancia en las puntas lo evita. El entrenamiento largo va con
-la última (`--inventado 0`): el término de sintéticos ya castiga las ramas falsas. La de cuatro trozos no explica nada: medido, la
-cresta no se fragmenta más (> 1 trozo: 2 → 4 % de val).
+la última (`--inventado 0`): el término de sintéticos ya castiga las ramas falsas. Y no es que la cresta se rompa en trozos: medido
+con la tercera, los dígitos con más de un trozo de cresta sólo pasan del 2 al 4 % de val.
+
+**Resultado** (unidad `rizo2-retrazo`, 14:58 → 15:35 UTC, `Result=success`, `NRestarts=0`; 1500 pasos en 1914 s; la pérdida de
+sintéticos nuevos 0,0862 → 0,0879, la de re-trazo 0,0100 → 0,0065). En val:
+
+| | con hueco | 7 con hueco | 0 con hueco | inventado | 7 con nudo | 4 con nudo | lazos por 0 | lazos por 8 | 1l con ramas |
+|---|---|---|---|---|---|---|---|---|---|
+| 64 px (§ 122) | 6,1 % | 7,5 % | 4,4 % | 9,25 % | 91,3 % | 96,3 % | 0,82 | 1,78 | 4,9 % |
+| **+ re-trazo** | **4,3 %** | **4,3 %** | **1,2 %** | 9,21 % | **94,4 %** | 96,9 % | **0,94** | 1,84 | 6,1 % |
+
+**El criterio NO se cumple**: con hueco 4,33 % contra ≤ 4 % (≈ 5 dígitos de 1617). Los otros tres, sí. Pero todo lo de estructura
+mejora y nada empeora fuera del ruido: los huecos bajan un 29 %, los del 0 a menos de un tercio, y el lazo del 0, que § 122 había
+perdido (0,95 → 0,82), vuelve a 0,94. Los 1l con ramas suben de 4 a 5 de los 82 de val: un dígito. Sobre los 5620 (train + extra
+incluidos) los huecos van de 6,4 a 5,4 %.
+
+⚠ En la figura, los 0 de abajo sin línea negra NO han perdido la cresta: un lazo cerrado sin puntas sale en `objetos()["lazos"]`,
+no en `tramos`, que es lo que se dibuja. Su re-trazo gris cubre el dígito entero. Pesos: `delgado-cnn/nn/pesos/k3x3-g0.7x-64-rt/`.
+⏳ Sin decidir (el dueño): si se acepta pese al criterio, y si se genera con él otro dataset de 32 px de alto como el de § 122.
 
 ### 124 · El dataset mejorado en el REVISOR: la FUENTE de los dígitos es un dato del compositor (el dueño, 2026-10-18: «vamos a llevar el dataset mejorado al app, y voy a entrenar un compositor»)
 
