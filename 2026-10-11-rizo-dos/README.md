@@ -1789,6 +1789,37 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 125 · AFINAR el adelgazador de 64 px con el FEEDBACK DEL RE-TRAZO (el dueño, 2026-10-19: «procede») — ⏳ entrenando
+
+La propuesta de § 123, hecha. `delgado-cnn/nn/afinar_retrazo.py` parte de `k3x3-g0.7x-64` (§ 122) y a la pérdida de los sintéticos
+(la de siempre, que mantiene M fina) le suma una de RE-TRAZO sobre los dígitos REALES de mismo trazo (×2): la cresta suave
+σ((M − 0,4)/0,05) se dilata con un disco del grosor de cada dígito (diferenciable: máximo de M·K sobre la ventana) y se compara con
+la tinta. Sólo **train + extra** (4003); **val (1617) queda fuera** para medir. Mide `nn/adelgazador_retrazo_vista.py` →
+`resultados/125-adelgazador-retrazo.{png,json}`; lo lanza `nn/correr-retrazo.sh lanzar` (unidad `rizo2-retrazo`, ~40 min).
+
+**CRITERIO, escrito antes del entrenamiento largo, en val**: dígitos con HUECO (≥ 4 px del núcleo de la tinta sin re-trazo) ≤ 4 %
+(base 6,1 %) · inventado ≤ la base (9,25 %) · lazos por 0 ≥ 0,90 (base 0,82) · 7 con algún nudo ≥ 85 % (base 91,3 %).
+
+⚠ **El criterio acordado con el dueño era otro y se cambió ANTES de entrenar, porque medía el borde**: «sin explicar < 7,4 %».
+Medido ese día sobre la base, en val: la mediana de sin explicar es 7,0 % con la tinta entera y **0,0 % en su núcleo** (la tinta sin
+su borde de 1 px). O sea que el 7 % de § 123 es BORDE —una pluma de grosor fijo contra un trazo de grosor variable— y no se arregla
+adelgazando. Lo que sí es estructura (la barra perdida, el lazo abierto) son los huecos del núcleo: el **6 %** de val (7: 7,4 %; 0: 4,4 %).
+
+**Cuatro pruebas cortas** antes de elegir la pérdida (100 pasos, 256 dígitos, ~2 min cada una; en val, contra la base):
+
+| pérdida de re-trazo | sin explicar | inventado | lazos por 0 | 7 con nudo | con hueco |
+|---|---|---|---|---|---|
+| (base, § 122) | 6,98 % | 9,25 % | 0,82 | 91,3 % | 6,1 % |
+| BCE(R, tinta) sobre M | 8,58 % | 8,18 % | 0,68 | 88,8 % | — |
+| sin explicar + inventado, sobre la cresta suave | 9,65 % | 7,80 % | 0,81 | 87,0 % | — |
+| lo mismo, con 1 px de tolerancia en las puntas | 10,69 % | 7,55 % | 0,74 | 81,4 % | — |
+| **sólo sin explicar, sobre el núcleo** | 7,14 % | 8,84 % | 0,85 | 90,7 % | **5,0 %** |
+
+**Las tres primeras ENSEÑAN A BORRAR**: la pluma redonda se pasa de la tinta en cada punta, y un brazo corto —la barra del 7— es casi
+todo puntas, así que el término de inventado premia quitarlo. Ni la tolerancia en las puntas lo evita. El entrenamiento largo va con
+la última (`--inventado 0`): el término de sintéticos ya castiga las ramas falsas. La de cuatro trozos no explica nada: medido, la
+cresta no se fragmenta más (> 1 trozo: 2 → 4 % de val).
+
 ### 124 · El dataset mejorado en el REVISOR: la FUENTE de los dígitos es un dato del compositor (el dueño, 2026-10-18: «vamos a llevar el dataset mejorado al app, y voy a entrenar un compositor»)
 
 En «entrenar otro» hay ahora **«dígitos»**: *NIST (binario, el de siempre)* o *mismo trazo, 32 px de alto (§ 122)* =

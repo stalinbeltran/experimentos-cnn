@@ -74,3 +74,11 @@ en `uci-optdigits-orig-32px-trazo4-r20261018`); 136 s, pérdida en nuevos 0,1380
 con `entrenar_local.ampliar`, la verdad calculada a 64 px). `python nn/entrenar_local.py --n 600 --capas 8 --canales 8 --suavizar 0.7 --dos 0.5
 --ampliar 2 --nombre k3x3-g0.7x-64` (33 min, pérdida en nuevos 0,0862) y `exportar_delgados.py --pesos k3x3-g0.7x-64 --dataset <…> --ampliar 2`
 (M de 64×64). A 32 px, entrenar con dos trazos (`k3x3-g0.7x`) NO recuperaba la barra del 7 (46 %); a 64 px, sí (89 %). Rizo-2 § 121–122.
+
+## `afinar_retrazo.py` y `k3x3-g0.7x-64-rt` (2026-10-19): el FEEDBACK DEL RE-TRAZO
+
+Ajuste fino de `k3x3-g0.7x-64` con una pérdida sobre los DÍGITOS REALES (sin línea media de verdad): la cresta suave de M, dilatada
+con un disco del grosor del dígito, tiene que cubrir el núcleo de la tinta (`--inventado 0`: el término de trazo inventado enseñaba a
+borrar la barra del 7). Sólo train + extra; val queda fuera. `python nn/afinar_retrazo.py --lambda 1 --inventado 0 --pasos 1500`
+(1,3 s por paso en el dev). El criterio, las pruebas y el resultado, en rizo-2 § 125.
+
