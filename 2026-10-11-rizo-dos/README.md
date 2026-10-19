@@ -1789,7 +1789,7 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
-### 126 · El adelgazador con trazos CASI CERRADOS: el 0 que no cierra en el punto exacto (el dueño, 2026-10-19: «procede») — ⏳ entrenando
+### 126 · El adelgazador con trazos CASI CERRADOS: el 0 que no cierra en el punto exacto (el dueño, 2026-10-19: «procede») — ❌ NO aprende los casi cerrados: ni siquiera los de entrenamiento
 
 El dueño: *«algunos trazos son "cercanos" pero no 100 % cerrados, y no hemos entrenado un equivalente»*: un 0 hecho de un tirón que
 termina un poco por encima o por debajo de donde empezó. `delgado-cnn/sinteticos.casi_cerrado` lo genera (empieza arriba, −25°…+60°
@@ -1806,6 +1806,22 @@ cola está conservada si su cresta la cubre en ≥ 80 % a ≤ 1 px. Medido antes
 
 **CRITERIO, escrito antes de entrenar**: casi cerrados: colas conservadas **≥ 90 %** y cresta que sobra ≤ la de § 125 + 2 puntos. Y
 en val no empeora lo de § 125: con hueco ≤ 4,33 % · lazos por 0 ≥ 0,90 · 7 con nudo ≥ 85 % · inventado ≤ 9,25 %.
+
+**Resultado** (unidad `rizo2-casi`, 18:26 → 19:01 UTC, `Result=success`, `NRestarts=0`, 1938 s). **El criterio NO se cumple**:
+
+| | colas conservadas | cresta que sobra | val: con hueco | lazos por 0 | 7 con nudo | inventado |
+|---|---|---|---|---|---|---|
+| 64 px (§ 122) | 78,8 % | 0,0 % | 6,1 % | 0,82 | 91,3 % | 9,25 % |
+| + re-trazo (§ 125) | 79,9 % | 0,8 % | 4,3 % | 0,94 | 94,4 % | 9,21 % |
+| + re-trazo + casi (§ 126) | **80,4 %** | 0,9 % | 4,3 % | 0,94 | 93,8 % | 9,14 % |
+
+Los casi cerrados **no cambian nada** (+0,5 puntos), y lo de val queda igual que § 125. La razón está en la pérdida supervisada
+(BCE ponderada) sobre los propios casi cerrados, medida después: **la red no aprendió ni los 100 con los que se entrenó** — 0,1822
+con el de 64 px, 0,1816 tras el afinado (los 10 nuevos: 0,1704 → 0,1724, plana los 1500 pasos; un trazo normal da 0,087). No es
+falta de ejemplos (salen ~9 por lote en 1500 pasos): no consigue bajarla. **Hipótesis, NO comprobada**: donde la cola se monta sobre
+el principio, la tinta es UNA banda gruesa, y desde la tinta sola dos líneas medias a 1,5–3,5 px no se distinguen de un trazo más
+grueso; la otra explicación es la capacidad (3657 parámetros, 8 capas de 8 canales). Se distinguen entrenando SÓLO con casi cerrados
+y más canales: si tampoco baja, es la ambigüedad. `k3x3-g0.7x-64-rtc` queda guardado; el vigente sigue siendo `-rt` (§ 125).
 
 ### 125 · AFINAR el adelgazador de 64 px con el FEEDBACK DEL RE-TRAZO (el dueño, 2026-10-19: «procede») — ❌ criterio NO cumplido por 0,33 puntos, pero mejora todo lo de estructura
 

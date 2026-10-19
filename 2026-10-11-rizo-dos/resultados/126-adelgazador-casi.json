@@ -1,0 +1,85 @@
+{
+ "medidas": {
+  "64 px (§ 122)": {
+   "casi": {
+    "trazos_con_cola_visible": 184,
+    "colas_conservadas": 78.80434782608695,
+    "cola_cubierta_media": 86.48387471468311,
+    "cresta_que_sobra": 0.0
+   },
+   "val": {
+    "hueco": 6.0606060606060606,
+    "hueco_7": 7.453416149068323,
+    "hueco_0": 4.375,
+    "sin_explicar": 6.976744186046512,
+    "inventado": 9.246575342465754,
+    "sin_explicar_7": 8.333333333333332,
+    "inventado_1": 7.064433847177554,
+    "nudo_7": 91.30434782608695,
+    "nudo_4": 96.31901840490798,
+    "lazos_0": 0.81875,
+    "lazos_6": 0.9877300613496932,
+    "lazos_8": 1.7756410256410255,
+    "lazos_9": 0.9382716049382716,
+    "1l_ramas": 4.878048780487805
+   }
+  },
+  "+ re-trazo (§ 125)": {
+   "casi": {
+    "trazos_con_cola_visible": 184,
+    "colas_conservadas": 79.8913043478261,
+    "cola_cubierta_media": 87.71443565788125,
+    "cresta_que_sobra": 0.8369519540551897
+   },
+   "val": {
+    "hueco": 4.329004329004329,
+    "hueco_7": 4.3478260869565215,
+    "hueco_0": 1.25,
+    "sin_explicar": 6.722689075630252,
+    "inventado": 9.205020920502092,
+    "sin_explicar_7": 7.638888888888889,
+    "inventado_1": 7.129374183243792,
+    "nudo_7": 94.40993788819875,
+    "nudo_4": 96.93251533742331,
+    "lazos_0": 0.94375,
+    "lazos_6": 0.9877300613496932,
+    "lazos_8": 1.8397435897435896,
+    "lazos_9": 0.9629629629629629,
+    "1l_ramas": 6.097560975609756
+   }
+  },
+  "+ re-trazo + casi (§ 126)": {
+   "casi": {
+    "trazos_con_cola_visible": 184,
+    "colas_conservadas": 80.43478260869566,
+    "cola_cubierta_media": 88.88439368536254,
+    "cresta_que_sobra": 0.8621330360460797
+   },
+   "val": {
+    "hueco": 4.267161410018553,
+    "hueco_7": 4.3478260869565215,
+    "hueco_0": 2.5,
+    "sin_explicar": 6.770833333333333,
+    "inventado": 9.13978494623656,
+    "sin_explicar_7": 7.518796992481203,
+    "inventado_1": 6.339160136628491,
+    "nudo_7": 93.7888198757764,
+    "nudo_4": 96.93251533742331,
+    "lazos_0": 0.94375,
+    "lazos_6": 0.9938650306748467,
+    "lazos_8": 1.8333333333333333,
+    "lazos_9": 0.9629629629629629,
+    "1l_ramas": 6.097560975609756
+   }
+  }
+ },
+ "criterio": {
+  "colas conservadas >= 90 %": false,
+  "cresta que sobra <= § 125 + 2": true,
+  "val: hueco <= 4,33": true,
+  "val: lazos por 0 >= 0,90": true,
+  "val: 7 con nudo >= 85": true,
+  "val: inventado <= 9,25": true,
+  "SE CUMPLE": false
+ }
+}

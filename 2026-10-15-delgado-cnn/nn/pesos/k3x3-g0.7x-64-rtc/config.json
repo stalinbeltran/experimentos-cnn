@@ -1,0 +1,31 @@
+{
+ "n": 600,
+ "capas": 8,
+ "canales": 8,
+ "epocas": 400,
+ "sigma": 0.8,
+ "semilla": 101,
+ "kernel": 3,
+ "suavizar": 0.7,
+ "dos": 0.5,
+ "ampliar": 2,
+ "nombre": "k3x3-g0.7x-64-rtc",
+ "parametros": 3657,
+ "segundos": 1937.5,
+ "mejor_nuevos": 0.08616827428340912,
+ "desde": "k3x3-g0.7x-64",
+ "retrazo": {
+  "desde": "k3x3-g0.7x-64",
+  "nombre": "k3x3-g0.7x-64-rtc",
+  "lam": 1.0,
+  "pasos": 1500,
+  "inventado": 0.0,
+  "lr": 0.001,
+  "lote_sint": 64,
+  "lote_real": 32,
+  "semilla": 303,
+  "casi": 100,
+  "limite": 0
+ },
+ "reales": 4003
+}
