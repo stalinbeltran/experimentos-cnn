@@ -1789,15 +1789,17 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
-### 127 · VISTA PREVIA: el LAZO con la posición de su centro y su ALTURA (el dueño, 2026-10-19) — sólo imagen, el revisor no cambia
+### 127 · VISTA PREVIA: el LAZO con la posición de su centro y su ALTURA RELATIVA (el dueño, 2026-10-19) — sólo imagen, el revisor no cambia
 
-«Crear un nuevo feature, que sea como el lazo con posición de su centro, y que indique cuál es su altura.» Leído como **lo que mide
-el lazo de alto** (máx − mín de la y de su polígono, px de 32; la posición vertical ya la da el centro). `nn/lazo_altura_vista.py` →
-`resultados/127-lazo-altura.{png,json}`, sobre el delgado del revisor. Codificación propuesta: la del bloque `lazos` con la altura
-dentro, como `lazos_area` lleva el área — gaussiana σ 2 en el centro con pico = alto / 25 (25 px = mediana del lazo de un 0 en val),
-máximo por celda + cuenta. Medido en val (mediana del alto): **0 → 25,0** · 6 → 11,6 · 9 → 11,3 · 4 → 11,3 · 8 → 10,7 (dos por dígito).
-⚠ Algunos 8 dan además un lazo EXTERIOR de 25–27 px que rodea a los dos (#482): el detector de lazos, no la altura; con altura ese
-lazo pesa como el de un 0.
+«Crear un nuevo feature, que sea como el lazo con posición de su centro, y que indique cuál es su altura», y después «haz que la
+altura sea relativa a 1, así es independiente del tamaño en px». **Altura = alto del lazo / alto del dígito**, los dos sobre la LÍNEA
+MEDIA del delgado (el lazo: máx − mín de la y de su polígono; el dígito: de la primera a la última fila de la cresta). ⚠ Medido el
+alto del dígito sobre la banda M > 0,4, un 0 daba 0,85: la banda es más gruesa que la línea media del lazo. `nn/lazo_altura_vista.py`
+→ `resultados/127-lazo-altura.{png,json}`. Codificación propuesta: la del bloque `lazos` con la altura dentro, como `lazos_area`
+lleva el área — gaussiana σ 2 en el centro con pico = altura relativa, máximo por celda + cuenta. Medido en val (mediana, p10–p90):
+**0 → 0,97** (0,88–0,99) · 6 → 0,42 · 9 → 0,42 · 4 → 0,42 · 8 → 0,40 (dos por dígito) · los 2 lazos de 3 → 0,20.
+⚠ 5 de los 156 ochos de val (#414, #482, #500, #508, #513) dan además un lazo EXTERIOR que rodea a los dos (≈ 0,99): el detector de
+lazos, no la altura; con la altura dentro, ese lazo pesa como el de un 0.
 
 ### 126 · El adelgazador con trazos CASI CERRADOS: el 0 que no cierra en el punto exacto (el dueño, 2026-10-19: «procede») — ❌ NO aprende los casi cerrados: ni siquiera los de entrenamiento
 
