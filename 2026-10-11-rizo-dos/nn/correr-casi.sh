@@ -1,7 +1,6 @@
 #!/bin/sh
 # rizo-2 § 126 — lo mismo que § 125 (correr-retrazo.sh) MÁS 100 trazos CASI CERRADOS en los sintéticos (el dueño, 2026-10-19).
 # Afinar (delgado-cnn/nn/afinar_retrazo.py --casi 100, ~35 min) → exportar M a 64 px → medir (nn/adelgazador_casi_vista.py) → aviso.
-# medir en val (nn/adelgazador_retrazo_vista.py) → aviso.
 #   sh nn/correr-casi.sh lanzar     → como UNIDAD de systemd `rizo2-casi` (padre PID 1: sobrevive al fin del turno)
 #   sh nn/correr-casi.sh seco       → imprime unidad y órdenes, sin lanzar nada
 #   sh nn/correr-casi.sh estado     → unidad, Result, NRestarts, último paso del afinado y qué salidas existen
