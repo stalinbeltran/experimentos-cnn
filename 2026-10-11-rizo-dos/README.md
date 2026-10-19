@@ -1789,6 +1789,24 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 126 · El adelgazador con trazos CASI CERRADOS: el 0 que no cierra en el punto exacto (el dueño, 2026-10-19: «procede») — ⏳ entrenando
+
+El dueño: *«algunos trazos son "cercanos" pero no 100 % cerrados, y no hemos entrenado un equivalente»*: un 0 hecho de un tirón que
+termina un poco por encima o por debajo de donde empezó. `delgado-cnn/sinteticos.casi_cerrado` lo genera (empieza arriba, −25°…+60°
+sobre la vuelta, y en el último tercio se desvía 1,5–3,5 px dentro/fuera y 0,5–2 px arriba/abajo; vista en
+`delgado-cnn/resultados/4-casi-cerrado.png`). **Misma receta que § 125** —desde `k3x3-g0.7x-64`, re-trazo sólo de sin explicar,
+1500 pasos, mismas semillas— **más 100 casi cerrados AÑADIDOS** a los 600 sintéticos (`--casi 100`, ≈ 14 %): la diferencia con
+§ 125 es sólo eso. `k3x3-g0.7x-64-rtc`; `nn/correr-casi.sh lanzar` (unidad `rizo2-casi`); mide `nn/adelgazador_casi_vista.py` →
+`resultados/126-adelgazador-casi.{png,json}`.
+
+**La medida nueva**: en 200 casi cerrados NUNCA vistos, ¿conserva la cresta la COLA desviada? Sólo cuenta la cola a > 2 px (de 32)
+del resto del trazo —más cerca, la cresta del lazo la «cubre» aunque se haya borrado: la 1.ª versión daba 82 % con el de 64 px— y una
+cola está conservada si su cresta la cubre en ≥ 80 % a ≤ 1 px. Medido antes de entrenar (184 de los 200 tienen cola visible): **64 px
+78,8 % · § 125 79,9 %**; cresta que sobra 0,0 y 0,8 %.
+
+**CRITERIO, escrito antes de entrenar**: casi cerrados: colas conservadas **≥ 90 %** y cresta que sobra ≤ la de § 125 + 2 puntos. Y
+en val no empeora lo de § 125: con hueco ≤ 4,33 % · lazos por 0 ≥ 0,90 · 7 con nudo ≥ 85 % · inventado ≤ 9,25 %.
+
 ### 125 · AFINAR el adelgazador de 64 px con el FEEDBACK DEL RE-TRAZO (el dueño, 2026-10-19: «procede») — ❌ criterio NO cumplido por 0,33 puntos, pero mejora todo lo de estructura
 
 La propuesta de § 123, hecha. `delgado-cnn/nn/afinar_retrazo.py` parte de `k3x3-g0.7x-64` (§ 122) y a la pérdida de los sintéticos

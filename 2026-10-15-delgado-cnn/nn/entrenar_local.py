@@ -31,7 +31,7 @@ from scipy import ndimage
 
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from sinteticos import N, _XX, _YY, curva_natural, dos_trazos, engrosar  # noqa: E402
+from sinteticos import N, _XX, _YY, casi_cerrado, curva_natural, dos_trazos, engrosar  # noqa: E402
 
 
 def verdad(puntos: np.ndarray, sigma: float) -> np.ndarray:
@@ -75,6 +75,21 @@ def conjunto(n: int, semilla: int, sigma: float, suavizar: float = 0.0, dos: flo
         if ampl > 1:                                         # § 122: a 32·k px, la tinta ampliada y la verdad calculada ya a esa escala
             X.append(ampliar(x, ampl)); T.append(verdad_n(pts * ampl, sigma, N * ampl)); cs.append(c); continue
         X.append(x); T.append(verdad(pts, sigma)); cs.append(c)
+    return np.stack(X).astype(np.float32), np.stack(T).astype(np.float32), cs
+
+
+def conjunto_casi(n: int, semilla: int, sigma: float, suavizar: float = 0.0, ampl: int = 1) -> tuple[np.ndarray, np.ndarray, list[dict]]:
+    """Trazos CASI CERRADOS (`sinteticos.casi_cerrado`, 2026-10-19): la misma tubería que `conjunto` (engrosar → gaussiana → ×k, y
+    la verdad calculada ya a la escala de la red). Van APARTE para poder contarlos y medirlos por separado."""
+    rng = np.random.default_rng(semilla); X, T, cs = [], [], []
+    while len(X) < n:
+        c = casi_cerrado(rng)
+        if len(c["puntos"]) < 40:
+            continue
+        x = engrosar(c["puntos"], c["grosor"]).astype(np.float32)
+        if suavizar > 0:
+            x = ndimage.gaussian_filter(x, suavizar, mode="constant")
+        X.append(ampliar(x, ampl)); T.append(verdad_n(c["puntos"] * ampl, sigma, N * ampl) if ampl > 1 else verdad(c["puntos"], sigma)); cs.append(c)
     return np.stack(X).astype(np.float32), np.stack(T).astype(np.float32), cs
 
 

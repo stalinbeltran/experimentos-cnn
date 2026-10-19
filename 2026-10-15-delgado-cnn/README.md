@@ -89,4 +89,5 @@ El dueño: «empiezas en un punto, haces casi todo el trazo como un cero pero en
 terminas un poco más arriba o más abajo». Óvalo que empieza arriba, da −25° … +60° de más sobre la vuelta, y en el último tercio se
 desvía 2–5 px (dentro/fuera) y 1–3 px (arriba/abajo). `nn/casi_cerrado_vista.py` → `resultados/4-casi-cerrado.png`, con 5 ceros
 reales de val de referencia y lo que hace con ellos `k3x3-g0.7x-64-rt`, que nunca vio uno. Con 1–3,5 px el final caía dentro de la
-tinta del principio y no se veía nada; con 2–5 px algunos ya parecen un 6 o una U. No entra en el entrenamiento.
+tinta del principio y no se veía nada; con 2–5 px algunos ya parecen un 6 o una U. Se quedó en el término medio (1,5–3,5 px y 0,5–2 px),
+y entra en el afinado con `afinar_retrazo.py --casi N` (se AÑADEN; `entrenar_local.conjunto_casi`): `k3x3-g0.7x-64-rtc`, rizo-2 § 126.

@@ -39,7 +39,7 @@ from skimage.morphology import skeletonize
 AQUI = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(AQUI.parents[0])); sys.path.insert(0, str(Path(__file__).resolve().parent))
 from expcnn import exigir_dataset  # noqa: E402
-from entrenar_local import SoloKernels, ampliar, conjunto  # noqa: E402
+from entrenar_local import SoloKernels, ampliar, conjunto, conjunto_casi  # noqa: E402
 
 T4 = "uci-optdigits-orig-32px-trazo4-r20261018"
 BORDE = 0.7 * 2                                   # σ del borde de la pluma, a 64 px
@@ -76,6 +76,7 @@ def main() -> int:
     ap.add_argument("--lote-sint", type=int, default=64)
     ap.add_argument("--lote-real", type=int, default=32)
     ap.add_argument("--semilla", type=int, default=303)
+    ap.add_argument("--casi", type=int, default=0, help="AÑADIR N trazos casi cerrados a los sintéticos (2026-10-19, rizo-2 § 126)")
     ap.add_argument("--limite", type=int, default=0, help="usar sólo N dígitos reales y N sintéticos (para cronometrar)")
     a = ap.parse_args()
     torch.manual_seed(a.semilla); rng = np.random.default_rng(a.semilla)
@@ -86,6 +87,10 @@ def main() -> int:
     n_sint = a.limite or cfg["n"]
     Xs, Ts, _ = conjunto(n_sint, cfg["semilla"], cfg["sigma"], cfg["suavizar"], cfg["dos"], k)
     Xn, Tn, _ = conjunto(10, 202, cfg["sigma"], cfg["suavizar"], cfg["dos"], k)
+    if a.casi:                                     # se AÑADEN: los 600 de siempre no cambian, así la diferencia es sólo esto
+        Xc, Tc, _ = conjunto_casi(a.casi, 404, cfg["sigma"], cfg["suavizar"], k)
+        Xs, Ts = np.concatenate([Xs, Xc]), np.concatenate([Ts, Tc])
+    Xcn, Tcn, _ = conjunto_casi(10, 505, cfg["sigma"], cfg["suavizar"], k)   # 10 casi cerrados NUNCA vistos, siempre medidos
     print(f"sintéticos: {len(Xs)} + 10 nuevos ({time.time() - t0:.0f} s)", flush=True)
 
     # reales: train + extra del dataset de mismo trazo, ampliados ×k con la MISMA función que exportar_delgados.py
@@ -105,6 +110,7 @@ def main() -> int:
     opt = torch.optim.Adam(red.parameters(), lr=a.lr); bce = nn.BCELoss(reduction="none")
     xs, ts = torch.from_numpy(Xs)[:, None], torch.from_numpy(Ts)[:, None]
     xn, tn = torch.from_numpy(Xn)[:, None], torch.from_numpy(Tn)[:, None]
+    xcn, tcn = torch.from_numpy(Xcn)[:, None], torch.from_numpy(Tcn)[:, None]
     xr, rr = torch.from_numpy(Xr)[:, None], torch.from_numpy(radio)
 
     def sup(x, t):
@@ -129,9 +135,9 @@ def main() -> int:
             if paso % 50 == 0:
                 red.eval()
                 with torch.no_grad():
-                    m = {"paso": paso, "nuevos": sup(xn, tn).item(), "retrazo": ret(xr[fijos], rr[fijos]).item(), "s": round(time.time() - t1, 1)}
+                    m = {"paso": paso, "nuevos": sup(xn, tn).item(), "casi_nuevos": sup(xcn, tcn).item(), "retrazo": ret(xr[fijos], rr[fijos]).item(), "s": round(time.time() - t1, 1)}
                 f.write(json.dumps(m) + "\n"); f.flush()
-                print(f"paso {paso:5d}  sint nuevos {m['nuevos']:.4f}  retrazo {m['retrazo']:.4f}  ({m['s']:.0f} s)", flush=True)
+                print(f"paso {paso:5d}  sint nuevos {m['nuevos']:.4f}  casi nuevos {m['casi_nuevos']:.4f}  retrazo {m['retrazo']:.4f}  ({m['s']:.0f} s)", flush=True)
             if paso == a.pasos:
                 break
             red.train(); opt.zero_grad()
