@@ -1833,6 +1833,10 @@ mejora y nada empeora fuera del ruido: los huecos bajan un 29 %, los del 0 a men
 perdido (0,95 → 0,82), vuelve a 0,94. Los 1l con ramas suben de 4 a 5 de los 82 de val: un dígito. Sobre los 5620 (train + extra
 incluidos) los huecos van de 6,4 a 5,4 %.
 
+**Los 0 que se cierran** (`nn/ceros_cerrados_vista.py` → `resultados/125-ceros-cerrados.{png,json}`): de los 160 ceros de val, 29
+salían abiertos con el de 64 px; el afinado **cierra 19**, siguen abiertos 10 y **no abre ninguno**. En todos, el corte era un hueco
+de 1–2 px donde M se quedaba por debajo de 0,4, casi siempre en un lado del óvalo.
+
 ⚠ En la figura, los 0 de abajo sin línea negra NO han perdido la cresta: un lazo cerrado sin puntas sale en `objetos()["lazos"]`,
 no en `tramos`, que es lo que se dibuja. Su re-trazo gris cubre el dígito entero. Pesos: `delgado-cnn/nn/pesos/k3x3-g0.7x-64-rt/`.
 ⏳ Sin decidir (el dueño): si se acepta pese al criterio, y si se genera con él otro dataset de 32 px de alto como el de § 122.
