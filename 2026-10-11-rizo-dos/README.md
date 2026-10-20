@@ -1789,6 +1789,25 @@ Los dos compositores quedan en el revisor.
 
 ## ⏳ PENDIENTE (el dueño, 2026-10-16, antes de destruir el dev): REVISAR el feature «vértice» (§ 95)
 
+### 129 · VISTA PREVIA: RECTAS y CURVAS DE RADIO AMPLIO, VERTICALES y HORIZONTALES, y cómo codificar su CONTINUIDAD (el dueño, 2026-10-19) — sólo imagen
+
+«Un feature que indique rectas y curvas de radio amplio. En una 3×3 que estén las verticales, en otra las horizontales. Deben tolerar
+otros ángulos similares hasta cierto rango. No incluyas inclinados a 45 grados. Y sugiéreme una forma de codificar la continuidad…».
+`nn/rectas_vh.py` (detector) y `nn/rectas_vh_vista.py` → `resultados/129-rectas-vh.{png,json}`. Sobre la cresta del delgado (tramos
+empalmados + lazos puros), muestra a muestra: VERTICAL si la tangente está a ≤ 30° de 90°, HORIZONTAL si a ≤ 30° de 0°, y sólo si
+|κ| ≤ 1/8 (radio ≥ 8 px: entra el lado de un 0, no la panza de un 2); las seguidas de la misma clase son una LÍNEA si miden ≥ 4 px.
+Rejillas V y H, 3×3 sin solape: largo de línea en la celda / lado de celda (≤ 1).
+
+**La tolerancia, medida en val** (% de dígitos sin ninguna línea): con 25°, 4 → 15 %, 3 → 28 %, 8 → 44 %; con **30°**, 4 → 5 %, 3 → 19 %,
+8 → 32 %; con 35°, 4 → 1 %, 8 → 19 %. Se queda en 30°: el palo de muchos 4 va inclinado ~30°, y la franja que no cuenta (30–60°)
+sigue dejando fuera los 45°. Suavizar más la cresta casi no cambia nada (probado con σ 1,5 y 3 adicionales).
+
+**Continuidad, dos propuestas** (las dos calculadas en la vista):
+- **ENLACES** (6 + 6): V entre la fila r y la r+1 de cada columna; H entre la columna c y la c+1 de cada fila; 1 si UNA MISMA línea
+  cruza las dos celdas. «Dos verticales continuas a los lados» = los cuatro enlaces de las columnas 0 y 2 (el 0 #79).
+- **RANURAS** (2 × 4 por orientación): las 2 líneas más largas, ordenadas por posición transversal, con (presente, posición, inicio,
+  fin) relativos a la caja del dígito.
+
 ### 128 · El LAZO con su ALTURA relativa, en el REVISOR (el dueño, 2026-10-19: «procede») — bloque `lazos_altura`
 
 Lo de § 127, como bloque elegible en «entrenar otro»: **«lazos ALTURA relativa (§ 128)»**, piezas rejilla + cuenta (celdas² + 1, como
