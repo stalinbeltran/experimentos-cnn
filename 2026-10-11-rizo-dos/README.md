@@ -1810,6 +1810,15 @@ px) y va en el eje (≤ 30°) **o** sigue a las dos líneas (≤ 20° de cada un
 ahora UNA vertical de 26,5 px. En val, % sin ninguna línea: 3 → 13 %, 8 → 27 %, 4 → 1 %. ⚠ La barra de ese 4 sigue sin salir: el
 trozo horizontal entre sus dos nudos mide 2,4 px y a su izquierda la barra va en diagonal.
 
+⏳ **PENDIENTE PARA EL 2026-10-21 (el dueño, 2026-10-20: «no me gusta el arreglo manual de las rectas unidas por nudo. Anota para mañana
+un detector de rectas a pesar de nudos»)**: un detector de rectas que no dependa de partir la cresta en tramos por los nudos, en vez
+de `_unir` (que queda como está, PROVISIONAL, y NO se lleva al revisor). Ideas para empezar, sin probar: (1) buscar las rectas
+directamente sobre el mapa M o sobre los píxeles de la cresta, sin grafo (una transformada de Hough, o ajustar rectas por RANSAC), de
+modo que un nudo sea sólo píxeles de cresta por los que pasa la recta; (2) un detector APRENDIDO, como el adelgazador: sintéticos de
+rectas y curvas amplias que se cruzan, con la verdad «esta recta V/H pasa por aquí», y una red de sólo kernels que dé dos mapas (V y H).
+Lo que tiene que resolver, medido hoy: el palo del 4 #1022 (cruza un nudo de ~6 px, inclinado ~30°) y la barra de ese 4 (2,4 px entre
+dos nudos).
+
 **Continuidad, dos propuestas** (las dos calculadas en la vista):
 - **ENLACES** (6 + 6): V entre la fila r y la r+1 de cada columna; H entre la columna c y la c+1 de cada fila; 1 si UNA MISMA línea
   cruza las dos celdas. «Dos verticales continuas a los lados» = los cuatro enlaces de las columnas 0 y 2 (el 0 #79).

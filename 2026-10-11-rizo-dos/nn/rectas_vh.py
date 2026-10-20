@@ -56,7 +56,9 @@ def _dif(v, w) -> float:
 
 
 def _unir(res, M):
-    """Une, mientras se pueda, dos líneas de la misma orientación cuyo hueco (entre sus extremos más cercanos) mide ≤ GAP_MAX, va en el
+    """⚠ PROVISIONAL: al dueño no le gusta este arreglo a mano (2026-10-20); pendiente un detector de rectas a pesar de los nudos
+    (README de rizo-2 § 129). No llevar al revisor así.
+Une, mientras se pueda, dos líneas de la misma orientación cuyo hueco (entre sus extremos más cercanos) mide ≤ GAP_MAX, va en el
     eje (≤ TOL) o sigue la dirección de las dos (≤ ANG_HUECO de la cuerda de cada una), y recorre la cresta. La línea unida lleva el hueco como tramo recto (es tinta de verdad: la del nudo)."""
     if len(res) < 2:
         return res
