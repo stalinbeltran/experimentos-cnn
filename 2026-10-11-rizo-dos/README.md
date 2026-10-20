@@ -1802,6 +1802,14 @@ Rejillas V y H, 3×3 sin solape: largo de línea en la celda / lado de celda (�
 8 → 32 %; con 35°, 4 → 1 %, 8 → 19 %. Se queda en 30°: el palo de muchos 4 va inclinado ~30°, y la franja que no cuenta (30–60°)
 sigue dejando fuera los 45°. Suavizar más la cresta casi no cambia nada (probado con σ 1,5 y 3 adicionales).
 
+**El dueño: «en el 4 #1022 no se detecta el segmento vertical medio».** Era el NUDO del cruce: la cresta dentro de un racimo de cruce
+no es de ningún tramo, y en ese 4 el nudo mide ~6 px; justo antes, la tangente se tuerce (138°). Quedaban dos verticales sueltas (5 y
+11 px). Ahora dos líneas de la misma orientación se UNEN a través de un hueco de ≤ 12 px si el hueco recorre la cresta (≥ 90 % a ≤ 1,5
+px) y va en el eje (≤ 30°) **o** sigue a las dos líneas (≤ 20° de cada una). Hacen falta las dos: con sólo el eje, el #1022 no se unía
+(su hueco va a 31,6°, como todo el palo); con sólo la de las dos líneas, el #239 se partía (un trozo corto y torcido). El #1022 da
+ahora UNA vertical de 26,5 px. En val, % sin ninguna línea: 3 → 13 %, 8 → 27 %, 4 → 1 %. ⚠ La barra de ese 4 sigue sin salir: el
+trozo horizontal entre sus dos nudos mide 2,4 px y a su izquierda la barra va en diagonal.
+
 **Continuidad, dos propuestas** (las dos calculadas en la vista):
 - **ENLACES** (6 + 6): V entre la fila r y la r+1 de cada columna; H entre la columna c y la c+1 de cada fila; 1 si UNA MISMA línea
   cruza las dos celdas. «Dos verticales continuas a los lados» = los cuatro enlaces de las columnas 0 y 2 (el 0 #79).

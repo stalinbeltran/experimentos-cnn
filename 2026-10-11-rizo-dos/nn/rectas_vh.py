@@ -27,6 +27,11 @@ TOL = 30.0          # grados alrededor de 90° (V) y de 0° (H): entre 30° y 60
                     # con 25° un 15 % de los 4 se quedaba sin ninguna línea (el palo inclinado ~30°); con 30°, el 5 %; con 35°, el 1 %
 K_AMPLIO = 1 / 8    # |κ| ≤ 1/8 px⁻¹ = radio ≥ 8 px
 L_LINEA = 4.0       # px: una línea más corta no cuenta
+GAP_MAX = 12.0      # px: dos líneas de la misma orientación se UNEN a través de un hueco así de largo (el NUDO de un cruce se traga
+                    # la cresta de dentro: en el 4 #1022 el palo quedaba partido en dos, § 129) si el hueco sigue la dirección de
+ANG_HUECO = 20.0    # LAS DOS líneas (≤ 20° de cada una: en el #1022 el hueco va a 31,6° de la vertical, como el palo) o va en el EJE
+                    # (≤ TOL: en el #239 un trozo corto y torcido del palo no pasaba la de las dos líneas), y
+EN_CRESTA = 0.9     # ≥ 90 % de su recorrido está a ≤ 1,5 px de la cresta (así no se unen dos trazos distintos que sólo están cerca)
 ORI = ["V", "H"]
 
 
@@ -44,8 +49,50 @@ def _muestras(M):
     return out
 
 
+def _dif(v, w) -> float:
+    """Ángulo entre dos direcciones SIN sentido (0–90°)."""
+    a = abs(np.degrees(np.arctan2(v[1], v[0])) - np.degrees(np.arctan2(w[1], w[0]))) % 180
+    return float(min(a, 180 - a))
+
+
+def _unir(res, M):
+    """Une, mientras se pueda, dos líneas de la misma orientación cuyo hueco (entre sus extremos más cercanos) mide ≤ GAP_MAX, va en el
+    eje (≤ TOL) o sigue la dirección de las dos (≤ ANG_HUECO de la cuerda de cada una), y recorre la cresta. La línea unida lleva el hueco como tramo recto (es tinta de verdad: la del nudo)."""
+    if len(res) < 2:
+        return res
+    dist = CC.ndimage.distance_transform_edt(~CC.skeletonize(np.asarray(M, np.float32) > CC.UMBRAL))
+    while True:
+        mejor = None
+        for a in range(len(res)):
+            for b in range(a + 1, len(res)):
+                if res[a]["o"] != res[b]["o"]:
+                    continue
+                for ia, pa in ((0, res[a]["pts"][0]), (-1, res[a]["pts"][-1])):
+                    for ib, pb in ((0, res[b]["pts"][0]), (-1, res[b]["pts"][-1])):
+                        g = float(np.hypot(*(pb - pa)))
+                        if g > GAP_MAX or g < 1e-6 or (mejor and g >= mejor[0]):
+                            continue
+                        ca, cb = res[a]["pts"][-1] - res[a]["pts"][0], res[b]["pts"][-1] - res[b]["pts"][0]
+                        eje = (0, 1) if res[a]["o"] == "V" else (1, 0)                # basta UNO: el hueco va en el eje (como un trozo
+                        if _dif(pb - pa, eje) > TOL and max(_dif(pb - pa, ca), _dif(pb - pa, cb)) > ANG_HUECO:   # más de la línea) o
+                            continue                                                    # sigue a las dos (#1022: palo inclinado ~30°)
+                        q = pa + np.linspace(0, 1, max(3, int(g * 2)))[:, None] * (pb - pa)
+                        ij = np.clip(np.floor(q).astype(int), 0, 31)
+                        if np.mean(dist[ij[:, 1], ij[:, 0]] <= 1.5) >= EN_CRESTA:
+                            mejor = (g, a, b, ia, ib, q)
+        if not mejor:
+            return res
+        _, a, b, ia, ib, q = mejor
+        pa = res[a]["pts"] if ia == -1 else res[a]["pts"][::-1]                # que acabe en el extremo que se une
+        pb = res[b]["pts"] if ib == 0 else res[b]["pts"][::-1]                 # que empiece en el extremo que se une
+        pts = np.concatenate([pa, q[1:-1], pb]); largo = float(np.sum(np.hypot(*np.diff(pts, axis=0).T)))
+        nuevo = {"o": res[a]["o"], "pts": pts, "cx": float(pts[:, 0].mean()), "cy": float(pts[:, 1].mean()), "largo": largo}
+        res = [l for k, l in enumerate(res) if k not in (a, b)] + [nuevo]
+
+
 def lineas(M) -> list[dict]:
-    """[{o: 'V'|'H', pts, cx, cy, largo}]: los runs de muestras casi rectas y casi verticales/horizontales."""
+    """[{o: 'V'|'H', pts, cx, cy, largo}]: los runs de muestras casi rectas y casi verticales/horizontales, unidos a través de los
+    nudos (`_unir`). Los runs de menos de L_LINEA se guardan para unir y sólo cuentan si al unirse llegan a L_LINEA."""
     res = []
     for ps, ang, ak, lazo in _muestras(M):
         cl = np.where(ak > K_AMPLIO, -1, np.where(np.abs(ang - 90) <= TOL, 0, np.where((ang <= TOL) | (ang >= 180 - TOL), 1, -1)))
@@ -61,9 +108,9 @@ def lineas(M) -> list[dict]:
             if c < 0:
                 continue
             seg = ps[np.arange(i, j) % n]; largo = float(np.sum(np.hypot(*np.diff(seg, axis=0).T)))
-            if largo >= L_LINEA:
+            if len(seg) >= 2:
                 res.append({"o": ORI[c], "pts": seg, "cx": float(seg[:, 0].mean()), "cy": float(seg[:, 1].mean()), "largo": largo})
-    return res
+    return [l for l in _unir(res, M) if l["largo"] >= L_LINEA]
 
 
 def _celda(x, y, celdas):
